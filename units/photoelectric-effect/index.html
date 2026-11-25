@@ -366,7 +366,14 @@ body { font-family: var(--lab-font); }
 }
 .lesson-workspace { min-width: 0; margin-block-start: 16px; }
 .lesson-body { min-width: 0; }
-.lesson-body > .rig-lab { margin-block-start: 0; }
+.lesson-reading-step { min-width: 0; padding-block: 16px 20px; border-block-start: 1px solid var(--lab-line); }
+.lesson-reading-step + .lesson-reading-step { margin-block-start: 12px; }
+.lesson-reading-step .lesson-reading-title { margin: 0 0 8px; font-size: clamp(1.08rem, 1.7vw, 1.38rem); line-height: 1.4; }
+.lesson-reading-step .lesson-reading-instructions { margin: 0 0 12px; color: var(--lab-muted); }
+.unit-content .lesson-reading-step > .lesson-part { margin-block: 16px 0; }
+.unit-content .lesson-bench-slot > .rig-lab { margin-block-start: 12px; }
+.unit-content .lesson-open-bench { margin-block: 6px 0; }
+.lesson-reading-step .rig-question { margin-block: 14px 0; }
 .lesson-body > :is(section[id], [id]) { scroll-margin-block-start: 76px; }
 .lesson-body .rig-question { scroll-margin-block-start: 76px; }
 
@@ -2929,7 +2936,7 @@ function mountBench(chapter, bench) {
   }
   if(location.hash)requestAnimationFrame(()=>document.getElementById(location.hash.slice(1))?.scrollIntoView());
 })("近代物理学实验");</script>
-<script id="physlab-lesson-guide">(function mountLessonGuide(groups) {
+<script id="physlab-lesson-guide">(function mountLessonGuide(groups, partSteps) {
   const article = document.querySelector('.unit-content > .lesson');
   const nav = article?.querySelector(':scope > nav.parts');
   if (!nav) return;
@@ -2974,12 +2981,12 @@ function mountBench(chapter, bench) {
   task.append(taskSummary,taskContent);
 
   function sectionOf(target) {
-    return target.startsWith('part:') ? lessonParts[Number(target.slice(5)) - 1] : lab;
+    return target.startsWith('part:') ? lessonParts[Number(target.slice(5)) - 1] : target === 'quiz' ? quiz : lab;
   }
 
   function resolveTarget(step) {
-    if (step.target === 'quiz') return quiz;
-    if (step.target === 'rig' || step.target.startsWith('part:')) return step.section;
+    if (!step.usesBench) return step.topic || step.section;
+    if (step.target === 'rig') return lab;
     return Array.from(lab.querySelectorAll(step.target)).find(element=>element.getClientRects().length) || lab;
   }
 
@@ -2995,7 +3002,13 @@ function mountBench(chapter, bench) {
       anchor.href = hash;
       anchor.dataset.stepTarget = target;
       anchor.append(make('span','lesson-guide-number',number),make('span','lesson-guide-label',title));
-      const step = {title,target,instructions,index,number,hash,anchor,section:sectionOf(target)};
+      const node = make('section','lesson-reading-step');
+      node.id = hash.slice(1);
+      const heading = make('h2','lesson-reading-title',`${number} ${title}`);
+      heading.tabIndex = -1;
+      node.append(heading,make('p','lesson-reading-instructions',instructions));
+      const section = sectionOf(target);
+      const step = {title,target,instructions,index,number,hash,anchor,section,node,heading,usesBench:section===lab};
       steps.push(step);
       nav.append(anchor);
       anchor.addEventListener('click',event=>{
@@ -3011,6 +3024,68 @@ function mountBench(chapter, bench) {
   rail.append(guide,task);
   workspace.append(rail,body);
   article.parentElement.classList.add('unit-content-with-guide');
+
+  const supplemental = Array.from(body.children).filter(child=>child!==lab && !lessonParts.includes(child));
+  body.append(...steps.map(step=>step.node));
+  for (const [index, part] of lessonParts.entries()) steps[partSteps[index]-1].node.append(part);
+
+  function continueIn(stepNumber, nodes, className = 'lesson-part') {
+    const step = steps[stepNumber - 1];
+    const continuation = make('div',className);
+    continuation.append(...nodes);
+    step.node.append(continuation);
+    step.topic = continuation;
+  }
+
+  // Some textbook sections cover multiple steps. Keep each original passage with its task.
+  if (article.id === 'lab-1') {
+    const subsections = lessonParts[3].querySelectorAll(':scope > h3');
+    for (const [index, stepNumber] of [8,9,11].entries()) {
+      const heading = subsections[index + 1];
+      continueIn(stepNumber,[heading,heading.nextElementSibling]);
+    }
+  } else if (article.id === 'lab-5') {
+    continueIn(10,[lessonParts[2].querySelector('[data-vsim] details:has([data-ct1])')],'lesson-part sim');
+  } else if (article.id === 'lab-7') {
+    const [,,drive,link,hint] = lessonParts[0].querySelectorAll(':scope > p, :scope > .formula');
+    continueIn(9,[drive]);
+    continueIn(10,[link,hint]);
+  }
+
+  const quizStep = steps.find(step=>step.target==='quiz');
+  quizStep?.node.append(quiz);
+  for (const node of supplemental) steps.at(-1).node.append(node);
+
+  for (const step of steps) {
+    if (step.usesBench) {
+      step.benchSlot = make('div','lesson-bench-slot');
+      step.openBench = make('button','lesson-open-bench','打开仿真实验台');
+      step.openBench.type = 'button';
+      step.node.append(step.openBench,step.benchSlot);
+      step.openBench.addEventListener('click',()=>{
+        moveBench(step);
+        mark(step);
+        scrollToTarget(resolveTarget(step),true);
+      });
+    } else if (!step.topic && step.target.startsWith('part:') && step.section?.parentElement!==step.node) {
+      const link = make('a','lesson-related-part',step.section.querySelector('h2').textContent);
+      link.href = `#${step.section.id}`;
+      step.node.append(link);
+      step.topic = link;
+    }
+  }
+
+  let benchStep;
+  function moveBench(step) {
+    if (step===benchStep) return;
+    if (benchStep) benchStep.openBench.textContent = '打开仿真实验台';
+    // An instrument can serve multiple steps. Move its mounted node and keep its measurements.
+    step.benchSlot.append(lab);
+    step.openBench.textContent = '定位本步操作';
+    benchStep = step;
+  }
+
+  moveBench(steps.find(step=>step.usesBench));
 
   let active;
   let targetHighlight;
@@ -3034,16 +3109,21 @@ function mountBench(chapter, bench) {
     }
   }
 
-  function scrollToTarget(target, focus) {
+  function highlight(target, focus) {
     if (!target) return;
-    if (target === quiz) quiz.open = true;
+    targetHighlight?.classList.remove('lesson-step-target');
+    targetHighlight = target;
+    target.classList.add('lesson-step-target');
     if (focus) {
-      targetHighlight?.classList.remove('lesson-step-target');
-      targetHighlight = target;
-      target.classList.add('lesson-step-target');
       if (!target.matches('a,button,input,select,textarea,summary,[tabindex]')) target.setAttribute('tabindex','-1');
       target.focus?.({preventScroll:true});
     }
+  }
+
+  function scrollToTarget(target, focus) {
+    if (!target) return;
+    if (target === quiz) quiz.open = true;
+    if (focus) highlight(target,true);
     const offset = desktop.matches ? 44 : rail.getBoundingClientRect().height + 20;
     window.scrollTo({top:window.scrollY + target.getBoundingClientRect().top - offset,behavior:'instant'});
     heldScroll = window.scrollY;
@@ -3055,7 +3135,11 @@ function mountBench(chapter, bench) {
     if (!desktop.matches) guide.open = false;
     mark(step);
     task.open = true;
-    scrollToTarget(resolveTarget(step),writeHistory);
+    if (step.usesBench) moveBench(step);
+    if (step.target === 'quiz') quiz.open = true;
+    highlight(resolveTarget(step),false);
+    if (writeHistory) step.heading.focus({preventScroll:true});
+    scrollToTarget(step.node,false);
   }
 
   previous.addEventListener('click',()=>go(steps[active.index - 1]));
@@ -3063,7 +3147,6 @@ function mountBench(chapter, bench) {
   guide.addEventListener('toggle',()=>{ if (!desktop.matches && guide.open) task.open = false; });
   task.addEventListener('toggle',()=>{ if (!desktop.matches && task.open) guide.open = false; });
 
-  const lessonBlocks = [lab,...lessonParts];
   let scheduled = false;
   function track() {
     if (scheduled) return;
@@ -3073,8 +3156,8 @@ function mountBench(chapter, bench) {
       if (heldScroll !== undefined && Math.abs(window.scrollY - heldScroll) < 12) return;
       heldScroll = undefined;
       const readingLine = desktop.matches ? 92 : rail.getBoundingClientRect().height + 24;
-      const section = lessonBlocks.findLast(block=>block.getBoundingClientRect().top <= readingLine);
-      if (section && section !== active.section) mark(steps.find(step=>step.section===section));
+      const atEnd = window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+      mark(atEnd ? steps.at(-1) : steps.findLast(step=>step.node.getBoundingClientRect().top <= readingLine) || steps[0]);
     });
   }
 
@@ -3085,17 +3168,14 @@ function mountBench(chapter, bench) {
     const step = steps.find(item=>item.hash===location.hash);
     if (step) { go(step,false); return; }
     const target = document.getElementById(location.hash.slice(1));
-    if (target === quiz) {
-      mark(steps.find(item=>item.target==='quiz'));
-      scrollToTarget(quiz,false);
-    } else if (lessonBlocks.includes(target)) {
-      mark(steps.find(item=>item.section===target));
+    if (target === lab || target === quiz || lessonParts.includes(target)) {
+      mark(steps.find(item=>item.node===target.closest('.lesson-reading-step')));
       scrollToTarget(target,false);
     }
   };
   window.addEventListener('hashchange',followFragment);
   mark(steps[0]);
   followFragment();
-})([["认光路，判断电压的作用",[["沿光路找出阴极和阳极","part:1","从汞灯沿导轨看向滤光盘、光阑和光电管。辨认发射电子的 K、收集电子的 A 和两只读数表。"],["开机后先在 0 V 看电流","[data-ph-power]","开机等汞灯稳定，打开遮光盖。保持 U = 0 V 观察电流，想一想电子在电场为零时为何还能到达阳极。"],["调正负电压，扫一条伏安曲线","[data-ph-voltage-scale]","同一个滤光片先调负压再调正压，观察读数。点「扫描 I–U 曲线」，在正压端找饱和平台，在负压端找接近遏止的范围。"]]],["同一条谱线，比较三种读法",[["固定光阑和距离，找 I = 0 交点","[data-ph-zero]","固定 Φ 和 d。建议选择「遏止区细看」，点「记录 I = 0 的电压」从扫线的横轴交点读数，记录 Uₐ 的负号。"],["保持电压不动，遮光测 I₁","[data-ph-dark]","还保留 I = 0 的电压时挡住入光口，记录暗电流 I₁。对照挡住前后两个电流读数。"],["重新照明，用 I₁ 作判据","[data-ph-comp]","移开遮光盖，在同一条扫线上找当前 I = I₁ 的位置，记录补偿所得 Uₐ。比较它与零电流法有多大差别。"],["找负压端由近直线转为抬升的位置","[data-ph-knee]","光照下还可能有阳极反向光电流。观察「遏止区细看」中的负压下部，记录曲线抬头的拐点，并和前两次读数比较。"]]],["补齐五条谱线，拟合普朗克常量",[["依次换滤光片，补齐五条谱线","[data-ph-filter]","保持第一条谱线的光阑和距离，依次选 365.0、404.7、435.8、546.1、577.0 nm。每换一片重扫，再用刚才的三种判据记录。"],["比较三法的 h、红限和逸出功","[data-ph-fit]","每次选同一种判法，把 |Uₐ| 对 ν 作直线拟合。调换判据比较 h 与相对误差。用零点求红限频率，再由截距换算阴极材料的逸出功。"]]],["把饱和电流和光强分开检验",[["固定距离，用光阑改变光强","[data-ph-saturation]","保留任一滤光片，固定距离和正向饱和电压（本台 +3.500 V 起）。换 3、5、7 mm 光阑，分别记录，判断 I 对 Φ² 是否成正比。"],["固定光阑，用滑台改变光强","[data-ph-series]","切换到「固定光阑，改变距离」。电压仍固定在饱和区，移动光电管记录多组数据，画 I 对 1/d² 的图。"],["解释光强为何改变平台高度","quiz","同色光下只开大光阑。试着分别用光子数量和单个光子的能量解释电流和遏止电压的变化。"]]],["延伸光源和光电检测",[["设计换光源或光电倍增管的实验","part:6","考虑如何标定 LED 波长和带宽。阅读光电倍增管的结构及增益，并区分用能谱求结合能的 XPS／UPS 与本台的测量。"]]]]);</script>
+})([["认光路，判断电压的作用",[["沿光路找出阴极和阳极","part:1","从汞灯沿导轨看向滤光盘、光阑和光电管。辨认发射电子的 K、收集电子的 A 和两只读数表。"],["开机后先在 0 V 看电流","[data-ph-power]","开机等汞灯稳定，打开遮光盖。保持 U = 0 V 观察电流，想一想电子在电场为零时为何还能到达阳极。"],["调正负电压，扫一条伏安曲线","[data-ph-voltage-scale]","同一个滤光片先调负压再调正压，观察读数。点「扫描 I–U 曲线」，在正压端找饱和平台，在负压端找接近遏止的范围。"]]],["同一条谱线，比较三种读法",[["固定光阑和距离，找 I = 0 交点","[data-ph-zero]","固定 Φ 和 d。建议选择「遏止区细看」，点「记录 I = 0 的电压」从扫线的横轴交点读数，记录 Uₐ 的负号。"],["保持电压不动，遮光测 I₁","[data-ph-dark]","还保留 I = 0 的电压时挡住入光口，记录暗电流 I₁。对照挡住前后两个电流读数。"],["重新照明，用 I₁ 作判据","[data-ph-comp]","移开遮光盖，在同一条扫线上找当前 I = I₁ 的位置，记录补偿所得 Uₐ。比较它与零电流法有多大差别。"],["找负压端由近直线转为抬升的位置","[data-ph-knee]","光照下还可能有阳极反向光电流。观察「遏止区细看」中的负压下部，记录曲线抬头的拐点，并和前两次读数比较。"]]],["补齐五条谱线，拟合普朗克常量",[["依次换滤光片，补齐五条谱线","[data-ph-filter]","保持第一条谱线的光阑和距离，依次选 365.0、404.7、435.8、546.1、577.0 nm。每换一片重扫，再用刚才的三种判据记录。"],["比较三法的 h、红限和逸出功","[data-ph-fit]","每次选同一种判法，把 |Uₐ| 对 ν 作直线拟合。调换判据比较 h 与相对误差。用零点求红限频率，再由截距换算阴极材料的逸出功。"]]],["把饱和电流和光强分开检验",[["固定距离，用光阑改变光强","[data-ph-saturation]","保留任一滤光片，固定距离和正向饱和电压（本台 +3.500 V 起）。换 3、5、7 mm 光阑，分别记录，判断 I 对 Φ² 是否成正比。"],["固定光阑，用滑台改变光强","[data-ph-series]","切换到「固定光阑，改变距离」。电压仍固定在饱和区，移动光电管记录多组数据，画 I 对 1/d² 的图。"],["解释光强为何改变平台高度","quiz","同色光下只开大光阑。试着分别用光子数量和单个光子的能量解释电流和遏止电压的变化。"]]],["延伸光源和光电检测",[["设计换光源或光电倍增管的实验","part:6","考虑如何标定 LED 波长和带宽。阅读光电倍增管的结构及增益，并区分用能谱求结合能的 XPS／UPS 与本台的测量。"]]]],[1,2,4,9,10,13]);</script>
 </body>
 </html>

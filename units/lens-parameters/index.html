@@ -366,7 +366,14 @@ body { font-family: var(--lab-font); }
 }
 .lesson-workspace { min-width: 0; margin-block-start: 16px; }
 .lesson-body { min-width: 0; }
-.lesson-body > .rig-lab { margin-block-start: 0; }
+.lesson-reading-step { min-width: 0; padding-block: 16px 20px; border-block-start: 1px solid var(--lab-line); }
+.lesson-reading-step + .lesson-reading-step { margin-block-start: 12px; }
+.lesson-reading-step .lesson-reading-title { margin: 0 0 8px; font-size: clamp(1.08rem, 1.7vw, 1.38rem); line-height: 1.4; }
+.lesson-reading-step .lesson-reading-instructions { margin: 0 0 12px; color: var(--lab-muted); }
+.unit-content .lesson-reading-step > .lesson-part { margin-block: 16px 0; }
+.unit-content .lesson-bench-slot > .rig-lab { margin-block-start: 12px; }
+.unit-content .lesson-open-bench { margin-block: 6px 0; }
+.lesson-reading-step .rig-question { margin-block: 14px 0; }
 .lesson-body > :is(section[id], [id]) { scroll-margin-block-start: 76px; }
 .lesson-body .rig-question { scroll-margin-block-start: 76px; }
 
@@ -2749,7 +2756,7 @@ function mountBench(chapter, bench) {
   }
   if(location.hash)requestAnimationFrame(()=>document.getElementById(location.hash.slice(1))?.scrollIntoView());
 })();</script>
-<script id="physlab-lesson-guide">(function mountLessonGuide(groups) {
+<script id="physlab-lesson-guide">(function mountLessonGuide(groups, partSteps) {
   const article = document.querySelector('.unit-content > .lesson');
   const nav = article?.querySelector(':scope > nav.parts');
   if (!nav) return;
@@ -2794,12 +2801,12 @@ function mountBench(chapter, bench) {
   task.append(taskSummary,taskContent);
 
   function sectionOf(target) {
-    return target.startsWith('part:') ? lessonParts[Number(target.slice(5)) - 1] : lab;
+    return target.startsWith('part:') ? lessonParts[Number(target.slice(5)) - 1] : target === 'quiz' ? quiz : lab;
   }
 
   function resolveTarget(step) {
-    if (step.target === 'quiz') return quiz;
-    if (step.target === 'rig' || step.target.startsWith('part:')) return step.section;
+    if (!step.usesBench) return step.topic || step.section;
+    if (step.target === 'rig') return lab;
     return Array.from(lab.querySelectorAll(step.target)).find(element=>element.getClientRects().length) || lab;
   }
 
@@ -2815,7 +2822,13 @@ function mountBench(chapter, bench) {
       anchor.href = hash;
       anchor.dataset.stepTarget = target;
       anchor.append(make('span','lesson-guide-number',number),make('span','lesson-guide-label',title));
-      const step = {title,target,instructions,index,number,hash,anchor,section:sectionOf(target)};
+      const node = make('section','lesson-reading-step');
+      node.id = hash.slice(1);
+      const heading = make('h2','lesson-reading-title',`${number} ${title}`);
+      heading.tabIndex = -1;
+      node.append(heading,make('p','lesson-reading-instructions',instructions));
+      const section = sectionOf(target);
+      const step = {title,target,instructions,index,number,hash,anchor,section,node,heading,usesBench:section===lab};
       steps.push(step);
       nav.append(anchor);
       anchor.addEventListener('click',event=>{
@@ -2831,6 +2844,68 @@ function mountBench(chapter, bench) {
   rail.append(guide,task);
   workspace.append(rail,body);
   article.parentElement.classList.add('unit-content-with-guide');
+
+  const supplemental = Array.from(body.children).filter(child=>child!==lab && !lessonParts.includes(child));
+  body.append(...steps.map(step=>step.node));
+  for (const [index, part] of lessonParts.entries()) steps[partSteps[index]-1].node.append(part);
+
+  function continueIn(stepNumber, nodes, className = 'lesson-part') {
+    const step = steps[stepNumber - 1];
+    const continuation = make('div',className);
+    continuation.append(...nodes);
+    step.node.append(continuation);
+    step.topic = continuation;
+  }
+
+  // Some textbook sections cover multiple steps. Keep each original passage with its task.
+  if (article.id === 'lab-1') {
+    const subsections = lessonParts[3].querySelectorAll(':scope > h3');
+    for (const [index, stepNumber] of [8,9,11].entries()) {
+      const heading = subsections[index + 1];
+      continueIn(stepNumber,[heading,heading.nextElementSibling]);
+    }
+  } else if (article.id === 'lab-5') {
+    continueIn(10,[lessonParts[2].querySelector('[data-vsim] details:has([data-ct1])')],'lesson-part sim');
+  } else if (article.id === 'lab-7') {
+    const [,,drive,link,hint] = lessonParts[0].querySelectorAll(':scope > p, :scope > .formula');
+    continueIn(9,[drive]);
+    continueIn(10,[link,hint]);
+  }
+
+  const quizStep = steps.find(step=>step.target==='quiz');
+  quizStep?.node.append(quiz);
+  for (const node of supplemental) steps.at(-1).node.append(node);
+
+  for (const step of steps) {
+    if (step.usesBench) {
+      step.benchSlot = make('div','lesson-bench-slot');
+      step.openBench = make('button','lesson-open-bench','打开仿真实验台');
+      step.openBench.type = 'button';
+      step.node.append(step.openBench,step.benchSlot);
+      step.openBench.addEventListener('click',()=>{
+        moveBench(step);
+        mark(step);
+        scrollToTarget(resolveTarget(step),true);
+      });
+    } else if (!step.topic && step.target.startsWith('part:') && step.section?.parentElement!==step.node) {
+      const link = make('a','lesson-related-part',step.section.querySelector('h2').textContent);
+      link.href = `#${step.section.id}`;
+      step.node.append(link);
+      step.topic = link;
+    }
+  }
+
+  let benchStep;
+  function moveBench(step) {
+    if (step===benchStep) return;
+    if (benchStep) benchStep.openBench.textContent = '打开仿真实验台';
+    // An instrument can serve multiple steps. Move its mounted node and keep its measurements.
+    step.benchSlot.append(lab);
+    step.openBench.textContent = '定位本步操作';
+    benchStep = step;
+  }
+
+  moveBench(steps.find(step=>step.usesBench));
 
   let active;
   let targetHighlight;
@@ -2854,16 +2929,21 @@ function mountBench(chapter, bench) {
     }
   }
 
-  function scrollToTarget(target, focus) {
+  function highlight(target, focus) {
     if (!target) return;
-    if (target === quiz) quiz.open = true;
+    targetHighlight?.classList.remove('lesson-step-target');
+    targetHighlight = target;
+    target.classList.add('lesson-step-target');
     if (focus) {
-      targetHighlight?.classList.remove('lesson-step-target');
-      targetHighlight = target;
-      target.classList.add('lesson-step-target');
       if (!target.matches('a,button,input,select,textarea,summary,[tabindex]')) target.setAttribute('tabindex','-1');
       target.focus?.({preventScroll:true});
     }
+  }
+
+  function scrollToTarget(target, focus) {
+    if (!target) return;
+    if (target === quiz) quiz.open = true;
+    if (focus) highlight(target,true);
     const offset = desktop.matches ? 44 : rail.getBoundingClientRect().height + 20;
     window.scrollTo({top:window.scrollY + target.getBoundingClientRect().top - offset,behavior:'instant'});
     heldScroll = window.scrollY;
@@ -2875,7 +2955,11 @@ function mountBench(chapter, bench) {
     if (!desktop.matches) guide.open = false;
     mark(step);
     task.open = true;
-    scrollToTarget(resolveTarget(step),writeHistory);
+    if (step.usesBench) moveBench(step);
+    if (step.target === 'quiz') quiz.open = true;
+    highlight(resolveTarget(step),false);
+    if (writeHistory) step.heading.focus({preventScroll:true});
+    scrollToTarget(step.node,false);
   }
 
   previous.addEventListener('click',()=>go(steps[active.index - 1]));
@@ -2883,7 +2967,6 @@ function mountBench(chapter, bench) {
   guide.addEventListener('toggle',()=>{ if (!desktop.matches && guide.open) task.open = false; });
   task.addEventListener('toggle',()=>{ if (!desktop.matches && task.open) guide.open = false; });
 
-  const lessonBlocks = [lab,...lessonParts];
   let scheduled = false;
   function track() {
     if (scheduled) return;
@@ -2893,8 +2976,8 @@ function mountBench(chapter, bench) {
       if (heldScroll !== undefined && Math.abs(window.scrollY - heldScroll) < 12) return;
       heldScroll = undefined;
       const readingLine = desktop.matches ? 92 : rail.getBoundingClientRect().height + 24;
-      const section = lessonBlocks.findLast(block=>block.getBoundingClientRect().top <= readingLine);
-      if (section && section !== active.section) mark(steps.find(step=>step.section===section));
+      const atEnd = window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+      mark(atEnd ? steps.at(-1) : steps.findLast(step=>step.node.getBoundingClientRect().top <= readingLine) || steps[0]);
     });
   }
 
@@ -2905,17 +2988,14 @@ function mountBench(chapter, bench) {
     const step = steps.find(item=>item.hash===location.hash);
     if (step) { go(step,false); return; }
     const target = document.getElementById(location.hash.slice(1));
-    if (target === quiz) {
-      mark(steps.find(item=>item.target==='quiz'));
-      scrollToTarget(quiz,false);
-    } else if (lessonBlocks.includes(target)) {
-      mark(steps.find(item=>item.section===target));
+    if (target === lab || target === quiz || lessonParts.includes(target)) {
+      mark(steps.find(item=>item.node===target.closest('.lesson-reading-step')));
       scrollToTarget(target,false);
     }
   };
   window.addEventListener('hashchange',followFragment);
   mark(steps[0]);
   followFragment();
-})([["上光具座前先学会共轴与读数",[["认出物屏、镜架和像屏","part:1","沿导轨找出发光物、待测透镜和成像屏，辨认各自的位置指针。记录距离时用两个位置的差。"],["粗调同高，再用清晰像检查共轴","part:3","实物先让物、镜、像屏中心大致等高，移屏或移镜微调，直到像清晰且靠近屏中心。仿真可以沿导轨拖镜架，核对各位置与清晰度提示。"]]],["比较凸透镜焦距的测法",[["选直接法，找平行光的焦点","[data-lens-mode]","把像屏移到远物像最清晰的位置，仿真直接用平行入射光，调到屏上光斑最小。记下大致焦距，用于选位移法的物屏间距。"],["物像距法量 u 和 v","[data-lens-mode]","切到物像距法，移动像屏到图样清晰，分别读物、镜、屏位置，算出 u 和 v，再用 1/f = 1/u + 1/v 求 f。换测法前先抄下结果。"],["位移法设定物屏距离 L > 4f","[data-lens-length]","切到位移法，用估测焦距检查所选 L 能形成两个清晰像。同一轮读数把物和屏固定下来。"],["找一大一小两个清晰像","[data-lens-position]","沿导轨只移动透镜，先找靠近物端的放大像，再找靠近屏端的缩小像。分别记录透镜位置，取两位置差 e，按 f = (L²−e²)/(4L) 求焦距。"],["用自准直法让回像贴近物","[data-lens-mode]","切到自准直法，让透镜出射光经平面镜返回，移动透镜直至回像在物所在平面清晰。此时从物到透镜的距离给出焦距。"]]],["用辅助像测凹透镜并汇总结果",[["先记凸镜的实像，再插入凹镜","[data-lens-mode]","切到凹透镜辅助法，先确定凸透镜原本形成实像的位置，再在会聚光束中插入凹透镜，移动像屏找新实像，记录两次像位置和凹镜位置。"],["核对虚物符号并比较测量结果","part:4","用前后两个像位置判定凹镜的虚物与实像，按教材符号约定代入并检查是否得到负焦距。对凸镜不同测法分别保存记录，比较结果及重复读数的不确定度。"],["从离轴模糊区分球差和色差","part:5","用教材的光线示意判断，同色的边缘光线与近轴光线为何聚焦不同，不同颜色的焦点又为何分开。"],["核对位移法中必须固定的距离","quiz","回看求焦距时使用的物屏距离 L 和透镜位移 e，判断移动白屏会改变哪个量。"]]]]);</script>
+})([["上光具座前先学会共轴与读数",[["认出物屏、镜架和像屏","part:1","沿导轨找出发光物、待测透镜和成像屏，辨认各自的位置指针。记录距离时用两个位置的差。"],["粗调同高，再用清晰像检查共轴","part:3","实物先让物、镜、像屏中心大致等高，移屏或移镜微调，直到像清晰且靠近屏中心。仿真可以沿导轨拖镜架，核对各位置与清晰度提示。"]]],["比较凸透镜焦距的测法",[["选直接法，找平行光的焦点","[data-lens-mode]","把像屏移到远物像最清晰的位置，仿真直接用平行入射光，调到屏上光斑最小。记下大致焦距，用于选位移法的物屏间距。"],["物像距法量 u 和 v","[data-lens-mode]","切到物像距法，移动像屏到图样清晰，分别读物、镜、屏位置，算出 u 和 v，再用 1/f = 1/u + 1/v 求 f。换测法前先抄下结果。"],["位移法设定物屏距离 L > 4f","[data-lens-length]","切到位移法，用估测焦距检查所选 L 能形成两个清晰像。同一轮读数把物和屏固定下来。"],["找一大一小两个清晰像","[data-lens-position]","沿导轨只移动透镜，先找靠近物端的放大像，再找靠近屏端的缩小像。分别记录透镜位置，取两位置差 e，按 f = (L²−e²)/(4L) 求焦距。"],["用自准直法让回像贴近物","[data-lens-mode]","切到自准直法，让透镜出射光经平面镜返回，移动透镜直至回像在物所在平面清晰。此时从物到透镜的距离给出焦距。"]]],["用辅助像测凹透镜并汇总结果",[["先记凸镜的实像，再插入凹镜","[data-lens-mode]","切到凹透镜辅助法，先确定凸透镜原本形成实像的位置，再在会聚光束中插入凹透镜，移动像屏找新实像，记录两次像位置和凹镜位置。"],["核对虚物符号并比较测量结果","part:4","用前后两个像位置判定凹镜的虚物与实像，按教材符号约定代入并检查是否得到负焦距。对凸镜不同测法分别保存记录，比较结果及重复读数的不确定度。"],["从离轴模糊区分球差和色差","part:5","用教材的光线示意判断，同色的边缘光线与近轴光线为何聚焦不同，不同颜色的焦点又为何分开。"],["核对位移法中必须固定的距离","quiz","回看求焦距时使用的物屏距离 L 和透镜位移 e，判断移动白屏会改变哪个量。"]]]],[1,3,2,9,10,11]);</script>
 </body>
 </html>
