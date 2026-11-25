@@ -153,6 +153,7 @@ h1, h2, h3, p { margin: 0; }
 .card-cover .ph { display: grid; place-items: center; height: 100%; color: #a9bac7; font-size: 13px; }
 .card-body { display: flex; flex: 1; flex-direction: column; gap: 8px; min-width: 0; padding: 16px; }
 .card-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.card-duration, .unit-duration { white-space: nowrap; }
 .card-title { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 17px; font-weight: 600; line-height: 1.45; overflow-wrap: anywhere; }
 .card-title .icon { align-self: center; color: var(--muted); }
 .card:hover .card-title .icon { color: var(--accent); }
@@ -272,11 +273,12 @@ h1, h2, h3, p { margin: 0; }
   .topbar { gap: 4px; padding-inline: 8px; }
   .topbar-tools { gap: 4px; }
   .brand { min-width: 44px; min-height: 44px; justify-content: center; }
-  .brand-label, .topbar-unit .btn-label, .nav-toggle .btn-label, .unit-meta { display: none; }
+  .brand-label, .topbar-unit .btn-label, .nav-toggle .btn-label, .unit-meta-context { display: none; }
   .search-wrap { margin-inline-end: 8px; }
   .search { width: min(54vw, 250px); min-height: 44px; font-size: 16px; }
   .btn { min-width: 44px; min-height: 44px; padding: 0; }
   .unit-title { font-size: 14px; }
+  .unit-meta { font-size: 12px; }
   .hero { margin-block-end: 16px; }
   .hero-sub { font-size: 15px; }
   .grid { gap: 16px; }

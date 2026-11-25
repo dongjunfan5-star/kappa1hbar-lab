@@ -13,5 +13,6 @@
   "level": 1,
   "entry": "index.html",
   "interactive": true,
-  "cover": "anatomy-cover.png"
+  "cover": "anatomy-cover.png",
+  "duration": 120
 }

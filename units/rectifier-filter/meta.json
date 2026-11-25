@@ -13,5 +13,6 @@
   "entry": "index.html",
   "interactive": true,
   "cover": "anatomy-cover.png",
-  "order": 16
+  "order": 16,
+  "duration": 180
 }
