@@ -1,0 +1,17 @@
+{
+  "title": "小磁针简谐振动的研究",
+  "chapter": "电磁学",
+  "summary": "用亥姆霍兹线圈改变磁力摆的回复力矩，从周期外推地磁场水平分量，再观察配重、耦合与大振幅的影响。",
+  "tags": [
+    "亥姆霍兹线圈",
+    "地磁场",
+    "周期",
+    "比磁矩",
+    "仿真实验"
+  ],
+  "level": 2,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png",
+  "order": 17
+}

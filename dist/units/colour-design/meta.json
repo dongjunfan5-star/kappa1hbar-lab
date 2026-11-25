@@ -1,0 +1,18 @@
+{
+  "title": "色彩设计实验",
+  "chapter": "光学",
+  "order": 19,
+  "summary": "测 LED 的伏安与光强，再通过红、绿、蓝灯的独立调节和滤片组合，在白屏上得到目标色。",
+  "tags": [
+    "LED",
+    "色彩",
+    "三原色",
+    "加法混色",
+    "滤光片",
+    "仿真实验"
+  ],
+  "level": 1,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

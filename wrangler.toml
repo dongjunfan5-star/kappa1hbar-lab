@@ -1,0 +1,9 @@
+# Cloudflare Workers 配置（静态资源）
+# 用法：在本目录（site/）执行 npx wrangler deploy
+name = "kappa1hbar-lab"
+compatibility_date = "2026-01-01"
+
+[assets]
+directory = "./dist"
+html_handling = "auto-trailing-slash"
+not_found_handling = "none"

@@ -1,0 +1,17 @@
+{
+  "title": "固体比热容的测量",
+  "chapter": "热学",
+  "order": 9,
+  "summary": "把水浴加热后的锌粒转入量热器，从温度–时间曲线校正初温和末温，用热量守恒求锌的比热容。",
+  "tags": [
+    "量热器",
+    "混合法",
+    "热平衡",
+    "散热修正",
+    "仿真实验"
+  ],
+  "level": 1,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

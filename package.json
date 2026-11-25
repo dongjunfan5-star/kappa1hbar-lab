@@ -1,0 +1,13 @@
+{
+  "name": "physlab-shell",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "大学物理实验交互站的承载外壳（零依赖静态站）",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "serve": "node scripts/serve.mjs",
+    "preview": "node scripts/build.mjs && node scripts/serve.mjs",
+    "new": "node scripts/new-unit.mjs"
+  }
+}

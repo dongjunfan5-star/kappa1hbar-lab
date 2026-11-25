@@ -1,0 +1,17 @@
+{
+  "title": "半导体温度计的设计和制作",
+  "chapter": "电磁学",
+  "summary": "用 NTC 和非平衡电桥把温度转换为微安表示值，完成 20–70 ℃ 的刻度标定，并测试 60 ℃、90 ℃ 的 PTC 报警。",
+  "tags": [
+    "温度计",
+    "热敏电阻",
+    "不平衡电桥",
+    "温度标定",
+    "仿真实验"
+  ],
+  "level": 2,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png",
+  "order": 14
+}

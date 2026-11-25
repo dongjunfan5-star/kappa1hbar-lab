@@ -1,0 +1,24 @@
+{
+  "title": "声速的测量",
+  "chapter": "力学",
+  "order": 8,
+  "summary": "用示波器找振幅峰、比较相位或读传播时差，测空气、液体和固体中的声速。",
+  "tags": [
+    "声速",
+    "信号发生器",
+    "共振干涉",
+    "相位比较",
+    "拟合",
+    "超声",
+    "示波器",
+    "换能器",
+    "时差",
+    "仿真实验"
+  ],
+  "level": 1,
+  "duration": 120,
+  "updated": "2026-11-15",
+  "cover": "anatomy-cover.png",
+  "entry": "anatomy.html",
+  "interactive": true
+}

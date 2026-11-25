@@ -1,0 +1,18 @@
+{
+  "title": "光速的测量",
+  "chapter": "光学",
+  "order": 23,
+  "summary": "沿导轨移动装有两块反射镜的小车，用示波器量出调制信号的相位变化，再由往返光程求空气中的光速。",
+  "tags": [
+    "光速",
+    "光强调制",
+    "李萨如图形",
+    "相位",
+    "示波器",
+    "仿真实验"
+  ],
+  "level": 2,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

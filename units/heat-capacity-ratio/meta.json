@@ -1,0 +1,17 @@
+{
+  "title": "空气比热容比的测量",
+  "chapter": "热学",
+  "order": 10,
+  "summary": "用储气瓶快速放气，在回温前后读取绝对压强，从绝热膨胀和等容回温两段过程算出空气的比热容比。",
+  "tags": [
+    "绝热膨胀",
+    "泊松比",
+    "压力传感器",
+    "温度传感器",
+    "仿真实验"
+  ],
+  "level": 2,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

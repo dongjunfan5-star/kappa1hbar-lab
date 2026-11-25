@@ -1,0 +1,16 @@
+{
+  "title": "氢原子光谱的测量",
+  "chapter": "近代物理学实验",
+  "summary": "用汞绿线标定光栅，转动分光计望远镜测量氢的巴耳末线，再从波长反求里德伯常量与普朗克常量。还可以换装三棱镜比较两种分光方法。",
+  "tags": [
+    "衍射光栅",
+    "巴耳末系",
+    "里德伯常量",
+    "仿真实验"
+  ],
+  "level": 2,
+  "order": 26,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

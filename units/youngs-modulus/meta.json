@@ -1,0 +1,17 @@
+{
+  "title": "用拉伸法测量金属丝的弹性模量",
+  "chapter": "力学",
+  "order": 3,
+  "summary": "逐级加、减砝码，用光杠杆把微小伸长放大成标尺位移，再由读数随拉力变化的斜率求杨氏模量。",
+  "tags": [
+    "杨氏模量",
+    "金属丝",
+    "光杠杆",
+    "拉伸",
+    "仿真实验"
+  ],
+  "level": 2,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

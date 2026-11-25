@@ -1,0 +1,18 @@
+{
+  "title": "透镜参量的测量",
+  "chapter": "光学",
+  "order": 21,
+  "summary": "沿光具座寻找清晰像，用物像距、两个共轭位置或反射像求焦距，再用辅助凸透镜测凹透镜。",
+  "tags": [
+    "凸透镜",
+    "凹透镜",
+    "焦距",
+    "成像",
+    "位移法",
+    "仿真实验"
+  ],
+  "level": 2,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

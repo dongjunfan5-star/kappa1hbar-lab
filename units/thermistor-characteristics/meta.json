@@ -1,0 +1,17 @@
+{
+  "title": "半导体热敏电阻特性的研究",
+  "chapter": "电磁学",
+  "summary": "用恒温水浴改变温度，在惠斯通电桥上调零测 NTC 阻值，并用万用表观察 PTC 越过居里点后的阻值跃升。",
+  "tags": [
+    "热敏电阻",
+    "惠斯通电桥",
+    "NTC",
+    "R–T 曲线",
+    "仿真实验"
+  ],
+  "level": 2,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png",
+  "order": 13
+}

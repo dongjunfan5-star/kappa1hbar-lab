@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>声速的测量</title>
+<style>
+  :root { color-scheme: dark; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    display: flex; flex-direction: column;
+    background: #0a0e14; color: #dbe4f0;
+    font: 14px/1.5 system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  }
+  .tabs {
+    flex: none; display: flex; gap: 6px; padding: 10px 12px;
+    border-bottom: 1px solid #1c2433; background: #0d1219;
+    overflow-x: auto; scrollbar-width: thin;
+  }
+  .tab {
+    appearance: none; flex: none; cursor: pointer; white-space: nowrap;
+    border: 1px solid #253042; background: #121a24; color: #a9b6c8;
+    padding: 7px 14px; border-radius: 999px; font: inherit; font-size: 13px;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .tab:hover { background: #17202c; color: #dbe4f0; }
+  .tab[aria-selected="true"] { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
+  .tab:focus-visible { outline: 2px solid #4da3ff; outline-offset: 2px; }
+  .stage { position: relative; flex: 1; min-height: 0; }
+  .stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #0a0e14; }
+  .stage iframe[hidden] { display: none; }
+  .loading {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    color: #7d8b9e; font-size: 13px; pointer-events: none; z-index: 2;
+  }
+  /* 关键：类选择器的 display 会盖过 hidden 属性的 UA 样式，必须显式处理 */
+  .loading[hidden] { display: none; }
+
+  /* 加载失败提示（DNS 抖动 / 断网时不再显示浏览器原始错误页）
+   * z-index 必须高于后插入的 iframe，否则浮层会被内容盖住 */
+  .failed {
+    position: absolute; inset: 0; display: none; place-items: center;
+    background: #0a0e14; padding: 24px; text-align: center; z-index: 3;
+  }
+  .failed.show { display: grid; }
+  .failed-box { max-width: 420px; }
+  .failed-title { color: #dbe4f0; font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .failed-desc { color: #7d8b9e; font-size: 13px; line-height: 1.7; margin-bottom: 16px; }
+  .failed-retry {
+    appearance: none; cursor: pointer; font: inherit; font-size: 13px;
+    background: #1d4ed8; color: #fff; border: 1px solid #1d4ed8;
+    padding: 8px 20px; border-radius: 999px;
+  }
+  .failed-retry:hover { background: #2563eb; }
+</style>
+<style id="physlab-bench-theme">
+:root {
+  color-scheme: light dark;
+  --lab-page: light-dark(#f1f5f7, #111820);
+  --lab-panel: light-dark(#fff, #18232d);
+  --lab-stage: light-dark(#e9f0f4, #111b24);
+  --lab-line: light-dark(#c8d5de, #334957);
+  --lab-control-line: light-dark(#a3b6c2, #516977);
+  --lab-ink: light-dark(#182832, #e7eef3);
+  --lab-muted: light-dark(#415563, #a9bac7);
+  --lab-signal: light-dark(#17634c, #a9efce);
+  --lab-signal-soft: light-dark(#e1f1eb, #223d3a);
+  --lab-signal-ink: light-dark(#fff, #132822);
+  --lab-font: system-ui, 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif;
+  --lab-radius: 10px;
+  --lab-key-radius: 7px;
+  --bg: var(--lab-page);
+  --paper: var(--lab-panel);
+  --ink: var(--lab-ink);
+  --muted: var(--lab-muted);
+  --line: var(--lab-line);
+  --accent: var(--lab-signal);
+  --accent-soft: var(--lab-signal-soft);
+  --accent-ink: var(--lab-signal-ink);
+}
+
+.iso:is(.rig-host, .cover-instrument) {
+  --anatomy-card: var(--lab-stage);
+  --anatomy-paper: var(--lab-stage);
+  --anatomy-text: var(--lab-muted);
+  --anatomy-strong: var(--lab-ink);
+  --anatomy-muted: var(--lab-muted);
+  --anatomy-face: light-dark(#d2e0e8, #314753);
+  --anatomy-top: light-dark(#e0ebf1, #3a505d);
+  --anatomy-shade-0: light-dark(#a2b6c3, #15212a);
+  --anatomy-shade-1: light-dark(#b7c9d4, #1e2e3a);
+  --anatomy-shade-2: light-dark(#c9d9e3, #263945);
+  --anatomy-shade-3: light-dark(#dce8ef, #304552);
+  --anatomy-hi: light-dark(#29424f, #e0ecf0);
+  --anatomy-mid: light-dark(#506b7b, #91adb9);
+  --anatomy-lo: light-dark(#647e8d, #617c8c);
+  --anatomy-faint: light-dark(#829aa8, #455d6a);
+  --anatomy-lit: light-dark(#153d3a, #effaff);
+  --anatomy-lit-top: light-dark(#aad3c6, #3c5e63);
+  --anatomy-lit-shade: light-dark(#8dbab2, #25454c);
+  --anatomy-weight: .86px;
+}
+
+body { font-family: var(--lab-font); }
+.unit-content { padding-block: clamp(16px, 2.8vw, 32px) 56px; }
+.unit-content .hero { padding-bottom: 16px; }
+.unit-content .lesson .hero h1 {
+  font-size: clamp(1.65rem, 3vw, 2.5rem);
+  margin: 4px 0 12px;
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+.unit-content .hero .kicker { margin: 0; }
+.unit-content .hero .lead { margin: 0 0 8px; line-height: 1.65; }
+.unit-content .hero .hint { margin: 0; }
+.unit-content .parts { gap: 4px 16px; padding-block: 12px; }
+.unit-content .parts a { color: var(--lab-muted); }
+.unit-content .parts a:first-child, .unit-content .parts a:hover { color: var(--lab-signal); }
+.unit-content .parts a:first-child { font-weight: 650; }
+.unit-content .rig-lab { margin-top: 24px; }
+.unit-content .rig-head { gap: 8px; margin-bottom: 12px; }
+.unit-content .rig-head :is(h2, p) { line-height: 1.55; }
+.unit-content .rig-instrument { border-radius: var(--lab-radius); }
+.unit-content .rig-bar { padding: 12px clamp(12px, 2vw, 20px); }
+.unit-content .rig-scene {
+  background: var(--lab-stage);
+  border-color: var(--lab-line);
+  border-radius: var(--lab-key-radius);
+}
+.unit-content .rig-host { padding: clamp(9px, 2vw, 18px); }
+.unit-content :is(button, select, input:not([type="range"]):not([type="radio"]):not([type="checkbox"])) {
+  border-radius: var(--lab-key-radius);
+  border-color: var(--lab-control-line);
+}
+.unit-content :is(button:hover:not(:disabled), button[aria-pressed="true"]) {
+  border-color: var(--lab-signal);
+}
+.unit-content .rig-readout {
+  border: 1px solid var(--lab-line);
+  border-inline-start: 3px solid var(--lab-signal);
+  border-radius: var(--lab-key-radius);
+  padding: .48em .75em;
+  background: var(--lab-stage);
+  font-variant-numeric: tabular-nums;
+}
+.unit-content .rig-readout :is(strong, output) { color: var(--lab-signal); }
+.unit-content :is(.rig-tools, .rig-choices) :is(button, select) { min-block-size: 40px; }
+.unit-content .rig-choices button { line-height: 1.45; }
+.unit-content :is(.sim, .formula, .equation) { border-color: var(--lab-line); }
+.unit-content .sim { border-radius: var(--lab-radius); }
+.unit-content .lesson-part { margin-block: 32px; }
+.unit-content .part-head { margin-bottom: 4px; }
+
+@media (max-width: 580px) {
+  .unit-content .rig-bar { gap: 3px 12px; }
+  .unit-content .rig-bar span { font-size: .83rem; }
+  .unit-content :is(.rig-tools, .rig-choices) :is(button, select) { min-block-size: 44px; }
+}
+
+:root { color-scheme: light dark !important; }
+:root[data-theme] {
+  --background: var(--lab-page);
+  --foreground: var(--lab-ink);
+  --muted-foreground: var(--lab-muted);
+  --card: var(--lab-panel);
+  --card-foreground: var(--lab-ink);
+  --popover: var(--lab-panel);
+  --popover-foreground: var(--lab-ink);
+  --border: var(--lab-line);
+  --input: var(--lab-control-line);
+  --primary: var(--lab-signal);
+  --primary-foreground: var(--lab-signal-ink);
+  --ring: var(--lab-signal);
+  --accent: var(--lab-signal-soft);
+  --accent-foreground: var(--lab-ink);
+  --viz-series-1: var(--lab-signal);
+  --radius: var(--lab-key-radius);
+}
+:root[data-theme="light"] { color-scheme: light !important; }
+:root[data-theme="dark"] { color-scheme: dark !important; }
+:root { --fg: var(--lab-ink); --rule: var(--lab-line); }
+body, .stage iframe, .failed { background-color: var(--lab-page); color: var(--lab-ink); }
+.tabs { background: var(--lab-panel); border-color: var(--lab-line); }
+.tab, .failed-retry { background: var(--lab-panel); color: var(--lab-ink); border: 1px solid var(--lab-control-line); border-radius: var(--lab-key-radius); }
+.tab:hover, .failed-retry:hover { background: var(--lab-stage); color: var(--lab-ink); }
+.tab[aria-selected="true"] { background: var(--lab-signal-soft); color: var(--lab-signal); border-color: var(--lab-signal); }
+.loading, .failed-desc, .book-kicker { color: var(--lab-muted); }
+.book-kicker { letter-spacing: normal; }
+.failed-title { color: var(--lab-ink); }
+.book-nav button, .book-footer button { border-radius: var(--lab-key-radius); }
+.tab:focus-visible, .failed-retry:focus-visible { outline: 2px solid var(--lab-signal); }
+.panel-image, #sound-experiment .se-scene {
+  border: 1px solid var(--lab-line);
+  border-radius: var(--lab-key-radius);
+  background: var(--lab-stage);
+}
+.panel-image { overflow: hidden; }
+#sound-experiment .se-scene { box-sizing: border-box; }
+.viz-stat-value { color: var(--lab-signal); font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+  <div class="tabs" role="tablist" aria-label="声速实验视图">
+    <button class="tab" role="tab" type="button" data-src="./panel.html" data-title="声速 · 仪器面板" aria-selected="true">仪器面板</button>
+    <button class="tab" role="tab" type="button" data-src="./experiment.html" data-title="声速 · 实验方法" aria-selected="false">实验方法</button>
+    <button class="tab" role="tab" type="button" data-src="./data.html" data-title="声速 · 数据处理" aria-selected="false">数据处理</button>
+  </div>
+  <div class="stage" id="stage">
+    <div class="loading" id="loading">正在加载…</div>
+    <div class="failed" id="failed" role="alert">
+      <div class="failed-box">
+        <div class="failed-title">内容加载失败</div>
+        <div class="failed-desc" id="failed-desc">可能是网络波动导致，点击下方按钮重试。</div>
+        <button class="failed-retry" type="button" id="retry">重新加载</button>
+      </div>
+    </div>
+  </div>
+<script>
+(function () {
+  'use strict';
+  var stage = document.getElementById('stage');
+  var loading = document.getElementById('loading');
+  var failed = document.getElementById('failed');
+  var failedDesc = document.getElementById('failed-desc');
+  var retryBtn = document.getElementById('retry');
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  var views = {};           // src -> 当前 iframe 及其加载状态
+  var activeTab = tabs[0];
+  var TIMEOUT_MS = 25000;   // 面板页 500 KB，国内访问偏慢，超时给足余量
+
+  function syncOverlay() {
+    var view = views[activeTab.dataset.src];
+    loading.hidden = view.state !== 'loading';
+    failed.classList.toggle('show', view.state === 'failed');
+    if (view.state === 'failed') failedDesc.textContent = view.message;
+  }
+
+  function createFrame(src, title, loadSrc) {
+    var frame = document.createElement('iframe');
+    frame.title = title || '';
+    frame.setAttribute('loading', 'eager');
+    var view = { frame: frame, state: 'loading' };
+    views[src] = view;
+
+    function finish(state, message) {
+      // 重试后，旧 iframe 的异步回调不能更新新一轮的状态。
+      if (views[src] !== view) return;
+      clearTimeout(view.timer);
+      view.state = state;
+      view.message = message;
+      if (activeTab.dataset.src === src) syncOverlay();
+    }
+
+    view.timer = setTimeout(function () {
+      finish('failed', '加载较慢（超过 25 秒）。网络可能不稳定，可以再等一下或点「重新加载」。');
+    }, TIMEOUT_MS);
+
+    frame.addEventListener('load', function () {
+      if (views[src] !== view || view.state === 'ok') return;
+      // 网络失败时浏览器会渲染自己的错误页 / 404 页——这些页面也有 body，
+      // 所以用子页里的本站标记来判断，拿不到标记就当作失败。
+      var ok = false;
+      try {
+        var d = frame.contentDocument;
+        ok = !!(d && d.querySelector('meta[name="physlab-view"]'));
+      } catch (e) { ok = false; }   // 跨源（浏览器错误页）会抛错
+      if (ok) finish('ok');
+      else finish('failed', '内容没能加载：域名解析失败或网络中断。请检查网络后点「重新加载」。');
+    });
+    frame.src = loadSrc || src;
+    stage.appendChild(frame);
+  }
+
+  function activate(tab) {
+    var src = tab.dataset.src;
+    activeTab = tab;
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+
+    if (!views[src]) createFrame(src, tab.dataset.title || tab.textContent);
+    Object.keys(views).forEach(function (k) { views[k].frame.hidden = k !== src; });
+    syncOverlay();
+    document.title = tab.dataset.title || '声速的测量';
+  }
+
+  /* 重试：重新载入当前页签，并加时间戳绕过缓存 */
+  retryBtn.addEventListener('click', function () {
+    var src = activeTab.dataset.src;
+    var old = views[src];
+    clearTimeout(old.timer);
+    old.frame.remove();
+    createFrame(src, activeTab.dataset.title || activeTab.textContent, src + '?r=' + Date.now());
+    syncOverlay();
+  });
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () { activate(tab); });
+    tab.addEventListener('keydown', function (e) {
+      var i = tabs.indexOf(tab);
+      var next = e.key === 'ArrowRight' ? tabs[i + 1] : e.key === 'ArrowLeft' ? tabs[i - 1] : null;
+      if (!next) return;
+      e.preventDefault();
+      next.focus();
+      activate(next);
+    });
+  });
+
+  activate(tabs[0]);
+})();
+</script>
+</body>
+</html>

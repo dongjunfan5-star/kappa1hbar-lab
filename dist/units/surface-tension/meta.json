@@ -1,0 +1,17 @@
+{
+  "title": "表面张力系数的测量",
+  "chapter": "力学",
+  "order": 6,
+  "summary": "先标定约利弹簧秤，再测液膜破裂前增加的拉力；或测毛细管的半径和液面升高，求表面张力系数。",
+  "tags": [
+    "表面张力",
+    "约利弹簧秤",
+    "拉脱法",
+    "毛细管",
+    "仿真实验"
+  ],
+  "level": 2,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

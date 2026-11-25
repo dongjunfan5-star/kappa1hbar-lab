@@ -1,0 +1,17 @@
+{
+  "title": "质量的测量",
+  "chapter": "力学",
+  "order": 1,
+  "summary": "先学会稳定称量，再用体积或浮力求密度；失重时改用弹簧振动测惯性质量。",
+  "tags": [
+    "质量",
+    "天平",
+    "静力称衡",
+    "浮力",
+    "仿真实验"
+  ],
+  "level": 1,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

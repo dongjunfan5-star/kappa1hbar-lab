@@ -1,0 +1,18 @@
+{
+  "title": "用气垫导轨研究匀加速运动与碰撞",
+  "chapter": "力学",
+  "order": 2,
+  "summary": "把遮光时间变成速度，再拟合加速度；用带方向的速度比较碰撞前后的动量与动能。",
+  "tags": [
+    "气垫导轨",
+    "光电门",
+    "匀加速",
+    "碰撞",
+    "动量",
+    "仿真实验"
+  ],
+  "level": 1,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

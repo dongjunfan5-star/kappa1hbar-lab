@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>实验 · 物理实验交互站</title>
+  <link rel="stylesheet" href="./assets/shell.css">
+</head>
+<body class="page-unit">
+  <header class="topbar topbar-unit">
+    <button class="btn btn-ghost nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar" aria-label="打开实验目录">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span class="btn-label">目录</span>
+    </button>
+    <a class="btn btn-ghost btn-back" href="./" aria-label="返回全部实验" title="返回全部实验">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6-6 6 6 6m-6-6h16"/></svg><span class="btn-label">全部实验</span>
+    </a>
+    <div class="unit-head">
+      <div class="unit-title" id="title">加载中…</div>
+      <div class="unit-meta" id="meta"></div>
+    </div>
+    <div class="topbar-tools">
+      <a class="btn btn-ghost" id="open" target="_blank" rel="noopener" aria-label="新标签打开" title="新标签打开">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5h6v6m0-6-8 8m5 1v5H5V8h5"/></svg><span class="btn-label">新标签打开</span>
+      </a>
+      <button class="btn" id="fs" type="button" aria-label="全屏" title="全屏">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5"/></svg><span class="btn-label">全屏</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="layout layout-unit">
+    <aside class="sidebar" id="sidebar" aria-label="实验目录"></aside>
+
+    <main class="main main-unit">
+      <div class="stage" id="stage">
+        <div class="stage-loading" id="loading" role="status">正在加载实验内容…</div>
+        <iframe id="frame" title="实验交互内容" allow="fullscreen; clipboard-write; autoplay"></iframe>
+        <button class="btn exit-fullscreen" type="button" id="exit-fs" aria-label="退出全屏" title="退出全屏">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h5V4m11 5h-5V4M4 15h5v5m11-5h-5v5"/></svg>
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <script src="./assets/shell.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "title": "液体比汽化热的测量",
+  "chapter": "热学",
+  "order": 11,
+  "summary": "在量热器中冷凝水蒸气，用增重求蒸汽质量，再从升温读数扣除冷凝水降温放出的热量。",
+  "tags": [
+    "水蒸气",
+    "比汽化热",
+    "冷凝",
+    "AD590",
+    "量热器",
+    "仿真实验"
+  ],
+  "level": 2,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

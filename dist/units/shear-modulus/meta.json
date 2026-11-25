@@ -1,0 +1,17 @@
+{
+  "title": "切变模量的测量",
+  "chapter": "力学",
+  "order": 4,
+  "summary": "测量扭摆加环前后的周期，用已知圆环的转动惯量消去未知圆盘惯量，再求钢丝的扭转刚度与切变模量。",
+  "tags": [
+    "切变模量",
+    "扭摆",
+    "转动惯量",
+    "周期",
+    "仿真实验"
+  ],
+  "level": 2,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

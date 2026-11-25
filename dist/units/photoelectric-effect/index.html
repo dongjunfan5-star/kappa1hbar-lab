@@ -1,0 +1,3101 @@
+<!doctype html>
+<!-- physlab-modern-export -->
+<!--
+MIT License
+
+Copyright (c) 2026 Ryan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>光电效应实验 · 大学物理实验</title>
+  <style>
+.iso{
+  --anatomy-page:#0b0b0b;--anatomy-card:#131313;--anatomy-text:#a3a3a3;--anatomy-strong:#e6e6e6;--anatomy-muted:#6e6e6e;
+  --anatomy-paper:#131313;--anatomy-face:#1b1b1b;--anatomy-top:#1c1c1c;
+  --anatomy-shade-0:#0f0f0f;--anatomy-shade-1:#121212;--anatomy-shade-2:#151515;--anatomy-shade-3:#181818;
+  --anatomy-lit-top:#262626;--anatomy-lit-shade:#1d1d1d;
+  --anatomy-hi:#d4d4d4;--anatomy-mid:#6a6a6a;--anatomy-lo:#3e3e3e;--anatomy-faint:#2a2a2a;--anatomy-lit:#ffffff;
+  --anatomy-halo:#050505;--anatomy-halo-opacity:.9;--anatomy-dot:#e6e6e6;
+  --anatomy-red:#ff6b6b;--anatomy-green:#6be0a0;--anatomy-blue:#6b9bff;
+  --anatomy-weight:.6px;--anatomy-ease:cubic-bezier(.32,.72,0,1);
+  --anatomy-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --anatomy-lift:inset 0 1px 0 0 #ffffff0a,inset 0 0 0 1px #ffffff06,0 0 0 1px #00000026,0 1px 1px -.5px #00000014,0 3px 3px -1.5px #00000014,0 6px 6px -3px #00000014,0 12px 12px -6px #00000014;
+}
+.iso[data-theme="light"]{
+  --anatomy-page:#f2f2ef;--anatomy-card:#fbfbfa;--anatomy-text:#57575a;--anatomy-strong:#18181a;--anatomy-muted:#8c8c90;
+  --anatomy-paper:#fbfbfa;--anatomy-face:#ffffff;--anatomy-top:#ffffff;
+  --anatomy-shade-0:#dcdcd9;--anatomy-shade-1:#e5e5e2;--anatomy-shade-2:#ededea;--anatomy-shade-3:#f4f4f1;
+  --anatomy-lit-top:#ffffff;--anatomy-lit-shade:#eeeeeb;
+  --anatomy-hi:#26262a;--anatomy-mid:#8a8a8f;--anatomy-lo:#b4b4b8;--anatomy-faint:#d4d4d6;--anatomy-lit:#000000;
+  --anatomy-halo:#8a8a80;--anatomy-halo-opacity:.32;--anatomy-dot:#3a3a3e;
+  --anatomy-red:#e5484d;--anatomy-green:#30a46c;--anatomy-blue:#3e63dd;
+  --anatomy-lift:inset 0 1px 0 0 #ffffff,0 0 0 1px #0000000f,0 1px 1px -.5px #0000000a,0 3px 3px -1.5px #0000000a,0 6px 6px -3px #0000000a,0 12px 12px -6px #0000000a;
+}
+.iso-svg{display:block;width:100%;height:auto;overflow:visible}
+.iso-svg path,.iso-svg circle{vector-effect:non-scaling-stroke}
+.iso-fill{fill:var(--anatomy-paper);stroke:none}
+.iso-solid[data-lit]>.iso-fill{fill:var(--anatomy-face)}
+.iso-shade,.iso-top{stroke:none}
+.iso-shade[data-shade="0"]{fill:var(--anatomy-shade-0)}
+.iso-shade[data-shade="1"]{fill:var(--anatomy-shade-1)}
+.iso-shade[data-shade="2"]{fill:var(--anatomy-shade-2)}
+.iso-shade[data-shade="3"]{fill:var(--anatomy-shade-3)}
+.iso-top{fill:var(--anatomy-top)}
+.iso-solid[data-lit]>.iso-top{fill:var(--anatomy-lit-top)}
+.iso-solid[data-lit]>.iso-shade{fill:var(--anatomy-lit-shade)}
+.iso-solid[data-seamless]>.iso-shade,.iso-solid[data-seamless]>.iso-top{stroke-width:.4;stroke-linejoin:round}
+.iso-solid[data-seamless]>.iso-shade[data-shade="0"]{stroke:var(--anatomy-shade-0)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="1"]{stroke:var(--anatomy-shade-1)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="2"]{stroke:var(--anatomy-shade-2)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="3"]{stroke:var(--anatomy-shade-3)}
+.iso-solid[data-seamless]>.iso-top{stroke:var(--anatomy-top)}
+.iso-solid[data-seamless][data-lit]>.iso-top{stroke:var(--anatomy-lit-top)}
+.iso-solid[data-seamless][data-lit]>.iso-shade{stroke:var(--anatomy-lit-shade)}
+.iso-solid[data-lit]>.iso-edge{stroke:var(--anatomy-lit)}
+.iso-halo{fill:var(--anatomy-halo);stroke:none;filter:blur(9px);opacity:var(--anatomy-halo-opacity);transform:translateY(3px)}
+.iso-line{fill:none;stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight);stroke-linecap:round;stroke-linejoin:round}
+.iso-line[data-tone="hi"]{stroke:var(--anatomy-hi)}
+.iso-line[data-tone="mid"]{stroke:var(--anatomy-mid)}
+.iso-line[data-tone="lo"]{stroke:var(--anatomy-lo)}
+.iso-line[data-tone="faint"]{stroke:var(--anatomy-faint)}
+.iso-line[data-tone="lit"]{stroke:var(--anatomy-lit)}
+.iso-line[data-tone="red"]{stroke:var(--anatomy-red)}
+.iso-line[data-tone="green"]{stroke:var(--anatomy-green)}
+.iso-line[data-tone="blue"]{stroke:var(--anatomy-blue)}
+.iso-line[data-dotted]{stroke-dasharray:.01 3.5;stroke-width:1}
+.iso-line[data-dashed]{stroke-dasharray:3 3}
+.iso-line[data-flow]{stroke-dasharray:2 6}
+.iso-wire-end{fill:var(--anatomy-paper);stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight)}
+.iso-wire[data-tone="hi"] .iso-wire-end{stroke:var(--anatomy-hi)}
+.iso-wire[data-tone="mid"] .iso-wire-end{stroke:var(--anatomy-mid)}
+.iso-wire[data-tone="faint"] .iso-wire-end{stroke:var(--anatomy-faint)}
+.iso-wire[data-tone="lit"] .iso-wire-end{stroke:var(--anatomy-lit)}
+.iso-dots circle{fill:var(--anatomy-dot);stroke:none;opacity:.32}
+.iso-dots[data-tone="hi"] circle{opacity:.85}
+.iso-dots[data-tone="mid"] circle{opacity:.45}
+.iso-dots[data-tone="lo"] circle{opacity:.22}
+.iso-dots[data-tone="faint"] circle{opacity:.12}
+.iso-face-text{fill:var(--anatomy-mid);font-family:var(--anatomy-mono);letter-spacing:.04em}
+.iso-face-text[data-tone="hi"]{fill:var(--anatomy-hi)}
+.iso-face-text[data-tone="lo"]{fill:var(--anatomy-lo)}
+.iso-face-text[data-tone="faint"]{fill:var(--anatomy-faint)}
+.tb-body{fill:var(--anatomy-shade-2);stroke:none}
+.tb-shine{fill:var(--anatomy-top);stroke:none}
+.tb-shade{fill:var(--anatomy-shade-0);stroke:none}
+.tb-ring{fill:none;stroke:var(--anatomy-lo);stroke-width:.45;stroke-linecap:butt;stroke-linejoin:round}
+.tb-ring[data-tone="mid"]{stroke:var(--anatomy-mid)}
+.tb-ring[data-tone="faint"]{stroke:var(--anatomy-faint)}
+.tb-ring[data-tone="hi"]{stroke:var(--anatomy-hi)}
+@keyframes iso-flow{to{stroke-dashoffset:-32}}
+@keyframes iso-pulse{0%,100%{opacity:.18}12%{opacity:1}40%{opacity:.18}}
+.iso-line[data-flow]{animation:iso-flow 1600ms linear infinite}
+.iso-dots circle[data-pulse]{animation:iso-pulse 1600ms steps(1,end) infinite;animation-delay:var(--pulse-at,0ms)}
+.iso-figure{margin:32px 0 36px}
+.iso-plate{position:relative;padding:52px 24px;border-radius:0;background:var(--anatomy-card);box-shadow:0 0 0 1px var(--anatomy-mid);--anatomy-paper:var(--anatomy-card)}
+.iso-plate-corners{position:absolute;inset:18px 20px;pointer-events:none}
+.iso-plate-corner{position:absolute;color:var(--anatomy-muted);font-family:var(--anatomy-mono);font-size:10.5px;line-height:1;letter-spacing:.04em;white-space:nowrap}
+.iso-plate-corner[data-corner="fig"]{top:0;left:0;color:var(--anatomy-text)}
+.iso-plate-corner[data-corner="title"]{top:0;right:0;text-transform:uppercase;letter-spacing:.1em}
+.iso-plate-corner[data-corner="hint"]{bottom:0;left:0;text-transform:uppercase;letter-spacing:.1em}
+.iso-plate-corner[data-corner="readout"]{right:0;bottom:0;color:var(--anatomy-text);font-variant-numeric:tabular-nums}
+.iso-plate .iso-svg{margin:0 auto}
+.iso-legend{display:grid;gap:8px;margin-top:12px;color:var(--anatomy-muted);font-size:13px;line-height:1.55}
+.iso-keys{display:flex;flex-wrap:wrap;gap:6px 18px}
+.iso-key{display:inline-flex;align-items:center;gap:7px}
+.iso-swatch{width:16px;height:10px;flex:none;overflow:visible}
+.iso-swatch path{fill:none;stroke:var(--anatomy-hi);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.iso-swatch[data-mark="raised"] path,.iso-swatch[data-mark="flat"] path{stroke:var(--anatomy-mid)}
+.iso-swatch[data-mark="lit"] path{stroke:var(--anatomy-lit)}
+.iso-swatch[data-mark="dim"] path{stroke:var(--anatomy-lo)}
+.iso-swatch[data-mark="dotted"] path{stroke-dasharray:.01 3;stroke-width:1.4}
+.iso-swatch[data-mark="dashed"] path{stroke-dasharray:3 2.5}
+.iso-swatch[data-mark="red"] path{stroke:var(--anatomy-red)}
+.iso-swatch[data-mark="green"] path{stroke:var(--anatomy-green)}
+.iso-swatch[data-mark="blue"] path{stroke:var(--anatomy-blue)}
+.iso-swatch-crease{stroke:var(--anatomy-lo)!important}
+@media (max-width:560px){.iso-plate{padding:48px 12px 70px}.iso-plate-corner[data-corner="hint"]{bottom:18px}}
+@media (prefers-reduced-motion:reduce){.iso-line[data-flow],.iso-dots circle[data-pulse]{animation:none}}
+</style>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: light-dark(#f5f4ef,#191d1b);
+      --paper: light-dark(#fffefa,#232925);
+      --ink: light-dark(#202721,#eeefe8);
+      --muted: light-dark(#626b63,#b8c2b8);
+      --line: light-dark(#d7dcd2,#45534a);
+      --accent: light-dark(#1a614b,#a3e3c5);
+      --accent-soft: light-dark(#e7f0e7,#293e34);
+      --accent-ink: light-dark(#fff,#12281f);
+      --plot-grid: var(--line);
+      --plot-ink: var(--ink);
+      --plot-accent: var(--accent);
+      --plot-secondary: light-dark(#9b4f2d,#ffba91);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-padding-top: 20px; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.8 system-ui, 'Microsoft YaHei', sans-serif; }
+    a { color: var(--accent); text-underline-offset: 4px; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    button,input,select { font: inherit; }
+    button,select,input:not([type="range"]):not([type="radio"]):not([type="checkbox"]) { color: var(--ink); background: var(--paper); border: 1px solid var(--line); padding: .43rem .68rem; border-radius: .36rem; }
+    button { cursor: pointer; }
+    button:hover:not(:disabled),button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    button:disabled { cursor: default; opacity: .55; }
+    input { max-width: 100%; accent-color: var(--accent); }
+    input[type="range"] { min-width: 0; display: block; width: 100%; margin: 5px 0; }
+    select { max-width: 100%; }
+    [hidden] { display: none !important; }
+    .top { border-bottom: 1px solid var(--line); }
+    .top-inner { max-width: 1260px; margin: auto; padding: 22px 36px; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 4px 20px; }
+    .top-title { font-weight: 650; text-decoration: none; color: var(--ink); }
+    .top-source,.kicker,.page-ref,.caption,.hint,.source { color: var(--muted); font-size: .875rem; }
+    .layout { display: grid; grid-template-columns: 236px minmax(0,1fr); gap: 52px; max-width: 1260px; margin: 0 auto; padding: 38px 36px 70px; }
+    .toc { align-self: start; position: sticky; top: 18px; max-height: calc(100dvh - 36px); overflow: auto; padding: 4px 4px 4px 0; }
+    .toc a { display: grid; grid-template-columns: 2rem 1fr; gap: 4px; align-items: baseline; padding: 9px 10px; color: var(--muted); text-decoration: none; font-size: .9rem; line-height: 1.45; border-left: 3px solid transparent; }
+    .toc a:hover,.toc a[aria-current="page"] { border-left-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    .toc a span:first-child { font-variant-numeric: tabular-nums; }
+    h1,h2,h3,h4 { line-height: 1.35; }
+    h1 { font-size: clamp(2rem, 4.3vw, 3.7rem); letter-spacing: -.045em; margin: 9px 0 19px; }
+    h2 { font-size: clamp(1.35rem,2.25vw,1.75rem); margin: 6px 0 14px; }
+    h3 { font-size: 1.11rem; margin: 1.4em 0 .3em; }
+    p { margin: .75em 0; }
+    main { min-width: 0; }
+    .hero { border-bottom: 1px solid var(--line); padding-bottom: 24px; }
+    .hero p { max-width: 44em; }
+    .lead { font-size: clamp(1rem,1.5vw,1.19rem); }
+    .course-list { list-style: none; padding: 0; margin: 8px 0 0; }
+    .course-list li { display: grid; grid-template-columns: 2rem minmax(0,1fr) auto; align-items: start; gap: 10px; border-bottom: 1px solid var(--line); padding: 16px 0; }
+    .course-list .number { color: var(--accent); font-variant-numeric: tabular-nums; }
+    .course-list a { display: inline-block; color: var(--ink); font-weight: 650; }
+    .course-list p { margin: .25em 0 0; color: var(--muted); font-size: .93rem; line-height: 1.55; }
+    .lesson { min-width: 0; }
+    .lesson header h1 { font-size: clamp(1.75rem,3.4vw,2.85rem); }
+    .parts { display: flex; gap: .5rem 1.15rem; flex-wrap: wrap; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: .88rem; }
+    .lesson-part { margin: 1.9rem 0; scroll-margin-top: 1rem; }
+    .lesson-part li { margin: .36em 0; }
+    .lesson-part ul,.lesson-part ol { padding-left: 1.6em; }
+    .page-ref { font-variant-numeric: tabular-nums; }
+    .part-head { display: flex; align-items: baseline; gap: 0 1rem; flex-wrap: wrap; }
+    .formula,.equation { background: var(--paper); border-left: 3px solid var(--line); margin: 1em 0; padding: .75em 1em; overflow-wrap: anywhere; font-family: 'Cambria Math', Cambria, 'Microsoft YaHei', serif; }
+    .table-wrap,.table-responsive { overflow: auto; max-width: 100%; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    caption { text-align: left; color: var(--muted); padding: .6rem 0; }
+    td,th { text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); padding: .55rem .65rem; }
+    details { border-top: 1px solid var(--line); padding: .68em 0; }
+    summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+    .sim { background: var(--paper); border: 1px solid var(--line); border-radius: .45rem; padding: clamp(12px, 2.8vw, 26px); margin: 1em 0; min-width: 0; }
+    .sim-controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: end; margin: .6em 0 1em; }
+    .sim-controls > label,.sim-controls > div { flex: 1 1 175px; min-width: min(100%,155px); }
+    .sim-controls > label > :is(select,input:not([type="radio"]):not([type="checkbox"])) { display: block; }
+    .sim :is(canvas,svg,img) { display: block; width: 100%; max-width: 100%; object-fit: contain; }
+    .sim svg:not([height]) { height: auto; }
+    .reading { color: var(--accent); font-weight: 650; font-variant-numeric: tabular-nums; }
+    .next-links { border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; padding-top: 1rem; }
+    .rig-lab { margin: 1.85rem 0 2.5rem; min-width: 0; }
+    .rig-head { display: grid; gap: 7px; margin-bottom: 15px; }
+    .rig-head h2,.rig-head p { margin: 0; }
+    .rig-instrument { border: 1px solid var(--line); border-radius: 10px; background: var(--paper); overflow: clip; }
+    .rig-bar { display:flex; justify-content:space-between; gap: 8px 22px; flex-wrap:wrap; border-bottom:1px solid var(--line); padding: 12px 20px; font-size:.91rem; }
+    .rig-bar span { color:var(--muted); }
+    .rig-host { min-width:0; padding: clamp(10px, 2vw, 20px); }
+    .rig-scene { min-width: 0; position:relative; background: var(--anatomy-card,var(--paper)); border: 1px solid var(--line); border-radius: 6px; }
+    .rig-scene-upright { max-width: min(100%,680px); margin-inline:auto; }
+    .rig-scene > svg, .rig-scene > .iso-svg { display:block; width:100%; height:auto; margin:auto; }
+    .rig-host > svg { width:100%; height:auto; display:block; }
+    .rig-hit { cursor:pointer; outline:none; }
+    .rig-hit-area { fill:transparent; stroke:transparent; stroke-width:1.7; }
+    .rig-hit-marker { fill:var(--accent); stroke:var(--paper); stroke-width:2.2; pointer-events:none; }
+    .rig-hit:hover .rig-hit-area,.rig-hit:focus-visible .rig-hit-area { stroke:var(--accent); fill:var(--accent-soft); fill-opacity:.27; }
+    .rig-tools { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin: .65rem 0; }
+    .rig-tools label { min-width:0; }
+    .rig-readout { border-left: 3px solid var(--accent); padding: .4em .75em; color:var(--ink); font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+    .rig-question { margin-top:1rem; }
+    .rig-choices { display:flex; flex-wrap:wrap; align-items:start; gap: 7px; }
+    .rig-choices button { text-align:start; }
+    .rig-feedback { color:var(--ink); }
+    .rig-feedback[data-correct=true] { color:var(--accent); }
+    .rig-host .iso-svg { overflow:visible; }
+    @media (max-width:820px) {
+      .layout { display: block; padding: 22px 19px 50px; }
+      .top-inner { padding: 14px 19px; }
+      .toc { position: static; max-height: none; padding: 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); margin-bottom: 27px; border-bottom: 1px solid var(--line); }
+      .toc a { font-size: .82rem; grid-template-columns: 1.55rem 1fr; padding: 7px 5px; }
+      .course-list li { grid-template-columns: 1.5rem minmax(0,1fr); gap: 4px 10px; }
+      .course-list .page-ref { grid-column: 2; }
+      td,th { padding: .45rem .35rem; }
+      .rig-hit-marker { r: 8; }
+    }
+  </style>
+<style>
+    .unit-content,.unit-return { max-width: 1020px; margin-inline:auto; padding-inline:clamp(16px,4vw,52px); }
+    .unit-content { padding-block:clamp(18px,4vw,40px) 60px; }
+    .unit-return { padding-block-start:16px; font-size:.9rem; }
+    .unit-content .hero { padding-bottom:18px; }
+    .parts { overflow-wrap:anywhere; }
+    .rig-scene svg { touch-action:pan-y; }
+  </style>
+<style id="physlab-bench-theme">
+:root {
+  color-scheme: light dark;
+  --lab-page: light-dark(#f1f5f7, #111820);
+  --lab-panel: light-dark(#fff, #18232d);
+  --lab-stage: light-dark(#e9f0f4, #111b24);
+  --lab-line: light-dark(#c8d5de, #334957);
+  --lab-control-line: light-dark(#a3b6c2, #516977);
+  --lab-ink: light-dark(#182832, #e7eef3);
+  --lab-muted: light-dark(#415563, #a9bac7);
+  --lab-signal: light-dark(#17634c, #a9efce);
+  --lab-signal-soft: light-dark(#e1f1eb, #223d3a);
+  --lab-signal-ink: light-dark(#fff, #132822);
+  --lab-font: system-ui, 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif;
+  --lab-radius: 10px;
+  --lab-key-radius: 7px;
+  --bg: var(--lab-page);
+  --paper: var(--lab-panel);
+  --ink: var(--lab-ink);
+  --muted: var(--lab-muted);
+  --line: var(--lab-line);
+  --accent: var(--lab-signal);
+  --accent-soft: var(--lab-signal-soft);
+  --accent-ink: var(--lab-signal-ink);
+}
+
+.iso:is(.rig-host, .cover-instrument) {
+  --anatomy-card: var(--lab-stage);
+  --anatomy-paper: var(--lab-stage);
+  --anatomy-text: var(--lab-muted);
+  --anatomy-strong: var(--lab-ink);
+  --anatomy-muted: var(--lab-muted);
+  --anatomy-face: light-dark(#d2e0e8, #314753);
+  --anatomy-top: light-dark(#e0ebf1, #3a505d);
+  --anatomy-shade-0: light-dark(#a2b6c3, #15212a);
+  --anatomy-shade-1: light-dark(#b7c9d4, #1e2e3a);
+  --anatomy-shade-2: light-dark(#c9d9e3, #263945);
+  --anatomy-shade-3: light-dark(#dce8ef, #304552);
+  --anatomy-hi: light-dark(#29424f, #e0ecf0);
+  --anatomy-mid: light-dark(#506b7b, #91adb9);
+  --anatomy-lo: light-dark(#647e8d, #617c8c);
+  --anatomy-faint: light-dark(#829aa8, #455d6a);
+  --anatomy-lit: light-dark(#153d3a, #effaff);
+  --anatomy-lit-top: light-dark(#aad3c6, #3c5e63);
+  --anatomy-lit-shade: light-dark(#8dbab2, #25454c);
+  --anatomy-weight: .86px;
+}
+
+body { font-family: var(--lab-font); }
+.unit-content { padding-block: clamp(16px, 2.8vw, 32px) 56px; }
+.unit-content .hero { padding-bottom: 16px; }
+.unit-content .lesson .hero h1 {
+  font-size: clamp(1.65rem, 3vw, 2.5rem);
+  margin: 4px 0 12px;
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+.unit-content .hero .kicker { margin: 0; }
+.unit-content .hero .lead { margin: 0 0 8px; line-height: 1.65; }
+.unit-content .hero .hint { margin: 0; }
+.unit-content .parts { gap: 4px 16px; padding-block: 12px; }
+.unit-content .parts a { color: var(--lab-muted); }
+.unit-content .parts a:first-child, .unit-content .parts a:hover { color: var(--lab-signal); }
+.unit-content .parts a:first-child { font-weight: 650; }
+.unit-content .rig-lab { margin-top: 24px; }
+.unit-content .rig-head { gap: 8px; margin-bottom: 12px; }
+.unit-content .rig-head :is(h2, p) { line-height: 1.55; }
+.unit-content .rig-instrument { border-radius: var(--lab-radius); }
+.unit-content .rig-bar { padding: 12px clamp(12px, 2vw, 20px); }
+.unit-content .rig-scene {
+  background: var(--lab-stage);
+  border-color: var(--lab-line);
+  border-radius: var(--lab-key-radius);
+}
+.unit-content .rig-host { padding: clamp(9px, 2vw, 18px); }
+.unit-content :is(button, select, input:not([type="range"]):not([type="radio"]):not([type="checkbox"])) {
+  border-radius: var(--lab-key-radius);
+  border-color: var(--lab-control-line);
+}
+.unit-content :is(button:hover:not(:disabled), button[aria-pressed="true"]) {
+  border-color: var(--lab-signal);
+}
+.unit-content .rig-readout {
+  border: 1px solid var(--lab-line);
+  border-inline-start: 3px solid var(--lab-signal);
+  border-radius: var(--lab-key-radius);
+  padding: .48em .75em;
+  background: var(--lab-stage);
+  font-variant-numeric: tabular-nums;
+}
+.unit-content .rig-readout :is(strong, output) { color: var(--lab-signal); }
+.unit-content :is(.rig-tools, .rig-choices) :is(button, select) { min-block-size: 40px; }
+.unit-content .rig-choices button { line-height: 1.45; }
+.unit-content :is(.sim, .formula, .equation) { border-color: var(--lab-line); }
+.unit-content .sim { border-radius: var(--lab-radius); }
+.unit-content .lesson-part { margin-block: 32px; }
+.unit-content .part-head { margin-bottom: 4px; }
+
+@media (max-width: 580px) {
+  .unit-content .rig-bar { gap: 3px 12px; }
+  .unit-content .rig-bar span { font-size: .83rem; }
+  .unit-content :is(.rig-tools, .rig-choices) :is(button, select) { min-block-size: 44px; }
+}
+</style>
+<style id="physlab-lesson-guide-style">
+.unit-content-with-guide, body:has(.unit-content-with-guide) > .unit-return {
+  max-width: 1280px;
+  padding-inline: clamp(16px, 3vw, 32px);
+}
+.lesson-workspace { min-width: 0; margin-block-start: 16px; }
+.lesson-body { min-width: 0; }
+.lesson-body > .rig-lab { margin-block-start: 0; }
+.lesson-body > :is(section[id], [id]) { scroll-margin-block-start: 76px; }
+.lesson-body .rig-question { scroll-margin-block-start: 76px; }
+
+.lesson-rail {
+  position: sticky;
+  inset-block-start: 8px;
+  z-index: 4;
+  display: grid;
+  gap: 8px;
+  align-self: start;
+  min-width: 0;
+  margin: 0 0 16px;
+}
+.lesson-guide, .lesson-task {
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--lab-line);
+  border-radius: var(--lab-radius);
+  background: var(--lab-panel);
+}
+.lesson-guide > summary, .lesson-task > summary {
+  min-block-size: 44px;
+  padding: 9px 12px;
+  color: var(--lab-signal);
+  font-size: .92rem;
+  line-height: 1.65;
+}
+.lesson-task > summary { min-block-size: 36px; padding-block: 6px; color: var(--lab-muted); font-size: .86rem; }
+.lesson-task-content { padding: 2px 12px 12px; }
+.lesson-task-title { display: block; color: var(--lab-signal); line-height: 1.4; }
+.lesson-task-text { margin: 5px 0 10px; color: var(--lab-ink); font-size: .86rem; line-height: 1.5; }
+.lesson-task-pager { display: flex; gap: 8px; }
+.unit-content .lesson-task-pager button { flex: 1; min-width: 0; padding: 6px; min-block-size: 38px; font-size: .85rem; }
+.lesson-step-target { outline: 2px solid var(--lab-signal); outline-offset: 3px; }
+.lesson-guide-current {
+  display: inline-block;
+  vertical-align: bottom;
+  margin-inline-start: .65em;
+  max-width: min(calc(100% - 8em), 24em);
+  overflow: hidden;
+  color: var(--lab-muted);
+  font-size: .82rem;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.unit-content .lesson-guide .parts {
+  display: block;
+  max-height: min(48dvh, 400px);
+  margin: 0;
+  padding: 4px 8px 10px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  border-bottom: 0;
+  font-size: .9rem;
+  line-height: 1.45;
+}
+.lesson-guide-group { margin: 0; padding: 5px 8px; color: var(--lab-muted); font-size: .82rem; }
+.lesson-guide-group:not(:first-child) { margin-block-start: 8px; padding-block-start: 10px; border-top: 1px solid var(--lab-line); }
+.unit-content .lesson-guide .parts a {
+  display: grid;
+  grid-template-columns: 2ch minmax(0,1fr);
+  gap: 8px;
+  align-items: baseline;
+  min-height: 40px;
+  padding: 7px 8px;
+  border-inline-start: 2px solid transparent;
+  border-radius: var(--lab-key-radius);
+  color: var(--lab-ink);
+  font-weight: 400;
+  text-decoration: none;
+}
+.lesson-guide-number { color: var(--lab-muted); font-variant-numeric: tabular-nums; }
+.unit-content .lesson-guide .parts a:hover { background: var(--lab-stage); }
+.unit-content .lesson-guide .parts a[aria-current="step"] {
+  background: var(--lab-signal-soft);
+  border-inline-start-color: var(--lab-signal);
+  color: var(--lab-signal);
+  font-weight: 650;
+}
+.lesson-guide a[aria-current="step"] .lesson-guide-number { color: inherit; }
+
+@media (min-width: 900px) {
+  .lesson-workspace { display: grid; grid-template-columns: clamp(190px, 19vw, 228px) minmax(0, 1fr); gap: clamp(16px, 2.5vw, 28px); }
+  .lesson-rail { inset-block-start: 16px; margin: 0; }
+  .lesson-guide-current { display: none; }
+  .unit-content .lesson-guide .parts { max-height: max(140px, calc(100dvh - 280px)); }
+  .lesson-body > :is(section[id], [id]), .lesson-body .rig-question { scroll-margin-block-start: 24px; }
+}
+@media (max-width: 899px) {
+  .unit-content .lesson-task-pager button { min-block-size: 44px; }
+}
+</style>
+</head>
+<body>
+<main id="course" class="unit-content"><noscript><p>请允许 JavaScript 以操作仿真实验台。</p></noscript></main>
+<script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id,lesson);</script>
+<script>const anatomyIso = (() => {
+const AZIMUTH = 45;
+const ELEVATION = 30;
+const SHADES = 4;
+const RADIANS = Math.PI / 180;
+const UNIT = Math.sqrt(1.6);
+function cameraOf({ scale, azimuth = AZIMUTH, elevation = ELEVATION }) {
+    const a = azimuth * RADIANS;
+    const e = elevation * RADIANS;
+    return { sinA: Math.sin(a), cosA: Math.cos(a), sinE: Math.sin(e), cosE: Math.cos(e), k: scale * UNIT };
+}
+function iso([x, y, z], projection) {
+    const { origin } = projection;
+    const { sinA, cosA, sinE, cosE, k } = cameraOf(projection);
+    return [origin[0] + (x * sinA - y * cosA) * k, origin[1] + ((x * cosA + y * sinA) * sinE - z * cosE) * k];
+}
+function towardViewer(projection) {
+    const { sinA, cosA } = cameraOf(projection);
+    return [cosA, sinA];
+}
+function depthOf([x, y, z], projection) {
+    const { sinA, cosA, sinE, cosE } = cameraOf(projection);
+    return (x * cosA + y * sinA) * cosE + z * sinE;
+}
+const tenth = (value) => {
+    const text = (Math.round(value * 10) / 10).toFixed(1).replace(/\.0$/, "");
+    return text === "-0" ? "0" : text;
+};
+function pathOf(points, closed = false) {
+    if (!points.length)
+        return "";
+    return points.map(([x, y], at) => `${at ? "L" : "M"}${tenth(x)} ${tenth(y)}`).join("") + (closed ? "Z" : "");
+}
+const joinPaths = (paths) => paths.filter(Boolean).join("");
+function roundedPlan({ x, y, w, d, r }, steps = 8) {
+    const radius = Math.max(0, Math.min(r, w / 2, d / 2));
+    const corners = [
+        [x + w - radius, y + radius, -90],
+        [x + w - radius, y + d - radius, 0],
+        [x + radius, y + d - radius, 90],
+        [x + radius, y + radius, 180],
+    ];
+    const out = [];
+    for (const [cx, cy, start] of corners) {
+        const count = radius > 0 ? steps : 0;
+        for (let step = 0; step <= count; step++) {
+            const angle = (start + (count ? (90 * step) / count : 45)) * RADIANS;
+            out.push([cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)]);
+        }
+    }
+    return out;
+}
+function signedArea(points) {
+    let area = 0;
+    for (let index = 0; index < points.length; index++) {
+        const [ax, ay] = points[index];
+        const [bx, by] = points[(index + 1) % points.length];
+        area += ax * by - bx * ay;
+    }
+    return area / 2;
+}
+const oriented = (points) => (signedArea(points) < 0 ? [...points].reverse() : points);
+function convexHull(points) {
+    const sorted = [...points].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    if (sorted.length < 3)
+        return sorted;
+    const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+    const lower = [];
+    for (const point of sorted) {
+        while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], point) <= 0)
+            lower.pop();
+        lower.push(point);
+    }
+    const upper = [];
+    for (let index = sorted.length - 1; index >= 0; index--) {
+        const point = sorted[index];
+        while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], point) <= 0)
+            upper.pop();
+        upper.push(point);
+    }
+    return [...lower.slice(0, -1), ...upper.slice(0, -1)];
+}
+function runsOf(flags, want) {
+    const count = flags.length;
+    const runs = [];
+    const start = flags.findIndex((flag, index) => flag !== flags[(index + count - 1) % count]);
+    if (start < 0)
+        return flags[0] === want ? [Array.from({ length: count + 1 }, (_, index) => index % count)] : [];
+    let run = null;
+    for (let step = 0; step < count; step++) {
+        const index = (start + step) % count;
+        if (flags[index] === want) {
+            if (!run)
+                run = [index];
+            run.push((index + 1) % count);
+        }
+        else if (run) {
+            runs.push(run);
+            run = null;
+        }
+    }
+    if (run)
+        runs.push(run);
+    return runs;
+}
+function extrude(ring, z, height, projection, options = {}) {
+    const convex = options.convex ?? true;
+    const count = ring.length;
+    const counter = signedArea(ring) > 0;
+    const [vx, vy] = towardViewer(projection);
+    const { sinA, cosA } = cameraOf(projection);
+    const normals = ring.map(([ax, ay], index) => {
+        const [bx, by] = ring[(index + 1) % count];
+        const dx = bx - ax;
+        const dy = by - ay;
+        const length = Math.hypot(dx, dy) || 1;
+        return (counter ? [dy / length, -dx / length] : [-dy / length, dx / length]);
+    });
+    const facing = normals.map(([nx, ny]) => nx * vx + ny * vy > 1e-9);
+    const top = ring.map(([x, y]) => iso([x, y, z + height], projection));
+    const bottom = ring.map(([x, y]) => iso([x, y, z], projection));
+    const outline = [];
+    const crease = [];
+    for (const run of runsOf(facing, false))
+        outline.push(pathOf(run.map((index) => top[index])));
+    for (const run of runsOf(facing, true)) {
+        crease.push(pathOf(run.map((index) => top[index])));
+        if (height > 0)
+            outline.push(pathOf(run.map((index) => bottom[index])));
+    }
+    if (height > 0) {
+        for (let index = 0; index < count; index++) {
+            if (facing[(index + count - 1) % count] !== facing[index])
+                outline.push(pathOf([top[index], bottom[index]]));
+        }
+    }
+    let fill;
+    if (convex) {
+        fill = pathOf(convexHull([...top, ...bottom]), true);
+    }
+    else {
+        const parts = [pathOf(oriented(top), true), pathOf(oriented(bottom), true)];
+        for (let index = 0; index < count; index++) {
+            if (!facing[index])
+                continue;
+            const next = (index + 1) % count;
+            parts.push(pathOf(oriented([top[index], top[next], bottom[next], bottom[index]]), true));
+        }
+        fill = parts.join("");
+    }
+    const buckets = Array.from({ length: SHADES }, () => []);
+    if (height > 0) {
+        const [lx, ly] = [-sinA, cosA];
+        for (let index = 0; index < count; index++) {
+            if (!facing[index])
+                continue;
+            const [nx, ny] = normals[index];
+            const lit = (nx * lx + ny * ly + 1) / 2;
+            const shade = Math.min(SHADES - 1, Math.max(0, Math.floor(lit * SHADES)));
+            const next = (index + 1) % count;
+            buckets[shade].push(pathOf(oriented([top[index], top[next], bottom[next], bottom[index]]), true));
+        }
+    }
+    let bevel;
+    if (options.bevel && options.bevel > 0) {
+        const by = options.bevel;
+        const inset = ring.map(([x, y], index) => {
+            const [ax, ay] = normals[(index + count - 1) % count];
+            const [bx, by2] = normals[index];
+            const mx = ax + bx;
+            const my = ay + by2;
+            const length = Math.hypot(mx, my) || 1;
+            return [x - (mx / length) * by, y - (my / length) * by];
+        });
+        const insetTop = inset.map(([x, y]) => iso([x, y, z + height], projection));
+        bevel = runsOf(facing, true)
+            .map((run) => pathOf([top[run[0]], ...run.slice(1, -1).map((index) => insetTop[index]), top[run[run.length - 1]]]))
+            .join("");
+    }
+    return {
+        fill,
+        outline: outline.join(""),
+        crease: crease.join(""),
+        top: pathOf(oriented(top), true),
+        shades: buckets.map((paths) => paths.join("")),
+        bevel,
+    };
+}
+const ringOf = (plan, steps = 8) => roundedPlan(plan, steps);
+function slabOf(plan, z, height, projection, steps = 8, bevel = 0) {
+    return extrude(ringOf(plan, steps), z, height, projection, { convex: true, bevel });
+}
+function circleRing(cx, cy, radius, steps = 40) {
+    return Array.from({ length: steps }, (_, step) => {
+        const angle = (step / steps) * Math.PI * 2;
+        return [cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)];
+    });
+}
+function cylinder(cx, cy, radius, z, height, projection, steps = 32, bevel = 0) {
+    return extrude(circleRing(cx, cy, radius, steps), z, height, projection, { convex: true, bevel });
+}
+const insetPlan = ({ x, y, w, d, r }, by) => ({ x: x + by, y: y + by, w: w - by * 2, d: d - by * 2, r: Math.max(0, r - by) });
+function onTop(points, z, projection, closed = false) {
+    return pathOf(points.map(([x, y]) => iso([x, y, z], projection)), closed);
+}
+const planOutline = (plan, z, projection, steps = 8) => onTop(ringOf(plan, steps), z, projection, true);
+const lineOnTop = (from, to, z, projection) => onTop([from, to], z, projection);
+const segment = (from, to, projection) => pathOf([iso(from, projection), iso(to, projection)]);
+const rise = (at, from, to, projection) => segment([at[0], at[1], from], [at[0], at[1], to], projection);
+const ring = (cx, cy, radius, z, projection, steps = 40) => onTop(circleRing(cx, cy, radius, steps), z, projection, true);
+const pointsAt = (points, projection) => points.map((point) => iso(point, projection));
+function dotGrid(x, y, columns, rows, gap, z, projection) {
+    const dots = [];
+    for (let row = 0; row < rows; row++) {
+        for (let column = 0; column < columns; column++)
+            dots.push(iso([x + column * gap, y + row * gap, z], projection));
+    }
+    return dots;
+}
+function corners({ x, y, w, d }, inset = 0) {
+    return [
+        [x + inset, y + inset],
+        [x + w - inset, y + inset],
+        [x + inset, y + d - inset],
+        [x + w - inset, y + d - inset],
+    ];
+}
+function boxCorners({ x, y, w, d }, z0, z1) {
+    const out = [];
+    for (const px of [x, x + w])
+        for (const py of [y, y + d])
+            for (const z of [z0, z1])
+                out.push([px, py, z]);
+    return out;
+}
+function knurl(cx, cy, radius, z0, z1, count, projection, inset = 0.4) {
+    const [vx, vy] = towardViewer(projection);
+    const lines = [];
+    for (let index = 0; index < count; index++) {
+        const angle = (index / count) * Math.PI * 2;
+        const nx = Math.cos(angle);
+        const ny = Math.sin(angle);
+        if (nx * vx + ny * vy < 0.15)
+            continue;
+        lines.push(segment([cx + radius * nx, cy + radius * ny, z0 + inset], [cx + radius * nx, cy + radius * ny, z1 - inset], projection));
+    }
+    return lines.join("");
+}
+function sideArc(cx, cy, radius, z, projection, steps = 24) {
+    const [vx, vy] = towardViewer(projection);
+    const facing = Math.atan2(vy, vx);
+    const points = [];
+    for (let step = 0; step <= steps; step++) {
+        const angle = facing - Math.PI / 2 + (step / steps) * Math.PI;
+        points.push(iso([cx + radius * Math.cos(angle), cy + radius * Math.sin(angle), z], projection));
+    }
+    return pathOf(points);
+}
+function ringSeam(ring, z, projection) {
+    const count = ring.length;
+    const counter = signedArea(ring) > 0;
+    const [vx, vy] = towardViewer(projection);
+    const facing = ring.map(([ax, ay], index) => {
+        const [bx, by] = ring[(index + 1) % count];
+        const dx = bx - ax;
+        const dy = by - ay;
+        const [nx, ny] = counter ? [dy, -dx] : [-dy, dx];
+        return nx * vx + ny * vy > 1e-9;
+    });
+    return runsOf(facing, true).map((run) => pathOf(run.map((index) => iso([ring[index][0], ring[index][1], z], projection)))).join("");
+}
+const sideSeam = (plan, z, projection, steps = 8) => ringSeam(ringOf(plan, steps), z, projection);
+function sideRing(center, radius, axis, projection, steps = 20) {
+    const [px, py, pz] = center;
+    const points = [];
+    for (let step = 0; step < steps; step++) {
+        const angle = (step / steps) * Math.PI * 2;
+        const u = radius * Math.cos(angle);
+        const v = radius * Math.sin(angle);
+        points.push(iso(axis === "x" ? [px, py + u, pz + v] : [px + u, py, pz + v], projection));
+    }
+    return pathOf(points, true);
+}
+function coil(from, to, center, radius, turns, axis, projection, perTurn = 16) {
+    const count = Math.max(1, Math.round(turns * perTurn));
+    const back = [];
+    const front = [];
+    let run = [];
+    let near = null;
+    for (let index = 0; index <= count; index++) {
+        const share = index / count;
+        const angle = share * turns * Math.PI * 2;
+        const u = radius * Math.cos(angle);
+        const v = radius * Math.sin(angle);
+        const along = from + (to - from) * share;
+        const point = axis === "x" ? [along, center[0] + u, center[1] + v] : [center[0] + u, along, center[1] + v];
+        const normal = axis === "x" ? [0, Math.cos(angle), Math.sin(angle)] : [Math.cos(angle), 0, Math.sin(angle)];
+        const facing = depthOf(normal, projection) > 0;
+        const flat = iso(point, projection);
+        if (near === null)
+            near = facing;
+        if (facing !== near) {
+            run.push(flat);
+            (near ? front : back).push(pathOf(run));
+            run = [flat];
+            near = facing;
+            continue;
+        }
+        run.push(flat);
+    }
+    if (run.length > 1)
+        (near ? front : back).push(pathOf(run));
+    return { back: back.join(""), front: front.join("") };
+}
+function topTicks(from, to, step, every, edge, z, lengths, projection, axis = "x") {
+    const minor = [];
+    const major = [];
+    const first = Math.ceil(from / step) * step;
+    for (let at = first, index = Math.round(first / step); at <= to + 1e-9; at += step, index++) {
+        const big = index % every === 0;
+        const length = big ? lengths[1] : lengths[0];
+        const a = axis === "x" ? [at, edge] : [edge, at];
+        const b = axis === "x" ? [at, edge + length] : [edge + length, at];
+        (big ? major : minor).push(lineOnTop(a, b, z, projection));
+    }
+    return { minor: minor.join(""), major: major.join("") };
+}
+function sideTicks(from, to, step, every, face, top, lengths, projection, axis = "x") {
+    const minor = [];
+    const major = [];
+    const first = Math.ceil(from / step) * step;
+    for (let at = first, index = Math.round(first / step); at <= to + 1e-9; at += step, index++) {
+        const big = index % every === 0;
+        const length = big ? lengths[1] : lengths[0];
+        const a = axis === "x" ? [at, face, top] : [face, at, top];
+        const b = axis === "x" ? [at, face, top - length] : [face, at, top - length];
+        (big ? major : minor).push(segment(a, b, projection));
+    }
+    return { minor: minor.join(""), major: major.join("") };
+}
+function radialTicks(cx, cy, radius, count, every, z, lengths, projection, from = 0, span = Math.PI * 2) {
+    const minor = [];
+    const major = [];
+    const closed = Math.abs(span - Math.PI * 2) < 1e-9;
+    const steps = closed ? count : count + 1;
+    for (let index = 0; index < steps; index++) {
+        const angle = from + (index / count) * span;
+        const big = index % every === 0;
+        const inner = radius - (big ? lengths[1] : lengths[0]);
+        const sx = Math.sin(angle);
+        const sy = -Math.cos(angle);
+        (big ? major : minor).push(lineOnTop([cx + sx * inner, cy + sy * inner], [cx + sx * radius, cy + sy * radius], z, projection));
+    }
+    return { minor: minor.join(""), major: major.join("") };
+}
+const haloOf = (plan, z, height, projection) => slabOf(plan, z, height, projection).fill;
+function axisVector(projection, [dx, dy, dz]) {
+    const origin = iso([0, 0, 0], projection);
+    const moved = iso([dx, dy, dz], projection);
+    return [moved[0] - origin[0], moved[1] - origin[1]];
+}
+const fine = (value) => Math.round(value * 100) / 100;
+function translateAlong(projection, by) {
+    const [x, y] = axisVector(projection, by);
+    return `translate(${fine(x)} ${fine(y)})`;
+}
+const thousandth = (value) => Math.round(value * 1000) / 1000;
+function axesAt(at, z, projection) {
+    const origin = iso([at[0], at[1], z], projection);
+    const along = (point) => {
+        const [px, py] = iso(point, projection);
+        return [px - origin[0], py - origin[1]];
+    };
+    return { origin, x: along([at[0] + 1, at[1], z]), y: along([at[0], at[1] + 1, z]), z: along([at[0], at[1], z + 1]) };
+}
+const matrixOf = (u, v, origin) => `matrix(${thousandth(u[0])} ${thousandth(u[1])} ${thousandth(v[0])} ${thousandth(v[1])} ${thousandth(origin[0])} ${thousandth(origin[1])})`;
+function holdStill(element, [dx, dy]) {
+    const text = dx || dy ? `translate(${-dx} ${-dy})` : "";
+    element.querySelectorAll("[data-hold]").forEach((node) => (text ? node.setAttribute("transform", text) : node.removeAttribute("transform")));
+}
+function topMatrix(at, z, projection, along = "x") {
+    const { origin, x, y } = axesAt(at, z, projection);
+    return along === "x" ? matrixOf(x, y, origin) : matrixOf([-y[0], -y[1]], x, origin);
+}
+function sideMatrix(at, z, projection, face) {
+    const { origin, x, y, z: up } = axesAt(at, z, projection);
+    const down = [-up[0], -up[1]];
+    return face === "left" ? matrixOf(x, down, origin) : matrixOf([-y[0], -y[1]], down, origin);
+}
+function screenRise(height, projection) {
+    const { cosE, k } = cameraOf(projection);
+    return height * cosE * k;
+}
+function fitProjection(points, width, height, { pad = 24, headroom = 0, azimuth = AZIMUTH, elevation = ELEVATION } = {}) {
+    const unit = { origin: [0, 0], scale: 1, azimuth, elevation };
+    const flat = points.map((point) => iso(point, unit));
+    const xs = flat.map(([x]) => x);
+    const ys = flat.map(([, y]) => y);
+    const left = Math.min(...xs);
+    const right = Math.max(...xs);
+    const up = Math.min(...ys);
+    const down = Math.max(...ys);
+    const scale = Math.min((width - pad * 2) / (right - left), (height - pad * 2 - headroom) / (down - up));
+    return {
+        origin: [width / 2 - ((left + right) / 2) * scale, headroom + (height - headroom) / 2 - ((up + down) / 2) * scale],
+        scale,
+        azimuth,
+        elevation,
+    };
+}
+const escape = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const attrs = (pairs) => Object.entries(pairs)
+    .filter(([, value]) => value !== undefined && value !== false)
+    .map(([key, value]) => ` ${key}="${escape(String(value))}"`)
+    .join("");
+function solidSvg(paths, { tone = "hi", crease = "faint", halo = false, lit = false, flat = false, className, inner = "" } = {}) {
+    const parts = [];
+    if (halo)
+        parts.push(`<path class="iso-halo" d="${paths.fill}"/>`);
+    parts.push(`<path class="iso-fill" d="${paths.fill}"/>`);
+    if (!flat) {
+        paths.shades.forEach((d, shade) => {
+            if (d)
+                parts.push(`<path class="iso-shade" data-shade="${shade}" d="${d}"/>`);
+        });
+        parts.push(`<path class="iso-top" d="${paths.top}"/>`);
+    }
+    if (crease !== "none" && paths.crease)
+        parts.push(`<path class="iso-line iso-crease" data-tone="${crease}" d="${paths.crease}"/>`);
+    if (crease !== "none" && paths.bevel)
+        parts.push(`<path class="iso-line iso-bevel" data-tone="${crease}" d="${paths.bevel}"/>`);
+    if (inner)
+        parts.push(inner);
+    parts.push(`<path class="iso-line iso-edge" data-tone="${tone}" d="${paths.outline}"/>`);
+    return `<g${attrs({ class: className ? `iso-solid ${className}` : "iso-solid", "data-lit": lit ? "" : undefined, "data-seamless": paths.seamless ? "" : undefined })}>${parts.join("")}</g>`;
+}
+function lineSvg(d, { tone = "lo", dotted = false, dashed = false, flow = false, className, free } = {}) {
+    if (!d)
+        return "";
+    return `<path${attrs({
+        class: className ? `iso-line ${className}` : "iso-line",
+        "data-tone": tone,
+        "data-free": free === true ? "" : free || undefined,
+        "data-dotted": dotted ? "" : undefined,
+        "data-dashed": dashed ? "" : undefined,
+        "data-flow": flow ? "" : undefined,
+        d,
+    })}/>`;
+}
+function dotsSvg(points, { size = 0.5, tone = "mid", pulse = false } = {}) {
+    const dots = points
+        .map(([x, y, alpha], index) => `<circle cx="${tenth(x)}" cy="${tenth(y)}" r="${size}"${alpha !== undefined && alpha < 1 ? ` fill-opacity="${Math.max(0, alpha).toFixed(2)}"` : ""}${pulse ? ` data-pulse="" style="--pulse-at:${(index * 137) % 1600}ms"` : ""}/>`)
+        .join("");
+    return `<g class="iso-dots" data-tone="${tone}">${dots}</g>`;
+}
+function fadedSvg(list, style = {}) {
+    const groups = new Map();
+    for (const entry of list) {
+        const [d, alpha] = Array.isArray(entry) ? entry : [entry.d, entry.alpha];
+        if (!d || !(alpha > 0.02))
+            continue;
+        const level = Math.min(1, Math.round(alpha * 20) / 20);
+        groups.set(level, (groups.get(level) ?? "") + d);
+    }
+    return [...groups].map(([alpha, d]) => (alpha >= 1 ? lineSvg(d, style) : `<g opacity="${alpha.toFixed(2)}">${lineSvg(d, style)}</g>`)).join("");
+}
+function fadeLineSvg(points, { fade = [0, 0], tone = "lo", className, stops = 6 } = {}) {
+    if (points.length < 2)
+        return "";
+    const ease = (t) => t * t * (3 - 2 * t);
+    const hashOf = (text) => {
+        let hash = 2166136261;
+        for (let index = 0; index < text.length; index++)
+            hash = Math.imul(hash ^ text.charCodeAt(index), 16777619);
+        return (hash >>> 0).toString(36);
+    };
+    const lengths = [0];
+    for (let index = 1; index < points.length; index++)
+        lengths.push(lengths[index - 1] + Math.hypot(points[index][0] - points[index - 1][0], points[index][1] - points[index - 1][1]));
+    const at = (length) => {
+        let index = 1;
+        while (index < points.length - 1 && lengths[index] < length)
+            index++;
+        const span = lengths[index] - lengths[index - 1] || 1;
+        const t = Math.max(0, Math.min(1, (length - lengths[index - 1]) / span));
+        return [points[index - 1][0] + (points[index][0] - points[index - 1][0]) * t, points[index - 1][1] + (points[index][1] - points[index - 1][1]) * t];
+    };
+    const pieceOf = (from, to) => [at(from), ...points.filter((_, index) => lengths[index] > from + 1e-6 && lengths[index] < to - 1e-6), at(to)];
+    const total = lengths[lengths.length - 1];
+    if (total < 1e-6)
+        return "";
+    let [start, end] = Array.isArray(fade) ? fade : [fade, fade];
+    if (start + end > total) {
+        const share = total / (start + end);
+        start *= share;
+        end *= share;
+    }
+    const paint = `var(--anatomy-${tone})`;
+    const ramp = (piece, rising) => {
+        const d = pathOf(piece);
+        const [x1, y1] = piece[0];
+        const [x2, y2] = piece[piece.length - 1];
+        const id = `iso-fade-${hashOf(`${d}|${tone}|${rising}`)}`;
+        const marks = Array.from({ length: stops + 1 }, (_, index) => {
+            const t = index / stops;
+            const alpha = ease(rising ? t : 1 - t);
+            return `<stop offset="${t.toFixed(3)}" stop-opacity="${alpha.toFixed(3)}" style="stop-color:${paint}"/>`;
+        }).join("");
+        const gradient = `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${tenth(x1)}" y1="${tenth(y1)}" x2="${tenth(x2)}" y2="${tenth(y2)}">${marks}</linearGradient>`;
+        return `<defs>${gradient}</defs><path${attrs({ class: className ? `iso-line ${className}` : "iso-line", "data-tone": tone, "data-free": rising ? "start" : "end", d, style: `stroke:url(#${id})` })}/>`;
+    };
+    const parts = [];
+    if (start > 0.05)
+        parts.push(ramp(pieceOf(0, start), true));
+    if (total - end - start > 0.05)
+        parts.push(lineSvg(pathOf(pieceOf(start, total - end)), { tone, className }));
+    if (end > 0.05)
+        parts.push(ramp(pieceOf(total - end, total), false));
+    return `<g class="iso-fade">${parts.join("")}</g>`;
+}
+function wireSvg(from, to, { via = [], tone = "lo", dotted = false, dashed = false, flow = false, ends = "both", size = 1.2 } = {}) {
+    const d = pathOf([from, ...via, to]);
+    const end = ([x, y]) => `<circle class="iso-wire-end" cx="${tenth(x)}" cy="${tenth(y)}" r="${size}"/>`;
+    return `<g class="iso-wire" data-tone="${tone}">${lineSvg(d, { tone, dotted, dashed, flow })}${ends === "both" || ends === "from" ? end(from) : ""}${ends === "both" || ends === "to" ? end(to) : ""}</g>`;
+}
+function faceTextSvg(transform, text, { size = 3, tone = "mid", anchor = "start" } = {}) {
+    return `<text class="iso-face-text" data-tone="${tone}" transform="${transform}" font-size="${size}" text-anchor="${anchor}">${escape(text)}</text>`;
+}
+function groupSvg(children, extra = {}) {
+    return `<g${attrs(extra)}>${Array.isArray(children) ? children.join("") : children}</g>`;
+}
+function figureSvg({ width, height, label, body, standalone = false, className }) {
+    const style = standalone ? `<style>${ISO_CSS}</style>` : "";
+    return `<svg${attrs({
+        xmlns: "http://www.w3.org/2000/svg",
+        class: `iso-svg${standalone ? " iso" : ""}${className ? ` ${className}` : ""}`,
+        "data-theme": standalone || undefined,
+        viewBox: `0 0 ${width} ${height}`,
+        role: "img",
+        "aria-label": label,
+    })}>${style}${Array.isArray(body) ? body.join("") : body}</svg>`;
+}
+function swatchSvg(mark) {
+    if (mark === "raised" || mark === "flat" || mark === "lit") {
+        const body = mark === "flat" ? "M2 6.5 8 3.5 14 6.5 8 9.5Z" : "M2 4.5 8 1.5 14 4.5 14 6 8 9 2 6Z";
+        const crease = mark === "flat" ? "" : `<path class="iso-swatch-crease" d="M2 4.5 8 7.5 14 4.5"/>`;
+        return `<svg class="iso-swatch" data-mark="${mark}" viewBox="0 0 16 10" aria-hidden="true"><path d="${body}"/>${crease}</svg>`;
+    }
+    return `<svg class="iso-swatch" data-mark="${mark}" viewBox="0 0 16 10" aria-hidden="true"><path d="M1.5 5h13"/></svg>`;
+}
+function plateHtml({ fig, title, hint, readout = "", keys = [], caption, body }) {
+    const corner = (name, text, extra = "") => `<span class="iso-plate-corner" data-corner="${name}"${extra}>${escape(text)}</span>`;
+    const legend = keys.length || caption
+        ? `<figcaption class="iso-legend">${keys.length ? `<span class="iso-keys">${keys.map((key) => `<span class="iso-key">${swatchSvg(key.mark)}${escape(key.label)}</span>`).join("")}</span>` : ""}${caption ? `<span class="iso-caption">${escape(caption)}</span>` : ""}</figcaption>`
+        : "";
+    return `<figure class="iso-figure"><div class="iso-plate"><div class="iso-plate-corners" aria-hidden="true">${corner("fig", fig)}${title ? corner("title", title) : ""}${hint ? corner("hint", hint) : ""}${corner("readout", readout, " data-readout")}</div>${body}</div>${legend}</figure>`;
+}
+function pageHtml({ title, theme = "dark", body, script = "", width = 650 }) {
+    return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${escape(title)}</title><style>${ISO_CSS}${PAGE_CSS.replace("__WIDTH__", String(width))}</style></head><body class="iso" data-theme="${theme}"><main class="iso-page">${body}</main>${script ? `<script type="module">${script.replace(/<\/(script)/gi, "<\\/$1")}<\/script>` : ""}</body></html>`;
+}
+const PAGE_CSS = `
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body[data-theme="light"]{color-scheme:light}
+body{margin:0;background:var(--anatomy-page);color:var(--anatomy-text);font:14px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.iso-page{width:min(__WIDTH__px,100% - 32px);margin:64px auto 96px}
+`;
+const ISO_CSS = `
+.iso{
+  --anatomy-page:#0b0b0b;--anatomy-card:#131313;--anatomy-text:#a3a3a3;--anatomy-strong:#e6e6e6;--anatomy-muted:#6e6e6e;
+  --anatomy-paper:#131313;--anatomy-face:#1b1b1b;--anatomy-top:#1c1c1c;
+  --anatomy-shade-0:#0f0f0f;--anatomy-shade-1:#121212;--anatomy-shade-2:#151515;--anatomy-shade-3:#181818;
+  --anatomy-lit-top:#262626;--anatomy-lit-shade:#1d1d1d;
+  --anatomy-hi:#d4d4d4;--anatomy-mid:#6a6a6a;--anatomy-lo:#3e3e3e;--anatomy-faint:#2a2a2a;--anatomy-lit:#ffffff;
+  --anatomy-halo:#050505;--anatomy-halo-opacity:.9;--anatomy-dot:#e6e6e6;
+  --anatomy-red:#ff6b6b;--anatomy-green:#6be0a0;--anatomy-blue:#6b9bff;
+  --anatomy-weight:.6px;--anatomy-ease:cubic-bezier(.32,.72,0,1);
+  --anatomy-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --anatomy-lift:inset 0 1px 0 0 #ffffff0a,inset 0 0 0 1px #ffffff06,0 0 0 1px #00000026,0 1px 1px -.5px #00000014,0 3px 3px -1.5px #00000014,0 6px 6px -3px #00000014,0 12px 12px -6px #00000014;
+}
+.iso[data-theme="light"]{
+  --anatomy-page:#f2f2ef;--anatomy-card:#fbfbfa;--anatomy-text:#57575a;--anatomy-strong:#18181a;--anatomy-muted:#8c8c90;
+  --anatomy-paper:#fbfbfa;--anatomy-face:#ffffff;--anatomy-top:#ffffff;
+  --anatomy-shade-0:#dcdcd9;--anatomy-shade-1:#e5e5e2;--anatomy-shade-2:#ededea;--anatomy-shade-3:#f4f4f1;
+  --anatomy-lit-top:#ffffff;--anatomy-lit-shade:#eeeeeb;
+  --anatomy-hi:#26262a;--anatomy-mid:#8a8a8f;--anatomy-lo:#b4b4b8;--anatomy-faint:#d4d4d6;--anatomy-lit:#000000;
+  --anatomy-halo:#8a8a80;--anatomy-halo-opacity:.32;--anatomy-dot:#3a3a3e;
+  --anatomy-red:#e5484d;--anatomy-green:#30a46c;--anatomy-blue:#3e63dd;
+  --anatomy-lift:inset 0 1px 0 0 #ffffff,0 0 0 1px #0000000f,0 1px 1px -.5px #0000000a,0 3px 3px -1.5px #0000000a,0 6px 6px -3px #0000000a,0 12px 12px -6px #0000000a;
+}
+.iso-svg{display:block;width:100%;height:auto;overflow:visible}
+.iso-svg path,.iso-svg circle{vector-effect:non-scaling-stroke}
+.iso-fill{fill:var(--anatomy-paper);stroke:none}
+.iso-solid[data-lit]>.iso-fill{fill:var(--anatomy-face)}
+.iso-shade,.iso-top{stroke:none}
+.iso-shade[data-shade="0"]{fill:var(--anatomy-shade-0)}
+.iso-shade[data-shade="1"]{fill:var(--anatomy-shade-1)}
+.iso-shade[data-shade="2"]{fill:var(--anatomy-shade-2)}
+.iso-shade[data-shade="3"]{fill:var(--anatomy-shade-3)}
+.iso-top{fill:var(--anatomy-top)}
+.iso-solid[data-lit]>.iso-top{fill:var(--anatomy-lit-top)}
+.iso-solid[data-lit]>.iso-shade{fill:var(--anatomy-lit-shade)}
+.iso-solid[data-seamless]>.iso-shade,.iso-solid[data-seamless]>.iso-top{stroke-width:.4;stroke-linejoin:round}
+.iso-solid[data-seamless]>.iso-shade[data-shade="0"]{stroke:var(--anatomy-shade-0)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="1"]{stroke:var(--anatomy-shade-1)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="2"]{stroke:var(--anatomy-shade-2)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="3"]{stroke:var(--anatomy-shade-3)}
+.iso-solid[data-seamless]>.iso-top{stroke:var(--anatomy-top)}
+.iso-solid[data-seamless][data-lit]>.iso-top{stroke:var(--anatomy-lit-top)}
+.iso-solid[data-seamless][data-lit]>.iso-shade{stroke:var(--anatomy-lit-shade)}
+.iso-solid[data-lit]>.iso-edge{stroke:var(--anatomy-lit)}
+.iso-halo{fill:var(--anatomy-halo);stroke:none;filter:blur(9px);opacity:var(--anatomy-halo-opacity);transform:translateY(3px)}
+.iso-line{fill:none;stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight);stroke-linecap:round;stroke-linejoin:round}
+.iso-line[data-tone="hi"]{stroke:var(--anatomy-hi)}
+.iso-line[data-tone="mid"]{stroke:var(--anatomy-mid)}
+.iso-line[data-tone="lo"]{stroke:var(--anatomy-lo)}
+.iso-line[data-tone="faint"]{stroke:var(--anatomy-faint)}
+.iso-line[data-tone="lit"]{stroke:var(--anatomy-lit)}
+.iso-line[data-tone="red"]{stroke:var(--anatomy-red)}
+.iso-line[data-tone="green"]{stroke:var(--anatomy-green)}
+.iso-line[data-tone="blue"]{stroke:var(--anatomy-blue)}
+.iso-line[data-dotted]{stroke-dasharray:.01 3.5;stroke-width:1}
+.iso-line[data-dashed]{stroke-dasharray:3 3}
+.iso-line[data-flow]{stroke-dasharray:2 6}
+.iso-wire-end{fill:var(--anatomy-paper);stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight)}
+.iso-wire[data-tone="hi"] .iso-wire-end{stroke:var(--anatomy-hi)}
+.iso-wire[data-tone="mid"] .iso-wire-end{stroke:var(--anatomy-mid)}
+.iso-wire[data-tone="faint"] .iso-wire-end{stroke:var(--anatomy-faint)}
+.iso-wire[data-tone="lit"] .iso-wire-end{stroke:var(--anatomy-lit)}
+.iso-dots circle{fill:var(--anatomy-dot);stroke:none;opacity:.32}
+.iso-dots[data-tone="hi"] circle{opacity:.85}
+.iso-dots[data-tone="mid"] circle{opacity:.45}
+.iso-dots[data-tone="lo"] circle{opacity:.22}
+.iso-dots[data-tone="faint"] circle{opacity:.12}
+.iso-face-text{fill:var(--anatomy-mid);font-family:var(--anatomy-mono);letter-spacing:.04em}
+.iso-face-text[data-tone="hi"]{fill:var(--anatomy-hi)}
+.iso-face-text[data-tone="lo"]{fill:var(--anatomy-lo)}
+.iso-face-text[data-tone="faint"]{fill:var(--anatomy-faint)}
+.tb-body{fill:var(--anatomy-shade-2);stroke:none}
+.tb-shine{fill:var(--anatomy-top);stroke:none}
+.tb-shade{fill:var(--anatomy-shade-0);stroke:none}
+.tb-ring{fill:none;stroke:var(--anatomy-lo);stroke-width:.45;stroke-linecap:butt;stroke-linejoin:round}
+.tb-ring[data-tone="mid"]{stroke:var(--anatomy-mid)}
+.tb-ring[data-tone="faint"]{stroke:var(--anatomy-faint)}
+.tb-ring[data-tone="hi"]{stroke:var(--anatomy-hi)}
+@keyframes iso-flow{to{stroke-dashoffset:-32}}
+@keyframes iso-pulse{0%,100%{opacity:.18}12%{opacity:1}40%{opacity:.18}}
+.iso-line[data-flow]{animation:iso-flow 1600ms linear infinite}
+.iso-dots circle[data-pulse]{animation:iso-pulse 1600ms steps(1,end) infinite;animation-delay:var(--pulse-at,0ms)}
+.iso-figure{margin:32px 0 36px}
+.iso-plate{position:relative;padding:52px 24px;border-radius:0;background:var(--anatomy-card);box-shadow:0 0 0 1px var(--anatomy-mid);--anatomy-paper:var(--anatomy-card)}
+.iso-plate-corners{position:absolute;inset:18px 20px;pointer-events:none}
+.iso-plate-corner{position:absolute;color:var(--anatomy-muted);font-family:var(--anatomy-mono);font-size:10.5px;line-height:1;letter-spacing:.04em;white-space:nowrap}
+.iso-plate-corner[data-corner="fig"]{top:0;left:0;color:var(--anatomy-text)}
+.iso-plate-corner[data-corner="title"]{top:0;right:0;text-transform:uppercase;letter-spacing:.1em}
+.iso-plate-corner[data-corner="hint"]{bottom:0;left:0;text-transform:uppercase;letter-spacing:.1em}
+.iso-plate-corner[data-corner="readout"]{right:0;bottom:0;color:var(--anatomy-text);font-variant-numeric:tabular-nums}
+.iso-plate .iso-svg{margin:0 auto}
+.iso-legend{display:grid;gap:8px;margin-top:12px;color:var(--anatomy-muted);font-size:13px;line-height:1.55}
+.iso-keys{display:flex;flex-wrap:wrap;gap:6px 18px}
+.iso-key{display:inline-flex;align-items:center;gap:7px}
+.iso-swatch{width:16px;height:10px;flex:none;overflow:visible}
+.iso-swatch path{fill:none;stroke:var(--anatomy-hi);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.iso-swatch[data-mark="raised"] path,.iso-swatch[data-mark="flat"] path{stroke:var(--anatomy-mid)}
+.iso-swatch[data-mark="lit"] path{stroke:var(--anatomy-lit)}
+.iso-swatch[data-mark="dim"] path{stroke:var(--anatomy-lo)}
+.iso-swatch[data-mark="dotted"] path{stroke-dasharray:.01 3;stroke-width:1.4}
+.iso-swatch[data-mark="dashed"] path{stroke-dasharray:3 2.5}
+.iso-swatch[data-mark="red"] path{stroke:var(--anatomy-red)}
+.iso-swatch[data-mark="green"] path{stroke:var(--anatomy-green)}
+.iso-swatch[data-mark="blue"] path{stroke:var(--anatomy-blue)}
+.iso-swatch-crease{stroke:var(--anatomy-lo)!important}
+@media (max-width:560px){.iso-plate{padding:48px 12px 70px}.iso-plate-corner[data-corner="hint"]{bottom:18px}}
+@media (prefers-reduced-motion:reduce){.iso-line[data-flow],.iso-dots circle[data-pulse]{animation:none}}
+`;
+
+return {AZIMUTH,ELEVATION,SHADES,cameraOf,iso,towardViewer,depthOf,pathOf,joinPaths,roundedPlan,extrude,ringOf,slabOf,circleRing,cylinder,insetPlan,onTop,planOutline,lineOnTop,segment,rise,ring,pointsAt,dotGrid,corners,boxCorners,knurl,sideArc,ringSeam,sideSeam,sideRing,coil,topTicks,sideTicks,radialTicks,haloOf,axisVector,translateAlong,holdStill,topMatrix,sideMatrix,screenRise,fitProjection,solidSvg,lineSvg,dotsSvg,fadedSvg,fadeLineSvg,wireSvg,faceTextSvg,groupSvg,figureSvg,plateHtml,pageHtml,ISO_CSS};
+})();
+const anatomyLathe = (() => {
+const { cameraOf, iso, pathOf } = anatomyIso;
+const TAU = Math.PI * 2;
+const LIGHT_UP = 1.2;
+const BANDS = [0, 0.2, 0.42, 0.62];
+
+const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const add3 = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const sub3 = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const mul3 = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
+const len3 = (a) => Math.hypot(a[0], a[1], a[2]);
+const unit3 = (a) => {
+  const length = len3(a) || 1;
+  return [a[0] / length, a[1] / length, a[2] / length];
+};
+const cross3 = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const lerp3 = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+
+function viewOf(P) {
+  const { sinA, cosA, sinE, cosE } = cameraOf(P);
+  return [cosA * cosE, sinA * cosE, sinE];
+}
+
+function lightOf(P) {
+  const { sinA, cosA } = cameraOf(P);
+  return unit3([-sinA, cosA, LIGHT_UP]);
+}
+
+const scaleOf = (P) => cameraOf(P).k;
+
+function bandOf(score) {
+  let tone = 0;
+  while (tone < BANDS.length && score >= BANDS[tone]) tone++;
+  return tone;
+}
+
+const toneOf = (normal, P) => bandOf(dot3(unit3(normal), lightOf(P)));
+
+function frameAlong(o, a) {
+  const axis = unit3(a);
+  const helper = Math.abs(axis[2]) > 0.9 ? [1, 0, 0] : [0, 0, 1];
+  const u = unit3(cross3(helper, axis));
+  const v = cross3(axis, u);
+  return { o, a: axis, u, v };
+}
+
+const frameOf = (o, a, u, v) => ({ o, a, u, v });
+
+function pointOf(F, s, r, angle) {
+  const c = Math.cos(angle);
+  const n = Math.sin(angle);
+  return [
+    F.o[0] + F.a[0] * s + r * (c * F.u[0] + n * F.v[0]),
+    F.o[1] + F.a[1] * s + r * (c * F.u[1] + n * F.v[1]),
+    F.o[2] + F.a[2] * s + r * (c * F.u[2] + n * F.v[2]),
+  ];
+}
+
+const radialOf = (F, angle) => {
+  const c = Math.cos(angle);
+  const n = Math.sin(angle);
+  return [c * F.u[0] + n * F.v[0], c * F.u[1] + n * F.v[1], c * F.u[2] + n * F.v[2]];
+};
+
+const tangentOf = (F, angle) => {
+  const c = Math.cos(angle);
+  const n = Math.sin(angle);
+  return [-n * F.u[0] + c * F.v[0], -n * F.u[1] + c * F.v[1], -n * F.u[2] + c * F.v[2]];
+};
+
+const angleToward = (F, direction) => Math.atan2(dot3(direction, F.v), dot3(direction, F.u));
+
+function hullTagged(points) {
+  const sorted = [...points].sort((a, b) => a.p[0] - b.p[0] || a.p[1] - b.p[1]);
+  if (sorted.length < 3) return sorted;
+  const cross = (o, a, b) => (a.p[0] - o.p[0]) * (b.p[1] - o.p[1]) - (a.p[1] - o.p[1]) * (b.p[0] - o.p[0]);
+  const lower = [];
+  for (const point of sorted) {
+    while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], point) <= 1e-9) lower.pop();
+    lower.push(point);
+  }
+  const upper = [];
+  for (let index = sorted.length - 1; index >= 0; index--) {
+    const point = sorted[index];
+    while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], point) <= 1e-9) upper.pop();
+    upper.push(point);
+  }
+  return [...lower.slice(0, -1), ...upper.slice(0, -1)];
+}
+
+const hullOf = (points) => hullTagged(points.map((p) => ({ p }))).map(({ p }) => p);
+
+function runsOf(flags) {
+  const count = flags.length;
+  const start = flags.findIndex((flag, index) => flag !== flags[(index + count - 1) % count]);
+  if (start < 0) return flags[0] ? [Array.from({ length: count + 1 }, (_, index) => index % count)] : [];
+  const runs = [];
+  let run = null;
+  for (let step = 0; step < count; step++) {
+    const index = (start + step) % count;
+    if (flags[index]) {
+      if (!run) run = [index];
+      run.push((index + 1) % count);
+    } else if (run) {
+      runs.push(run);
+      run = null;
+    }
+  }
+  if (run) runs.push(run);
+  return runs;
+}
+
+function groupsOf(keys) {
+  const count = keys.length;
+  const out = [];
+  const start = keys.findIndex((key, index) => key !== keys[(index + count - 1) % count]);
+  if (start < 0) {
+    if (keys[0] !== null) out.push({ key: keys[0], run: Array.from({ length: count + 1 }, (_, index) => index % count) });
+    return out;
+  }
+  let current = null;
+  for (let step = 0; step < count; step++) {
+    const index = (start + step) % count;
+    const key = keys[index];
+    if (current && current.key === key) {
+      current.run.push((index + 1) % count);
+      continue;
+    }
+    if (current && current.key !== null) out.push(current);
+    current = { key, run: [index, (index + 1) % count] };
+  }
+  if (current && current.key !== null) out.push(current);
+  return out;
+}
+
+const stepsFor = (radius, least = 16, most = 112, scale = 0) => Math.max(least, Math.min(most, scale ? Math.ceil((TAU * radius * scale) / 3) : Math.round((radius * 1.3) / 4) * 4));
+
+function chains(edges) {
+  const out = [];
+  let current = null;
+  for (const [a, b, keep] of edges) {
+    if (!keep) {
+      if (current) out.push(current);
+      current = null;
+      continue;
+    }
+    if (!current) current = [a];
+    current.push(b);
+  }
+  if (current) out.push(current);
+  if (out.length > 1 && edges[0][2] && edges[edges.length - 1][2]) {
+    const last = out.pop();
+    out[0] = [...last, ...out[0].slice(1)];
+  }
+  return out;
+}
+
+function labelledArcs(nr, na, view, light, gr = nr, ga = na) {
+  const cuts = [];
+  if (Math.abs(gr) > 1e-9) {
+    const visibleCut = -(ga * view.a) / (gr * view.flat);
+    if (visibleCut > -1 && visibleCut < 1) {
+      const d = Math.acos(visibleCut);
+      cuts.push(view.phi - d, view.phi + d);
+    }
+  }
+  if (Math.abs(nr) > 1e-9) {
+    for (const threshold of BANDS) {
+      const c = (threshold - na * light.a) / (nr * light.flat);
+      if (c > -1 && c < 1) {
+        const d = Math.acos(c);
+        cuts.push(light.phi - d, light.phi + d);
+      }
+    }
+  }
+  const wrap = (angle) => ((angle % TAU) + TAU) % TAU;
+  const sorted = [...new Set(cuts.map((angle) => Math.round(wrap(angle) * 1e9) / 1e9))].sort((a, b) => a - b);
+  const label = (angle) => {
+    const facing = gr * view.flat * Math.cos(angle - view.phi) + ga * view.a;
+    if (facing <= 1e-9) return -1;
+    return bandOf(nr * light.flat * Math.cos(angle - light.phi) + na * light.a);
+  };
+  if (!sorted.length) {
+    const tone = label(0);
+    return tone < 0 ? [] : [{ tone, from: 0, to: TAU, full: true }];
+  }
+  const arcs = sorted.map((from, index) => {
+    const to = index + 1 < sorted.length ? sorted[index + 1] : sorted[0] + TAU;
+    return { tone: label((from + to) / 2), from, to };
+  });
+  const merged = [];
+  for (const arc of arcs) {
+    const last = merged[merged.length - 1];
+    if (last && last.tone === arc.tone && Math.abs(last.to - arc.from) < 1e-9) last.to = arc.to;
+    else merged.push({ ...arc });
+  }
+  if (merged.length > 1 && merged[0].tone === merged[merged.length - 1].tone && Math.abs(merged[merged.length - 1].to - TAU - merged[0].from) < 1e-9) {
+    const last = merged.pop();
+    merged[0].from = last.from - TAU;
+  }
+  return merged.filter((arc) => arc.tone >= 0);
+}
+
+function hermiteSlopes(run) {
+  const n = run.length - 1;
+  const h = Array.from({ length: n }, (_, j) => run[j + 1][0] - run[j][0]);
+  const delta = h.map((value, j) => (run[j + 1][1] - run[j][1]) / value);
+  const d = new Array(n + 1).fill(0);
+  const end = (h0, h1, d0, d1) => {
+    let value = ((2 * h0 + h1) * d0 - h0 * d1) / (h0 + h1);
+    if (Math.sign(value) !== Math.sign(d0)) value = 0;
+    else if (Math.sign(d0) !== Math.sign(d1) && Math.abs(value) > Math.abs(3 * d0)) value = 3 * d0;
+    return value;
+  };
+  if (n === 1) d[0] = d[1] = delta[0];
+  else {
+    d[0] = end(h[0], h[1], delta[0], delta[1]);
+    d[n] = end(h[n - 1], h[n - 2], delta[n - 1], delta[n - 2]);
+  }
+  for (let k = 1; k < n; k++) {
+    if (delta[k - 1] * delta[k] <= 0) continue;
+    const w1 = 2 * h[k] + h[k - 1];
+    const w2 = h[k] + 2 * h[k - 1];
+    d[k] = (w1 + w2) / (w1 / delta[k - 1] + w2 / delta[k]);
+  }
+  return d;
+}
+
+function curveRuns(meridian) {
+  const m = meridian.length;
+  const segments = new Array(m - 1).fill(null);
+  let start = 0;
+  while (start < m - 1) {
+    let end = start + 1;
+    while (end < m - 1 && meridian[end][2] && Math.abs(meridian[end + 1][0] - meridian[end][0]) > 1e-9 && Math.abs(meridian[end][0] - meridian[end - 1][0]) > 1e-9) end++;
+    const run = meridian.slice(start, end + 1);
+    const n = run.length - 1;
+    if (n >= 2 && run.every((point, j) => j === 0 || Math.abs(point[0] - run[j - 1][0]) > 1e-9)) {
+      const d = hermiteSlopes(run);
+      for (let j = 0; j < n; j++) {
+        const [s0, r0] = run[j];
+        const [s1, r1] = run[j + 1];
+        const hj = s1 - s0;
+        const d0 = d[j];
+        const d1 = d[j + 1];
+        const radius = (s) => {
+          const t = (s - s0) / hj;
+          return (2 * t ** 3 - 3 * t ** 2 + 1) * r0 + (t ** 3 - 2 * t ** 2 + t) * hj * d0 + (-2 * t ** 3 + 3 * t ** 2) * r1 + (t ** 3 - t ** 2) * hj * d1;
+        };
+        const slope = (s) => {
+          const t = (s - s0) / hj;
+          return ((6 * t ** 2 - 6 * t) * r0 + (6 * t - 6 * t ** 2) * r1) / hj + (3 * t ** 2 - 4 * t + 1) * d0 + (3 * t ** 2 - 2 * t) * d1;
+        };
+        segments[start + j] = { radius, slope };
+      }
+    }
+    start = end;
+  }
+  return segments;
+}
+
+function curved(meridian, P, segments, { error = 0.2, depth = 6 } = {}) {
+  const k = scaleOf(P);
+  const out = [meridian[0]];
+  for (let i = 0; i < meridian.length - 1; i++) {
+    const curve = segments[i];
+    const [s0] = meridian[i];
+    const [s1] = meridian[i + 1];
+    if (curve) {
+      const split = (a, b, level) => {
+        const mid = (a + b) / 2;
+        const chord = (curve.radius(a) + curve.radius(b)) / 2;
+        if (level < depth && Math.abs(curve.radius(mid) - chord) * k > error) {
+          split(a, mid, level + 1);
+          out.push([mid, curve.radius(mid), 1]);
+          split(mid, b, level + 1);
+        }
+      };
+      split(s0, s1, 0);
+    }
+    out.push(meridian[i + 1]);
+  }
+  return out;
+}
+
+function smoothRows(meridian, F, P, { rows = 6, slope = null, radius = null, steps = 48, error = 0.35, depth: deepest = 8, fineness = 0.1 } = {}) {
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const view = { a: dot3(F.a, V), flat: Math.hypot(dot3(F.u, V), dot3(F.v, V)), phi: Math.atan2(dot3(F.v, V), dot3(F.u, V)) };
+  const light = { a: dot3(F.a, L), flat: Math.hypot(dot3(F.u, L), dot3(F.v, L)), phi: Math.atan2(dot3(F.v, L), dot3(F.u, L)) };
+  const m = meridian.length;
+  const faces = [];
+  for (let i = 0; i < m - 1; i++) {
+    const ds = meridian[i + 1][0] - meridian[i][0];
+    const dr = meridian[i + 1][1] - meridian[i][1];
+    const length = Math.hypot(ds, dr) || 1;
+    faces.push([ds / length, -dr / length]);
+  }
+  const splines = slope ? null : curveRuns(meridian);
+  const vertexNormal = (k, own) => {
+    if (k <= 0 || k >= m - 1 || !meridian[k][2]) return own;
+    const a = faces[k - 1];
+    const b = faces[k];
+    const x = a[0] + b[0];
+    const y = a[1] + b[1];
+    const length = Math.hypot(x, y) || 1;
+    return [x / length, y / length];
+  };
+  const normalAt = (i, u) => {
+    const [s0] = meridian[i];
+    const [s1] = meridian[i + 1];
+    const s = s0 + (s1 - s0) * u;
+    const sign = Math.sign(s1 - s0) || 1;
+    const g = slope ? slope(s) : splines[i] ? splines[i].slope(s) : null;
+    if (g !== null) {
+      const length = Math.hypot(1, g);
+      return [sign / length, (-sign * g) / length];
+    }
+    const a = vertexNormal(i, faces[i]);
+    const b = vertexNormal(i + 1, faces[i]);
+    const x = a[0] + (b[0] - a[0]) * u;
+    const y = a[1] + (b[1] - a[1]) * u;
+    const length = Math.hypot(x, y) || 1;
+    return [x / length, y / length];
+  };
+  const pointAt = (i, u, angle) => {
+    const [s0, r0] = meridian[i];
+    const [s1, r1] = meridian[i + 1];
+    const s = s0 + (s1 - s0) * u;
+    return iso(pointOf(F, s, radius ? radius(s) : splines && splines[i] ? splines[i].radius(s) : r0 + (r1 - r0) * u, angle), P);
+  };
+  const buckets = [[], [], [], [], []];
+  const fine = TAU / Math.max(24, Math.min(192, steps * 1.5));
+  const arcPoints = (i, u, from, to) => {
+    const count = Math.max(1, Math.ceil((to - from) / fine));
+    return Array.from({ length: count + 1 }, (_, index) => pointAt(i, u, from + ((to - from) * index) / count));
+  };
+  const centreOf = (arc, reference) => {
+    let mid = (arc.from + arc.to) / 2 - reference;
+    mid = ((mid % TAU) + TAU) % TAU;
+    return mid;
+  };
+  const levelOf = (i, u) => {
+    const [nr, na] = normalAt(i, u);
+    const groups = new Map();
+    for (const arc of labelledArcs(nr, na, view, light, faces[i][0], faces[i][1])) {
+      if (!groups.has(arc.tone)) groups.set(arc.tone, []);
+      groups.get(arc.tone).push(arc);
+    }
+    for (const list of groups.values()) list.sort((x, y) => centreOf(x, light.phi) - centreOf(y, light.phi));
+    return { i, u, groups };
+  };
+  const same = (x, y) => {
+    if (x.groups.size !== y.groups.size) return false;
+    for (const [tone, list] of x.groups) if ((y.groups.get(tone) ?? []).length !== list.length) return false;
+    return true;
+  };
+  const align = (reference, arc) => {
+    const out = { ...arc };
+    const centre = (reference.from + reference.to) / 2;
+    while ((out.from + out.to) / 2 - centre > Math.PI) {
+      out.from -= TAU;
+      out.to -= TAU;
+    }
+    while (centre - (out.from + out.to) / 2 > Math.PI) {
+      out.from += TAU;
+      out.to += TAU;
+    }
+    return out;
+  };
+  const strayOf = (i, a, mid, b) => {
+    let worst = 0;
+    for (const [tone, list] of mid.groups) {
+      list.forEach((arc, index) => {
+        const lo = align(arc, a.groups.get(tone)[index]);
+        const hi = align(arc, b.groups.get(tone)[index]);
+        for (const key of ["from", "to"]) {
+          const p = pointAt(i, mid.u, arc[key]);
+          const p0 = pointAt(i, a.u, lo[key]);
+          const p1 = pointAt(i, b.u, hi[key]);
+          worst = Math.max(worst, Math.hypot(p[0] - (p0[0] + p1[0]) / 2, p[1] - (p0[1] + p1[1]) / 2));
+        }
+      });
+    }
+    return worst;
+  };
+  const sheet = (tone, levels) => {
+    levels[0].groups.get(tone).forEach((arc, index) => {
+      const chain = [arc];
+      for (let k = 1; k < levels.length; k++) chain.push(align(chain[k - 1], levels[k].groups.get(tone)[index]));
+      const last = levels.length - 1;
+      const points = [...arcPoints(levels[0].i, levels[0].u, chain[0].from, chain[0].to)];
+      for (let k = 1; k < last; k++) points.push(pointAt(levels[k].i, levels[k].u, chain[k].to));
+      points.push(...arcPoints(levels[last].i, levels[last].u, chain[last].from, chain[last].to).reverse());
+      for (let k = last - 1; k >= 1; k--) points.push(pointAt(levels[k].i, levels[k].u, chain[k].from));
+      buckets[tone].push(pathOf(oriented(points), true));
+    });
+  };
+  const overlap = (x, y) => Math.min(x.to, y.to) - Math.max(x.from, y.from);
+  const strip = (tone, a, b) => {
+    const below = a.groups.get(tone) ?? [];
+    const above = (b.groups.get(tone) ?? []).map((arc) => ({ arc, used: false }));
+    const quad = (lo, hi) => {
+      const points = [...arcPoints(a.i, a.u, lo.from, lo.to), ...arcPoints(b.i, b.u, hi.from, hi.to).reverse()];
+      buckets[tone].push(pathOf(oriented(points), true));
+    };
+    for (const arc of below) {
+      let best = null;
+      let score = -Infinity;
+      for (const entry of above) {
+        if (entry.used) continue;
+        const aligned = align(arc, entry.arc);
+        const value = overlap(arc, aligned);
+        if (value > score) (score = value), (best = entry);
+      }
+      if (best && score > -0.05) {
+        best.used = true;
+        quad(arc, align(arc, best.arc));
+      } else {
+        const centre = (arc.from + arc.to) / 2;
+        quad(arc, { from: centre, to: centre });
+      }
+    }
+    for (const entry of above) {
+      if (entry.used) continue;
+      const centre = (entry.arc.from + entry.arc.to) / 2;
+      quad({ from: centre, to: centre }, entry.arc);
+    }
+  };
+  const k = scaleOf(P);
+  let run = [];
+  const flush = () => {
+    const tones = [...new Set(run.flatMap((level) => [...level.groups.keys()]))].sort((x, y) => x - y);
+    for (const tone of tones) {
+      const countOf = (level) => (level.groups.get(tone) ?? []).length;
+      let start = 0;
+      for (let at = 1; at <= run.length; at++) {
+        if (at < run.length && countOf(run[at - 1]) === countOf(run[at])) continue;
+        if (at - 1 > start && countOf(run[start])) sheet(tone, run.slice(start, at));
+        if (at < run.length) strip(tone, run[at - 1], run[at]);
+        start = at;
+      }
+    }
+    run = [];
+  };
+  for (let i = 0; i < m - 1; i++) {
+    const ds = meridian[i + 1][0] - meridian[i][0];
+    if (Math.abs(ds) < 1e-9) {
+      flush();
+      continue;
+    }
+    const count = Math.max(1, rows);
+    const reach = (Math.hypot(ds, meridian[i + 1][1] - meridian[i][1]) * k) / count;
+    const limit = Math.max(1, Math.min(deepest, Math.ceil(Math.log2(Math.max(2, reach / fineness)))));
+    const coarse = Array.from({ length: count + 1 }, (_, index) => levelOf(i, index / count));
+    run.push(coarse[0]);
+    const refine = (a, b, depth) => {
+      const mid = levelOf(i, (a.u + b.u) / 2);
+      const split = depth < limit && (!same(a, b) || !same(a, mid) || (depth < 6 && strayOf(i, a, mid, b) > error));
+      if (!split) {
+        run.push(b);
+        return;
+      }
+      refine(a, mid, depth + 1);
+      refine(mid, b, depth + 1);
+    };
+    for (let index = 1; index <= count; index++) refine(coarse[index - 1], coarse[index], 0);
+  }
+  flush();
+  return buckets;
+}
+
+function sideOf(meridian) {
+  const m = meridian.length;
+  let first = 0;
+  let last = m - 1;
+  if (meridian[0][1] <= 1e-9) first = 1;
+  if (meridian[m - 1][1] <= 1e-9) last = m - 2;
+  const side = meridian.slice(first, last + 1);
+  for (let index = 1; index < side.length; index++) if (side[index][0] - side[index - 1][0] <= 1e-9) return null;
+  return side.length >= 3 ? side : null;
+}
+
+function surfaceOf(side, F, P, rims, { samples = 96, slope = null } = {}) {
+  const V = viewOf(P);
+  const aV = dot3(F.a, V);
+  const facing = Math.atan2(dot3(F.v, V), dot3(F.u, V));
+  const [left, right] = silhouettePoints(side, F, P, { samples, slope });
+  if (left.length <= samples || right.length <= samples) return null;
+  const s0 = side[0][0];
+  const s1 = side[side.length - 1][0];
+  const angleOf = (point) => angleToward(F, sub3(point, add3(F.o, mul3(F.a, dot3(sub3(point, F.o), F.a)))));
+  const wrap = (angle) => ((angle % TAU) + TAU) % TAU;
+  const arc = (s, r, from, to, through) => {
+    let sweep = wrap(to - from);
+    if (wrap(through - from) > sweep) sweep -= TAU;
+    const count = Math.max(4, Math.ceil(Math.abs(sweep) / (TAU / 96)), Math.ceil((Math.abs(sweep) * r * scaleOf(P)) / 1.5));
+    return Array.from({ length: count + 1 }, (_, index) => iso(pointOf(F, s, r, from + (sweep * index) / count), P));
+  };
+  const r0 = side[0][1];
+  const r1 = side[side.length - 1][1];
+  const bottom = -aV > 0 ? facing + Math.PI : facing;
+  const top = aV > 0 ? facing + Math.PI : facing;
+  const L = left.map((point) => iso(point, P));
+  const R = right.map((point) => iso(point, P));
+  const topArc = arc(s1, r1, angleOf(left[left.length - 1]), angleOf(right[right.length - 1]), top);
+  const bottomArc = arc(s0, r0, angleOf(right[0]), angleOf(left[0]), bottom);
+  const keepFirst = rims === "all" || rims === "first" || rims === "ends";
+  const keepLast = rims === "all" || rims === "last" || rims === "ends";
+  const fill = pathOf([...L, ...topArc, ...[...R].reverse(), ...bottomArc], true);
+  const outline = [pathOf(L), pathOf(R), keepLast ? pathOf(topArc) : "", keepFirst ? pathOf(bottomArc) : ""].join("");
+  const hull = hullOf([...arc(s0, r0, 0, TAU - 1e-6, Math.PI), ...arc(s1, r1, 0, TAU - 1e-6, Math.PI), ...L, ...R]);
+  let gap = 0;
+  for (const p of [...L, ...R]) {
+    let best = Infinity;
+    for (let index = 0; index < hull.length; index++) {
+      const a = hull[index];
+      const b = hull[(index + 1) % hull.length];
+      const dx = b[0] - a[0];
+      const dy = b[1] - a[1];
+      const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy || 1)));
+      best = Math.min(best, Math.hypot(p[0] - a[0] - dx * t, p[1] - a[1] - dy * t));
+    }
+    gap = Math.max(gap, best);
+  }
+  return { fill, outline, gap };
+}
+
+const softOf = (meridian) => meridian.some((point) => Boolean(point[2]));
+
+function lathe(meridian, F, P, { steps = stepsFor(Math.max(...meridian.map(([, r]) => r)), 32, 160, scaleOf(P)), fill = "auto", hole = null, bevel = 0, rims = "all", smooth: asked = "auto", waist = 0.5 } = {}) {
+  const smooth = asked === "auto" ? softOf(meridian) : asked;
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const aV = dot3(F.a, V);
+  const uV = dot3(F.u, V);
+  const vV = dot3(F.v, V);
+  const aL = dot3(F.a, L);
+  const uL = dot3(F.u, L);
+  const vL = dot3(F.v, L);
+  const n = steps;
+  const m = meridian.length;
+  const rings = meridian.map(([s, r]) => Array.from({ length: n }, (_, j) => iso(pointOf(F, s, r, (j / n) * TAU), P)));
+  const midC = [];
+  const midS = [];
+  for (let j = 0; j < n; j++) {
+    const t = ((j + 0.5) / n) * TAU;
+    midC.push(Math.cos(t));
+    midS.push(Math.sin(t));
+  }
+  const seen = [];
+  const tones = [];
+  for (let i = 0; i < m - 1; i++) {
+    const ds = meridian[i + 1][0] - meridian[i][0];
+    const dr = meridian[i + 1][1] - meridian[i][1];
+    const length = Math.hypot(ds, dr);
+    const row = [];
+    const toneRow = [];
+    for (let j = 0; j < n; j++) {
+      if (length < 1e-9) {
+        row.push(false);
+        toneRow.push(0);
+        continue;
+      }
+      const facing = ds * (midC[j] * uV + midS[j] * vV) - dr * aV;
+      const lit = (ds * (midC[j] * uL + midS[j] * vL) - dr * aL) / length;
+      row.push(facing > 1e-6 * length);
+      toneRow.push(bandOf(lit));
+    }
+    seen.push(row);
+    tones.push(toneRow);
+  }
+  const buckets = [[], [], [], [], []];
+  const all = [];
+  const smoothed = smooth ? smoothRows(meridian, F, P, { steps, ...(smooth === true ? {} : smooth) }) : null;
+  if (smoothed) smoothed.forEach((list, tone) => list.forEach((d) => (buckets[tone].push(d), all.push(d))));
+  for (let i = 0; i < m - 1; i++) {
+    if (smoothed && Math.abs(meridian[i + 1][0] - meridian[i][0]) > 1e-9) continue;
+    const keys = seen[i].map((visible, j) => (visible ? tones[i][j] : null));
+    for (const { key, run } of groupsOf(keys)) {
+      const a = run.map((j) => rings[i][j]);
+      const b = run.map((j) => rings[i + 1][j]).reverse();
+      const d = pathOf(oriented([...a, ...b]), true);
+      buckets[key].push(d);
+      all.push(d);
+    }
+  }
+  const phi = Math.atan2(vV, uV);
+  const flatV = Math.hypot(uV, vV);
+  const rangeOf = (i) => {
+    const ds = meridian[i + 1][0] - meridian[i][0];
+    const dr = meridian[i + 1][1] - meridian[i][1];
+    if (Math.hypot(ds, dr) < 1e-9) return null;
+    if (Math.abs(ds) < 1e-9 || flatV < 1e-9) return -dr * aV > 1e-9 ? [-1, 1] : null;
+    const c = (dr * aV) / (ds * flatV);
+    return ds > 0 ? [Math.max(-1, c), 1] : [-1, Math.min(1, c)];
+  };
+  const arcsOf = (ranges) => {
+    if (ranges.some((range) => !range)) return [];
+    const lo = Math.max(...ranges.map(([x]) => x));
+    const hi = Math.min(...ranges.map(([, x]) => x));
+    if (lo >= hi - 1e-9) return [];
+    const near = Math.acos(Math.min(1, hi));
+    const far = Math.acos(Math.max(-1, lo));
+    if (hi >= 1 && lo <= -1) return [[phi, phi + TAU]];
+    if (hi >= 1) return [[phi - far, phi + far]];
+    if (lo <= -1) return [[phi + near, phi + TAU - near]];
+    return [[phi + near, phi + far], [phi - far, phi - near]];
+  };
+  const along = (s, r, [from, to]) => {
+    const count = Math.max(2, Math.ceil(((to - from) * Math.max(r, 1e-6) * scaleOf(P)) / 1.5));
+    return Array.from({ length: count + 1 }, (_, j) => iso(pointOf(F, s, r, from + ((to - from) * j) / count), P));
+  };
+  const creases = [];
+  for (let i = 1; i < m - 1; i++) {
+    if (meridian[i][2] || meridian[i][1] <= 1e-9) continue;
+    for (const arc of arcsOf([rangeOf(i - 1), rangeOf(i)])) creases.push(pathOf(along(meridian[i][0], meridian[i][1], arc)));
+  }
+  let bevelPath = "";
+  if (bevel > 0 && m > 2) {
+    const ends = [];
+    if (meridian[0][1] <= 1e-9) ends.push([0, 1, 1]);
+    if (meridian[m - 1][1] <= 1e-9) ends.push([m - 2, m - 2, m - 3]);
+    for (const [cap, rim, side] of ends) {
+      const [s, r] = meridian[rim];
+      for (const arc of arcsOf([rangeOf(cap), rangeOf(side)])) {
+        const inset = along(s, Math.max(0, r - bevel), arc);
+        const edge = along(s, r, arc);
+        bevelPath += pathOf([edge[0], ...inset.slice(1, -1), edge[edge.length - 1]]);
+      }
+    }
+  }
+  const { fill: fillPath, outline } = outlineOf(meridian, F, P, { steps: n, fill, hole, rims, smooth, waist, all });
+  return {
+    fill: fillPath,
+    outline,
+    crease: creases.join(""),
+    top: buckets[4].join(""),
+    shades: buckets.slice(0, 4).map((list) => list.join("")),
+    bevel: bevelPath || undefined,
+    seamless: Boolean(smoothed),
+  };
+}
+
+function shapeOf(meridian, P, smooth) {
+  if (smooth && smooth.radius) {
+    const segments = meridian.slice(0, -1).map(([s0], index) => (Math.abs(meridian[index + 1][0] - s0) > 1e-9 ? { radius: smooth.radius, slope: smooth.slope } : null));
+    return curved(meridian, P, segments);
+  }
+  const curves = smooth && !smooth.slope ? curveRuns(meridian) : null;
+  return curves && curves.some(Boolean) ? curved(meridian, P, curves) : meridian;
+}
+
+function outlineOf(meridian, F, P, { steps = stepsFor(Math.max(...meridian.map(([, r]) => r)), 32, 160, scaleOf(P)), fill = "auto", hole = null, rims = "all", smooth: asked = "auto", waist = 0.5, all = null } = {}) {
+  const smooth = asked === "auto" ? softOf(meridian) : asked;
+  const n = steps;
+  let fillPath;
+  let outline;
+  const shape = shapeOf(meridian, P, smooth);
+  const side = fill === "auto" || fill === "surface" ? sideOf(shape) : null;
+  const surface = side && !hole ? surfaceOf(side, F, P, rims, { slope: smooth && smooth.slope ? smooth.slope : null }) : null;
+  if (surface && (fill === "surface" || surface.gap > waist)) {
+    fillPath = surface.fill;
+    outline = surface.outline;
+  } else if (fill === "hull" || fill === "auto" || fill === "surface") {
+    const most = Math.max(...shape.map(([, r]) => r));
+    const around = Math.min(320, Math.max(n, Math.ceil((TAU * most * scaleOf(P)) / 1.5)));
+    const tagged = [];
+    shape.forEach(([s, r], index) => {
+      for (let j = 0; j < around; j++) tagged.push({ p: iso(pointOf(F, s, r, (j / around) * TAU), P), ring: index });
+    });
+    const hull = hullTagged(tagged);
+    const holePath = hole ? pathOf(Array.from({ length: around }, (_, j) => iso(pointOf(F, hole[0], hole[1], (j / around) * TAU), P)), true) : "";
+    fillPath = pathOf(hull.map(({ p }) => p), true) + holePath;
+    if (rims === "all") {
+      outline = pathOf(hull.map(({ p }) => p), true) + holePath;
+    } else {
+      const keepFirst = rims === "first" || rims === "ends";
+      const keepLast = rims === "last" || rims === "ends";
+      const edges = hull.map((a, index) => {
+        const b = hull[(index + 1) % hull.length];
+        const same = a.ring === b.ring;
+        const keep = !same || (a.ring !== 0 && a.ring !== shape.length - 1) || (keepFirst && a.ring === 0) || (keepLast && a.ring === shape.length - 1);
+        return [a.p, b.p, keep];
+      });
+      outline = chains(edges).map((points) => pathOf(points)).join("") + holePath;
+    }
+  } else {
+    fillPath = all ? all.join("") : (({ shades, top }) => [...shades, top].join(""))(lathe(meridian, F, P, { steps: n, fill: "auto", hole, rims, smooth, waist }));
+    outline = "";
+  }
+  return { fill: fillPath, outline };
+}
+
+const signedArea = (points) => points.reduce((sum, [x, y], index) => {
+  const [nx, ny] = points[(index + 1) % points.length];
+  return sum + x * ny - nx * y;
+}, 0);
+
+const oriented = (points) => (signedArea(points) < 0 ? [...points].reverse() : points);
+
+const saddleStart = (R, a, angle) => Math.sqrt(Math.max(0, R * R - a * a * Math.cos(angle) ** 2));
+
+function saddleOf(F, a, start, s1, P, { steps = stepsFor(a, 24) } = {}) {
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const n = steps;
+  const angle = (j) => (j / n) * TAU;
+  const from = typeof start === "function" ? start : (t) => saddleStart(start, a, t);
+  const low = Array.from({ length: n }, (_, j) => iso(pointOf(F, from(angle(j)), a, angle(j)), P));
+  const high = Array.from({ length: n }, (_, j) => iso(pointOf(F, s1, a, angle(j)), P));
+  const seen = [];
+  const tones = [];
+  for (let j = 0; j < n; j++) {
+    const normal = radialOf(F, angle(j + 0.5));
+    seen.push(dot3(normal, V) > 1e-6);
+    tones.push(bandOf(dot3(normal, L)));
+  }
+  const buckets = [[], [], [], [], []];
+  const fills = [];
+  const keys = seen.map((visible, j) => (visible ? tones[j] : null));
+  for (const { key, run } of groupsOf(keys)) {
+    const d = pathOf(oriented([...run.map((j) => low[j]), ...run.map((j) => high[j]).reverse()]), true);
+    buckets[key].push(d);
+    fills.push(d);
+  }
+  const capSeen = dot3(F.a, V) > 1e-6;
+  if (capSeen) {
+    const d = pathOf(oriented(high), true);
+    buckets[bandOf(dot3(F.a, L))].push(d);
+    fills.push(d);
+  }
+  const front = runsOf(seen);
+  const back = runsOf(seen.map((visible) => !visible));
+  const edges = [];
+  for (const run of front) {
+    edges.push(pathOf(run.map((j) => low[j])));
+    edges.push(pathOf([low[run[0]], high[run[0]]]), pathOf([low[run[run.length - 1]], high[run[run.length - 1]]]));
+  }
+  for (const run of capSeen ? back : front) edges.push(pathOf(run.map((j) => high[j])));
+  return {
+    fill: fills.join(""),
+    outline: edges.join(""),
+    crease: capSeen ? front.map((run) => pathOf(run.map((j) => high[j]))).join("") : "",
+    top: buckets[4].join(""),
+    shades: buckets.slice(0, 4).map((list) => list.join("")),
+    seamless: true,
+  };
+}
+
+function prismOf(F, polygon, s0, s1, P) {
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const ring = oriented(polygon.map(([x, y]) => [x, y]));
+  const n = ring.length;
+  const at = (s, [x, y]) => [F.o[0] + F.a[0] * s + F.u[0] * x + F.v[0] * y, F.o[1] + F.a[1] * s + F.u[1] * x + F.v[1] * y, F.o[2] + F.a[2] * s + F.u[2] * x + F.v[2] * y];
+  const low = ring.map((point) => iso(at(s0, point), P));
+  const high = ring.map((point) => iso(at(s1, point), P));
+  const buckets = [[], [], [], [], []];
+  const seen = [];
+  for (let j = 0; j < n; j++) {
+    const [x0, y0] = ring[j];
+    const [x1, y1] = ring[(j + 1) % n];
+    const normal = unit3(add3(mul3(F.u, y1 - y0), mul3(F.v, -(x1 - x0))));
+    const visible = dot3(normal, V) > 1e-6;
+    seen.push(visible);
+    if (visible) buckets[bandOf(dot3(normal, L))].push(pathOf([low[j], low[(j + 1) % n], high[(j + 1) % n], high[j]], true));
+  }
+  const ends = [[s0, low, mul3(F.a, -1)], [s1, high, F.a]];
+  const capSeen = ends.map(([, , normal]) => dot3(normal, V) > 1e-6);
+  ends.forEach(([, points, normal], index) => capSeen[index] && buckets[bandOf(dot3(normal, L))].push(pathOf(points, true)));
+  const hull = hullOf([...low, ...high]);
+  const creases = [];
+  for (let j = 0; j < n; j++) {
+    const prev = (j - 1 + n) % n;
+    const a = [ring[j][0] - ring[prev][0], ring[j][1] - ring[prev][1]];
+    const b = [ring[(j + 1) % n][0] - ring[j][0], ring[(j + 1) % n][1] - ring[j][1]];
+    const sharp = (a[0] * b[0] + a[1] * b[1]) / (Math.hypot(a[0], a[1]) * Math.hypot(b[0], b[1]) || 1) < Math.cos(0.35);
+    if (sharp && seen[j] && seen[prev]) creases.push(pathOf([low[j], high[j]]));
+    ends.forEach(([, points], index) => capSeen[index] && seen[j] && creases.push(pathOf([points[j], points[(j + 1) % n]])));
+  }
+  return { fill: pathOf(hull, true), outline: pathOf(hull, true), crease: creases.join(""), top: buckets[4].join(""), shades: buckets.slice(0, 4).map((list) => list.join("")) };
+}
+
+function stadium(r0, r1, offset, steps = 32) {
+  const circle = (cx, r) => Array.from({ length: steps }, (_, index) => [cx + r * Math.cos((index / steps) * TAU), r * Math.sin((index / steps) * TAU)]);
+  return hullOf([...circle(0, r0), ...circle(offset, r1)]);
+}
+
+function sphereOf(centre, r, P, { steps = 48 } = {}) {
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const F = frameAlong(centre, V);
+  const flat = (p) => iso(p, P);
+  const rim = Array.from({ length: steps }, (_, index) => pointOf(F, 0, r, (index / steps) * TAU));
+  const outline = pathOf(rim.map(flat), true);
+  const capOf = (threshold) => {
+    const points = rim.filter((p) => dot3(sub3(p, centre), L) / r >= threshold).map(flat);
+    const c = dot3(L, V);
+    const LF = frameAlong(add3(centre, mul3(L, r * threshold)), L);
+    const radius = r * Math.sqrt(Math.max(0, 1 - threshold * threshold));
+    for (let index = 0; index < steps; index++) {
+      const p = pointOf(LF, 0, radius, (index / steps) * TAU);
+      if (dot3(sub3(p, centre), V) >= -1e-9) points.push(flat(p));
+    }
+    if (c > threshold) points.push(flat(add3(centre, mul3(V, r))));
+    return points.length > 2 ? pathOf(hullOf(points), true) : "";
+  };
+  const shades = [outline, capOf(BANDS[1]), capOf(BANDS[2]), capOf(BANDS[3])];
+  return { fill: outline, outline, crease: "", top: "", shades, seamless: true };
+}
+
+const disc = (s0, s1, r, F, P, options = {}) =>
+  lathe(
+    [
+      [s0, 0],
+      [s0, r],
+      [s1, r],
+      [s1, 0],
+    ],
+    F,
+    P,
+    { steps: stepsFor(r, 32, 160, scaleOf(P)), ...options },
+  );
+
+const ringBand = (s0, s1, rIn, rOut, F, P, options = {}) =>
+  lathe(
+    [
+      [s0, rIn],
+      [s0, rOut],
+      [s1, rOut],
+      [s1, rIn],
+    ],
+    F,
+    P,
+    { steps: stepsFor(rOut, 32, 160, scaleOf(P)), hole: null, ...options },
+  );
+
+function solidOf(profile, F, P, options = {}) {
+  const first = profile[0];
+  const last = profile[profile.length - 1];
+  const meridian = [[first[0], 0], ...profile, [last[0], 0]];
+  const most = Math.max(...profile.map(([, r]) => r));
+  return lathe(meridian, F, P, { steps: stepsFor(most, 32, 160, scaleOf(P)), ...options });
+}
+
+function bandOfProfile(profile, F, P, options = {}) {
+  const most = Math.max(...profile.map(([, r]) => r));
+  return lathe(profile, F, P, { steps: stepsFor(most, 32, 160, scaleOf(P)), ...options });
+}
+
+function silhouettePoints(profile, F, P, { samples = 72, slope: given = null, radius = null } = {}) {
+  const V = viewOf(P);
+  const aV = dot3(F.a, V);
+  const uV = dot3(F.u, V);
+  const vV = dot3(F.v, V);
+  const facing = Math.atan2(vV, uV);
+  const flat = Math.hypot(uV, vV) || 1e-9;
+  const s0 = profile[0][0];
+  const s1 = profile[profile.length - 1][0];
+  const radiusAt = radius ?? ((s) => {
+    let index = 1;
+    while (index < profile.length - 1 && profile[index][0] < s) index++;
+    const [sa, ra] = profile[index - 1];
+    const [sb, rb] = profile[index];
+    return ra + ((rb - ra) * (s - sa)) / (sb - sa || 1);
+  });
+  const side = (sign) => {
+    const points = [];
+    for (let step = 0; step <= samples; step++) {
+      const s = s0 + ((s1 - s0) * step) / samples;
+      const h = (s1 - s0) / samples / 2 || 0.01;
+      const slope = given ? given(s) : (radiusAt(Math.min(s1, s + h)) - radiusAt(Math.max(s0, s - h))) / (Math.min(s1, s + h) - Math.max(s0, s - h) || 1);
+      const c = (slope * aV) / flat;
+      if (Math.abs(c) > 1) continue;
+      points.push(pointOf(F, s, radiusAt(s), facing + sign * Math.acos(c)));
+    }
+    return points;
+  };
+  return [side(1), side(-1)];
+}
+
+const silhouetteOf = (profile, F, P, options = {}) =>
+  silhouettePoints(profile, F, P, options)
+    .map((points) => pathOf(points.map((point) => iso(point, P))))
+    .join("");
+
+function profileCurve(profile, { slope = null, radius = null } = {}) {
+  for (let index = 1; index < profile.length; index++) if (profile[index][0] - profile[index - 1][0] <= 1e-9) throw new Error(`profileCurve: s must rise along the profile (point ${index} at s = ${profile[index][0]})`);
+  const segments = curveRuns(profile);
+  const s0 = profile[0][0];
+  const s1 = profile[profile.length - 1][0];
+  const find = (s) => {
+    let lo = 0;
+    let hi = profile.length - 2;
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >> 1;
+      if (profile[mid][0] <= s) lo = mid;
+      else hi = mid - 1;
+    }
+    return lo;
+  };
+  const linear = (index, s) => {
+    const [sa, ra] = profile[index];
+    const [sb, rb] = profile[index + 1];
+    return [ra + ((rb - ra) * (s - sa)) / (sb - sa), (rb - ra) / (sb - sa)];
+  };
+  const radiusAt = radius ?? ((s) => {
+    const at = Math.max(s0, Math.min(s1, s));
+    const index = find(at);
+    return segments[index] ? segments[index].radius(at) : linear(index, at)[0];
+  });
+  const slopeAt = slope ?? ((s) => {
+    const at = Math.max(s0, Math.min(s1, s));
+    const index = find(at);
+    return segments[index] ? segments[index].slope(at) : linear(index, at)[1];
+  });
+  return { s0, s1, radius: radiusAt, slope: slopeAt, analytic: Boolean(slope && radius) };
+}
+
+function bandsOf(profile, cuts, F, P, { slope = null, radius = null, steps, rows = 6, rims = "none", fill = "auto", samples = 72 } = {}) {
+  const curve = profileCurve(profile, { slope, radius });
+  const { s0, s1 } = curve;
+  const stops = [s0, ...[...new Set(cuts)].filter((s) => s > s0 + 1e-6 && s < s1 - 1e-6).sort((a, b) => a - b), s1];
+  const most = Math.max(...profile.map(([, r]) => r), ...stops.map((s) => curve.radius(s)));
+  const n = steps ?? stepsFor(most, 32, 160, scaleOf(P));
+  const knot = (s, soft) => (soft ? [s, curve.radius(s), 1] : [s, curve.radius(s)]);
+  const meridianOf = (a, b) => [knot(a), ...profile.filter(([s]) => s > a + 1e-9 && s < b - 1e-9).map(([s, , soft]) => knot(s, soft)), knot(b)];
+  const shading = { slope: curve.slope, radius: curve.radius, rows };
+  const bands = stops.slice(0, -1).map((a, index) => {
+    const b = stops[index + 1];
+    const meridian = meridianOf(a, b);
+    const paths = lathe(meridian, F, P, { steps: n, rims, fill, smooth: shading });
+    const seam = index < stops.length - 2 ? arcOf(F, b, curve.radius(b), P, { slope: curve.slope(b) }) : "";
+    return { s0: a, s1: b, profile: meridian, paths: { ...paths, outline: "" }, outline: paths.outline, seam };
+  });
+  const sidesOf = (from = s0, to = s1, { ends = false, count = samples } = {}) => {
+    const span = [Math.max(s0, from), Math.min(s1, to)];
+    const dense = Array.from({ length: count + 1 }, (_, index) => knot(span[0] + ((span[1] - span[0]) * index) / count, true));
+    const points = silhouettePoints(dense, F, P, { samples: count, slope: curve.slope, radius: curve.radius });
+    const rim = (s) => arcOf(F, s, curve.radius(s), P, { slope: curve.slope(s) });
+    const rimsAt = ends === true ? span : ends === "first" ? [span[0]] : ends === "last" ? [span[1]] : [];
+    return { d: points.map((list) => pathOf(list.map((point) => iso(point, P)))).join("") + rimsAt.map(rim).join(""), points };
+  };
+  return { bands, sidesOf, radius: curve.radius, slope: curve.slope, steps: n, s0, s1 };
+}
+
+function arcOf(F, s, r, P, { slope = 0, steps = 0, least = 0.02, inward = false, from = 0, to = TAU, trim = 0.3 } = {}) {
+  const V = viewOf(P);
+  const aV = dot3(F.a, V);
+  const uV = dot3(F.u, V);
+  const vV = dot3(F.v, V);
+  const flat = Math.hypot(uV, vV);
+  const phi = Math.atan2(vV, uV);
+  const norm = Math.hypot(1, slope);
+  const full = Math.abs(to - from - TAU) < 1e-9;
+  let visible;
+  if (flat < 1e-9) visible = (inward ? slope * aV / norm > least : -slope * aV / norm > least) ? [[phi, phi + TAU]] : [];
+  else if (inward) {
+    const c = (slope * aV - least * norm) / flat;
+    visible = c <= -1 ? [] : c >= 1 ? [[phi, phi + TAU]] : [[phi + Math.acos(c), phi + TAU - Math.acos(c)]];
+  } else {
+    const c = (least * norm + slope * aV) / flat;
+    visible = c >= 1 ? [] : c <= -1 ? [[phi, phi + TAU]] : [[phi - Math.acos(c), phi + Math.acos(c)]];
+  }
+  const at = (t) => iso(pointOf(F, s, r, t), P);
+  const speed = (t) => {
+    const a = at(t - 1e-3);
+    const b = at(t + 1e-3);
+    return Math.hypot(b[0] - a[0], b[1] - a[1]) / 2e-3;
+  };
+  const count = (span) => Math.max(2, Math.ceil(((steps || stepsFor(r, 24, 112)) * span) / TAU), Math.ceil((span * r * scaleOf(P)) / 1.5));
+  const out = [];
+  for (const [a, b] of visible) {
+    if (b - a >= TAU - 1e-9 && full) {
+      const n = count(TAU);
+      out.push(pathOf(Array.from({ length: n }, (_, j) => at(from + (j / n) * TAU)), true));
+      continue;
+    }
+    const pieces = full ? [[a, b, true, true]] : [];
+    if (!full)
+      for (let turn = -2; turn <= 2; turn++) {
+        const lo = Math.max(a + turn * TAU, from);
+        const hi = Math.min(b + turn * TAU, to);
+        if (hi - lo > 1e-6) pieces.push([lo, hi, lo > from + 1e-9, hi < to - 1e-9]);
+      }
+    for (const [lo, hi, limb0, limb1] of pieces) {
+      const span = hi - lo;
+      const cut0 = limb0 && trim > 0 ? Math.min(span * 0.25, trim / (speed(lo) || 1)) : 0;
+      const cut1 = limb1 && trim > 0 ? Math.min(span * 0.25, trim / (speed(hi) || 1)) : 0;
+      const t0 = lo + cut0;
+      const t1 = hi - cut1;
+      const n = count(t1 - t0);
+      out.push(pathOf(Array.from({ length: n + 1 }, (_, j) => at(t0 + ((t1 - t0) * j) / n))));
+    }
+  }
+  return out.join("");
+}
+
+function circleOf(F, s, r, P, steps = 0) {
+  const count = steps || stepsFor(r, 24, 112);
+  return pathOf(
+    Array.from({ length: count }, (_, j) => iso(pointOf(F, s, r, (j / count) * TAU), P)),
+    true,
+  );
+}
+
+function spokesOf(F, s, r0, r1, count, P, { phase = 0, sweep = 0, from = 0, to = TAU } = {}) {
+  const lines = [];
+  for (let index = 0; index < count; index++) {
+    const t = phase + from + (index / count) * (to - from);
+    lines.push(pathOf([iso(pointOf(F, s, r0, t), P), iso(pointOf(F, s, r1, t + sweep), P)]));
+  }
+  return lines.join("");
+}
+
+const fadeOf = (value, [lo, hi]) => {
+  const t = Math.max(0, Math.min(1, (value - lo) / (hi - lo || 1e-9)));
+  return t * t * (3 - 2 * t);
+};
+
+function ribsOf(F, s0, s1, r, count, P, { phase = 0, twist = 0, least = 0.12, r1 = r, fade = null, seams = false } = {}) {
+  const V = viewOf(P);
+  const lines = [];
+  const slope = (r1 - r) / (s1 - s0 || 1);
+  for (let index = 0; index < count; index++) {
+    const t = phase + (index / count) * TAU;
+    const radial = radialOf(F, t + twist / 2);
+    const normal = unit3([radial[0] - slope * F.a[0], radial[1] - slope * F.a[1], radial[2] - slope * F.a[2]]);
+    const facing = dot3(normal, V);
+    const d = pathOf([iso(pointOf(F, s0, r, t), P), iso(pointOf(F, s1, r1, t + twist), P)]);
+    if (fade) {
+      const alpha = fadeOf(facing, fade);
+      if (alpha > 0.02) lines.push({ d, alpha });
+      continue;
+    }
+    if (facing < least) continue;
+    lines.push(d);
+  }
+  const ends = seams ? [seams === "last" ? "" : arcOf(F, s0, r, P, { slope }), seams === "first" ? "" : arcOf(F, s1, r1, P, { slope })].filter(Boolean) : [];
+  if (fade) return [...lines, ...ends.map((d) => ({ d, alpha: 1 }))];
+  return [...lines, ...ends].join("");
+}
+
+function rodOut(F, from, to, r, P, { stroke = 0, ...options } = {}) {
+  const pad = 0.35 / scaleOf(P);
+  const ring = (s) => Array.from({ length: 48 }, (_, index) => iso(pointOf(F, s, r + pad, (index / 48) * TAU), P));
+  return {
+    paths: disc(from - stroke, to, r, F, P, options),
+    clip: pathOf(hullOf([...ring(from), ...ring(to + stroke)]), true),
+    from,
+    to,
+    stroke,
+    reach: to + stroke,
+  };
+}
+
+function dotsOf(F, s, r, count, P, { phase = 0, slope = 0, least = 0.08, all = false, fade = null } = {}) {
+  const V = viewOf(P);
+  const out = [];
+  for (let index = 0; index < count; index++) {
+    const t = phase + (index / count) * TAU;
+    let alpha = 1;
+    if (!all) {
+      const radial = radialOf(F, t);
+      const normal = unit3([radial[0] - slope * F.a[0], radial[1] - slope * F.a[1], radial[2] - slope * F.a[2]]);
+      const facing = dot3(normal, V);
+      if (fade) alpha = fadeOf(facing, fade);
+      else if (facing < least) continue;
+      if (alpha <= 0.02) continue;
+    }
+    const [x, y] = iso(pointOf(F, s, r, t), P);
+    out.push(alpha < 1 ? [x, y, alpha] : [x, y]);
+  }
+  return out;
+}
+
+function facingOf(F, angle, P, slope = 0) {
+  const radial = radialOf(F, angle);
+  return dot3(unit3([radial[0] - slope * F.a[0], radial[1] - slope * F.a[1], radial[2] - slope * F.a[2]]), viewOf(P));
+}
+
+function fillet(points, radius, perArc = 7, { P = null, tube = 0, margin = 1.3 } = {}) {
+  if (points.length < 3) return points.map((p) => [...p]);
+  const V = P && tube ? viewOf(P) : null;
+  const out = [[...points[0]]];
+  for (let index = 1; index < points.length - 1; index++) {
+    const prev = points[index - 1];
+    const here = points[index];
+    const next = points[index + 1];
+    const into = unit3(sub3(here, prev));
+    const outOf = unit3(sub3(next, here));
+    const cosTurn = Math.max(-1, Math.min(1, dot3(into, outOf)));
+    const turn = Math.acos(cosTurn);
+    if (turn < 1e-3) {
+      out.push([...here]);
+      continue;
+    }
+    const room = Math.min(len3(sub3(here, prev)), len3(sub3(next, here))) * 0.48;
+    const facing = V ? Math.abs(dot3(unit3(cross3(into, outOf)), V)) : 1;
+    const bend = V ? Math.max(radius, (margin * tube) / (0.7 * Math.max(0.05, facing) ** 2)) : radius;
+    const cut = Math.min(bend * Math.tan(turn / 2), room);
+    const a = sub3(here, mul3(into, cut));
+    const b = add3(here, mul3(outOf, cut));
+    const count = Math.max(2, Math.ceil((perArc * turn) / (Math.PI / 2)));
+    for (let step = 0; step <= count; step++) {
+      const t = step / count;
+      const p0 = lerp3(a, here, t);
+      const p1 = lerp3(here, b, t);
+      out.push(lerp3(p0, p1, t));
+    }
+  }
+  out.push([...points[points.length - 1]]);
+  return out;
+}
+
+function resample(points, spacing) {
+  const lengths = [0];
+  for (let index = 1; index < points.length; index++) lengths.push(lengths[index - 1] + len3(sub3(points[index], points[index - 1])));
+  const total = lengths[lengths.length - 1];
+  const count = Math.max(1, Math.round(total / spacing));
+  const out = [];
+  let segment = 1;
+  for (let step = 0; step <= count; step++) {
+    const at = (total * step) / count;
+    while (segment < points.length - 1 && lengths[segment] < at) segment++;
+    const a = points[segment - 1];
+    const b = points[segment];
+    const span = lengths[segment] - lengths[segment - 1] || 1;
+    out.push(lerp3(a, b, Math.min(1, Math.max(0, (at - lengths[segment - 1]) / span))));
+  }
+  return out;
+}
+
+function pathLength(points) {
+  let total = 0;
+  for (let index = 1; index < points.length; index++) total += len3(sub3(points[index], points[index - 1]));
+  return total;
+}
+
+function cut(points, from, to) {
+  const out = [];
+  let walked = 0;
+  for (let index = 1; index < points.length; index++) {
+    const a = points[index - 1];
+    const b = points[index];
+    const length = len3(sub3(b, a));
+    const start = walked;
+    const end = walked + length;
+    if (end >= from && start <= to) {
+      const t0 = Math.max(0, (from - start) / (length || 1));
+      const t1 = Math.min(1, (to - start) / (length || 1));
+      if (!out.length) out.push(lerp3(a, b, t0));
+      out.push(lerp3(a, b, t1));
+    }
+    walked = end;
+  }
+  return out;
+}
+
+const pointAlong = (points, at) => {
+  const piece = cut(points, at, at + 0.01);
+  return piece[0] ?? points[points.length - 1];
+};
+
+function tangentAlong(points, at) {
+  const total = pathLength(points);
+  const a = pointAlong(points, Math.max(0, at - 0.6));
+  const b = pointAlong(points, Math.min(total, at + 0.6));
+  return unit3(sub3(b, a));
+}
+
+function spiral(F, s, r0, r1, a0, a1, steps = 28) {
+  const out = [];
+  for (let index = 0; index <= steps; index++) {
+    const t = index / steps;
+    out.push(pointOf(F, s, r0 + (r1 - r0) * t, a0 + (a1 - a0) * t));
+  }
+  return out;
+}
+
+function arcPoints(F, s, r, a0, a1, steps = 24) {
+  return Array.from({ length: steps + 1 }, (_, index) => pointOf(F, s, r, a0 + ((a1 - a0) * index) / steps));
+}
+
+return {dot3,add3,sub3,mul3,len3,unit3,cross3,lerp3,viewOf,lightOf,scaleOf,bandOf,toneOf,frameAlong,frameOf,pointOf,radialOf,tangentOf,angleToward,hullOf,runsOf,stepsFor,curveRuns,softOf,lathe,outlineOf,saddleStart,saddleOf,prismOf,stadium,sphereOf,disc,ringBand,solidOf,bandOfProfile,silhouettePoints,silhouetteOf,profileCurve,bandsOf,arcOf,circleOf,spokesOf,fadeOf,ribsOf,rodOut,dotsOf,facingOf,fillet,resample,pathLength,cut,pointAlong,tangentAlong,spiral,arcPoints};
+})();
+const anatomyKit = {...anatomyIso, ...anatomyLathe};
+const benchRegistry = new Map();
+const rigHitHandlers = new WeakMap();
+const reducedRigMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+function registerBench(id, bench) {
+  benchRegistry.set(String(id), bench);
+}
+
+function svgHit(id, label, x, y, r = 20) {
+  const safeLabel = String(label).replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;');
+  return `<g class="rig-hit" role="button" tabindex="0" data-rig-hit="${id}" aria-label="${safeLabel}"><title>${safeLabel}</title><circle class="rig-hit-area" cx="${x}" cy="${y}" r="${r}"/><circle class="rig-hit-marker" cx="${x}" cy="${y}" r="6"/></g>`;
+}
+
+function bindHits(host, handlers) {
+  if (!rigHitHandlers.has(host)) {
+    const activate = event => {
+      let target = event.target.closest('[data-rig-hit]');
+      if (event.type === 'click' && event.detail > 0 && target?.ownerSVGElement) {
+        let closest = Infinity;
+        for (const candidate of target.ownerSVGElement.querySelectorAll('[data-rig-hit]')) {
+          const area = candidate.querySelector('.rig-hit-area');
+          if (!area || !area.getClientRects().length) continue;
+          const box = area.getBoundingClientRect();
+          const dx = event.clientX - (box.left + box.width / 2);
+          const dy = event.clientY - (box.top + box.height / 2);
+          const distance = dx * dx + dy * dy;
+          if (box.width && box.height && (2*dx/box.width)**2+(2*dy/box.height)**2 <= 1 && distance < closest) {
+            target = candidate;
+            closest = distance;
+          }
+        }
+      }
+      const action = target && rigHitHandlers.get(host)?.[target.dataset.rigHit];
+      if (!action) return;
+      if (event.type === 'keydown') {
+        if (event.repeat || !['Enter', ' '].includes(event.key)) return;
+        event.preventDefault();
+      }
+      action(event, target);
+    };
+    host.addEventListener('click', activate);
+    host.addEventListener('keydown', activate);
+  }
+  rigHitHandlers.set(host, handlers);
+}
+
+function rigTimeline(host, durationMs, render) {
+  if (reducedRigMotion.matches || durationMs <= 0) {
+    render(1);
+    return () => {};
+  }
+  let first;
+  let frame = requestAnimationFrame(tick);
+  function tick(now) {
+    first ??= now;
+    const ended = document.hidden || host.closest('[hidden]');
+    const progress = ended ? 1 : Math.min(1, (now - first) / durationMs);
+    render(progress);
+    if (progress < 1) frame = requestAnimationFrame(tick);
+  }
+  return () => cancelAnimationFrame(frame);
+}
+
+function mountBench(chapter, bench) {
+  const section = chapter.querySelector('.rig-lab');
+  const host = section.querySelector('.rig-host');
+  const theme = matchMedia('(prefers-color-scheme: dark)');
+  const setTheme = () => { host.dataset.theme = theme.matches ? 'dark' : 'light'; };
+  setTheme();
+  theme.addEventListener('change', setTheme);
+  bench.mount(host, {k:anatomyKit, svgHit, bindHits, timeline:(ms, draw) => rigTimeline(host, ms, draw)});
+  const compact = ['lab-1','lab-5','lab-6'].includes(chapter.id);
+  const prepareDrawing = scene => {
+    for (const drawing of scene.querySelectorAll('svg:has([data-rig-hit])')) {
+      drawing.setAttribute('role','group');
+      if (!compact || drawing.hasAttribute('data-framed')) continue;
+      const {x,y,width,height} = drawing.viewBox.baseVal;
+      drawing.setAttribute('viewBox',`${x+width*.105} ${y+height*.025} ${width*.79} ${height*.95}`);
+      drawing.setAttribute('data-framed','');
+    }
+  };
+  for (const scene of host.querySelectorAll('.rig-scene')) {
+    if (compact) scene.classList.add('rig-scene-upright');
+    prepareDrawing(scene);
+    new MutationObserver(() => prepareDrawing(scene)).observe(scene,{childList:true});
+  }
+  const choices = section.querySelector('.rig-choices');
+  const feedback = section.querySelector('.rig-feedback');
+  for (const choice of bench.question.choices) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = choice.label;
+    button.setAttribute('aria-pressed', 'false');
+    button.addEventListener('click', () => {
+      for (const candidate of choices.children) candidate.setAttribute('aria-pressed', String(candidate === button));
+      feedback.textContent = choice.feedback;
+      feedback.dataset.correct = String(Boolean(choice.correct));
+    });
+    choices.append(button);
+  }
+}
+</script>
+<script>(() => {
+  const light = [
+    {nm:365.0, nu:8.214, name:'近紫外', color:'#bba9fc'},
+    {nm:404.7, nu:7.408, name:'紫', color:'#a18cff'},
+    {nm:435.8, nu:6.879, name:'蓝', color:'#80afff'},
+    {nm:546.1, nu:5.490, name:'绿', color:'#86e7af'},
+    {nm:577.0, nu:5.196, name:'黄', color:'#f0cf75'},
+  ];
+  const methods = [['zero','零电流法'],['comp','补偿法'],['knee','拐点法']];
+  const electron = 1.602176634e-19;
+  const referenceH = 6.62607015e-34;
+  const workFunction = 1.82;
+  const clamp = (n,low,high) => Math.min(high,Math.max(low,n));
+  const rounded = (n,digits) => Math.round(n * 10**digits) / 10**digits;
+  const fixed = (n,digits=3) => rounded(n,digits).toFixed(digits).replace('-', '−');
+  const section = (title,pages,html) => ({title,pages,html});
+
+  function fit(rows) {
+    if (rows.length < 2) return;
+    const average = axis => rows.reduce((sum,row)=>sum+row[axis],0)/rows.length;
+    const mx = average(0), my = average(1);
+    const spread = rows.reduce((sum,[x])=>sum+(x-mx)**2,0);
+    if (!spread) return;
+    const slope = rows.reduce((sum,[x,y])=>sum+(x-mx)*(y-my),0)/spread;
+    return {slope, intercept:my-slope*mx};
+  }
+
+  addLesson({
+    id:'24', title:'光电效应实验', pages:'206–213',
+    summary:'让汞灯的五条谱线依次照射光电管，用三种方法寻找遏止电压，再拟合普朗克常量、光阴极逸出功和红限频率。',
+    sections:[
+      section('认清两块电极，预测读数','206–208、210',`<p>汞灯发出多条谱线。先用滤光片选出单色光，再用光阑调光强，最后把光送入真空光电管。图 24-1、24-4 中，阴极 K 吸收光子后发射电子，阳极 A 收集到电子时，串联微电流表 G 才显示光电流。电压表并接于两极，读数为 U = U<sub>A</sub> − U<sub>K</sub>。</p><p>先猜一个现象：照着光，把两极电压调到 0 V，电流会不会消失？试着从 0 V 慢慢把 U 调成负值，再查看解释。</p><details><summary>为什么 U 为零时仍会有光电流？</summary><p>部分电子逸出时已经有初动能，可以飞到阳极。令阳极电位更低，才会拦下越来越多电子。当连最快的电子也无法到达阳极，阴极的正向光电流消失。</p></details><p>教材使用直流可调电源与换向接线。仿真用同一个带正负号的旋钮表示换向和调压。实际测量要选合适的电流量程，减少电磁干扰与杂散光，并让光主要照到 K。</p>`),
+      section('分清频率、光强和电场的作用','207–209',`<p>同一种颜色下，增大光强意味着在相同时间有更多光子到达阴极。足够大的正电压会把几乎全部逸出的电子收集起来，电流进入饱和平台。加大光强，平台抬高。再向负电压调节，比较同色不同光强的截止位置。</p><div class="formula">hν = E<sub>k,max</sub> + A<br>E<sub>k,max</sub> = e|U<sub>a</sub>|，|U<sub>a</sub>| = (h/e)ν − A/e<br>ν₀ = A/h，ν = c/λ</div><p>A 是电子克服材料表面束缚所需的逸出功。ν 低于红限 ν₀ 时，单个光子的能量不够。高于红限时，即使光弱，也会在照射后迅速发生光电效应。改变颜色会改变最快电子的初动能。若用 LED 作光源，要先测定中心波长和光谱宽度。</p>`),
+      section('固定几何，依次量五条谱线','208–211',`<p>按表 24-2 依次使用 365.0、404.7、435.8、546.1 和 577.0 nm 五片滤光片。固定同一光阑和灯管距离，每换一片，重新扫一条 I–U 曲线。先看负压段和趋于饱和的正压段，再比较三种遏止电压的判法。</p><ol><li><strong>零电流法</strong>。找到表上 I = 0 的电压。这一近似适用于阳极反向光电流和暗电流都很小的情况。</li><li><strong>补偿法</strong>。调至 I = 0 后保持 U 不变，挡住入光口并记录微弱的负暗电流 I₁。重新照亮，继续调 U，直到表上 I = I₁，记录相应电压。这一步补偿暗电流。</li><li><strong>拐点法</strong>。若阳极也发射光电子，负压会助推这些电子形成反向光电流。在实测曲线负压下部，从反向电流的近直线段转到抬头段的位置读 U<sub>a</sub>。仿真的「拐点」用两个局部斜率不同的直线求交。</li></ol><p>暗电流在遮光时就存在，来自热激发、漏电等。阳极反向光电流需要有光照到阳极。遮光前后可以分辨这两项。若改变距离、光阑或滤光片，应重新测该组的暗电流及曲线。</p>`),
+      section('作图求 h、红限频率与逸出功','208、211–212',`<p>表 24-2 中保留 U<sub>a</sub> 的负号。拟合前取绝对值，以 ν 为横轴、|U<sub>a</sub>| 为纵轴。同一种判法的五组数据拟合成一条直线，得到斜率 k 和截距 b。再比较三种方法的结果。</p><div class="formula">h = e k　　A = −e b　　ν₀ = −b/k<br>相对误差 = |h − h₀| / h₀ × 100%</div><p>若作图的横轴直接使用教材表中的 ν / 10<sup>14</sup> Hz 数值，乘电子电荷以前，先将图上斜率除以 10<sup>14</sup>。b 以伏特为单位时，−b 的数值恰等于以 eV 表示的逸出功。检查换算后 h 的单位为 J·s。</p><p>写报告时标明滤光片、光阑、距离、读数判法和拟合点数。杂散光、滤光片的通带、读数分辨率、电极状态、暗电流与反向光电流都会影响结果。较小的光电流会让零点附近的判别更困难。</p>`),
+      section('用两种方式改变光强','211',`<p>固定一条谱线，把电压固定在饱和区。先固定灯管距离，只换光阑，以 Φ² 为横轴作图，其中 Φ 是光阑直径。再固定同一光阑，只沿导轨移动光电管，以 1/d² 为横轴作图，其中 d 是光源到管口的距离。把两组数据分别列表，检验饱和光电流对相对光强的比例关系。</p><p>每轮一次只变一个量。测光阑时比较相同 d 下的点，测距离时比较相同 Φ 下的点。仿真近似用几何关系描述相对光强，实物中的对准误差和有限光源尺寸会使曲线偏离。</p>`),
+      section('光源、光电倍增管与报告思考','206、211–213',`<h3>把教材的开放题变成实验设计</h3><p><strong>换 LED 或钨丝灯。</strong>先确认光源光谱。LED 可以按实测中心波长估算频率，比较带宽对读点的影响。钨丝灯光谱宽，需要滤光后再比较；直接把它当作单一频率会影响拟合。</p><p><strong>光电倍增管。</strong>在光阴极之后加入聚焦极和一串倍增极，每个倍增极用碰撞释放更多电子，最后由阳极收集。教材附录以光通量 Φ 比较光阴极和阳极灵敏度 S<sub>K</sub> = I<sub>K</sub>/Φ、S<sub>A</sub> = I<sub>A</sub>/Φ；增益 G = I<sub>A</sub>/I<sub>K</sub>。设计检验时固定光通量，比较工作电压、倍增增益和遮光时的暗电流。教材还列出光谱响应随波长变化的测法。</p><p><strong>XPS 与 UPS。</strong>用已知能量的 X 射线或紫外光激发样品，再从出射电子动能推断其结合能。能谱仪测的是一组电子动能分布，本台测的是阴极最快电子的截止条件。</p><details><summary>为什么拟合截距依赖光阴极？</summary><p>截距为 −A/e，A 取决于阴极材料及其表面状态。同一表面提高光强时，变的是到达阴极的光子数量。换材料后，应重新从该材料的遏止电压拟合红限。</p></details>`),
+    ],
+  });
+
+  registerBench('24',{
+    title:'汞灯光路与真空光电管',
+    intro:'从左到右是汞灯、滤光盘、光阑和可沿导轨移动的光电管。前方仪表同时显示两极电压和微弱电流。',
+    task:'开机后开遮光盖，在 0 V 看光电子能否到达阳极。缓慢转向负压，再扫一条 I–U 曲线找遏止电压。',
+    question:{prompt:'保持同一滤光片和距离，放大光阑。哪两项会怎样改变？',choices:[
+      {label:'饱和光电流增大，遏止电压幅值基本不变',correct:true,feedback:'同频率下，每个光子的能量不变。更多光子能释放更多电子，饱和电流上升，最快电子的动能基本相同。'},
+      {label:'饱和光电流不变，遏止电压幅值增大',feedback:'打开更大的光阑让更多光子进入。先把电压放到正向平台，换光阑直接比较电流。'},
+      {label:'两者都增大',feedback:'把光子的数量和每个光子的能量分开。对照同一颜色的两条扫线，比较平台高度和负压侧的停止位置。'},
+    ]},
+    mount(host,{k,svgHit,bindHits,timeline}) {
+      const width=680, height=352;
+      const tray={x:-158,y:-65,w:322,d:152,r:8};
+      const P=k.fitProjection(k.boxCorners(tray,-13,72).concat([[-70,-33,85],[52,-33,86]]),width,height,{azimuth:48,elevation:27,pad:26});
+      const copy=(count,draw)=>Array.from({length:count},(_,index)=>draw(index)).join('');
+      const iso=point=>k.iso(point,P);
+      const outline=(points,closed=false)=>k.pathOf(points.map(iso),closed);
+      const line=(points,tone='lo')=>k.lineSvg(outline(points),{tone});
+      const shape=(points,fill,attributes='')=>`<path d="${outline(points,true)}" fill="${fill}" ${attributes}/>`;
+      const solid=(geometry,tone='mid')=>k.solidSvg(geometry,{tone});
+      const slab=(x,y,w,d,z,h,tone='mid',r=3)=>solid(k.slabOf({x,y,w,d,r},z,h,P,6,.8),tone);
+      const cylinder=(x,y,r,z,h,tone='mid')=>solid(k.cylinder(x,y,r,z,h,P,32,.65),tone);
+      const ring=(x,y,r,z,tone='hi')=>k.lineSvg(k.ring(x,y,r,z,P,24),{tone});
+      const axis=(y,z)=>k.frameAlong([0,y,z],[1,0,0]);
+      const turn=(profile,y,z,tone='mid')=>solid(k.solidOf(profile,axis(y,z),P),tone);
+      const flange=(x1,x2,inner,outer,y,z,tone='hi')=>solid(k.ringBand(x1,x2,inner,outer,axis(y,z),P),tone);
+      const circleX=(x,y,z,r)=>Array.from({length:36},(_,i)=>{
+        const a=i*Math.PI/18;
+        return [x,y+r*Math.cos(a),z+r*Math.sin(a)];
+      });
+      const face=(x,y,z,w,h,fill)=>shape([[x,y,z],[x+w,y,z],[x+w,y,z-h],[x,y,z-h]],fill);
+      const text=(x,y,z,label,size=6)=>k.faceTextSvg(k.topMatrix([x,y],z,P,'x'),label,{size,tone:'hi'});
+      const front=(x,y,z,label,size=5,attr='')=>k.faceTextSvg(k.sideMatrix([x,y],z,P,'left'),label,{size,tone:'hi'}).replace('<text',`<text ${attr}`);
+      const screw=(x,y,z)=>ring(x,y,1.6,z,'hi')+line([[x-1.2,y,z+.1],[x+1.2,y,z+.1]]);
+      const hit=(id,label,point,r=19)=>svgHit(id,label,...iso(point),r);
+      const wire=(points,color)=>`<path d="${outline(points)}" fill="none" stroke="var(--anatomy-shade-0)" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/><path d="${outline(points)}" fill="none" stroke="${color}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+      const plate = `<path class="iso-halo" d="${k.haloOf(tray,-13,7,P)}"/>`+
+        k.corners(tray,13).map(([x,y])=>cylinder(x,y,6.5,-13,6,'lo')).join('')+
+        slab(tray.x,tray.y,tray.w,tray.d,-7,7,'lo',8)+k.corners(tray,10).map(([x,y])=>screw(x,y,.1)).join('');
+      const beamY=-30, beamZ=58;
+      const scale = slab(-143,-5,280,10,1,1,'mid',1)+
+        copy(54,i=>line([[-140+i*5,-3,2.2],[-140+i*5,i%5===0?3:0,2.2]],i%5===0?'hi':'lo'))+
+        copy(6,i=>text(i*50-141,4,2.3,String(i*5),3.2));
+      const guide = [-51,-13].map(y=>slab(-140,y,283,4,0,4,'lo',1)+slab(-138,y+1,279,2,4,1,'mid',.5)).join('')+
+        slab(-144,-56,6,53,0,9,'lo')+slab(141,-56,6,53,0,9,'lo')+scale;
+
+      const lamp = slab(-149,-61,56,60,4,6,'hi')+slab(-145,-58,49,55,10,66,'hi',5)+
+        slab(-147,-59,52,57,76,3,'mid')+text(-141,-49,79.2,'Hg  /  SOURCE',5.5)+
+        k.corners({x:-146,y:-58,w:50,d:55},4).map(([x,y])=>screw(x,y,79.2)).join('')+
+        copy(8,i=>face(-139+i*4.3,-2.7,67,1.6,23,'var(--anatomy-shade-0)'))+
+        face(-141,-2.65,38,41,24,'var(--anatomy-shade-0)')+
+        front(-138,-2.45,29,'汞灯',6)+
+        `<circle data-ph-led cx="${iso([-106,-2.2,21])[0]}" cy="${iso([-106,-2.2,21])[1]}" r="3.3" fill="#607078"/>`+
+        turn([[-96,14],[-93,17],[-87,17],[-84,14]],beamY,beamZ,'hi')+
+        flange(-84,-81,9,14,beamY,beamZ)+shape(circleX(-80.5,beamY,beamZ,8.7),'#182a34')+
+        hit('ph-power','汞灯电源',[-119,-2,23]);
+      const carrier=(x,label)=>slab(x-10,-53,21,48,5,5,'mid')+
+        slab(x-4,-33,8,8,10,31,'mid')+screw(x-5,-10,10.2)+screw(x+6,-45,10.2)+
+        slab(x-9,-47,19,7,10,2,'lo')+text(x-8,-40,12.2,label,4);
+      const filters = carrier(-59,'Hg λ')+turn([[-65,22],[-62,24],[-57,24],[-55,22]],beamY+12,beamZ,'hi')+
+        copy(5,i=>{
+          const a=Math.PI+i*Math.PI*2/5, y=beamY+12+Math.cos(a)*12, z=beamZ+Math.sin(a)*12;
+          return shape(circleX(-54.75,y,z,4.9),light[i].color,'opacity=".65"');
+        })+
+        shape(circleX(-54.5,beamY,beamZ,6),'var(--anatomy-shade-0)')+
+        `<path data-ph-filter-window d="${outline(circleX(-54.2,beamY,beamZ,4.7),true)}"/>`+
+        turn([[-55,4.8],[-52,4.8],[-51,3.7]],beamY+12,beamZ,'hi')+
+        hit('ph-filter','滤光盘：换下一片滤光片',[-52,beamY+13,beamZ+18]);
+      const iris = carrier(-17,'Φ')+flange(-21,-13,8,17,beamY,beamZ)+
+        turn([[-16,11],[-12,11],[-11,9]],beamY,beamZ,'hi')+
+        shape(circleX(-10.7,beamY,beamZ,8.8),'#14232b')+
+        `<path data-ph-iris-window fill="#627281"/>`+
+        copy(8,i=>{
+          const a=i*Math.PI/4;
+          return line([[-10.5,beamY+8*Math.cos(a),beamZ+8*Math.sin(a)],[-10.5,beamY+5.5*Math.cos(a+.3),beamZ+5.5*Math.sin(a+.3)]]);
+        })+cylinder(-18,beamY,3.2,75,4,'hi')+
+        hit('ph-iris','光阑顶端：换下一档孔径',[-17,beamY,80]);
+      const detector = `<g data-ph-detector>`+slab(15,-57,56,53,5,7,'hi')+
+        slab(22,-55,44,49,12,5,'mid')+screw(19,-11,12.2)+screw(67,-11,12.2)+text(25,-11,17.2,'K  /  A',6)+
+        slab(24,-50,34,39,17,31,'mid',5)+
+        turn([[22,13],[25,20],[32,21],[53,20],[59,14]],beamY,beamZ,'hi')+
+        flange(16,23,8,15,beamY,beamZ)+shape(circleX(15.8,beamY,beamZ,7.6),'#14232b')+
+        `<path data-ph-cathode d="${outline(circleX(15.5,beamY,beamZ,6.6),true)}" fill="#83e0c8" opacity="0"/>`+
+        `<g data-ph-shutter-body>${turn([[10,11],[12,14],[16,14],[17,12.5]],beamY,beamZ,'hi')}${slab(11,beamY-4,6,8,beamZ+11,7,'hi')}</g>`+
+        turn([[57,14],[60,14],[62,12]],beamY,beamZ,'lo')+
+        cylinder(51,-30,7,79,5,'hi')+k.lineSvg(k.knurl(51,-30,7,79,84,25,P),{tone:'lo'})+
+        hit('ph-distance','滑台手轮：把光电管移远',[51,-30,87])+
+        hit('ph-cover','光电管遮光盖',[15,beamY,beamZ])+ '</g>';
+
+      const controls = slab(-107,23,240,51,0,38,'hi',6)+slab(-104,25,232,46,38,3,'mid')+
+        text(-94,39,41.2,'PHOTOELECTRIC MEASUREMENT',6.3)+
+        k.corners({x:-102,y:27,w:226,d:42},4).map(([x,y])=>screw(x,y,41.2)).join('')+
+        face(-99,74.25,32,83,22,'#12242a')+face(-9,74.25,32,92,22,'#12242a')+
+        front(-94,74.45,17,'0.000 V',9,'data-ph-device-u="" fill="#a9efce"')+
+        front(-3,74.45,17,'0.00 pA',9,'data-ph-device-i="" fill="#a9efce"')+
+        cylinder(106,57,9,41,6,'hi')+k.lineSvg(k.knurl(106,57,9,41,47,31,P),{tone:'lo'})+
+        `<path data-ph-knob d="" stroke="var(--anatomy-hi)" stroke-width="1.6" stroke-linecap="round"/>`+
+        hit('ph-down','偏压旋钮：向负向调节',[106,57,49])+
+        front(90,74.45,16,'U = A − K',5)+cylinder(-62,31,2.8,41,1.7,'hi')+cylinder(-51,31,2.8,41,1.7,'hi');
+      const beamLayer = `<path data-ph-beam-source fill="#d9edf2" opacity="0"/><path data-ph-beam fill="#88edbc" opacity="0"/>`;
+      const art = k.figureSvg({width,height,label:'光电效应台。带汞灯电源、旋转滤光盘、光阑、光电管滑台和双数字表。',body:[
+        plate,guide,wire([[-62,31,43],[-70,21,49],[-99,16,40],[-122,11,15],[-141,1,20]],'#7f9eab'),
+        `<g data-ph-cables></g>`,lamp,beamLayer,filters,iris,detector,controls,
+      ]});
+
+      host.innerHTML=`<style>
+        .ph-lab{display:grid;gap:7px}
+        .ph-lab .rig-tools label{display:grid;gap:4px}
+        .ph-lab .rig-tools label input[type=number]{max-width:7.5em}
+        .ph-lab .rig-tools label input[type=range]{width:min(215px,50vw)}
+        .ph-lab .ph-note{min-height:2.75em;margin:.2em 0}
+        .ph-lab .ph-study{display:grid;gap:8px;min-width:0}
+        .ph-lab .ph-study h3{margin:10px 0 0}
+        .ph-lab .ph-chart{width:100%;height:auto;display:block;background:var(--anatomy-card);border:1px solid var(--line);border-radius:7px}
+        .ph-lab .ph-chart text{font:13px system-ui,sans-serif;fill:var(--muted)}
+        .ph-lab .ph-table{overflow:auto;margin:0;max-width:100%}
+        .ph-lab table{width:100%;font-variant-numeric:tabular-nums}
+        .ph-lab :is(th,td){padding:5px 6px;white-space:nowrap;text-align:right}
+      </style>
+      <div class="ph-lab">
+        <div class="rig-scene">${art}</div>
+        <p class="rig-readout" data-ph-live>仪器已关机。</p>
+        <div class="rig-tools">
+          <button type="button" data-ph-power>开启汞灯与仪表</button><button type="button" data-ph-cover>打开遮光盖</button>
+          <label>滤光片 <select data-ph-filter>${light.map((band,i)=>`<option value="${i}">${band.nm.toFixed(1)} nm · ${band.name}</option>`).join('')}</select></label>
+          <label>光阑直径 Φ <select data-ph-aperture>${[3,5,7].map(d=>`<option value="${d}" ${d===5?'selected':''}>${d} mm</option>`).join('')}</select></label>
+          <label>灯管距离 d <output data-ph-distance-value>35 cm</output><input type="range" min="25" max="60" step="1" value="35" data-ph-distance></label>
+        </div>
+        <div class="rig-tools">
+          <label>两极电压粗调 U <input aria-label="两极电压粗调" type="range" min="-2.4" max="4" step="0.05" value="0" data-ph-voltage-scale></label>
+          <label>细调 / V <input aria-label="两极电压细调" type="number" min="-2.4" max="4" step="0.001" value="0.000" data-ph-voltage></label>
+          <button type="button" data-ph-scan>扫描 I–U 曲线</button>
+          <label>观察范围 <select data-ph-zoom><option value="full">完整曲线</option><option value="close">遏止区细看</option></select></label>
+        </div>
+        <svg class="ph-chart" data-ph-chart viewBox="0 0 530 202" role="img" aria-label="光电管电流随两极电压变化的曲线"></svg>
+        <div class="ph-study">
+          <h3>从同一条曲线读三次遏止电压</h3>
+          <div class="rig-tools">
+            <button type="button" data-ph-zero>记录 I = 0 的电压</button>
+            <button type="button" data-ph-dark>遮光并记录暗电流 I₁</button>
+            <button type="button" data-ph-comp>记录 I = I₁ 的电压</button>
+            <button type="button" data-ph-knee>记录拐点电压</button>
+          </div>
+          <p class="hint ph-note" role="status" data-ph-note>打开电源。仪表稳定后打开遮光盖，先观察 U = 0 V 的电流。</p>
+          <div class="ph-table"><table aria-label="不同谱线的三种遏止电压记录"><thead><tr><th scope="col">λ / nm</th><th scope="col">ν / 10¹⁴ Hz</th><th scope="col">零电流 / V</th><th scope="col">补偿 / V</th><th scope="col">拐点 / V</th></tr></thead><tbody data-ph-rows></tbody></table></div>
+          <div class="rig-tools"><label>拟合使用的判据 <select data-ph-fit>${methods.map(([value,label])=>`<option value="${value}">${label}</option>`).join('')}</select></label></div>
+          <p class="rig-readout" data-ph-result></p>
+          <svg class="ph-chart" data-ph-fit-chart viewBox="0 0 530 202" role="img" aria-label="所记录的遏止电压幅值随入射光频率变化及线性拟合"></svg>
+          <h3>比较饱和电流与相对光强</h3>
+          <div class="rig-tools">
+            <label>控制变量 <select data-ph-series><option value="iris">固定距离，改变光阑</option><option value="distance">固定光阑，改变距离</option></select></label>
+            <button type="button" data-ph-saturation>记录饱和电流</button><button type="button" data-ph-clear-saturation>清空两组饱和记录</button>
+          </div>
+          <p class="hint" data-ph-intensity-report>选定一条谱线，把电压调到 +3.500 V 后先记录一组。</p>
+          <div class="ph-table"><table aria-label="饱和光电流记录"><thead><tr><th scope="col">Φ / mm</th><th scope="col">d / cm</th><th scope="col">Φ² / mm²</th><th scope="col">10³/d² / cm⁻²</th><th scope="col">I / pA</th></tr></thead><tbody data-ph-intensity-rows></tbody></table></div>
+          <svg class="ph-chart" data-ph-intensity-chart viewBox="0 0 530 202" role="img" aria-label="饱和光电流随光阑直径平方或距离倒平方变化"></svg>
+        </div>
+      </div>`;
+
+      const state = {on:false, warm:0, covered:true, band:0, voltage:0, aperture:5, distance:35};
+      const recorded = light.map(()=>({}));
+      const saturation = {iris:[],distance:[]};
+      let scan, dark, baseline, comparisonBands, cancelWarm = () => {};
+      const q = name => host.querySelector(`[data-ph-${name}]`);
+      const mode = () => q('series').value;
+      const band = () => light[state.band];
+      const strength = () => (state.aperture/5)**2 * (35/state.distance)**2;
+      const stopVoltage = () => workFunction - referenceH*band().nu*1e14/electron;
+      const signature = () => `${state.band}:${state.aperture}:${state.distance}`;
+      const ready = () => state.on && state.warm===1;
+      const beamOn = () => ready() && !state.covered;
+      const note = message => { q('note').textContent = message; };
+      const darkSignal = voltage => .24*voltage-.035;
+      function signal(voltage,covered=state.covered) {
+        if (covered) return darkSignal(voltage);
+        const acceleration = Math.max(0,voltage-stopVoltage());
+        const forward = 31*strength()*(1-Math.exp(-acceleration/.87));
+        const reverse = -.43*strength()*clamp(-voltage/.145,0,1);
+        return forward + reverse + darkSignal(voltage);
+      }
+
+      function render() {
+        const lit = beamOn();
+        const shift = (state.distance-35)*1.66;
+        const openOffset = state.covered ? [0,0] : iso([0,0,21]).map((value,i)=>value-iso([0,0,0])[i]);
+        const offset = iso([shift,0,0]).map((value,i)=>value-iso([0,0,0])[i]);
+        q('detector').setAttribute('transform',`translate(${offset.join(' ')})`);
+        q('shutter-body').setAttribute('transform',`translate(${openOffset.join(' ')})`);
+        q('cables').innerHTML = wire([[-51,31,43],[-45,20,44],[-21,12,25],[10+shift,7,8],[61+shift,2,10],[59+shift,-5,19]],'#a47959');
+        q('beam-source').setAttribute('d',outline([[-80,beamY,beamZ-3],[-65,beamY,beamZ-5],[-65,beamY,beamZ+5],[-80,beamY,beamZ+3]],true));
+        q('beam-source').setAttribute('opacity',state.warm*.52);
+        q('beam').setAttribute('d',outline([[-53,beamY,beamZ-3],[-10,beamY,beamZ-state.aperture*.57],[14+shift,beamY,beamZ-state.aperture*.86],[14+shift,beamY,beamZ+state.aperture*.86],[-10,beamY,beamZ+state.aperture*.57],[-53,beamY,beamZ+3]],true));
+        q('beam').setAttribute('fill',band().color);
+        q('beam').setAttribute('opacity',state.warm*(state.covered?.28:.68));
+        q('cathode').setAttribute('opacity',lit?.68:0);
+        q('filter-window').setAttribute('fill',band().color);
+        q('iris-window').setAttribute('d',outline(circleX(-10.6,beamY,beamZ,state.aperture*.83),true));
+        q('iris-window').setAttribute('fill',state.warm ? band().color : '#627281');
+        q('led').setAttribute('fill',state.on?'#96efbd':'#607078');
+        const angle = (state.voltage+2.4)/(4+2.4)*Math.PI*1.55 - Math.PI*1.275;
+        q('knob').setAttribute('d',outline([[106,57,47.2],[106+7*Math.cos(angle),57+7*Math.sin(angle),47.2]]));
+        q('power').textContent = state.on?'关闭汞灯与仪表':'开启汞灯与仪表';
+        q('power').setAttribute('aria-pressed',String(state.on));
+        q('cover').textContent = state.covered?'打开遮光盖':'合上遮光盖';
+        q('cover').setAttribute('aria-pressed',String(state.covered));
+        q('device-u').textContent = state.on?`${fixed(state.voltage)} V`:'— V';
+        q('device-i').textContent = ready()?`${fixed(signal(state.voltage),2)} pA`:'— pA';
+        q('distance-value').textContent = `${state.distance} cm`;
+        q('live').innerHTML = ready()
+          ? `<strong>U = ${fixed(state.voltage)} V · I = ${fixed(signal(state.voltage),2)} pA</strong><br>${band().nm.toFixed(1)} nm · Φ ${state.aperture} mm · d ${state.distance} cm · ${lit?'光照 K':'遮光，仅暗电流'}`
+          : (state.on?'汞灯预热中，等电流读数稳定。':'仪器已关机。');
+        showCurve();
+      }
+
+      function chart(target,{series,points=[],mark,xmin,xmax,ymin,ymax,caption,xTitle,yTitle}) {
+        const px = x=>51+456*(x-xmin)/(xmax-xmin);
+        const py = y=>164-132*(y-ymin)/(ymax-ymin);
+        const coords = ([x,y])=>`${px(x).toFixed(1)} ${py(y).toFixed(1)}`;
+        const axisX = py(clamp(0,ymin,ymax));
+        const yDigits = ymax-ymin<6 ? 2 : 1;
+        const xDigits = xmax-xmin<12 ? 2 : 1;
+        const grid = copy(5,i=>{
+          const x = xmin+(xmax-xmin)*i/4, y=ymin+(ymax-ymin)*i/4;
+          return `<path d="M${px(x)} 32V164 M51 ${py(y)}H507" fill="none" stroke="var(--line)"/><text x="${px(x)}" y="181" text-anchor="middle">${fixed(x,xDigits)}</text><text x="45" y="${py(y)+4}" text-anchor="end">${fixed(y,yDigits)}</text>`;
+        });
+        target.innerHTML = grid+`<path d="M51 32V164 M51 ${axisX}H507" fill="none" stroke="var(--muted)"/><text x="51" y="20">${yTitle}</text><text x="507" y="20" text-anchor="end">${caption}</text><text x="507" y="198" text-anchor="end">${xTitle}</text>`+
+          series.map(({data,color,dashed})=>`<path d="${data.map((point,i)=>(i?'L':'M')+coords(point)).join(' ')}" fill="none" stroke="${color}" stroke-width="2" ${dashed?'stroke-dasharray="5 4"':''}/>`).join('')+
+          points.map(([x,y])=>`<circle cx="${px(x)}" cy="${py(y)}" r="3.7" fill="var(--accent)"/>`).join('')+
+          (mark&&mark[0]>=xmin&&mark[0]<=xmax&&mark[1]>=ymin&&mark[1]<=ymax?`<circle cx="${px(mark[0])}" cy="${py(mark[1])}" r="4.4" fill="var(--accent)" stroke="var(--anatomy-card)" stroke-width="1.2"/>`:'');
+      }
+
+      const wavelengthCurves = new Map();
+      function sweep() {
+        if (!beamOn()) return note('等汞灯预热完成并打开遮光盖，再扫光照曲线。');
+        const range = Array.from({length:641},(_,i)=>+(-2.4+i*.01).toFixed(2));
+        scan={signature:signature(),data:range.map(u=>[u,+signal(u,false).toFixed(3)])};
+        wavelengthCurves.set(signature(),scan.data);
+        note('扫线完成。可以切到「遏止区细看」比较横轴交点与曲线抬头处。');
+        showCurve();
+      }
+
+      function findCrossing(points,target) {
+        const index = points.findIndex(([u,i],j)=>u<0 && j>0 && i>=target && points[j-1][1]<target);
+        if (index<1) return;
+        const [u1,i1]=points[index-1], [u2,i2]=points[index];
+        return u1+(u2-u1)*(target-i1)/(i2-i1);
+      }
+
+      function findKnee(points) {
+        let best = {change:-Infinity,index:0};
+        for (let i=10;i<points.length-10;i++) {
+          if (points[i][0]>=-.20) break;
+          const left=points[i-2][1]-points[i-8][1];
+          const right=points[i+8][1]-points[i+2][1];
+          if (right-left>best.change) best={change:right-left,index:i};
+        }
+        const n=best.index;
+        const before=fit(points.slice(n-11,n-4)), after=fit(points.slice(n+4,n+11));
+        return before && after ? (after.intercept-before.intercept)/(before.slope-after.slope) : undefined;
+      }
+
+      function showCurve() {
+        const selected = scan?.signature===signature() ? scan.data : [];
+        const close = selected.length && q('zoom').value==='close';
+        const middle = close ? findCrossing(selected,0) : 0;
+        const xmin = close?middle-.23:-2.4, xmax = close?middle+.22:4;
+        const previous = [...wavelengthCurves.entries()].filter(([key])=>{
+          const [,aperture,distance] = key.split(':').map(Number);
+          return key!==signature() && aperture===state.aperture && distance===state.distance;
+        });
+        const thin = (rows,stride=5)=>rows.filter((_,i)=>i%stride===0);
+        const series = (close?[]:previous.map(([,data])=>({data:thin(data),color:'var(--anatomy-lo)',dashed:true}))).concat(
+          selected.length?[{data:close?selected.filter(([u])=>u>=xmin&&u<=xmax):thin(selected),color:'var(--accent)'}]:[]);
+        const reading = ready() && state.voltage>=xmin && state.voltage<=xmax ? [state.voltage,signal(state.voltage)] : null;
+        const values = series.flatMap(trace=>trace.data.map(([,i])=>i));
+        if (reading) values.push(reading[1]);
+        const ymin=Math.min(-1,...values)*1.07, ymax=Math.max(close?3:38,...values)*1.08;
+        chart(q('chart'),{series,mark:reading,xmin,xmax,ymin,ymax,
+          caption:selected.length?(close?'负压局部':previous.length?'虚线为其他波长':'当前波长的扫线'):'改变电压可先观察当前读数',xTitle:'U / V',yTitle:'I / pA'});
+      }
+
+      function saveStop(method) {
+        if (!beamOn()) return note('保持光源和仪表开启，并把遮光盖移开。');
+        if (!scan || scan.signature!==signature()) return note('先为当前波长、光阑和距离扫描 I–U 曲线。');
+        if (baseline && (baseline.aperture!==state.aperture || baseline.distance!==state.distance))
+          return note(`表 24-2 使用同一几何条件。请恢复 Φ ${baseline.aperture} mm、d ${baseline.distance} cm。`);
+        if (method==='comp' && dark?.signature!==signature()) return note('先记录零点，保持电压不变，遮光记录暗电流 I₁，再打开遮光盖。');
+        const value = method==='knee' ? findKnee(scan.data) : findCrossing(scan.data,method==='comp'?dark.current:0);
+        if (!Number.isFinite(value)) return note('当前曲线无法判读，先检查光路并重新扫描。');
+        baseline ??= {aperture:state.aperture,distance:state.distance};
+        voltage(value);
+        recorded[state.band][method]=state.voltage;
+        note(`${methods.find(([key])=>key===method)[1]}已记录 ${band().nm.toFixed(1)} nm 的 Uₐ = ${fixed(state.voltage)} V。${method==='zero'?'保持这次电压以记录暗电流。':method==='comp'?`以遮光值 ${fixed(dark.current,2)} pA 为判据。`:'比较负压底部的近直线与抬头段。'}`);
+        showResults();
+      }
+
+      function measureDark() {
+        const zero = recorded[state.band].zero;
+        if (!ready() || zero===undefined || scan?.signature!==signature() || Math.abs(state.voltage-zero)>.002)
+          return note('先点「记录 I = 0 的电压」，把旋钮留在这个读数，再遮光测 I₁。');
+        state.covered=true;
+        dark={signature:signature(),current:rounded(signal(state.voltage),2)};
+        render();
+        note(`同一反向电压下遮光得到 I₁ = ${fixed(dark.current,2)} pA。打开遮光盖，再用 I = I₁ 找对应电压。`);
+      }
+
+      function showResults() {
+        const kind = q('fit').value;
+        const points = light.flatMap(({nu},i)=>recorded[i][kind]===undefined?[]:[[nu,Math.abs(recorded[i][kind])]]);
+        const result = fit(points);
+        const series=[];
+        const xmin=5,xmax=8.45,ymin=0,ymax=1.79;
+        q('rows').innerHTML = light.map(({nm,nu},i)=>`<tr><th scope="row">${nm.toFixed(1)}</th><td>${fixed(nu)}</td>${methods.map(([key])=>`<td>${recorded[i][key]===undefined?'—':fixed(recorded[i][key])}</td>`).join('')}</tr>`).join('');
+        if (result) {
+          const {slope,intercept}=result, h=slope*electron/1e14, limit=-intercept/slope;
+          series.push({data:[[xmin,xmin*slope+intercept],[xmax,xmax*slope+intercept]],color:'var(--accent)',dashed:true});
+          q('result').textContent = `${points.length}/5 条谱线 · h = ${(h/1e-34).toFixed(3)} × 10⁻³⁴ J·s · 相对误差 ${(Math.abs(h-referenceH)/referenceH*100).toFixed(2)}% · ν₀ = ${limit.toFixed(3)} × 10¹⁴ Hz · A = ${(-intercept).toFixed(3)} eV`;
+        } else {
+          q('result').textContent = `${points.length}/5 条谱线。选定同一种判法，先测至少两条谱线得到斜率，再补到五条。`;
+        }
+        chart(q('fit-chart'),{series,points,xmin,xmax,ymin,ymax,caption:`${points.length} 条实测记录`,xTitle:'ν / 10¹⁴ Hz',yTitle:'|Uₐ| / V'});
+      }
+
+      function saveSaturation() {
+        if (!beamOn() || state.voltage<3.5) return note('开灯、打开遮光盖，固定正向偏压至少 +3.500 V，再记饱和电流。');
+        const kind=mode(), rows=saturation[kind];
+        const first=rows[0];
+        const control=kind==='iris'?'distance':'aperture';
+        const variable=kind==='iris'?'aperture':'distance';
+        if (first && (first.band!==state.band || first[control]!==state[control] || Math.abs(first.voltage-state.voltage)>.0005))
+          return note('这一组应保持原有滤光片、两极电压和控制量，只改变光阑或距离中的一项。');
+        const current = rounded(signal(state.voltage)-darkSignal(state.voltage),2);
+        const value = {voltage:state.voltage,band:state.band,aperture:state.aperture,distance:state.distance,current};
+        const index=rows.findIndex(row=>row[variable]===value[variable]);
+        if (index>=0) rows[index]=value;
+        else rows.push(value);
+        note('已记录饱和光电流。表中已扣除这个正电压下的暗电流。');
+        showSaturation();
+      }
+
+      function showSaturation() {
+        const irisMode=mode()==='iris', rows=saturation[mode()];
+        const points=rows.map(row=>[irisMode?row.aperture**2:1000/row.distance**2,row.current]).sort((a,b)=>a[0]-b[0]);
+        const xmax=irisMode?55:1.8, ymax=Math.max(10,...points.map(point=>point[1]))*1.15;
+        const result=fit(points), series=[];
+        if (result) {
+          const [min,max]=[points[0][0],points.at(-1)[0]];
+          series.push({data:[[min,result.slope*min+result.intercept],[max,result.slope*max+result.intercept]],color:'var(--accent)',dashed:true});
+        }
+        q('intensity-rows').innerHTML=rows.map(({aperture,distance,current})=>`<tr><td>${aperture}</td><td>${distance}</td><td>${aperture**2}</td><td>${fixed(1000/distance**2)}</td><td>${fixed(current,2)}</td></tr>`).join('');
+        q('intensity-report').textContent=result?`本组 ${rows.length} 点 · 拟合截距 ${fixed(result.intercept,2)} pA。比较截距与 0 的距离，判断是否近似成正比。`:`本组 ${rows.length} 点。固定光色和电压，至少取两个设置，再判断电流是否随相对光强成正比。`;
+        chart(q('intensity-chart'),{series,points,xmin:0,xmax,ymin:0,ymax,caption:irisMode?'同一距离':'同一光阑',xTitle:irisMode?'Φ² / mm²':'10³/d² / cm⁻²',yTitle:'I / pA'});
+      }
+
+      function power() {
+        state.on=!state.on;
+        cancelWarm();
+        state.warm=0;
+        if (state.on) {
+          cancelWarm=timeline(650,fraction=>{
+            state.warm=fraction;
+            render();
+            if (fraction===1) note('汞灯已稳定。打开遮光盖，先看 0 V 时的电流。');
+          });
+        } else {
+          note('已关机。已采集的实验记录保留在本页。');
+        }
+        render();
+      }
+      function cover() {
+        state.covered=!state.covered;
+        note(state.covered?'遮光时只剩暗电流。':'已恢复照明。补偿法需以刚才保存的 I₁ 为读数目标。');
+        render();
+      }
+      function setting(name,value) {
+        state[name]=Number(value);
+        q(name==='band'?'filter':name).value=value;
+        note('光路条件已改变。测遏止电压时，先重新扫描这条曲线。');
+        render();
+      }
+      function voltage(value,syncNumber=true) {
+        state.voltage=rounded(clamp(Number(value),-2.4,4),3);
+        q('voltage-scale').value=state.voltage;
+        if (syncNumber) q('voltage').value=state.voltage.toFixed(3);
+        render();
+      }
+
+      q('power').addEventListener('click',power);
+      q('cover').addEventListener('click',cover);
+      q('filter').addEventListener('change',event=>setting('band',event.target.value));
+      q('aperture').addEventListener('change',event=>setting('aperture',event.target.value));
+      q('distance').addEventListener('input',event=>setting('distance',event.target.value));
+      q('voltage-scale').addEventListener('input',event=>voltage(event.target.value));
+      q('voltage').addEventListener('input',event=>{
+        if (Number.isFinite(event.target.valueAsNumber)) voltage(event.target.valueAsNumber,false);
+      });
+      q('voltage').addEventListener('change',()=>voltage(state.voltage));
+      q('scan').addEventListener('click',sweep);
+      q('zoom').addEventListener('change',showCurve);
+      q('zero').addEventListener('click',()=>saveStop('zero'));
+      q('dark').addEventListener('click',measureDark);
+      q('comp').addEventListener('click',()=>saveStop('comp'));
+      q('knee').addEventListener('click',()=>saveStop('knee'));
+      q('fit').addEventListener('change',showResults);
+      q('series').addEventListener('change',showSaturation);
+      q('saturation').addEventListener('click',saveSaturation);
+      q('clear-saturation').addEventListener('click',()=>{
+        saturation.iris.length=saturation.distance.length=0;
+        showSaturation();
+        note('两组饱和电流已清空，可重新选择光谱与几何条件。');
+      });
+      bindHits(host,{
+        'ph-power':power,'ph-cover':cover,
+        'ph-filter':()=>setting('band',(state.band+1)%light.length),
+        'ph-iris':()=>setting('aperture',state.aperture===7?3:state.aperture+2),
+        'ph-distance':()=>setting('distance',state.distance>=60?25:Math.min(60,state.distance+5)),
+        'ph-down':()=>voltage(state.voltage<=-2.4?0:state.voltage-.1),
+      });
+      render();
+      showResults();
+      showSaturation();
+    },
+  });
+})();
+</script>
+<script>const experimentId = "24"; (function renderCourse(chapterName){
+  const lesson=lessons.get(experimentId);
+  const bench=benchRegistry.get(experimentId);
+  if(!lesson||!bench)throw new Error('未找到实验数据');
+  const root=document.getElementById('course');
+  const article=document.createElement('article');
+  const key=`lab-${experimentId}`;
+  const sections=lesson.sections.map((section,n)=>({...section,id:`${key}-part-${n+1}`}));
+  const pages=value=>/^\d/.test(value)?`第 ${value} 页`:value;
+  article.id=key;
+  article.className='lesson';
+  article.setAttribute('aria-labelledby',`${key}-title`);
+  article.innerHTML=`<header class="hero"><p class="kicker">${chapterName} · 实验 ${experimentId} · 教材 ${pages(lesson.pages)}</p><h1 id="${key}-title">${lesson.title}</h1><p class="lead">${lesson.summary}</p><p class="hint">页码按教材印刷页计。仪器画面和数值用于仿真练习。</p></header>
+    <nav class="parts" aria-label="本节目录"><a href="#${key}-rig">仿真实验台</a>${sections.map(section=>`<a href="#${section.id}">${section.title}</a>`).join('')}</nav>
+    <section class="rig-lab" id="${key}-rig"><div class="rig-head"><h2>${bench.title}</h2><p>${bench.intro}</p><p><strong>第一次操作</strong>　${bench.task}</p></div>
+    <div class="rig-instrument"><div class="rig-bar"><strong>实验 ${experimentId} · 仪器台</strong><span>点图上的绿色标记，或用 Tab 找到部件，再按 Enter。</span></div><div class="iso rig-host"></div></div>
+    <details class="rig-question"><summary>做完后，试着解释读数</summary><p>${bench.question.prompt}</p><div class="rig-choices"></div><p class="rig-feedback" aria-live="polite"></p></details></section>
+    ${sections.map((section,n)=>`<section class="lesson-part" id="${section.id}"><div class="part-head"><h2>${section.title}</h2><span class="page-ref">${pages(section.pages)}</span>${n===0?`<a class="page-ref" href="#${key}-rig">前往仿真实验台 ↑</a>`:''}</div>${section.html}</section>`).join('')}`;
+  root.append(article);
+  lesson.mount?.(article);
+  mountBench(article,bench);
+  if(window===window.top){
+    const nav=document.createElement('nav');
+    nav.className='unit-return';
+    nav.setAttribute('aria-label','网站目录');
+    nav.innerHTML='<a href="../../index.html">← 实验站首页</a>';
+    root.before(nav);
+  }
+  if(location.hash)requestAnimationFrame(()=>document.getElementById(location.hash.slice(1))?.scrollIntoView());
+})("近代物理学实验");</script>
+<script id="physlab-lesson-guide">(function mountLessonGuide(groups) {
+  const article = document.querySelector('.unit-content > .lesson');
+  const nav = article?.querySelector(':scope > nav.parts');
+  if (!nav) return;
+
+  const desktop = matchMedia('(min-width: 900px)');
+  function make(tag, className='', text='') {
+    const element = document.createElement(tag);
+    element.className = className;
+    element.textContent = text;
+    return element;
+  }
+
+  const rail = make('aside','lesson-rail');
+  rail.setAttribute('aria-label','本节学习导引');
+  const guide = make('details','lesson-guide');
+  guide.open = desktop.matches;
+  const summary = make('summary','','学习目录');
+  const currentTitle = make('span','lesson-guide-current');
+  currentTitle.setAttribute('aria-hidden','true');
+  summary.append(currentTitle);
+  nav.setAttribute('aria-label','本节学习目录');
+  const workspace = make('div','lesson-workspace');
+  const body = make('div','lesson-body');
+  const lab = article.querySelector('.rig-lab');
+  const lessonParts = Array.from(article.querySelectorAll('.lesson-part'));
+  const quiz = article.querySelector('.rig-question');
+  if (quiz) quiz.id ||= `${lab.id}-check`;
+
+  const task = make('details','lesson-task');
+  task.open = desktop.matches;
+  const taskSummary = make('summary');
+  const taskContent = make('div','lesson-task-content');
+  const taskTitle = make('strong','lesson-task-title');
+  const taskText = make('p','lesson-task-text');
+  taskText.setAttribute('aria-live','polite');
+  const pager = make('div','lesson-task-pager');
+  const previous = make('button','','上一项');
+  const next = make('button','','下一项');
+  previous.type = next.type = 'button';
+  pager.append(previous,next);
+  taskContent.append(taskTitle,taskText,pager);
+  task.append(taskSummary,taskContent);
+
+  function sectionOf(target) {
+    return target.startsWith('part:') ? lessonParts[Number(target.slice(5)) - 1] : lab;
+  }
+
+  function resolveTarget(step) {
+    if (step.target === 'quiz') return quiz;
+    if (step.target === 'rig' || step.target.startsWith('part:')) return step.section;
+    return Array.from(lab.querySelectorAll(step.target)).find(element=>element.getClientRects().length) || lab;
+  }
+
+  nav.replaceChildren();
+  const steps = [];
+  for (const [index,[group, items]] of groups.entries()) {
+    nav.append(make('p','lesson-guide-group',`${index + 1} · ${group}`));
+    for (const [title,target,instructions] of items) {
+      const index = steps.length;
+      const number = String(index + 1).padStart(2,'0');
+      const anchor = make('a');
+      const hash = `#${article.id}-step-${number}`;
+      anchor.href = hash;
+      anchor.dataset.stepTarget = target;
+      anchor.append(make('span','lesson-guide-number',number),make('span','lesson-guide-label',title));
+      const step = {title,target,instructions,index,number,hash,anchor,section:sectionOf(target)};
+      steps.push(step);
+      nav.append(anchor);
+      anchor.addEventListener('click',event=>{
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        event.preventDefault();
+        go(step);
+      });
+    }
+  }
+  while (nav.nextSibling) body.append(nav.nextSibling);
+  nav.before(workspace);
+  guide.append(summary,nav);
+  rail.append(guide,task);
+  workspace.append(rail,body);
+  article.parentElement.classList.add('unit-content-with-guide');
+
+  let active;
+  let targetHighlight;
+  let heldScroll;
+  function mark(step) {
+    if (!step || step === active) return;
+    active?.anchor.removeAttribute('aria-current');
+    active = step;
+    step.anchor.setAttribute('aria-current','step');
+    currentTitle.textContent = `${step.number} ${step.title}`;
+    taskSummary.textContent = `本步任务 ${step.index + 1}/${steps.length}`;
+    taskTitle.textContent = step.title;
+    taskText.textContent = step.instructions;
+    previous.disabled = step.index === 0;
+    next.disabled = step.index === steps.length - 1;
+    if (guide.open) {
+      const row = step.anchor.getBoundingClientRect();
+      const list = nav.getBoundingClientRect();
+      if (row.top < list.top) nav.scrollTop -= list.top - row.top + 4;
+      if (row.bottom > list.bottom) nav.scrollTop += row.bottom - list.bottom + 4;
+    }
+  }
+
+  function scrollToTarget(target, focus) {
+    if (!target) return;
+    if (target === quiz) quiz.open = true;
+    if (focus) {
+      targetHighlight?.classList.remove('lesson-step-target');
+      targetHighlight = target;
+      target.classList.add('lesson-step-target');
+      if (!target.matches('a,button,input,select,textarea,summary,[tabindex]')) target.setAttribute('tabindex','-1');
+      target.focus?.({preventScroll:true});
+    }
+    const offset = desktop.matches ? 44 : rail.getBoundingClientRect().height + 20;
+    window.scrollTo({top:window.scrollY + target.getBoundingClientRect().top - offset,behavior:'instant'});
+    heldScroll = window.scrollY;
+  }
+
+  function go(step, writeHistory=true) {
+    if (!step) return;
+    if (writeHistory && location.hash !== step.hash) history.pushState(null,'',step.hash);
+    if (!desktop.matches) guide.open = false;
+    mark(step);
+    task.open = true;
+    scrollToTarget(resolveTarget(step),writeHistory);
+  }
+
+  previous.addEventListener('click',()=>go(steps[active.index - 1]));
+  next.addEventListener('click',()=>go(steps[active.index + 1]));
+  guide.addEventListener('toggle',()=>{ if (!desktop.matches && guide.open) task.open = false; });
+  task.addEventListener('toggle',()=>{ if (!desktop.matches && task.open) guide.open = false; });
+
+  const lessonBlocks = [lab,...lessonParts];
+  let scheduled = false;
+  function track() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(()=>{
+      scheduled = false;
+      if (heldScroll !== undefined && Math.abs(window.scrollY - heldScroll) < 12) return;
+      heldScroll = undefined;
+      const readingLine = desktop.matches ? 92 : rail.getBoundingClientRect().height + 24;
+      const section = lessonBlocks.findLast(block=>block.getBoundingClientRect().top <= readingLine);
+      if (section && section !== active.section) mark(steps.find(step=>step.section===section));
+    });
+  }
+
+  window.addEventListener('scroll',track,{passive:true});
+  window.addEventListener('resize',track);
+  desktop.addEventListener('change',()=>{guide.open = task.open = desktop.matches;track();});
+  const followFragment = () => {
+    const step = steps.find(item=>item.hash===location.hash);
+    if (step) { go(step,false); return; }
+    const target = document.getElementById(location.hash.slice(1));
+    if (target === quiz) {
+      mark(steps.find(item=>item.target==='quiz'));
+      scrollToTarget(quiz,false);
+    } else if (lessonBlocks.includes(target)) {
+      mark(steps.find(item=>item.section===target));
+      scrollToTarget(target,false);
+    }
+  };
+  window.addEventListener('hashchange',followFragment);
+  mark(steps[0]);
+  followFragment();
+})([["认光路，判断电压的作用",[["沿光路找出阴极和阳极","part:1","从汞灯沿导轨看向滤光盘、光阑和光电管。辨认发射电子的 K、收集电子的 A 和两只读数表。"],["开机后先在 0 V 看电流","[data-ph-power]","开机等汞灯稳定，打开遮光盖。保持 U = 0 V 观察电流，想一想电子在电场为零时为何还能到达阳极。"],["调正负电压，扫一条伏安曲线","[data-ph-voltage-scale]","同一个滤光片先调负压再调正压，观察读数。点「扫描 I–U 曲线」，在正压端找饱和平台，在负压端找接近遏止的范围。"]]],["同一条谱线，比较三种读法",[["固定光阑和距离，找 I = 0 交点","[data-ph-zero]","固定 Φ 和 d。建议选择「遏止区细看」，点「记录 I = 0 的电压」从扫线的横轴交点读数，记录 Uₐ 的负号。"],["保持电压不动，遮光测 I₁","[data-ph-dark]","还保留 I = 0 的电压时挡住入光口，记录暗电流 I₁。对照挡住前后两个电流读数。"],["重新照明，用 I₁ 作判据","[data-ph-comp]","移开遮光盖，在同一条扫线上找当前 I = I₁ 的位置，记录补偿所得 Uₐ。比较它与零电流法有多大差别。"],["找负压端由近直线转为抬升的位置","[data-ph-knee]","光照下还可能有阳极反向光电流。观察「遏止区细看」中的负压下部，记录曲线抬头的拐点，并和前两次读数比较。"]]],["补齐五条谱线，拟合普朗克常量",[["依次换滤光片，补齐五条谱线","[data-ph-filter]","保持第一条谱线的光阑和距离，依次选 365.0、404.7、435.8、546.1、577.0 nm。每换一片重扫，再用刚才的三种判据记录。"],["比较三法的 h、红限和逸出功","[data-ph-fit]","每次选同一种判法，把 |Uₐ| 对 ν 作直线拟合。调换判据比较 h 与相对误差。用零点求红限频率，再由截距换算阴极材料的逸出功。"]]],["把饱和电流和光强分开检验",[["固定距离，用光阑改变光强","[data-ph-saturation]","保留任一滤光片，固定距离和正向饱和电压（本台 +3.500 V 起）。换 3、5、7 mm 光阑，分别记录，判断 I 对 Φ² 是否成正比。"],["固定光阑，用滑台改变光强","[data-ph-series]","切换到「固定光阑，改变距离」。电压仍固定在饱和区，移动光电管记录多组数据，画 I 对 1/d² 的图。"],["解释光强为何改变平台高度","quiz","同色光下只开大光阑。试着分别用光子数量和单个光子的能量解释电流和遏止电压的变化。"]]],["延伸光源和光电检测",[["设计换光源或光电倍增管的实验","part:6","考虑如何标定 LED 波长和带宽。阅读光电倍增管的结构及增益，并区分用能谱求结合能的 XPS／UPS 与本台的测量。"]]]]);</script>
+</body>
+</html>

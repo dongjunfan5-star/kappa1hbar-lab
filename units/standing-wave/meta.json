@@ -1,0 +1,24 @@
+{
+  "title": "驻波实验",
+  "chapter": "力学",
+  "order": 7,
+  "summary": "数波腹、量弦长，用驻波反求弦上横波的速度和弦的线密度。",
+  "tags": [
+    "驻波",
+    "弦振动",
+    "波速",
+    "共振曲线",
+    "品质因数",
+    "电振音叉",
+    "波节",
+    "波腹",
+    "线密度",
+    "仿真实验"
+  ],
+  "level": 2,
+  "duration": 180,
+  "updated": "2026-11-20",
+  "cover": "anatomy-cover.png",
+  "entry": "anatomy.html",
+  "interactive": true
+}

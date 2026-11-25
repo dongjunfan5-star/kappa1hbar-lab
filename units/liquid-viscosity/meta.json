@@ -1,0 +1,17 @@
+{
+  "title": "液体黏度的测量",
+  "chapter": "力学",
+  "order": 5,
+  "summary": "让小球进入匀速下落区，测距离与时间，再按容器大小和雷诺数修正，得到液体在该温度下的动力黏度。",
+  "tags": [
+    "液体黏度",
+    "落球",
+    "斯托克斯",
+    "雷诺数",
+    "仿真实验"
+  ],
+  "level": 2,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

@@ -1,0 +1,17 @@
+{
+  "title": "硅光电池光电特性的研究",
+  "chapter": "光学",
+  "order": 18,
+  "summary": "调光照、接负载，量电压和电流，再从实测曲线找最大输出功率和填充因子。",
+  "tags": [
+    "硅光电池",
+    "光伏",
+    "伏安特性",
+    "填充因子",
+    "仿真实验"
+  ],
+  "level": 1,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

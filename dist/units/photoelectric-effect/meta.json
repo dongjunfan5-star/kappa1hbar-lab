@@ -1,0 +1,16 @@
+{
+  "title": "光电效应实验",
+  "chapter": "近代物理学实验",
+  "summary": "让汞灯的五条谱线依次照射光电管，用三种方法寻找遏止电压，再拟合普朗克常量、光阴极逸出功和红限频率。",
+  "tags": [
+    "遏止电压",
+    "伏安特性",
+    "普朗克常量",
+    "仿真实验"
+  ],
+  "level": 2,
+  "order": 24,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}
