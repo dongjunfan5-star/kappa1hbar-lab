@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>大学物理实验 · 交互实验站</title>
+  <meta name="description" content="在仿真实验台上认识仪器、练习操作和记录读数">
+  <link rel="stylesheet" href="./assets/shell.css">
+</head>
+<body class="page-index">
+  <header class="topbar">
+    <button class="btn btn-ghost nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar" aria-label="打开实验目录">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span class="btn-label">目录</span>
+    </button>
+    <a class="brand" href="./" aria-label="物理实验 · 交互实验站">
+      <svg class="icon brand-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4v16h18M8 19v-2m5 2v-2m5 2v-2M5.5 11c2.5-5 5-5 7.5 0s5 5 7.5 0"/></svg>
+      <span class="brand-label">物理实验 · 交互实验站</span>
+    </a>
+    <div class="topbar-tools">
+      <label class="search-wrap">
+        <svg class="icon search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"/><path d="m15 15 4.5 4.5"/></svg>
+        <input id="q" class="search" type="search" placeholder="搜索实验或仪器" autocomplete="off" aria-label="搜索实验或仪器">
+      </label>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="实验目录"></aside>
+
+    <div class="main">
+      <main class="wrap">
+        <section class="hero">
+          <div>
+            <h1>大学物理实验</h1>
+            <p class="hero-sub">在仿真实验台上认识仪器、练习操作和记录读数。</p>
+          </div>
+          <svg class="signal-field" viewBox="0 0 640 160" aria-hidden="true" focusable="false">
+            <defs>
+              <pattern id="signal-graticule" width="32" height="20" patternUnits="userSpaceOnUse">
+                <path class="signal-grid-line" d="M0 20V0H32"/>
+              </pattern>
+              <linearGradient id="signal-edges">
+                <stop stop-color="white" stop-opacity="0"/>
+                <stop offset=".16" stop-color="white"/>
+                <stop offset=".86" stop-color="white"/>
+                <stop offset="1" stop-color="white" stop-opacity=".35"/>
+              </linearGradient>
+              <mask id="signal-window"><rect width="640" height="160" fill="url(#signal-edges)"/></mask>
+              <linearGradient id="signal-sweep-fill">
+                <stop stop-color="white" stop-opacity="0"/>
+                <stop offset=".76" stop-color="white"/>
+                <stop offset="1" stop-color="white" stop-opacity="0"/>
+              </linearGradient>
+              <mask id="signal-sweep-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="160">
+                <rect class="signal-sweep" x="-170" width="170" height="160" fill="url(#signal-sweep-fill)"/>
+              </mask>
+              <path id="signal-primary" d="M-24 80C4 30 32 30 60 80S116 130 144 80 200 30 228 80 284 130 312 80 368 30 396 80 452 130 480 80 536 30 564 80 620 130 648 80"/>
+              <path id="signal-reference" d="M-24 52C4 52 32 108 60 108S116 52 144 52 200 108 228 108 284 52 312 52 368 108 396 108 452 52 480 52 536 108 564 108 620 52 648 52"/>
+            </defs>
+            <g mask="url(#signal-window)">
+              <rect class="signal-screen" x="1" y="1" width="638" height="158" rx="9"/>
+              <rect x="1" y="1" width="638" height="158" rx="9" fill="url(#signal-graticule)"/>
+              <path class="signal-axis" d="M0 80h640M312 10v140"/>
+              <path class="signal-ticks" d="M48 76v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8m24-11v14m24-11v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8m24-8v8"/>
+              <use href="#signal-reference" class="signal-reference"/>
+              <use href="#signal-primary" class="signal-primary"/>
+              <use href="#signal-primary" class="signal-highlight" mask="url(#signal-sweep-mask)"/>
+              <path class="signal-trigger" d="M305 10h14l-7 9z"/>
+              <circle class="signal-point" cx="312" cy="80" r="3.75"/>
+            </g>
+          </svg>
+        </section>
+
+        <div class="catalog-tools">
+          <nav class="chips" id="chips" aria-label="按章筛选"></nav>
+          <p class="catalog-count" id="catalog-count" role="status"></p>
+        </div>
+
+        <section class="grid" id="grid" aria-label="实验列表"></section>
+        <p class="empty" id="empty" hidden>没有匹配的实验</p>
+      </main>
+
+      <footer class="foot">
+        <span id="foot-meta"></span>
+      </footer>
+    </div>
+  </div>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <script src="./assets/shell.js"></script>
+</body>
+</html>

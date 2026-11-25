@@ -1,0 +1,18 @@
+{
+  "title": "用光学法测微小几何量",
+  "chapter": "光学",
+  "order": 22,
+  "summary": "用读数显微镜量牛顿环、用劈尖条纹量细丝，再通过衍射暗纹或干涉条纹判断微粒大小与玻璃面形。",
+  "tags": [
+    "牛顿环",
+    "光学干涉",
+    "劈尖",
+    "衍射",
+    "曲率半径",
+    "仿真实验"
+  ],
+  "level": 2,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}

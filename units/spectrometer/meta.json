@@ -1,0 +1,19 @@
+{
+  "title": "分光计的调整与使用",
+  "chapter": "光学",
+  "order": 20,
+  "summary": "自准直法调好望远镜、平行光管与载物台，测三棱镜顶角与最小偏向角求折射率，再用光栅测色散与谱线波长。",
+  "tags": [
+    "分光计",
+    "自准直",
+    "最小偏向角",
+    "光栅",
+    "折射率"
+  ],
+  "level": 2,
+  "duration": 180,
+  "updated": "2026-11-12",
+  "cover": "anatomy-cover.png",
+  "entry": "index.html",
+  "interactive": true
+}

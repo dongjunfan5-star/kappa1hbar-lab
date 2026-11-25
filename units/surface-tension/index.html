@@ -1,0 +1,3054 @@
+<!doctype html>
+<!-- physlab-mechanics-export -->
+<!--
+MIT License
+
+Copyright (c) 2026 Ryan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>表面张力系数的测量 · 大学物理实验</title>
+  <style>
+.iso{
+  --anatomy-page:#0b0b0b;--anatomy-card:#131313;--anatomy-text:#a3a3a3;--anatomy-strong:#e6e6e6;--anatomy-muted:#6e6e6e;
+  --anatomy-paper:#131313;--anatomy-face:#1b1b1b;--anatomy-top:#1c1c1c;
+  --anatomy-shade-0:#0f0f0f;--anatomy-shade-1:#121212;--anatomy-shade-2:#151515;--anatomy-shade-3:#181818;
+  --anatomy-lit-top:#262626;--anatomy-lit-shade:#1d1d1d;
+  --anatomy-hi:#d4d4d4;--anatomy-mid:#6a6a6a;--anatomy-lo:#3e3e3e;--anatomy-faint:#2a2a2a;--anatomy-lit:#ffffff;
+  --anatomy-halo:#050505;--anatomy-halo-opacity:.9;--anatomy-dot:#e6e6e6;
+  --anatomy-red:#ff6b6b;--anatomy-green:#6be0a0;--anatomy-blue:#6b9bff;
+  --anatomy-weight:.6px;--anatomy-ease:cubic-bezier(.32,.72,0,1);
+  --anatomy-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --anatomy-lift:inset 0 1px 0 0 #ffffff0a,inset 0 0 0 1px #ffffff06,0 0 0 1px #00000026,0 1px 1px -.5px #00000014,0 3px 3px -1.5px #00000014,0 6px 6px -3px #00000014,0 12px 12px -6px #00000014;
+}
+.iso[data-theme="light"]{
+  --anatomy-page:#f2f2ef;--anatomy-card:#fbfbfa;--anatomy-text:#57575a;--anatomy-strong:#18181a;--anatomy-muted:#8c8c90;
+  --anatomy-paper:#fbfbfa;--anatomy-face:#ffffff;--anatomy-top:#ffffff;
+  --anatomy-shade-0:#dcdcd9;--anatomy-shade-1:#e5e5e2;--anatomy-shade-2:#ededea;--anatomy-shade-3:#f4f4f1;
+  --anatomy-lit-top:#ffffff;--anatomy-lit-shade:#eeeeeb;
+  --anatomy-hi:#26262a;--anatomy-mid:#8a8a8f;--anatomy-lo:#b4b4b8;--anatomy-faint:#d4d4d6;--anatomy-lit:#000000;
+  --anatomy-halo:#8a8a80;--anatomy-halo-opacity:.32;--anatomy-dot:#3a3a3e;
+  --anatomy-red:#e5484d;--anatomy-green:#30a46c;--anatomy-blue:#3e63dd;
+  --anatomy-lift:inset 0 1px 0 0 #ffffff,0 0 0 1px #0000000f,0 1px 1px -.5px #0000000a,0 3px 3px -1.5px #0000000a,0 6px 6px -3px #0000000a,0 12px 12px -6px #0000000a;
+}
+.iso-svg{display:block;width:100%;height:auto;overflow:visible}
+.iso-svg path,.iso-svg circle{vector-effect:non-scaling-stroke}
+.iso-fill{fill:var(--anatomy-paper);stroke:none}
+.iso-solid[data-lit]>.iso-fill{fill:var(--anatomy-face)}
+.iso-shade,.iso-top{stroke:none}
+.iso-shade[data-shade="0"]{fill:var(--anatomy-shade-0)}
+.iso-shade[data-shade="1"]{fill:var(--anatomy-shade-1)}
+.iso-shade[data-shade="2"]{fill:var(--anatomy-shade-2)}
+.iso-shade[data-shade="3"]{fill:var(--anatomy-shade-3)}
+.iso-top{fill:var(--anatomy-top)}
+.iso-solid[data-lit]>.iso-top{fill:var(--anatomy-lit-top)}
+.iso-solid[data-lit]>.iso-shade{fill:var(--anatomy-lit-shade)}
+.iso-solid[data-seamless]>.iso-shade,.iso-solid[data-seamless]>.iso-top{stroke-width:.4;stroke-linejoin:round}
+.iso-solid[data-seamless]>.iso-shade[data-shade="0"]{stroke:var(--anatomy-shade-0)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="1"]{stroke:var(--anatomy-shade-1)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="2"]{stroke:var(--anatomy-shade-2)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="3"]{stroke:var(--anatomy-shade-3)}
+.iso-solid[data-seamless]>.iso-top{stroke:var(--anatomy-top)}
+.iso-solid[data-seamless][data-lit]>.iso-top{stroke:var(--anatomy-lit-top)}
+.iso-solid[data-seamless][data-lit]>.iso-shade{stroke:var(--anatomy-lit-shade)}
+.iso-solid[data-lit]>.iso-edge{stroke:var(--anatomy-lit)}
+.iso-halo{fill:var(--anatomy-halo);stroke:none;filter:blur(9px);opacity:var(--anatomy-halo-opacity);transform:translateY(3px)}
+.iso-line{fill:none;stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight);stroke-linecap:round;stroke-linejoin:round}
+.iso-line[data-tone="hi"]{stroke:var(--anatomy-hi)}
+.iso-line[data-tone="mid"]{stroke:var(--anatomy-mid)}
+.iso-line[data-tone="lo"]{stroke:var(--anatomy-lo)}
+.iso-line[data-tone="faint"]{stroke:var(--anatomy-faint)}
+.iso-line[data-tone="lit"]{stroke:var(--anatomy-lit)}
+.iso-line[data-tone="red"]{stroke:var(--anatomy-red)}
+.iso-line[data-tone="green"]{stroke:var(--anatomy-green)}
+.iso-line[data-tone="blue"]{stroke:var(--anatomy-blue)}
+.iso-line[data-dotted]{stroke-dasharray:.01 3.5;stroke-width:1}
+.iso-line[data-dashed]{stroke-dasharray:3 3}
+.iso-line[data-flow]{stroke-dasharray:2 6}
+.iso-wire-end{fill:var(--anatomy-paper);stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight)}
+.iso-wire[data-tone="hi"] .iso-wire-end{stroke:var(--anatomy-hi)}
+.iso-wire[data-tone="mid"] .iso-wire-end{stroke:var(--anatomy-mid)}
+.iso-wire[data-tone="faint"] .iso-wire-end{stroke:var(--anatomy-faint)}
+.iso-wire[data-tone="lit"] .iso-wire-end{stroke:var(--anatomy-lit)}
+.iso-dots circle{fill:var(--anatomy-dot);stroke:none;opacity:.32}
+.iso-dots[data-tone="hi"] circle{opacity:.85}
+.iso-dots[data-tone="mid"] circle{opacity:.45}
+.iso-dots[data-tone="lo"] circle{opacity:.22}
+.iso-dots[data-tone="faint"] circle{opacity:.12}
+.iso-face-text{fill:var(--anatomy-mid);font-family:var(--anatomy-mono);letter-spacing:.04em}
+.iso-face-text[data-tone="hi"]{fill:var(--anatomy-hi)}
+.iso-face-text[data-tone="lo"]{fill:var(--anatomy-lo)}
+.iso-face-text[data-tone="faint"]{fill:var(--anatomy-faint)}
+.tb-body{fill:var(--anatomy-shade-2);stroke:none}
+.tb-shine{fill:var(--anatomy-top);stroke:none}
+.tb-shade{fill:var(--anatomy-shade-0);stroke:none}
+.tb-ring{fill:none;stroke:var(--anatomy-lo);stroke-width:.45;stroke-linecap:butt;stroke-linejoin:round}
+.tb-ring[data-tone="mid"]{stroke:var(--anatomy-mid)}
+.tb-ring[data-tone="faint"]{stroke:var(--anatomy-faint)}
+.tb-ring[data-tone="hi"]{stroke:var(--anatomy-hi)}
+@keyframes iso-flow{to{stroke-dashoffset:-32}}
+@keyframes iso-pulse{0%,100%{opacity:.18}12%{opacity:1}40%{opacity:.18}}
+.iso-line[data-flow]{animation:iso-flow 1600ms linear infinite}
+.iso-dots circle[data-pulse]{animation:iso-pulse 1600ms steps(1,end) infinite;animation-delay:var(--pulse-at,0ms)}
+.iso-figure{margin:32px 0 36px}
+.iso-plate{position:relative;padding:52px 24px;border-radius:0;background:var(--anatomy-card);box-shadow:0 0 0 1px var(--anatomy-mid);--anatomy-paper:var(--anatomy-card)}
+.iso-plate-corners{position:absolute;inset:18px 20px;pointer-events:none}
+.iso-plate-corner{position:absolute;color:var(--anatomy-muted);font-family:var(--anatomy-mono);font-size:10.5px;line-height:1;letter-spacing:.04em;white-space:nowrap}
+.iso-plate-corner[data-corner="fig"]{top:0;left:0;color:var(--anatomy-text)}
+.iso-plate-corner[data-corner="title"]{top:0;right:0;text-transform:uppercase;letter-spacing:.1em}
+.iso-plate-corner[data-corner="hint"]{bottom:0;left:0;text-transform:uppercase;letter-spacing:.1em}
+.iso-plate-corner[data-corner="readout"]{right:0;bottom:0;color:var(--anatomy-text);font-variant-numeric:tabular-nums}
+.iso-plate .iso-svg{margin:0 auto}
+.iso-legend{display:grid;gap:8px;margin-top:12px;color:var(--anatomy-muted);font-size:13px;line-height:1.55}
+.iso-keys{display:flex;flex-wrap:wrap;gap:6px 18px}
+.iso-key{display:inline-flex;align-items:center;gap:7px}
+.iso-swatch{width:16px;height:10px;flex:none;overflow:visible}
+.iso-swatch path{fill:none;stroke:var(--anatomy-hi);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.iso-swatch[data-mark="raised"] path,.iso-swatch[data-mark="flat"] path{stroke:var(--anatomy-mid)}
+.iso-swatch[data-mark="lit"] path{stroke:var(--anatomy-lit)}
+.iso-swatch[data-mark="dim"] path{stroke:var(--anatomy-lo)}
+.iso-swatch[data-mark="dotted"] path{stroke-dasharray:.01 3;stroke-width:1.4}
+.iso-swatch[data-mark="dashed"] path{stroke-dasharray:3 2.5}
+.iso-swatch[data-mark="red"] path{stroke:var(--anatomy-red)}
+.iso-swatch[data-mark="green"] path{stroke:var(--anatomy-green)}
+.iso-swatch[data-mark="blue"] path{stroke:var(--anatomy-blue)}
+.iso-swatch-crease{stroke:var(--anatomy-lo)!important}
+@media (max-width:560px){.iso-plate{padding:48px 12px 70px}.iso-plate-corner[data-corner="hint"]{bottom:18px}}
+@media (prefers-reduced-motion:reduce){.iso-line[data-flow],.iso-dots circle[data-pulse]{animation:none}}
+</style>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: light-dark(#f5f4ef,#191d1b);
+      --paper: light-dark(#fffefa,#232925);
+      --ink: light-dark(#202721,#eeefe8);
+      --muted: light-dark(#626b63,#b8c2b8);
+      --line: light-dark(#d7dcd2,#45534a);
+      --accent: light-dark(#1a614b,#a3e3c5);
+      --accent-soft: light-dark(#e7f0e7,#293e34);
+      --accent-ink: light-dark(#fff,#12281f);
+      --plot-grid: var(--line);
+      --plot-ink: var(--ink);
+      --plot-accent: var(--accent);
+      --plot-secondary: light-dark(#9b4f2d,#ffba91);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-padding-top: 20px; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.8 system-ui, 'Microsoft YaHei', sans-serif; }
+    a { color: var(--accent); text-underline-offset: 4px; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    button,input,select { font: inherit; }
+    button,select,input:not([type="range"]):not([type="radio"]):not([type="checkbox"]) { color: var(--ink); background: var(--paper); border: 1px solid var(--line); padding: .43rem .68rem; border-radius: .36rem; }
+    button { cursor: pointer; }
+    button:hover:not(:disabled),button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    button:disabled { cursor: default; opacity: .55; }
+    input { max-width: 100%; accent-color: var(--accent); }
+    input[type="range"] { min-width: 0; display: block; width: 100%; margin: 5px 0; }
+    select { max-width: 100%; }
+    [hidden] { display: none !important; }
+    .top { border-bottom: 1px solid var(--line); }
+    .top-inner { max-width: 1260px; margin: auto; padding: 22px 36px; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 4px 20px; }
+    .top-title { font-weight: 650; text-decoration: none; color: var(--ink); }
+    .top-source,.kicker,.page-ref,.caption,.hint,.source { color: var(--muted); font-size: .875rem; }
+    .layout { display: grid; grid-template-columns: 236px minmax(0,1fr); gap: 52px; max-width: 1260px; margin: 0 auto; padding: 38px 36px 70px; }
+    .toc { align-self: start; position: sticky; top: 18px; max-height: calc(100dvh - 36px); overflow: auto; padding: 4px 4px 4px 0; }
+    .toc a { display: grid; grid-template-columns: 2rem 1fr; gap: 4px; align-items: baseline; padding: 9px 10px; color: var(--muted); text-decoration: none; font-size: .9rem; line-height: 1.45; border-left: 3px solid transparent; }
+    .toc a:hover,.toc a[aria-current="page"] { border-left-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    .toc a span:first-child { font-variant-numeric: tabular-nums; }
+    h1,h2,h3,h4 { line-height: 1.35; }
+    h1 { font-size: clamp(2rem, 4.3vw, 3.7rem); letter-spacing: -.045em; margin: 9px 0 19px; }
+    h2 { font-size: clamp(1.35rem,2.25vw,1.75rem); margin: 6px 0 14px; }
+    h3 { font-size: 1.11rem; margin: 1.4em 0 .3em; }
+    p { margin: .75em 0; }
+    main { min-width: 0; }
+    .hero { border-bottom: 1px solid var(--line); padding-bottom: 24px; }
+    .hero p { max-width: 44em; }
+    .lead { font-size: clamp(1rem,1.5vw,1.19rem); }
+    .course-list { list-style: none; padding: 0; margin: 8px 0 0; }
+    .course-list li { display: grid; grid-template-columns: 2rem minmax(0,1fr) auto; align-items: start; gap: 10px; border-bottom: 1px solid var(--line); padding: 16px 0; }
+    .course-list .number { color: var(--accent); font-variant-numeric: tabular-nums; }
+    .course-list a { display: inline-block; color: var(--ink); font-weight: 650; }
+    .course-list p { margin: .25em 0 0; color: var(--muted); font-size: .93rem; line-height: 1.55; }
+    .lesson { min-width: 0; }
+    .lesson header h1 { font-size: clamp(1.75rem,3.4vw,2.85rem); }
+    .parts { display: flex; gap: .5rem 1.15rem; flex-wrap: wrap; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: .88rem; }
+    .lesson-part { margin: 1.9rem 0; scroll-margin-top: 1rem; }
+    .lesson-part li { margin: .36em 0; }
+    .lesson-part ul,.lesson-part ol { padding-left: 1.6em; }
+    .page-ref { font-variant-numeric: tabular-nums; }
+    .part-head { display: flex; align-items: baseline; gap: 0 1rem; flex-wrap: wrap; }
+    .formula,.equation { background: var(--paper); border-left: 3px solid var(--line); margin: 1em 0; padding: .75em 1em; overflow-wrap: anywhere; font-family: 'Cambria Math', Cambria, 'Microsoft YaHei', serif; }
+    .table-wrap,.table-responsive { overflow: auto; max-width: 100%; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    caption { text-align: left; color: var(--muted); padding: .6rem 0; }
+    td,th { text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); padding: .55rem .65rem; }
+    details { border-top: 1px solid var(--line); padding: .68em 0; }
+    summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+    .sim { background: var(--paper); border: 1px solid var(--line); border-radius: .45rem; padding: clamp(12px, 2.8vw, 26px); margin: 1em 0; min-width: 0; }
+    .sim-controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: end; margin: .6em 0 1em; }
+    .sim-controls > label,.sim-controls > div { flex: 1 1 175px; min-width: min(100%,155px); }
+    .sim-controls > label > :is(select,input:not([type="radio"]):not([type="checkbox"])) { display: block; }
+    .sim :is(canvas,svg,img) { display: block; width: 100%; max-width: 100%; object-fit: contain; }
+    .sim svg:not([height]) { height: auto; }
+    .reading { color: var(--accent); font-weight: 650; font-variant-numeric: tabular-nums; }
+    .next-links { border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; padding-top: 1rem; }
+    .rig-lab { margin: 1.85rem 0 2.5rem; min-width: 0; }
+    .rig-head { display: grid; gap: 7px; margin-bottom: 15px; }
+    .rig-head h2,.rig-head p { margin: 0; }
+    .rig-instrument { border: 1px solid var(--line); border-radius: 10px; background: var(--paper); overflow: clip; }
+    .rig-bar { display:flex; justify-content:space-between; gap: 8px 22px; flex-wrap:wrap; border-bottom:1px solid var(--line); padding: 12px 20px; font-size:.91rem; }
+    .rig-bar span { color:var(--muted); }
+    .rig-host { min-width:0; padding: clamp(10px, 2vw, 20px); }
+    .rig-scene { min-width: 0; position:relative; background: var(--anatomy-card,var(--paper)); border: 1px solid var(--line); border-radius: 6px; }
+    .rig-scene-upright { max-width: min(100%,680px); margin-inline:auto; }
+    .rig-scene > svg, .rig-scene > .iso-svg { display:block; width:100%; height:auto; margin:auto; }
+    .rig-host > svg { width:100%; height:auto; display:block; }
+    .rig-hit { cursor:pointer; outline:none; }
+    .rig-hit-area { fill:transparent; stroke:transparent; stroke-width:1.7; }
+    .rig-hit-marker { fill:var(--accent); stroke:var(--paper); stroke-width:2.2; pointer-events:none; }
+    .rig-hit:hover .rig-hit-area,.rig-hit:focus-visible .rig-hit-area { stroke:var(--accent); fill:var(--accent-soft); fill-opacity:.27; }
+    .rig-tools { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin: .65rem 0; }
+    .rig-tools label { min-width:0; }
+    .rig-readout { border-left: 3px solid var(--accent); padding: .4em .75em; color:var(--ink); font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+    .rig-question { margin-top:1rem; }
+    .rig-choices { display:flex; flex-wrap:wrap; align-items:start; gap: 7px; }
+    .rig-choices button { text-align:start; }
+    .rig-feedback { color:var(--ink); }
+    .rig-feedback[data-correct=true] { color:var(--accent); }
+    .rig-host .iso-svg { overflow:visible; }
+    @media (max-width:820px) {
+      .layout { display: block; padding: 22px 19px 50px; }
+      .top-inner { padding: 14px 19px; }
+      .toc { position: static; max-height: none; padding: 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); margin-bottom: 27px; border-bottom: 1px solid var(--line); }
+      .toc a { font-size: .82rem; grid-template-columns: 1.55rem 1fr; padding: 7px 5px; }
+      .course-list li { grid-template-columns: 1.5rem minmax(0,1fr); gap: 4px 10px; }
+      .course-list .page-ref { grid-column: 2; }
+      td,th { padding: .45rem .35rem; }
+      .rig-hit-marker { r: 8; }
+    }
+  </style>
+<style>
+  .unit-content,.unit-return { max-width: 1020px; margin-inline: auto; padding-inline: clamp(16px,4vw,52px); }
+  .unit-content { padding-block: clamp(18px,4vw,40px) 60px; }
+  .unit-return { padding-block-start: 16px; font-size: .9rem; }
+  .unit-content .hero { padding-bottom: 18px; }
+  .parts { overflow-wrap: anywhere; }
+  </style>
+<style id="physlab-bench-theme">
+:root {
+  color-scheme: light dark;
+  --lab-page: light-dark(#f1f5f7, #111820);
+  --lab-panel: light-dark(#fff, #18232d);
+  --lab-stage: light-dark(#e9f0f4, #111b24);
+  --lab-line: light-dark(#c8d5de, #334957);
+  --lab-control-line: light-dark(#a3b6c2, #516977);
+  --lab-ink: light-dark(#182832, #e7eef3);
+  --lab-muted: light-dark(#415563, #a9bac7);
+  --lab-signal: light-dark(#17634c, #a9efce);
+  --lab-signal-soft: light-dark(#e1f1eb, #223d3a);
+  --lab-signal-ink: light-dark(#fff, #132822);
+  --lab-font: system-ui, 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif;
+  --lab-radius: 10px;
+  --lab-key-radius: 7px;
+  --bg: var(--lab-page);
+  --paper: var(--lab-panel);
+  --ink: var(--lab-ink);
+  --muted: var(--lab-muted);
+  --line: var(--lab-line);
+  --accent: var(--lab-signal);
+  --accent-soft: var(--lab-signal-soft);
+  --accent-ink: var(--lab-signal-ink);
+}
+
+.iso:is(.rig-host, .cover-instrument) {
+  --anatomy-card: var(--lab-stage);
+  --anatomy-paper: var(--lab-stage);
+  --anatomy-text: var(--lab-muted);
+  --anatomy-strong: var(--lab-ink);
+  --anatomy-muted: var(--lab-muted);
+  --anatomy-face: light-dark(#d2e0e8, #314753);
+  --anatomy-top: light-dark(#e0ebf1, #3a505d);
+  --anatomy-shade-0: light-dark(#a2b6c3, #15212a);
+  --anatomy-shade-1: light-dark(#b7c9d4, #1e2e3a);
+  --anatomy-shade-2: light-dark(#c9d9e3, #263945);
+  --anatomy-shade-3: light-dark(#dce8ef, #304552);
+  --anatomy-hi: light-dark(#29424f, #e0ecf0);
+  --anatomy-mid: light-dark(#506b7b, #91adb9);
+  --anatomy-lo: light-dark(#647e8d, #617c8c);
+  --anatomy-faint: light-dark(#829aa8, #455d6a);
+  --anatomy-lit: light-dark(#153d3a, #effaff);
+  --anatomy-lit-top: light-dark(#aad3c6, #3c5e63);
+  --anatomy-lit-shade: light-dark(#8dbab2, #25454c);
+  --anatomy-weight: .86px;
+}
+
+body { font-family: var(--lab-font); }
+.unit-content { padding-block: clamp(16px, 2.8vw, 32px) 56px; }
+.unit-content .hero { padding-bottom: 16px; }
+.unit-content .lesson .hero h1 {
+  font-size: clamp(1.65rem, 3vw, 2.5rem);
+  margin: 4px 0 12px;
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+.unit-content .hero .kicker { margin: 0; }
+.unit-content .hero .lead { margin: 0 0 8px; line-height: 1.65; }
+.unit-content .hero .hint { margin: 0; }
+.unit-content .parts { gap: 4px 16px; padding-block: 12px; }
+.unit-content .parts a { color: var(--lab-muted); }
+.unit-content .parts a:first-child, .unit-content .parts a:hover { color: var(--lab-signal); }
+.unit-content .parts a:first-child { font-weight: 650; }
+.unit-content .rig-lab { margin-top: 24px; }
+.unit-content .rig-head { gap: 8px; margin-bottom: 12px; }
+.unit-content .rig-head :is(h2, p) { line-height: 1.55; }
+.unit-content .rig-instrument { border-radius: var(--lab-radius); }
+.unit-content .rig-bar { padding: 12px clamp(12px, 2vw, 20px); }
+.unit-content .rig-scene {
+  background: var(--lab-stage);
+  border-color: var(--lab-line);
+  border-radius: var(--lab-key-radius);
+}
+.unit-content .rig-host { padding: clamp(9px, 2vw, 18px); }
+.unit-content :is(button, select, input:not([type="range"]):not([type="radio"]):not([type="checkbox"])) {
+  border-radius: var(--lab-key-radius);
+  border-color: var(--lab-control-line);
+}
+.unit-content :is(button:hover:not(:disabled), button[aria-pressed="true"]) {
+  border-color: var(--lab-signal);
+}
+.unit-content .rig-readout {
+  border: 1px solid var(--lab-line);
+  border-inline-start: 3px solid var(--lab-signal);
+  border-radius: var(--lab-key-radius);
+  padding: .48em .75em;
+  background: var(--lab-stage);
+  font-variant-numeric: tabular-nums;
+}
+.unit-content .rig-readout :is(strong, output) { color: var(--lab-signal); }
+.unit-content :is(.rig-tools, .rig-choices) :is(button, select) { min-block-size: 40px; }
+.unit-content .rig-choices button { line-height: 1.45; }
+.unit-content :is(.sim, .formula, .equation) { border-color: var(--lab-line); }
+.unit-content .sim { border-radius: var(--lab-radius); }
+.unit-content .lesson-part { margin-block: 32px; }
+.unit-content .part-head { margin-bottom: 4px; }
+
+@media (max-width: 580px) {
+  .unit-content .rig-bar { gap: 3px 12px; }
+  .unit-content .rig-bar span { font-size: .83rem; }
+  .unit-content :is(.rig-tools, .rig-choices) :is(button, select) { min-block-size: 44px; }
+}
+</style>
+<style id="physlab-lesson-guide-style">
+.unit-content-with-guide, body:has(.unit-content-with-guide) > .unit-return {
+  max-width: 1280px;
+  padding-inline: clamp(16px, 3vw, 32px);
+}
+.lesson-workspace { min-width: 0; margin-block-start: 16px; }
+.lesson-body { min-width: 0; }
+.lesson-body > .rig-lab { margin-block-start: 0; }
+.lesson-body > :is(section[id], [id]) { scroll-margin-block-start: 76px; }
+.lesson-body .rig-question { scroll-margin-block-start: 76px; }
+
+.lesson-rail {
+  position: sticky;
+  inset-block-start: 8px;
+  z-index: 4;
+  display: grid;
+  gap: 8px;
+  align-self: start;
+  min-width: 0;
+  margin: 0 0 16px;
+}
+.lesson-guide, .lesson-task {
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--lab-line);
+  border-radius: var(--lab-radius);
+  background: var(--lab-panel);
+}
+.lesson-guide > summary, .lesson-task > summary {
+  min-block-size: 44px;
+  padding: 9px 12px;
+  color: var(--lab-signal);
+  font-size: .92rem;
+  line-height: 1.65;
+}
+.lesson-task > summary { min-block-size: 36px; padding-block: 6px; color: var(--lab-muted); font-size: .86rem; }
+.lesson-task-content { padding: 2px 12px 12px; }
+.lesson-task-title { display: block; color: var(--lab-signal); line-height: 1.4; }
+.lesson-task-text { margin: 5px 0 10px; color: var(--lab-ink); font-size: .86rem; line-height: 1.5; }
+.lesson-task-pager { display: flex; gap: 8px; }
+.unit-content .lesson-task-pager button { flex: 1; min-width: 0; padding: 6px; min-block-size: 38px; font-size: .85rem; }
+.lesson-step-target { outline: 2px solid var(--lab-signal); outline-offset: 3px; }
+.lesson-guide-current {
+  display: inline-block;
+  vertical-align: bottom;
+  margin-inline-start: .65em;
+  max-width: min(calc(100% - 8em), 24em);
+  overflow: hidden;
+  color: var(--lab-muted);
+  font-size: .82rem;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.unit-content .lesson-guide .parts {
+  display: block;
+  max-height: min(48dvh, 400px);
+  margin: 0;
+  padding: 4px 8px 10px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  border-bottom: 0;
+  font-size: .9rem;
+  line-height: 1.45;
+}
+.lesson-guide-group { margin: 0; padding: 5px 8px; color: var(--lab-muted); font-size: .82rem; }
+.lesson-guide-group:not(:first-child) { margin-block-start: 8px; padding-block-start: 10px; border-top: 1px solid var(--lab-line); }
+.unit-content .lesson-guide .parts a {
+  display: grid;
+  grid-template-columns: 2ch minmax(0,1fr);
+  gap: 8px;
+  align-items: baseline;
+  min-height: 40px;
+  padding: 7px 8px;
+  border-inline-start: 2px solid transparent;
+  border-radius: var(--lab-key-radius);
+  color: var(--lab-ink);
+  font-weight: 400;
+  text-decoration: none;
+}
+.lesson-guide-number { color: var(--lab-muted); font-variant-numeric: tabular-nums; }
+.unit-content .lesson-guide .parts a:hover { background: var(--lab-stage); }
+.unit-content .lesson-guide .parts a[aria-current="step"] {
+  background: var(--lab-signal-soft);
+  border-inline-start-color: var(--lab-signal);
+  color: var(--lab-signal);
+  font-weight: 650;
+}
+.lesson-guide a[aria-current="step"] .lesson-guide-number { color: inherit; }
+
+@media (min-width: 900px) {
+  .lesson-workspace { display: grid; grid-template-columns: clamp(190px, 19vw, 228px) minmax(0, 1fr); gap: clamp(16px, 2.5vw, 28px); }
+  .lesson-rail { inset-block-start: 16px; margin: 0; }
+  .lesson-guide-current { display: none; }
+  .unit-content .lesson-guide .parts { max-height: max(140px, calc(100dvh - 280px)); }
+  .lesson-body > :is(section[id], [id]), .lesson-body .rig-question { scroll-margin-block-start: 24px; }
+}
+@media (max-width: 899px) {
+  .unit-content .lesson-task-pager button { min-block-size: 44px; }
+}
+</style>
+</head>
+<body>
+<main id="course" class="unit-content"><noscript><p>请在浏览器中允许 JavaScript，以操作仿真实验台。</p></noscript></main>
+<script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id, lesson);</script>
+<script>const anatomyIso = (() => {
+const AZIMUTH = 45;
+const ELEVATION = 30;
+const SHADES = 4;
+const RADIANS = Math.PI / 180;
+const UNIT = Math.sqrt(1.6);
+function cameraOf({ scale, azimuth = AZIMUTH, elevation = ELEVATION }) {
+    const a = azimuth * RADIANS;
+    const e = elevation * RADIANS;
+    return { sinA: Math.sin(a), cosA: Math.cos(a), sinE: Math.sin(e), cosE: Math.cos(e), k: scale * UNIT };
+}
+function iso([x, y, z], projection) {
+    const { origin } = projection;
+    const { sinA, cosA, sinE, cosE, k } = cameraOf(projection);
+    return [origin[0] + (x * sinA - y * cosA) * k, origin[1] + ((x * cosA + y * sinA) * sinE - z * cosE) * k];
+}
+function towardViewer(projection) {
+    const { sinA, cosA } = cameraOf(projection);
+    return [cosA, sinA];
+}
+function depthOf([x, y, z], projection) {
+    const { sinA, cosA, sinE, cosE } = cameraOf(projection);
+    return (x * cosA + y * sinA) * cosE + z * sinE;
+}
+const tenth = (value) => {
+    const text = (Math.round(value * 10) / 10).toFixed(1).replace(/\.0$/, "");
+    return text === "-0" ? "0" : text;
+};
+function pathOf(points, closed = false) {
+    if (!points.length)
+        return "";
+    return points.map(([x, y], at) => `${at ? "L" : "M"}${tenth(x)} ${tenth(y)}`).join("") + (closed ? "Z" : "");
+}
+const joinPaths = (paths) => paths.filter(Boolean).join("");
+function roundedPlan({ x, y, w, d, r }, steps = 8) {
+    const radius = Math.max(0, Math.min(r, w / 2, d / 2));
+    const corners = [
+        [x + w - radius, y + radius, -90],
+        [x + w - radius, y + d - radius, 0],
+        [x + radius, y + d - radius, 90],
+        [x + radius, y + radius, 180],
+    ];
+    const out = [];
+    for (const [cx, cy, start] of corners) {
+        const count = radius > 0 ? steps : 0;
+        for (let step = 0; step <= count; step++) {
+            const angle = (start + (count ? (90 * step) / count : 45)) * RADIANS;
+            out.push([cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)]);
+        }
+    }
+    return out;
+}
+function signedArea(points) {
+    let area = 0;
+    for (let index = 0; index < points.length; index++) {
+        const [ax, ay] = points[index];
+        const [bx, by] = points[(index + 1) % points.length];
+        area += ax * by - bx * ay;
+    }
+    return area / 2;
+}
+const oriented = (points) => (signedArea(points) < 0 ? [...points].reverse() : points);
+function convexHull(points) {
+    const sorted = [...points].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    if (sorted.length < 3)
+        return sorted;
+    const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+    const lower = [];
+    for (const point of sorted) {
+        while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], point) <= 0)
+            lower.pop();
+        lower.push(point);
+    }
+    const upper = [];
+    for (let index = sorted.length - 1; index >= 0; index--) {
+        const point = sorted[index];
+        while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], point) <= 0)
+            upper.pop();
+        upper.push(point);
+    }
+    return [...lower.slice(0, -1), ...upper.slice(0, -1)];
+}
+function runsOf(flags, want) {
+    const count = flags.length;
+    const runs = [];
+    const start = flags.findIndex((flag, index) => flag !== flags[(index + count - 1) % count]);
+    if (start < 0)
+        return flags[0] === want ? [Array.from({ length: count + 1 }, (_, index) => index % count)] : [];
+    let run = null;
+    for (let step = 0; step < count; step++) {
+        const index = (start + step) % count;
+        if (flags[index] === want) {
+            if (!run)
+                run = [index];
+            run.push((index + 1) % count);
+        }
+        else if (run) {
+            runs.push(run);
+            run = null;
+        }
+    }
+    if (run)
+        runs.push(run);
+    return runs;
+}
+function extrude(ring, z, height, projection, options = {}) {
+    const convex = options.convex ?? true;
+    const count = ring.length;
+    const counter = signedArea(ring) > 0;
+    const [vx, vy] = towardViewer(projection);
+    const { sinA, cosA } = cameraOf(projection);
+    const normals = ring.map(([ax, ay], index) => {
+        const [bx, by] = ring[(index + 1) % count];
+        const dx = bx - ax;
+        const dy = by - ay;
+        const length = Math.hypot(dx, dy) || 1;
+        return (counter ? [dy / length, -dx / length] : [-dy / length, dx / length]);
+    });
+    const facing = normals.map(([nx, ny]) => nx * vx + ny * vy > 1e-9);
+    const top = ring.map(([x, y]) => iso([x, y, z + height], projection));
+    const bottom = ring.map(([x, y]) => iso([x, y, z], projection));
+    const outline = [];
+    const crease = [];
+    for (const run of runsOf(facing, false))
+        outline.push(pathOf(run.map((index) => top[index])));
+    for (const run of runsOf(facing, true)) {
+        crease.push(pathOf(run.map((index) => top[index])));
+        if (height > 0)
+            outline.push(pathOf(run.map((index) => bottom[index])));
+    }
+    if (height > 0) {
+        for (let index = 0; index < count; index++) {
+            if (facing[(index + count - 1) % count] !== facing[index])
+                outline.push(pathOf([top[index], bottom[index]]));
+        }
+    }
+    let fill;
+    if (convex) {
+        fill = pathOf(convexHull([...top, ...bottom]), true);
+    }
+    else {
+        const parts = [pathOf(oriented(top), true), pathOf(oriented(bottom), true)];
+        for (let index = 0; index < count; index++) {
+            if (!facing[index])
+                continue;
+            const next = (index + 1) % count;
+            parts.push(pathOf(oriented([top[index], top[next], bottom[next], bottom[index]]), true));
+        }
+        fill = parts.join("");
+    }
+    const buckets = Array.from({ length: SHADES }, () => []);
+    if (height > 0) {
+        const [lx, ly] = [-sinA, cosA];
+        for (let index = 0; index < count; index++) {
+            if (!facing[index])
+                continue;
+            const [nx, ny] = normals[index];
+            const lit = (nx * lx + ny * ly + 1) / 2;
+            const shade = Math.min(SHADES - 1, Math.max(0, Math.floor(lit * SHADES)));
+            const next = (index + 1) % count;
+            buckets[shade].push(pathOf(oriented([top[index], top[next], bottom[next], bottom[index]]), true));
+        }
+    }
+    let bevel;
+    if (options.bevel && options.bevel > 0) {
+        const by = options.bevel;
+        const inset = ring.map(([x, y], index) => {
+            const [ax, ay] = normals[(index + count - 1) % count];
+            const [bx, by2] = normals[index];
+            const mx = ax + bx;
+            const my = ay + by2;
+            const length = Math.hypot(mx, my) || 1;
+            return [x - (mx / length) * by, y - (my / length) * by];
+        });
+        const insetTop = inset.map(([x, y]) => iso([x, y, z + height], projection));
+        bevel = runsOf(facing, true)
+            .map((run) => pathOf([top[run[0]], ...run.slice(1, -1).map((index) => insetTop[index]), top[run[run.length - 1]]]))
+            .join("");
+    }
+    return {
+        fill,
+        outline: outline.join(""),
+        crease: crease.join(""),
+        top: pathOf(oriented(top), true),
+        shades: buckets.map((paths) => paths.join("")),
+        bevel,
+    };
+}
+const ringOf = (plan, steps = 8) => roundedPlan(plan, steps);
+function slabOf(plan, z, height, projection, steps = 8, bevel = 0) {
+    return extrude(ringOf(plan, steps), z, height, projection, { convex: true, bevel });
+}
+function circleRing(cx, cy, radius, steps = 40) {
+    return Array.from({ length: steps }, (_, step) => {
+        const angle = (step / steps) * Math.PI * 2;
+        return [cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)];
+    });
+}
+function cylinder(cx, cy, radius, z, height, projection, steps = 32, bevel = 0) {
+    return extrude(circleRing(cx, cy, radius, steps), z, height, projection, { convex: true, bevel });
+}
+const insetPlan = ({ x, y, w, d, r }, by) => ({ x: x + by, y: y + by, w: w - by * 2, d: d - by * 2, r: Math.max(0, r - by) });
+function onTop(points, z, projection, closed = false) {
+    return pathOf(points.map(([x, y]) => iso([x, y, z], projection)), closed);
+}
+const planOutline = (plan, z, projection, steps = 8) => onTop(ringOf(plan, steps), z, projection, true);
+const lineOnTop = (from, to, z, projection) => onTop([from, to], z, projection);
+const segment = (from, to, projection) => pathOf([iso(from, projection), iso(to, projection)]);
+const rise = (at, from, to, projection) => segment([at[0], at[1], from], [at[0], at[1], to], projection);
+const ring = (cx, cy, radius, z, projection, steps = 40) => onTop(circleRing(cx, cy, radius, steps), z, projection, true);
+const pointsAt = (points, projection) => points.map((point) => iso(point, projection));
+function dotGrid(x, y, columns, rows, gap, z, projection) {
+    const dots = [];
+    for (let row = 0; row < rows; row++) {
+        for (let column = 0; column < columns; column++)
+            dots.push(iso([x + column * gap, y + row * gap, z], projection));
+    }
+    return dots;
+}
+function corners({ x, y, w, d }, inset = 0) {
+    return [
+        [x + inset, y + inset],
+        [x + w - inset, y + inset],
+        [x + inset, y + d - inset],
+        [x + w - inset, y + d - inset],
+    ];
+}
+function boxCorners({ x, y, w, d }, z0, z1) {
+    const out = [];
+    for (const px of [x, x + w])
+        for (const py of [y, y + d])
+            for (const z of [z0, z1])
+                out.push([px, py, z]);
+    return out;
+}
+function knurl(cx, cy, radius, z0, z1, count, projection, inset = 0.4) {
+    const [vx, vy] = towardViewer(projection);
+    const lines = [];
+    for (let index = 0; index < count; index++) {
+        const angle = (index / count) * Math.PI * 2;
+        const nx = Math.cos(angle);
+        const ny = Math.sin(angle);
+        if (nx * vx + ny * vy < 0.15)
+            continue;
+        lines.push(segment([cx + radius * nx, cy + radius * ny, z0 + inset], [cx + radius * nx, cy + radius * ny, z1 - inset], projection));
+    }
+    return lines.join("");
+}
+function sideArc(cx, cy, radius, z, projection, steps = 24) {
+    const [vx, vy] = towardViewer(projection);
+    const facing = Math.atan2(vy, vx);
+    const points = [];
+    for (let step = 0; step <= steps; step++) {
+        const angle = facing - Math.PI / 2 + (step / steps) * Math.PI;
+        points.push(iso([cx + radius * Math.cos(angle), cy + radius * Math.sin(angle), z], projection));
+    }
+    return pathOf(points);
+}
+function ringSeam(ring, z, projection) {
+    const count = ring.length;
+    const counter = signedArea(ring) > 0;
+    const [vx, vy] = towardViewer(projection);
+    const facing = ring.map(([ax, ay], index) => {
+        const [bx, by] = ring[(index + 1) % count];
+        const dx = bx - ax;
+        const dy = by - ay;
+        const [nx, ny] = counter ? [dy, -dx] : [-dy, dx];
+        return nx * vx + ny * vy > 1e-9;
+    });
+    return runsOf(facing, true).map((run) => pathOf(run.map((index) => iso([ring[index][0], ring[index][1], z], projection)))).join("");
+}
+const sideSeam = (plan, z, projection, steps = 8) => ringSeam(ringOf(plan, steps), z, projection);
+function sideRing(center, radius, axis, projection, steps = 20) {
+    const [px, py, pz] = center;
+    const points = [];
+    for (let step = 0; step < steps; step++) {
+        const angle = (step / steps) * Math.PI * 2;
+        const u = radius * Math.cos(angle);
+        const v = radius * Math.sin(angle);
+        points.push(iso(axis === "x" ? [px, py + u, pz + v] : [px + u, py, pz + v], projection));
+    }
+    return pathOf(points, true);
+}
+function coil(from, to, center, radius, turns, axis, projection, perTurn = 16) {
+    const count = Math.max(1, Math.round(turns * perTurn));
+    const back = [];
+    const front = [];
+    let run = [];
+    let near = null;
+    for (let index = 0; index <= count; index++) {
+        const share = index / count;
+        const angle = share * turns * Math.PI * 2;
+        const u = radius * Math.cos(angle);
+        const v = radius * Math.sin(angle);
+        const along = from + (to - from) * share;
+        const point = axis === "x" ? [along, center[0] + u, center[1] + v] : [center[0] + u, along, center[1] + v];
+        const normal = axis === "x" ? [0, Math.cos(angle), Math.sin(angle)] : [Math.cos(angle), 0, Math.sin(angle)];
+        const facing = depthOf(normal, projection) > 0;
+        const flat = iso(point, projection);
+        if (near === null)
+            near = facing;
+        if (facing !== near) {
+            run.push(flat);
+            (near ? front : back).push(pathOf(run));
+            run = [flat];
+            near = facing;
+            continue;
+        }
+        run.push(flat);
+    }
+    if (run.length > 1)
+        (near ? front : back).push(pathOf(run));
+    return { back: back.join(""), front: front.join("") };
+}
+function topTicks(from, to, step, every, edge, z, lengths, projection, axis = "x") {
+    const minor = [];
+    const major = [];
+    const first = Math.ceil(from / step) * step;
+    for (let at = first, index = Math.round(first / step); at <= to + 1e-9; at += step, index++) {
+        const big = index % every === 0;
+        const length = big ? lengths[1] : lengths[0];
+        const a = axis === "x" ? [at, edge] : [edge, at];
+        const b = axis === "x" ? [at, edge + length] : [edge + length, at];
+        (big ? major : minor).push(lineOnTop(a, b, z, projection));
+    }
+    return { minor: minor.join(""), major: major.join("") };
+}
+function sideTicks(from, to, step, every, face, top, lengths, projection, axis = "x") {
+    const minor = [];
+    const major = [];
+    const first = Math.ceil(from / step) * step;
+    for (let at = first, index = Math.round(first / step); at <= to + 1e-9; at += step, index++) {
+        const big = index % every === 0;
+        const length = big ? lengths[1] : lengths[0];
+        const a = axis === "x" ? [at, face, top] : [face, at, top];
+        const b = axis === "x" ? [at, face, top - length] : [face, at, top - length];
+        (big ? major : minor).push(segment(a, b, projection));
+    }
+    return { minor: minor.join(""), major: major.join("") };
+}
+function radialTicks(cx, cy, radius, count, every, z, lengths, projection, from = 0, span = Math.PI * 2) {
+    const minor = [];
+    const major = [];
+    const closed = Math.abs(span - Math.PI * 2) < 1e-9;
+    const steps = closed ? count : count + 1;
+    for (let index = 0; index < steps; index++) {
+        const angle = from + (index / count) * span;
+        const big = index % every === 0;
+        const inner = radius - (big ? lengths[1] : lengths[0]);
+        const sx = Math.sin(angle);
+        const sy = -Math.cos(angle);
+        (big ? major : minor).push(lineOnTop([cx + sx * inner, cy + sy * inner], [cx + sx * radius, cy + sy * radius], z, projection));
+    }
+    return { minor: minor.join(""), major: major.join("") };
+}
+const haloOf = (plan, z, height, projection) => slabOf(plan, z, height, projection).fill;
+function axisVector(projection, [dx, dy, dz]) {
+    const origin = iso([0, 0, 0], projection);
+    const moved = iso([dx, dy, dz], projection);
+    return [moved[0] - origin[0], moved[1] - origin[1]];
+}
+const fine = (value) => Math.round(value * 100) / 100;
+function translateAlong(projection, by) {
+    const [x, y] = axisVector(projection, by);
+    return `translate(${fine(x)} ${fine(y)})`;
+}
+const thousandth = (value) => Math.round(value * 1000) / 1000;
+function axesAt(at, z, projection) {
+    const origin = iso([at[0], at[1], z], projection);
+    const along = (point) => {
+        const [px, py] = iso(point, projection);
+        return [px - origin[0], py - origin[1]];
+    };
+    return { origin, x: along([at[0] + 1, at[1], z]), y: along([at[0], at[1] + 1, z]), z: along([at[0], at[1], z + 1]) };
+}
+const matrixOf = (u, v, origin) => `matrix(${thousandth(u[0])} ${thousandth(u[1])} ${thousandth(v[0])} ${thousandth(v[1])} ${thousandth(origin[0])} ${thousandth(origin[1])})`;
+function holdStill(element, [dx, dy]) {
+    const text = dx || dy ? `translate(${-dx} ${-dy})` : "";
+    element.querySelectorAll("[data-hold]").forEach((node) => (text ? node.setAttribute("transform", text) : node.removeAttribute("transform")));
+}
+function topMatrix(at, z, projection, along = "x") {
+    const { origin, x, y } = axesAt(at, z, projection);
+    return along === "x" ? matrixOf(x, y, origin) : matrixOf([-y[0], -y[1]], x, origin);
+}
+function sideMatrix(at, z, projection, face) {
+    const { origin, x, y, z: up } = axesAt(at, z, projection);
+    const down = [-up[0], -up[1]];
+    return face === "left" ? matrixOf(x, down, origin) : matrixOf([-y[0], -y[1]], down, origin);
+}
+function screenRise(height, projection) {
+    const { cosE, k } = cameraOf(projection);
+    return height * cosE * k;
+}
+function fitProjection(points, width, height, { pad = 24, headroom = 0, azimuth = AZIMUTH, elevation = ELEVATION } = {}) {
+    const unit = { origin: [0, 0], scale: 1, azimuth, elevation };
+    const flat = points.map((point) => iso(point, unit));
+    const xs = flat.map(([x]) => x);
+    const ys = flat.map(([, y]) => y);
+    const left = Math.min(...xs);
+    const right = Math.max(...xs);
+    const up = Math.min(...ys);
+    const down = Math.max(...ys);
+    const scale = Math.min((width - pad * 2) / (right - left), (height - pad * 2 - headroom) / (down - up));
+    return {
+        origin: [width / 2 - ((left + right) / 2) * scale, headroom + (height - headroom) / 2 - ((up + down) / 2) * scale],
+        scale,
+        azimuth,
+        elevation,
+    };
+}
+const escape = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const attrs = (pairs) => Object.entries(pairs)
+    .filter(([, value]) => value !== undefined && value !== false)
+    .map(([key, value]) => ` ${key}="${escape(String(value))}"`)
+    .join("");
+function solidSvg(paths, { tone = "hi", crease = "faint", halo = false, lit = false, flat = false, className, inner = "" } = {}) {
+    const parts = [];
+    if (halo)
+        parts.push(`<path class="iso-halo" d="${paths.fill}"/>`);
+    parts.push(`<path class="iso-fill" d="${paths.fill}"/>`);
+    if (!flat) {
+        paths.shades.forEach((d, shade) => {
+            if (d)
+                parts.push(`<path class="iso-shade" data-shade="${shade}" d="${d}"/>`);
+        });
+        parts.push(`<path class="iso-top" d="${paths.top}"/>`);
+    }
+    if (crease !== "none" && paths.crease)
+        parts.push(`<path class="iso-line iso-crease" data-tone="${crease}" d="${paths.crease}"/>`);
+    if (crease !== "none" && paths.bevel)
+        parts.push(`<path class="iso-line iso-bevel" data-tone="${crease}" d="${paths.bevel}"/>`);
+    if (inner)
+        parts.push(inner);
+    parts.push(`<path class="iso-line iso-edge" data-tone="${tone}" d="${paths.outline}"/>`);
+    return `<g${attrs({ class: className ? `iso-solid ${className}` : "iso-solid", "data-lit": lit ? "" : undefined, "data-seamless": paths.seamless ? "" : undefined })}>${parts.join("")}</g>`;
+}
+function lineSvg(d, { tone = "lo", dotted = false, dashed = false, flow = false, className, free } = {}) {
+    if (!d)
+        return "";
+    return `<path${attrs({
+        class: className ? `iso-line ${className}` : "iso-line",
+        "data-tone": tone,
+        "data-free": free === true ? "" : free || undefined,
+        "data-dotted": dotted ? "" : undefined,
+        "data-dashed": dashed ? "" : undefined,
+        "data-flow": flow ? "" : undefined,
+        d,
+    })}/>`;
+}
+function dotsSvg(points, { size = 0.5, tone = "mid", pulse = false } = {}) {
+    const dots = points
+        .map(([x, y, alpha], index) => `<circle cx="${tenth(x)}" cy="${tenth(y)}" r="${size}"${alpha !== undefined && alpha < 1 ? ` fill-opacity="${Math.max(0, alpha).toFixed(2)}"` : ""}${pulse ? ` data-pulse="" style="--pulse-at:${(index * 137) % 1600}ms"` : ""}/>`)
+        .join("");
+    return `<g class="iso-dots" data-tone="${tone}">${dots}</g>`;
+}
+function fadedSvg(list, style = {}) {
+    const groups = new Map();
+    for (const entry of list) {
+        const [d, alpha] = Array.isArray(entry) ? entry : [entry.d, entry.alpha];
+        if (!d || !(alpha > 0.02))
+            continue;
+        const level = Math.min(1, Math.round(alpha * 20) / 20);
+        groups.set(level, (groups.get(level) ?? "") + d);
+    }
+    return [...groups].map(([alpha, d]) => (alpha >= 1 ? lineSvg(d, style) : `<g opacity="${alpha.toFixed(2)}">${lineSvg(d, style)}</g>`)).join("");
+}
+function fadeLineSvg(points, { fade = [0, 0], tone = "lo", className, stops = 6 } = {}) {
+    if (points.length < 2)
+        return "";
+    const ease = (t) => t * t * (3 - 2 * t);
+    const hashOf = (text) => {
+        let hash = 2166136261;
+        for (let index = 0; index < text.length; index++)
+            hash = Math.imul(hash ^ text.charCodeAt(index), 16777619);
+        return (hash >>> 0).toString(36);
+    };
+    const lengths = [0];
+    for (let index = 1; index < points.length; index++)
+        lengths.push(lengths[index - 1] + Math.hypot(points[index][0] - points[index - 1][0], points[index][1] - points[index - 1][1]));
+    const at = (length) => {
+        let index = 1;
+        while (index < points.length - 1 && lengths[index] < length)
+            index++;
+        const span = lengths[index] - lengths[index - 1] || 1;
+        const t = Math.max(0, Math.min(1, (length - lengths[index - 1]) / span));
+        return [points[index - 1][0] + (points[index][0] - points[index - 1][0]) * t, points[index - 1][1] + (points[index][1] - points[index - 1][1]) * t];
+    };
+    const pieceOf = (from, to) => [at(from), ...points.filter((_, index) => lengths[index] > from + 1e-6 && lengths[index] < to - 1e-6), at(to)];
+    const total = lengths[lengths.length - 1];
+    if (total < 1e-6)
+        return "";
+    let [start, end] = Array.isArray(fade) ? fade : [fade, fade];
+    if (start + end > total) {
+        const share = total / (start + end);
+        start *= share;
+        end *= share;
+    }
+    const paint = `var(--anatomy-${tone})`;
+    const ramp = (piece, rising) => {
+        const d = pathOf(piece);
+        const [x1, y1] = piece[0];
+        const [x2, y2] = piece[piece.length - 1];
+        const id = `iso-fade-${hashOf(`${d}|${tone}|${rising}`)}`;
+        const marks = Array.from({ length: stops + 1 }, (_, index) => {
+            const t = index / stops;
+            const alpha = ease(rising ? t : 1 - t);
+            return `<stop offset="${t.toFixed(3)}" stop-opacity="${alpha.toFixed(3)}" style="stop-color:${paint}"/>`;
+        }).join("");
+        const gradient = `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${tenth(x1)}" y1="${tenth(y1)}" x2="${tenth(x2)}" y2="${tenth(y2)}">${marks}</linearGradient>`;
+        return `<defs>${gradient}</defs><path${attrs({ class: className ? `iso-line ${className}` : "iso-line", "data-tone": tone, "data-free": rising ? "start" : "end", d, style: `stroke:url(#${id})` })}/>`;
+    };
+    const parts = [];
+    if (start > 0.05)
+        parts.push(ramp(pieceOf(0, start), true));
+    if (total - end - start > 0.05)
+        parts.push(lineSvg(pathOf(pieceOf(start, total - end)), { tone, className }));
+    if (end > 0.05)
+        parts.push(ramp(pieceOf(total - end, total), false));
+    return `<g class="iso-fade">${parts.join("")}</g>`;
+}
+function wireSvg(from, to, { via = [], tone = "lo", dotted = false, dashed = false, flow = false, ends = "both", size = 1.2 } = {}) {
+    const d = pathOf([from, ...via, to]);
+    const end = ([x, y]) => `<circle class="iso-wire-end" cx="${tenth(x)}" cy="${tenth(y)}" r="${size}"/>`;
+    return `<g class="iso-wire" data-tone="${tone}">${lineSvg(d, { tone, dotted, dashed, flow })}${ends === "both" || ends === "from" ? end(from) : ""}${ends === "both" || ends === "to" ? end(to) : ""}</g>`;
+}
+function faceTextSvg(transform, text, { size = 3, tone = "mid", anchor = "start" } = {}) {
+    return `<text class="iso-face-text" data-tone="${tone}" transform="${transform}" font-size="${size}" text-anchor="${anchor}">${escape(text)}</text>`;
+}
+function groupSvg(children, extra = {}) {
+    return `<g${attrs(extra)}>${Array.isArray(children) ? children.join("") : children}</g>`;
+}
+function figureSvg({ width, height, label, body, standalone = false, className }) {
+    const style = standalone ? `<style>${ISO_CSS}</style>` : "";
+    return `<svg${attrs({
+        xmlns: "http://www.w3.org/2000/svg",
+        class: `iso-svg${standalone ? " iso" : ""}${className ? ` ${className}` : ""}`,
+        "data-theme": standalone || undefined,
+        viewBox: `0 0 ${width} ${height}`,
+        role: "img",
+        "aria-label": label,
+    })}>${style}${Array.isArray(body) ? body.join("") : body}</svg>`;
+}
+function swatchSvg(mark) {
+    if (mark === "raised" || mark === "flat" || mark === "lit") {
+        const body = mark === "flat" ? "M2 6.5 8 3.5 14 6.5 8 9.5Z" : "M2 4.5 8 1.5 14 4.5 14 6 8 9 2 6Z";
+        const crease = mark === "flat" ? "" : `<path class="iso-swatch-crease" d="M2 4.5 8 7.5 14 4.5"/>`;
+        return `<svg class="iso-swatch" data-mark="${mark}" viewBox="0 0 16 10" aria-hidden="true"><path d="${body}"/>${crease}</svg>`;
+    }
+    return `<svg class="iso-swatch" data-mark="${mark}" viewBox="0 0 16 10" aria-hidden="true"><path d="M1.5 5h13"/></svg>`;
+}
+function plateHtml({ fig, title, hint, readout = "", keys = [], caption, body }) {
+    const corner = (name, text, extra = "") => `<span class="iso-plate-corner" data-corner="${name}"${extra}>${escape(text)}</span>`;
+    const legend = keys.length || caption
+        ? `<figcaption class="iso-legend">${keys.length ? `<span class="iso-keys">${keys.map((key) => `<span class="iso-key">${swatchSvg(key.mark)}${escape(key.label)}</span>`).join("")}</span>` : ""}${caption ? `<span class="iso-caption">${escape(caption)}</span>` : ""}</figcaption>`
+        : "";
+    return `<figure class="iso-figure"><div class="iso-plate"><div class="iso-plate-corners" aria-hidden="true">${corner("fig", fig)}${title ? corner("title", title) : ""}${hint ? corner("hint", hint) : ""}${corner("readout", readout, " data-readout")}</div>${body}</div>${legend}</figure>`;
+}
+function pageHtml({ title, theme = "dark", body, script = "", width = 650 }) {
+    return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${escape(title)}</title><style>${ISO_CSS}${PAGE_CSS.replace("__WIDTH__", String(width))}</style></head><body class="iso" data-theme="${theme}"><main class="iso-page">${body}</main>${script ? `<script type="module">${script.replace(/<\/(script)/gi, "<\\/$1")}<\/script>` : ""}</body></html>`;
+}
+const PAGE_CSS = `
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body[data-theme="light"]{color-scheme:light}
+body{margin:0;background:var(--anatomy-page);color:var(--anatomy-text);font:14px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.iso-page{width:min(__WIDTH__px,100% - 32px);margin:64px auto 96px}
+`;
+const ISO_CSS = `
+.iso{
+  --anatomy-page:#0b0b0b;--anatomy-card:#131313;--anatomy-text:#a3a3a3;--anatomy-strong:#e6e6e6;--anatomy-muted:#6e6e6e;
+  --anatomy-paper:#131313;--anatomy-face:#1b1b1b;--anatomy-top:#1c1c1c;
+  --anatomy-shade-0:#0f0f0f;--anatomy-shade-1:#121212;--anatomy-shade-2:#151515;--anatomy-shade-3:#181818;
+  --anatomy-lit-top:#262626;--anatomy-lit-shade:#1d1d1d;
+  --anatomy-hi:#d4d4d4;--anatomy-mid:#6a6a6a;--anatomy-lo:#3e3e3e;--anatomy-faint:#2a2a2a;--anatomy-lit:#ffffff;
+  --anatomy-halo:#050505;--anatomy-halo-opacity:.9;--anatomy-dot:#e6e6e6;
+  --anatomy-red:#ff6b6b;--anatomy-green:#6be0a0;--anatomy-blue:#6b9bff;
+  --anatomy-weight:.6px;--anatomy-ease:cubic-bezier(.32,.72,0,1);
+  --anatomy-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --anatomy-lift:inset 0 1px 0 0 #ffffff0a,inset 0 0 0 1px #ffffff06,0 0 0 1px #00000026,0 1px 1px -.5px #00000014,0 3px 3px -1.5px #00000014,0 6px 6px -3px #00000014,0 12px 12px -6px #00000014;
+}
+.iso[data-theme="light"]{
+  --anatomy-page:#f2f2ef;--anatomy-card:#fbfbfa;--anatomy-text:#57575a;--anatomy-strong:#18181a;--anatomy-muted:#8c8c90;
+  --anatomy-paper:#fbfbfa;--anatomy-face:#ffffff;--anatomy-top:#ffffff;
+  --anatomy-shade-0:#dcdcd9;--anatomy-shade-1:#e5e5e2;--anatomy-shade-2:#ededea;--anatomy-shade-3:#f4f4f1;
+  --anatomy-lit-top:#ffffff;--anatomy-lit-shade:#eeeeeb;
+  --anatomy-hi:#26262a;--anatomy-mid:#8a8a8f;--anatomy-lo:#b4b4b8;--anatomy-faint:#d4d4d6;--anatomy-lit:#000000;
+  --anatomy-halo:#8a8a80;--anatomy-halo-opacity:.32;--anatomy-dot:#3a3a3e;
+  --anatomy-red:#e5484d;--anatomy-green:#30a46c;--anatomy-blue:#3e63dd;
+  --anatomy-lift:inset 0 1px 0 0 #ffffff,0 0 0 1px #0000000f,0 1px 1px -.5px #0000000a,0 3px 3px -1.5px #0000000a,0 6px 6px -3px #0000000a,0 12px 12px -6px #0000000a;
+}
+.iso-svg{display:block;width:100%;height:auto;overflow:visible}
+.iso-svg path,.iso-svg circle{vector-effect:non-scaling-stroke}
+.iso-fill{fill:var(--anatomy-paper);stroke:none}
+.iso-solid[data-lit]>.iso-fill{fill:var(--anatomy-face)}
+.iso-shade,.iso-top{stroke:none}
+.iso-shade[data-shade="0"]{fill:var(--anatomy-shade-0)}
+.iso-shade[data-shade="1"]{fill:var(--anatomy-shade-1)}
+.iso-shade[data-shade="2"]{fill:var(--anatomy-shade-2)}
+.iso-shade[data-shade="3"]{fill:var(--anatomy-shade-3)}
+.iso-top{fill:var(--anatomy-top)}
+.iso-solid[data-lit]>.iso-top{fill:var(--anatomy-lit-top)}
+.iso-solid[data-lit]>.iso-shade{fill:var(--anatomy-lit-shade)}
+.iso-solid[data-seamless]>.iso-shade,.iso-solid[data-seamless]>.iso-top{stroke-width:.4;stroke-linejoin:round}
+.iso-solid[data-seamless]>.iso-shade[data-shade="0"]{stroke:var(--anatomy-shade-0)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="1"]{stroke:var(--anatomy-shade-1)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="2"]{stroke:var(--anatomy-shade-2)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="3"]{stroke:var(--anatomy-shade-3)}
+.iso-solid[data-seamless]>.iso-top{stroke:var(--anatomy-top)}
+.iso-solid[data-seamless][data-lit]>.iso-top{stroke:var(--anatomy-lit-top)}
+.iso-solid[data-seamless][data-lit]>.iso-shade{stroke:var(--anatomy-lit-shade)}
+.iso-solid[data-lit]>.iso-edge{stroke:var(--anatomy-lit)}
+.iso-halo{fill:var(--anatomy-halo);stroke:none;filter:blur(9px);opacity:var(--anatomy-halo-opacity);transform:translateY(3px)}
+.iso-line{fill:none;stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight);stroke-linecap:round;stroke-linejoin:round}
+.iso-line[data-tone="hi"]{stroke:var(--anatomy-hi)}
+.iso-line[data-tone="mid"]{stroke:var(--anatomy-mid)}
+.iso-line[data-tone="lo"]{stroke:var(--anatomy-lo)}
+.iso-line[data-tone="faint"]{stroke:var(--anatomy-faint)}
+.iso-line[data-tone="lit"]{stroke:var(--anatomy-lit)}
+.iso-line[data-tone="red"]{stroke:var(--anatomy-red)}
+.iso-line[data-tone="green"]{stroke:var(--anatomy-green)}
+.iso-line[data-tone="blue"]{stroke:var(--anatomy-blue)}
+.iso-line[data-dotted]{stroke-dasharray:.01 3.5;stroke-width:1}
+.iso-line[data-dashed]{stroke-dasharray:3 3}
+.iso-line[data-flow]{stroke-dasharray:2 6}
+.iso-wire-end{fill:var(--anatomy-paper);stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight)}
+.iso-wire[data-tone="hi"] .iso-wire-end{stroke:var(--anatomy-hi)}
+.iso-wire[data-tone="mid"] .iso-wire-end{stroke:var(--anatomy-mid)}
+.iso-wire[data-tone="faint"] .iso-wire-end{stroke:var(--anatomy-faint)}
+.iso-wire[data-tone="lit"] .iso-wire-end{stroke:var(--anatomy-lit)}
+.iso-dots circle{fill:var(--anatomy-dot);stroke:none;opacity:.32}
+.iso-dots[data-tone="hi"] circle{opacity:.85}
+.iso-dots[data-tone="mid"] circle{opacity:.45}
+.iso-dots[data-tone="lo"] circle{opacity:.22}
+.iso-dots[data-tone="faint"] circle{opacity:.12}
+.iso-face-text{fill:var(--anatomy-mid);font-family:var(--anatomy-mono);letter-spacing:.04em}
+.iso-face-text[data-tone="hi"]{fill:var(--anatomy-hi)}
+.iso-face-text[data-tone="lo"]{fill:var(--anatomy-lo)}
+.iso-face-text[data-tone="faint"]{fill:var(--anatomy-faint)}
+.tb-body{fill:var(--anatomy-shade-2);stroke:none}
+.tb-shine{fill:var(--anatomy-top);stroke:none}
+.tb-shade{fill:var(--anatomy-shade-0);stroke:none}
+.tb-ring{fill:none;stroke:var(--anatomy-lo);stroke-width:.45;stroke-linecap:butt;stroke-linejoin:round}
+.tb-ring[data-tone="mid"]{stroke:var(--anatomy-mid)}
+.tb-ring[data-tone="faint"]{stroke:var(--anatomy-faint)}
+.tb-ring[data-tone="hi"]{stroke:var(--anatomy-hi)}
+@keyframes iso-flow{to{stroke-dashoffset:-32}}
+@keyframes iso-pulse{0%,100%{opacity:.18}12%{opacity:1}40%{opacity:.18}}
+.iso-line[data-flow]{animation:iso-flow 1600ms linear infinite}
+.iso-dots circle[data-pulse]{animation:iso-pulse 1600ms steps(1,end) infinite;animation-delay:var(--pulse-at,0ms)}
+.iso-figure{margin:32px 0 36px}
+.iso-plate{position:relative;padding:52px 24px;border-radius:0;background:var(--anatomy-card);box-shadow:0 0 0 1px var(--anatomy-mid);--anatomy-paper:var(--anatomy-card)}
+.iso-plate-corners{position:absolute;inset:18px 20px;pointer-events:none}
+.iso-plate-corner{position:absolute;color:var(--anatomy-muted);font-family:var(--anatomy-mono);font-size:10.5px;line-height:1;letter-spacing:.04em;white-space:nowrap}
+.iso-plate-corner[data-corner="fig"]{top:0;left:0;color:var(--anatomy-text)}
+.iso-plate-corner[data-corner="title"]{top:0;right:0;text-transform:uppercase;letter-spacing:.1em}
+.iso-plate-corner[data-corner="hint"]{bottom:0;left:0;text-transform:uppercase;letter-spacing:.1em}
+.iso-plate-corner[data-corner="readout"]{right:0;bottom:0;color:var(--anatomy-text);font-variant-numeric:tabular-nums}
+.iso-plate .iso-svg{margin:0 auto}
+.iso-legend{display:grid;gap:8px;margin-top:12px;color:var(--anatomy-muted);font-size:13px;line-height:1.55}
+.iso-keys{display:flex;flex-wrap:wrap;gap:6px 18px}
+.iso-key{display:inline-flex;align-items:center;gap:7px}
+.iso-swatch{width:16px;height:10px;flex:none;overflow:visible}
+.iso-swatch path{fill:none;stroke:var(--anatomy-hi);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.iso-swatch[data-mark="raised"] path,.iso-swatch[data-mark="flat"] path{stroke:var(--anatomy-mid)}
+.iso-swatch[data-mark="lit"] path{stroke:var(--anatomy-lit)}
+.iso-swatch[data-mark="dim"] path{stroke:var(--anatomy-lo)}
+.iso-swatch[data-mark="dotted"] path{stroke-dasharray:.01 3;stroke-width:1.4}
+.iso-swatch[data-mark="dashed"] path{stroke-dasharray:3 2.5}
+.iso-swatch[data-mark="red"] path{stroke:var(--anatomy-red)}
+.iso-swatch[data-mark="green"] path{stroke:var(--anatomy-green)}
+.iso-swatch[data-mark="blue"] path{stroke:var(--anatomy-blue)}
+.iso-swatch-crease{stroke:var(--anatomy-lo)!important}
+@media (max-width:560px){.iso-plate{padding:48px 12px 70px}.iso-plate-corner[data-corner="hint"]{bottom:18px}}
+@media (prefers-reduced-motion:reduce){.iso-line[data-flow],.iso-dots circle[data-pulse]{animation:none}}
+`;
+
+return {AZIMUTH,ELEVATION,SHADES,cameraOf,iso,towardViewer,depthOf,pathOf,joinPaths,roundedPlan,extrude,ringOf,slabOf,circleRing,cylinder,insetPlan,onTop,planOutline,lineOnTop,segment,rise,ring,pointsAt,dotGrid,corners,boxCorners,knurl,sideArc,ringSeam,sideSeam,sideRing,coil,topTicks,sideTicks,radialTicks,haloOf,axisVector,translateAlong,holdStill,topMatrix,sideMatrix,screenRise,fitProjection,solidSvg,lineSvg,dotsSvg,fadedSvg,fadeLineSvg,wireSvg,faceTextSvg,groupSvg,figureSvg,plateHtml,pageHtml,ISO_CSS};
+})();
+const anatomyLathe = (() => {
+const { cameraOf, iso, pathOf } = anatomyIso;
+const TAU = Math.PI * 2;
+const LIGHT_UP = 1.2;
+const BANDS = [0, 0.2, 0.42, 0.62];
+
+const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const add3 = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const sub3 = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const mul3 = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
+const len3 = (a) => Math.hypot(a[0], a[1], a[2]);
+const unit3 = (a) => {
+  const length = len3(a) || 1;
+  return [a[0] / length, a[1] / length, a[2] / length];
+};
+const cross3 = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const lerp3 = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+
+function viewOf(P) {
+  const { sinA, cosA, sinE, cosE } = cameraOf(P);
+  return [cosA * cosE, sinA * cosE, sinE];
+}
+
+function lightOf(P) {
+  const { sinA, cosA } = cameraOf(P);
+  return unit3([-sinA, cosA, LIGHT_UP]);
+}
+
+const scaleOf = (P) => cameraOf(P).k;
+
+function bandOf(score) {
+  let tone = 0;
+  while (tone < BANDS.length && score >= BANDS[tone]) tone++;
+  return tone;
+}
+
+const toneOf = (normal, P) => bandOf(dot3(unit3(normal), lightOf(P)));
+
+function frameAlong(o, a) {
+  const axis = unit3(a);
+  const helper = Math.abs(axis[2]) > 0.9 ? [1, 0, 0] : [0, 0, 1];
+  const u = unit3(cross3(helper, axis));
+  const v = cross3(axis, u);
+  return { o, a: axis, u, v };
+}
+
+const frameOf = (o, a, u, v) => ({ o, a, u, v });
+
+function pointOf(F, s, r, angle) {
+  const c = Math.cos(angle);
+  const n = Math.sin(angle);
+  return [
+    F.o[0] + F.a[0] * s + r * (c * F.u[0] + n * F.v[0]),
+    F.o[1] + F.a[1] * s + r * (c * F.u[1] + n * F.v[1]),
+    F.o[2] + F.a[2] * s + r * (c * F.u[2] + n * F.v[2]),
+  ];
+}
+
+const radialOf = (F, angle) => {
+  const c = Math.cos(angle);
+  const n = Math.sin(angle);
+  return [c * F.u[0] + n * F.v[0], c * F.u[1] + n * F.v[1], c * F.u[2] + n * F.v[2]];
+};
+
+const tangentOf = (F, angle) => {
+  const c = Math.cos(angle);
+  const n = Math.sin(angle);
+  return [-n * F.u[0] + c * F.v[0], -n * F.u[1] + c * F.v[1], -n * F.u[2] + c * F.v[2]];
+};
+
+const angleToward = (F, direction) => Math.atan2(dot3(direction, F.v), dot3(direction, F.u));
+
+function hullTagged(points) {
+  const sorted = [...points].sort((a, b) => a.p[0] - b.p[0] || a.p[1] - b.p[1]);
+  if (sorted.length < 3) return sorted;
+  const cross = (o, a, b) => (a.p[0] - o.p[0]) * (b.p[1] - o.p[1]) - (a.p[1] - o.p[1]) * (b.p[0] - o.p[0]);
+  const lower = [];
+  for (const point of sorted) {
+    while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], point) <= 1e-9) lower.pop();
+    lower.push(point);
+  }
+  const upper = [];
+  for (let index = sorted.length - 1; index >= 0; index--) {
+    const point = sorted[index];
+    while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], point) <= 1e-9) upper.pop();
+    upper.push(point);
+  }
+  return [...lower.slice(0, -1), ...upper.slice(0, -1)];
+}
+
+const hullOf = (points) => hullTagged(points.map((p) => ({ p }))).map(({ p }) => p);
+
+function runsOf(flags) {
+  const count = flags.length;
+  const start = flags.findIndex((flag, index) => flag !== flags[(index + count - 1) % count]);
+  if (start < 0) return flags[0] ? [Array.from({ length: count + 1 }, (_, index) => index % count)] : [];
+  const runs = [];
+  let run = null;
+  for (let step = 0; step < count; step++) {
+    const index = (start + step) % count;
+    if (flags[index]) {
+      if (!run) run = [index];
+      run.push((index + 1) % count);
+    } else if (run) {
+      runs.push(run);
+      run = null;
+    }
+  }
+  if (run) runs.push(run);
+  return runs;
+}
+
+function groupsOf(keys) {
+  const count = keys.length;
+  const out = [];
+  const start = keys.findIndex((key, index) => key !== keys[(index + count - 1) % count]);
+  if (start < 0) {
+    if (keys[0] !== null) out.push({ key: keys[0], run: Array.from({ length: count + 1 }, (_, index) => index % count) });
+    return out;
+  }
+  let current = null;
+  for (let step = 0; step < count; step++) {
+    const index = (start + step) % count;
+    const key = keys[index];
+    if (current && current.key === key) {
+      current.run.push((index + 1) % count);
+      continue;
+    }
+    if (current && current.key !== null) out.push(current);
+    current = { key, run: [index, (index + 1) % count] };
+  }
+  if (current && current.key !== null) out.push(current);
+  return out;
+}
+
+const stepsFor = (radius, least = 16, most = 112, scale = 0) => Math.max(least, Math.min(most, scale ? Math.ceil((TAU * radius * scale) / 3) : Math.round((radius * 1.3) / 4) * 4));
+
+function chains(edges) {
+  const out = [];
+  let current = null;
+  for (const [a, b, keep] of edges) {
+    if (!keep) {
+      if (current) out.push(current);
+      current = null;
+      continue;
+    }
+    if (!current) current = [a];
+    current.push(b);
+  }
+  if (current) out.push(current);
+  if (out.length > 1 && edges[0][2] && edges[edges.length - 1][2]) {
+    const last = out.pop();
+    out[0] = [...last, ...out[0].slice(1)];
+  }
+  return out;
+}
+
+function labelledArcs(nr, na, view, light, gr = nr, ga = na) {
+  const cuts = [];
+  if (Math.abs(gr) > 1e-9) {
+    const visibleCut = -(ga * view.a) / (gr * view.flat);
+    if (visibleCut > -1 && visibleCut < 1) {
+      const d = Math.acos(visibleCut);
+      cuts.push(view.phi - d, view.phi + d);
+    }
+  }
+  if (Math.abs(nr) > 1e-9) {
+    for (const threshold of BANDS) {
+      const c = (threshold - na * light.a) / (nr * light.flat);
+      if (c > -1 && c < 1) {
+        const d = Math.acos(c);
+        cuts.push(light.phi - d, light.phi + d);
+      }
+    }
+  }
+  const wrap = (angle) => ((angle % TAU) + TAU) % TAU;
+  const sorted = [...new Set(cuts.map((angle) => Math.round(wrap(angle) * 1e9) / 1e9))].sort((a, b) => a - b);
+  const label = (angle) => {
+    const facing = gr * view.flat * Math.cos(angle - view.phi) + ga * view.a;
+    if (facing <= 1e-9) return -1;
+    return bandOf(nr * light.flat * Math.cos(angle - light.phi) + na * light.a);
+  };
+  if (!sorted.length) {
+    const tone = label(0);
+    return tone < 0 ? [] : [{ tone, from: 0, to: TAU, full: true }];
+  }
+  const arcs = sorted.map((from, index) => {
+    const to = index + 1 < sorted.length ? sorted[index + 1] : sorted[0] + TAU;
+    return { tone: label((from + to) / 2), from, to };
+  });
+  const merged = [];
+  for (const arc of arcs) {
+    const last = merged[merged.length - 1];
+    if (last && last.tone === arc.tone && Math.abs(last.to - arc.from) < 1e-9) last.to = arc.to;
+    else merged.push({ ...arc });
+  }
+  if (merged.length > 1 && merged[0].tone === merged[merged.length - 1].tone && Math.abs(merged[merged.length - 1].to - TAU - merged[0].from) < 1e-9) {
+    const last = merged.pop();
+    merged[0].from = last.from - TAU;
+  }
+  return merged.filter((arc) => arc.tone >= 0);
+}
+
+function hermiteSlopes(run) {
+  const n = run.length - 1;
+  const h = Array.from({ length: n }, (_, j) => run[j + 1][0] - run[j][0]);
+  const delta = h.map((value, j) => (run[j + 1][1] - run[j][1]) / value);
+  const d = new Array(n + 1).fill(0);
+  const end = (h0, h1, d0, d1) => {
+    let value = ((2 * h0 + h1) * d0 - h0 * d1) / (h0 + h1);
+    if (Math.sign(value) !== Math.sign(d0)) value = 0;
+    else if (Math.sign(d0) !== Math.sign(d1) && Math.abs(value) > Math.abs(3 * d0)) value = 3 * d0;
+    return value;
+  };
+  if (n === 1) d[0] = d[1] = delta[0];
+  else {
+    d[0] = end(h[0], h[1], delta[0], delta[1]);
+    d[n] = end(h[n - 1], h[n - 2], delta[n - 1], delta[n - 2]);
+  }
+  for (let k = 1; k < n; k++) {
+    if (delta[k - 1] * delta[k] <= 0) continue;
+    const w1 = 2 * h[k] + h[k - 1];
+    const w2 = h[k] + 2 * h[k - 1];
+    d[k] = (w1 + w2) / (w1 / delta[k - 1] + w2 / delta[k]);
+  }
+  return d;
+}
+
+function curveRuns(meridian) {
+  const m = meridian.length;
+  const segments = new Array(m - 1).fill(null);
+  let start = 0;
+  while (start < m - 1) {
+    let end = start + 1;
+    while (end < m - 1 && meridian[end][2] && Math.abs(meridian[end + 1][0] - meridian[end][0]) > 1e-9 && Math.abs(meridian[end][0] - meridian[end - 1][0]) > 1e-9) end++;
+    const run = meridian.slice(start, end + 1);
+    const n = run.length - 1;
+    if (n >= 2 && run.every((point, j) => j === 0 || Math.abs(point[0] - run[j - 1][0]) > 1e-9)) {
+      const d = hermiteSlopes(run);
+      for (let j = 0; j < n; j++) {
+        const [s0, r0] = run[j];
+        const [s1, r1] = run[j + 1];
+        const hj = s1 - s0;
+        const d0 = d[j];
+        const d1 = d[j + 1];
+        const radius = (s) => {
+          const t = (s - s0) / hj;
+          return (2 * t ** 3 - 3 * t ** 2 + 1) * r0 + (t ** 3 - 2 * t ** 2 + t) * hj * d0 + (-2 * t ** 3 + 3 * t ** 2) * r1 + (t ** 3 - t ** 2) * hj * d1;
+        };
+        const slope = (s) => {
+          const t = (s - s0) / hj;
+          return ((6 * t ** 2 - 6 * t) * r0 + (6 * t - 6 * t ** 2) * r1) / hj + (3 * t ** 2 - 4 * t + 1) * d0 + (3 * t ** 2 - 2 * t) * d1;
+        };
+        segments[start + j] = { radius, slope };
+      }
+    }
+    start = end;
+  }
+  return segments;
+}
+
+function curved(meridian, P, segments, { error = 0.2, depth = 6 } = {}) {
+  const k = scaleOf(P);
+  const out = [meridian[0]];
+  for (let i = 0; i < meridian.length - 1; i++) {
+    const curve = segments[i];
+    const [s0] = meridian[i];
+    const [s1] = meridian[i + 1];
+    if (curve) {
+      const split = (a, b, level) => {
+        const mid = (a + b) / 2;
+        const chord = (curve.radius(a) + curve.radius(b)) / 2;
+        if (level < depth && Math.abs(curve.radius(mid) - chord) * k > error) {
+          split(a, mid, level + 1);
+          out.push([mid, curve.radius(mid), 1]);
+          split(mid, b, level + 1);
+        }
+      };
+      split(s0, s1, 0);
+    }
+    out.push(meridian[i + 1]);
+  }
+  return out;
+}
+
+function smoothRows(meridian, F, P, { rows = 6, slope = null, radius = null, steps = 48, error = 0.35, depth: deepest = 8, fineness = 0.1 } = {}) {
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const view = { a: dot3(F.a, V), flat: Math.hypot(dot3(F.u, V), dot3(F.v, V)), phi: Math.atan2(dot3(F.v, V), dot3(F.u, V)) };
+  const light = { a: dot3(F.a, L), flat: Math.hypot(dot3(F.u, L), dot3(F.v, L)), phi: Math.atan2(dot3(F.v, L), dot3(F.u, L)) };
+  const m = meridian.length;
+  const faces = [];
+  for (let i = 0; i < m - 1; i++) {
+    const ds = meridian[i + 1][0] - meridian[i][0];
+    const dr = meridian[i + 1][1] - meridian[i][1];
+    const length = Math.hypot(ds, dr) || 1;
+    faces.push([ds / length, -dr / length]);
+  }
+  const splines = slope ? null : curveRuns(meridian);
+  const vertexNormal = (k, own) => {
+    if (k <= 0 || k >= m - 1 || !meridian[k][2]) return own;
+    const a = faces[k - 1];
+    const b = faces[k];
+    const x = a[0] + b[0];
+    const y = a[1] + b[1];
+    const length = Math.hypot(x, y) || 1;
+    return [x / length, y / length];
+  };
+  const normalAt = (i, u) => {
+    const [s0] = meridian[i];
+    const [s1] = meridian[i + 1];
+    const s = s0 + (s1 - s0) * u;
+    const sign = Math.sign(s1 - s0) || 1;
+    const g = slope ? slope(s) : splines[i] ? splines[i].slope(s) : null;
+    if (g !== null) {
+      const length = Math.hypot(1, g);
+      return [sign / length, (-sign * g) / length];
+    }
+    const a = vertexNormal(i, faces[i]);
+    const b = vertexNormal(i + 1, faces[i]);
+    const x = a[0] + (b[0] - a[0]) * u;
+    const y = a[1] + (b[1] - a[1]) * u;
+    const length = Math.hypot(x, y) || 1;
+    return [x / length, y / length];
+  };
+  const pointAt = (i, u, angle) => {
+    const [s0, r0] = meridian[i];
+    const [s1, r1] = meridian[i + 1];
+    const s = s0 + (s1 - s0) * u;
+    return iso(pointOf(F, s, radius ? radius(s) : splines && splines[i] ? splines[i].radius(s) : r0 + (r1 - r0) * u, angle), P);
+  };
+  const buckets = [[], [], [], [], []];
+  const fine = TAU / Math.max(24, Math.min(192, steps * 1.5));
+  const arcPoints = (i, u, from, to) => {
+    const count = Math.max(1, Math.ceil((to - from) / fine));
+    return Array.from({ length: count + 1 }, (_, index) => pointAt(i, u, from + ((to - from) * index) / count));
+  };
+  const centreOf = (arc, reference) => {
+    let mid = (arc.from + arc.to) / 2 - reference;
+    mid = ((mid % TAU) + TAU) % TAU;
+    return mid;
+  };
+  const levelOf = (i, u) => {
+    const [nr, na] = normalAt(i, u);
+    const groups = new Map();
+    for (const arc of labelledArcs(nr, na, view, light, faces[i][0], faces[i][1])) {
+      if (!groups.has(arc.tone)) groups.set(arc.tone, []);
+      groups.get(arc.tone).push(arc);
+    }
+    for (const list of groups.values()) list.sort((x, y) => centreOf(x, light.phi) - centreOf(y, light.phi));
+    return { i, u, groups };
+  };
+  const same = (x, y) => {
+    if (x.groups.size !== y.groups.size) return false;
+    for (const [tone, list] of x.groups) if ((y.groups.get(tone) ?? []).length !== list.length) return false;
+    return true;
+  };
+  const align = (reference, arc) => {
+    const out = { ...arc };
+    const centre = (reference.from + reference.to) / 2;
+    while ((out.from + out.to) / 2 - centre > Math.PI) {
+      out.from -= TAU;
+      out.to -= TAU;
+    }
+    while (centre - (out.from + out.to) / 2 > Math.PI) {
+      out.from += TAU;
+      out.to += TAU;
+    }
+    return out;
+  };
+  const strayOf = (i, a, mid, b) => {
+    let worst = 0;
+    for (const [tone, list] of mid.groups) {
+      list.forEach((arc, index) => {
+        const lo = align(arc, a.groups.get(tone)[index]);
+        const hi = align(arc, b.groups.get(tone)[index]);
+        for (const key of ["from", "to"]) {
+          const p = pointAt(i, mid.u, arc[key]);
+          const p0 = pointAt(i, a.u, lo[key]);
+          const p1 = pointAt(i, b.u, hi[key]);
+          worst = Math.max(worst, Math.hypot(p[0] - (p0[0] + p1[0]) / 2, p[1] - (p0[1] + p1[1]) / 2));
+        }
+      });
+    }
+    return worst;
+  };
+  const sheet = (tone, levels) => {
+    levels[0].groups.get(tone).forEach((arc, index) => {
+      const chain = [arc];
+      for (let k = 1; k < levels.length; k++) chain.push(align(chain[k - 1], levels[k].groups.get(tone)[index]));
+      const last = levels.length - 1;
+      const points = [...arcPoints(levels[0].i, levels[0].u, chain[0].from, chain[0].to)];
+      for (let k = 1; k < last; k++) points.push(pointAt(levels[k].i, levels[k].u, chain[k].to));
+      points.push(...arcPoints(levels[last].i, levels[last].u, chain[last].from, chain[last].to).reverse());
+      for (let k = last - 1; k >= 1; k--) points.push(pointAt(levels[k].i, levels[k].u, chain[k].from));
+      buckets[tone].push(pathOf(oriented(points), true));
+    });
+  };
+  const overlap = (x, y) => Math.min(x.to, y.to) - Math.max(x.from, y.from);
+  const strip = (tone, a, b) => {
+    const below = a.groups.get(tone) ?? [];
+    const above = (b.groups.get(tone) ?? []).map((arc) => ({ arc, used: false }));
+    const quad = (lo, hi) => {
+      const points = [...arcPoints(a.i, a.u, lo.from, lo.to), ...arcPoints(b.i, b.u, hi.from, hi.to).reverse()];
+      buckets[tone].push(pathOf(oriented(points), true));
+    };
+    for (const arc of below) {
+      let best = null;
+      let score = -Infinity;
+      for (const entry of above) {
+        if (entry.used) continue;
+        const aligned = align(arc, entry.arc);
+        const value = overlap(arc, aligned);
+        if (value > score) (score = value), (best = entry);
+      }
+      if (best && score > -0.05) {
+        best.used = true;
+        quad(arc, align(arc, best.arc));
+      } else {
+        const centre = (arc.from + arc.to) / 2;
+        quad(arc, { from: centre, to: centre });
+      }
+    }
+    for (const entry of above) {
+      if (entry.used) continue;
+      const centre = (entry.arc.from + entry.arc.to) / 2;
+      quad({ from: centre, to: centre }, entry.arc);
+    }
+  };
+  const k = scaleOf(P);
+  let run = [];
+  const flush = () => {
+    const tones = [...new Set(run.flatMap((level) => [...level.groups.keys()]))].sort((x, y) => x - y);
+    for (const tone of tones) {
+      const countOf = (level) => (level.groups.get(tone) ?? []).length;
+      let start = 0;
+      for (let at = 1; at <= run.length; at++) {
+        if (at < run.length && countOf(run[at - 1]) === countOf(run[at])) continue;
+        if (at - 1 > start && countOf(run[start])) sheet(tone, run.slice(start, at));
+        if (at < run.length) strip(tone, run[at - 1], run[at]);
+        start = at;
+      }
+    }
+    run = [];
+  };
+  for (let i = 0; i < m - 1; i++) {
+    const ds = meridian[i + 1][0] - meridian[i][0];
+    if (Math.abs(ds) < 1e-9) {
+      flush();
+      continue;
+    }
+    const count = Math.max(1, rows);
+    const reach = (Math.hypot(ds, meridian[i + 1][1] - meridian[i][1]) * k) / count;
+    const limit = Math.max(1, Math.min(deepest, Math.ceil(Math.log2(Math.max(2, reach / fineness)))));
+    const coarse = Array.from({ length: count + 1 }, (_, index) => levelOf(i, index / count));
+    run.push(coarse[0]);
+    const refine = (a, b, depth) => {
+      const mid = levelOf(i, (a.u + b.u) / 2);
+      const split = depth < limit && (!same(a, b) || !same(a, mid) || (depth < 6 && strayOf(i, a, mid, b) > error));
+      if (!split) {
+        run.push(b);
+        return;
+      }
+      refine(a, mid, depth + 1);
+      refine(mid, b, depth + 1);
+    };
+    for (let index = 1; index <= count; index++) refine(coarse[index - 1], coarse[index], 0);
+  }
+  flush();
+  return buckets;
+}
+
+function sideOf(meridian) {
+  const m = meridian.length;
+  let first = 0;
+  let last = m - 1;
+  if (meridian[0][1] <= 1e-9) first = 1;
+  if (meridian[m - 1][1] <= 1e-9) last = m - 2;
+  const side = meridian.slice(first, last + 1);
+  for (let index = 1; index < side.length; index++) if (side[index][0] - side[index - 1][0] <= 1e-9) return null;
+  return side.length >= 3 ? side : null;
+}
+
+function surfaceOf(side, F, P, rims, { samples = 96, slope = null } = {}) {
+  const V = viewOf(P);
+  const aV = dot3(F.a, V);
+  const facing = Math.atan2(dot3(F.v, V), dot3(F.u, V));
+  const [left, right] = silhouettePoints(side, F, P, { samples, slope });
+  if (left.length <= samples || right.length <= samples) return null;
+  const s0 = side[0][0];
+  const s1 = side[side.length - 1][0];
+  const angleOf = (point) => angleToward(F, sub3(point, add3(F.o, mul3(F.a, dot3(sub3(point, F.o), F.a)))));
+  const wrap = (angle) => ((angle % TAU) + TAU) % TAU;
+  const arc = (s, r, from, to, through) => {
+    let sweep = wrap(to - from);
+    if (wrap(through - from) > sweep) sweep -= TAU;
+    const count = Math.max(4, Math.ceil(Math.abs(sweep) / (TAU / 96)), Math.ceil((Math.abs(sweep) * r * scaleOf(P)) / 1.5));
+    return Array.from({ length: count + 1 }, (_, index) => iso(pointOf(F, s, r, from + (sweep * index) / count), P));
+  };
+  const r0 = side[0][1];
+  const r1 = side[side.length - 1][1];
+  const bottom = -aV > 0 ? facing + Math.PI : facing;
+  const top = aV > 0 ? facing + Math.PI : facing;
+  const L = left.map((point) => iso(point, P));
+  const R = right.map((point) => iso(point, P));
+  const topArc = arc(s1, r1, angleOf(left[left.length - 1]), angleOf(right[right.length - 1]), top);
+  const bottomArc = arc(s0, r0, angleOf(right[0]), angleOf(left[0]), bottom);
+  const keepFirst = rims === "all" || rims === "first" || rims === "ends";
+  const keepLast = rims === "all" || rims === "last" || rims === "ends";
+  const fill = pathOf([...L, ...topArc, ...[...R].reverse(), ...bottomArc], true);
+  const outline = [pathOf(L), pathOf(R), keepLast ? pathOf(topArc) : "", keepFirst ? pathOf(bottomArc) : ""].join("");
+  const hull = hullOf([...arc(s0, r0, 0, TAU - 1e-6, Math.PI), ...arc(s1, r1, 0, TAU - 1e-6, Math.PI), ...L, ...R]);
+  let gap = 0;
+  for (const p of [...L, ...R]) {
+    let best = Infinity;
+    for (let index = 0; index < hull.length; index++) {
+      const a = hull[index];
+      const b = hull[(index + 1) % hull.length];
+      const dx = b[0] - a[0];
+      const dy = b[1] - a[1];
+      const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy || 1)));
+      best = Math.min(best, Math.hypot(p[0] - a[0] - dx * t, p[1] - a[1] - dy * t));
+    }
+    gap = Math.max(gap, best);
+  }
+  return { fill, outline, gap };
+}
+
+const softOf = (meridian) => meridian.some((point) => Boolean(point[2]));
+
+function lathe(meridian, F, P, { steps = stepsFor(Math.max(...meridian.map(([, r]) => r)), 32, 160, scaleOf(P)), fill = "auto", hole = null, bevel = 0, rims = "all", smooth: asked = "auto", waist = 0.5 } = {}) {
+  const smooth = asked === "auto" ? softOf(meridian) : asked;
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const aV = dot3(F.a, V);
+  const uV = dot3(F.u, V);
+  const vV = dot3(F.v, V);
+  const aL = dot3(F.a, L);
+  const uL = dot3(F.u, L);
+  const vL = dot3(F.v, L);
+  const n = steps;
+  const m = meridian.length;
+  const rings = meridian.map(([s, r]) => Array.from({ length: n }, (_, j) => iso(pointOf(F, s, r, (j / n) * TAU), P)));
+  const midC = [];
+  const midS = [];
+  for (let j = 0; j < n; j++) {
+    const t = ((j + 0.5) / n) * TAU;
+    midC.push(Math.cos(t));
+    midS.push(Math.sin(t));
+  }
+  const seen = [];
+  const tones = [];
+  for (let i = 0; i < m - 1; i++) {
+    const ds = meridian[i + 1][0] - meridian[i][0];
+    const dr = meridian[i + 1][1] - meridian[i][1];
+    const length = Math.hypot(ds, dr);
+    const row = [];
+    const toneRow = [];
+    for (let j = 0; j < n; j++) {
+      if (length < 1e-9) {
+        row.push(false);
+        toneRow.push(0);
+        continue;
+      }
+      const facing = ds * (midC[j] * uV + midS[j] * vV) - dr * aV;
+      const lit = (ds * (midC[j] * uL + midS[j] * vL) - dr * aL) / length;
+      row.push(facing > 1e-6 * length);
+      toneRow.push(bandOf(lit));
+    }
+    seen.push(row);
+    tones.push(toneRow);
+  }
+  const buckets = [[], [], [], [], []];
+  const all = [];
+  const smoothed = smooth ? smoothRows(meridian, F, P, { steps, ...(smooth === true ? {} : smooth) }) : null;
+  if (smoothed) smoothed.forEach((list, tone) => list.forEach((d) => (buckets[tone].push(d), all.push(d))));
+  for (let i = 0; i < m - 1; i++) {
+    if (smoothed && Math.abs(meridian[i + 1][0] - meridian[i][0]) > 1e-9) continue;
+    const keys = seen[i].map((visible, j) => (visible ? tones[i][j] : null));
+    for (const { key, run } of groupsOf(keys)) {
+      const a = run.map((j) => rings[i][j]);
+      const b = run.map((j) => rings[i + 1][j]).reverse();
+      const d = pathOf(oriented([...a, ...b]), true);
+      buckets[key].push(d);
+      all.push(d);
+    }
+  }
+  const phi = Math.atan2(vV, uV);
+  const flatV = Math.hypot(uV, vV);
+  const rangeOf = (i) => {
+    const ds = meridian[i + 1][0] - meridian[i][0];
+    const dr = meridian[i + 1][1] - meridian[i][1];
+    if (Math.hypot(ds, dr) < 1e-9) return null;
+    if (Math.abs(ds) < 1e-9 || flatV < 1e-9) return -dr * aV > 1e-9 ? [-1, 1] : null;
+    const c = (dr * aV) / (ds * flatV);
+    return ds > 0 ? [Math.max(-1, c), 1] : [-1, Math.min(1, c)];
+  };
+  const arcsOf = (ranges) => {
+    if (ranges.some((range) => !range)) return [];
+    const lo = Math.max(...ranges.map(([x]) => x));
+    const hi = Math.min(...ranges.map(([, x]) => x));
+    if (lo >= hi - 1e-9) return [];
+    const near = Math.acos(Math.min(1, hi));
+    const far = Math.acos(Math.max(-1, lo));
+    if (hi >= 1 && lo <= -1) return [[phi, phi + TAU]];
+    if (hi >= 1) return [[phi - far, phi + far]];
+    if (lo <= -1) return [[phi + near, phi + TAU - near]];
+    return [[phi + near, phi + far], [phi - far, phi - near]];
+  };
+  const along = (s, r, [from, to]) => {
+    const count = Math.max(2, Math.ceil(((to - from) * Math.max(r, 1e-6) * scaleOf(P)) / 1.5));
+    return Array.from({ length: count + 1 }, (_, j) => iso(pointOf(F, s, r, from + ((to - from) * j) / count), P));
+  };
+  const creases = [];
+  for (let i = 1; i < m - 1; i++) {
+    if (meridian[i][2] || meridian[i][1] <= 1e-9) continue;
+    for (const arc of arcsOf([rangeOf(i - 1), rangeOf(i)])) creases.push(pathOf(along(meridian[i][0], meridian[i][1], arc)));
+  }
+  let bevelPath = "";
+  if (bevel > 0 && m > 2) {
+    const ends = [];
+    if (meridian[0][1] <= 1e-9) ends.push([0, 1, 1]);
+    if (meridian[m - 1][1] <= 1e-9) ends.push([m - 2, m - 2, m - 3]);
+    for (const [cap, rim, side] of ends) {
+      const [s, r] = meridian[rim];
+      for (const arc of arcsOf([rangeOf(cap), rangeOf(side)])) {
+        const inset = along(s, Math.max(0, r - bevel), arc);
+        const edge = along(s, r, arc);
+        bevelPath += pathOf([edge[0], ...inset.slice(1, -1), edge[edge.length - 1]]);
+      }
+    }
+  }
+  const { fill: fillPath, outline } = outlineOf(meridian, F, P, { steps: n, fill, hole, rims, smooth, waist, all });
+  return {
+    fill: fillPath,
+    outline,
+    crease: creases.join(""),
+    top: buckets[4].join(""),
+    shades: buckets.slice(0, 4).map((list) => list.join("")),
+    bevel: bevelPath || undefined,
+    seamless: Boolean(smoothed),
+  };
+}
+
+function shapeOf(meridian, P, smooth) {
+  if (smooth && smooth.radius) {
+    const segments = meridian.slice(0, -1).map(([s0], index) => (Math.abs(meridian[index + 1][0] - s0) > 1e-9 ? { radius: smooth.radius, slope: smooth.slope } : null));
+    return curved(meridian, P, segments);
+  }
+  const curves = smooth && !smooth.slope ? curveRuns(meridian) : null;
+  return curves && curves.some(Boolean) ? curved(meridian, P, curves) : meridian;
+}
+
+function outlineOf(meridian, F, P, { steps = stepsFor(Math.max(...meridian.map(([, r]) => r)), 32, 160, scaleOf(P)), fill = "auto", hole = null, rims = "all", smooth: asked = "auto", waist = 0.5, all = null } = {}) {
+  const smooth = asked === "auto" ? softOf(meridian) : asked;
+  const n = steps;
+  let fillPath;
+  let outline;
+  const shape = shapeOf(meridian, P, smooth);
+  const side = fill === "auto" || fill === "surface" ? sideOf(shape) : null;
+  const surface = side && !hole ? surfaceOf(side, F, P, rims, { slope: smooth && smooth.slope ? smooth.slope : null }) : null;
+  if (surface && (fill === "surface" || surface.gap > waist)) {
+    fillPath = surface.fill;
+    outline = surface.outline;
+  } else if (fill === "hull" || fill === "auto" || fill === "surface") {
+    const most = Math.max(...shape.map(([, r]) => r));
+    const around = Math.min(320, Math.max(n, Math.ceil((TAU * most * scaleOf(P)) / 1.5)));
+    const tagged = [];
+    shape.forEach(([s, r], index) => {
+      for (let j = 0; j < around; j++) tagged.push({ p: iso(pointOf(F, s, r, (j / around) * TAU), P), ring: index });
+    });
+    const hull = hullTagged(tagged);
+    const holePath = hole ? pathOf(Array.from({ length: around }, (_, j) => iso(pointOf(F, hole[0], hole[1], (j / around) * TAU), P)), true) : "";
+    fillPath = pathOf(hull.map(({ p }) => p), true) + holePath;
+    if (rims === "all") {
+      outline = pathOf(hull.map(({ p }) => p), true) + holePath;
+    } else {
+      const keepFirst = rims === "first" || rims === "ends";
+      const keepLast = rims === "last" || rims === "ends";
+      const edges = hull.map((a, index) => {
+        const b = hull[(index + 1) % hull.length];
+        const same = a.ring === b.ring;
+        const keep = !same || (a.ring !== 0 && a.ring !== shape.length - 1) || (keepFirst && a.ring === 0) || (keepLast && a.ring === shape.length - 1);
+        return [a.p, b.p, keep];
+      });
+      outline = chains(edges).map((points) => pathOf(points)).join("") + holePath;
+    }
+  } else {
+    fillPath = all ? all.join("") : (({ shades, top }) => [...shades, top].join(""))(lathe(meridian, F, P, { steps: n, fill: "auto", hole, rims, smooth, waist }));
+    outline = "";
+  }
+  return { fill: fillPath, outline };
+}
+
+const signedArea = (points) => points.reduce((sum, [x, y], index) => {
+  const [nx, ny] = points[(index + 1) % points.length];
+  return sum + x * ny - nx * y;
+}, 0);
+
+const oriented = (points) => (signedArea(points) < 0 ? [...points].reverse() : points);
+
+const saddleStart = (R, a, angle) => Math.sqrt(Math.max(0, R * R - a * a * Math.cos(angle) ** 2));
+
+function saddleOf(F, a, start, s1, P, { steps = stepsFor(a, 24) } = {}) {
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const n = steps;
+  const angle = (j) => (j / n) * TAU;
+  const from = typeof start === "function" ? start : (t) => saddleStart(start, a, t);
+  const low = Array.from({ length: n }, (_, j) => iso(pointOf(F, from(angle(j)), a, angle(j)), P));
+  const high = Array.from({ length: n }, (_, j) => iso(pointOf(F, s1, a, angle(j)), P));
+  const seen = [];
+  const tones = [];
+  for (let j = 0; j < n; j++) {
+    const normal = radialOf(F, angle(j + 0.5));
+    seen.push(dot3(normal, V) > 1e-6);
+    tones.push(bandOf(dot3(normal, L)));
+  }
+  const buckets = [[], [], [], [], []];
+  const fills = [];
+  const keys = seen.map((visible, j) => (visible ? tones[j] : null));
+  for (const { key, run } of groupsOf(keys)) {
+    const d = pathOf(oriented([...run.map((j) => low[j]), ...run.map((j) => high[j]).reverse()]), true);
+    buckets[key].push(d);
+    fills.push(d);
+  }
+  const capSeen = dot3(F.a, V) > 1e-6;
+  if (capSeen) {
+    const d = pathOf(oriented(high), true);
+    buckets[bandOf(dot3(F.a, L))].push(d);
+    fills.push(d);
+  }
+  const front = runsOf(seen);
+  const back = runsOf(seen.map((visible) => !visible));
+  const edges = [];
+  for (const run of front) {
+    edges.push(pathOf(run.map((j) => low[j])));
+    edges.push(pathOf([low[run[0]], high[run[0]]]), pathOf([low[run[run.length - 1]], high[run[run.length - 1]]]));
+  }
+  for (const run of capSeen ? back : front) edges.push(pathOf(run.map((j) => high[j])));
+  return {
+    fill: fills.join(""),
+    outline: edges.join(""),
+    crease: capSeen ? front.map((run) => pathOf(run.map((j) => high[j]))).join("") : "",
+    top: buckets[4].join(""),
+    shades: buckets.slice(0, 4).map((list) => list.join("")),
+    seamless: true,
+  };
+}
+
+function prismOf(F, polygon, s0, s1, P) {
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const ring = oriented(polygon.map(([x, y]) => [x, y]));
+  const n = ring.length;
+  const at = (s, [x, y]) => [F.o[0] + F.a[0] * s + F.u[0] * x + F.v[0] * y, F.o[1] + F.a[1] * s + F.u[1] * x + F.v[1] * y, F.o[2] + F.a[2] * s + F.u[2] * x + F.v[2] * y];
+  const low = ring.map((point) => iso(at(s0, point), P));
+  const high = ring.map((point) => iso(at(s1, point), P));
+  const buckets = [[], [], [], [], []];
+  const seen = [];
+  for (let j = 0; j < n; j++) {
+    const [x0, y0] = ring[j];
+    const [x1, y1] = ring[(j + 1) % n];
+    const normal = unit3(add3(mul3(F.u, y1 - y0), mul3(F.v, -(x1 - x0))));
+    const visible = dot3(normal, V) > 1e-6;
+    seen.push(visible);
+    if (visible) buckets[bandOf(dot3(normal, L))].push(pathOf([low[j], low[(j + 1) % n], high[(j + 1) % n], high[j]], true));
+  }
+  const ends = [[s0, low, mul3(F.a, -1)], [s1, high, F.a]];
+  const capSeen = ends.map(([, , normal]) => dot3(normal, V) > 1e-6);
+  ends.forEach(([, points, normal], index) => capSeen[index] && buckets[bandOf(dot3(normal, L))].push(pathOf(points, true)));
+  const hull = hullOf([...low, ...high]);
+  const creases = [];
+  for (let j = 0; j < n; j++) {
+    const prev = (j - 1 + n) % n;
+    const a = [ring[j][0] - ring[prev][0], ring[j][1] - ring[prev][1]];
+    const b = [ring[(j + 1) % n][0] - ring[j][0], ring[(j + 1) % n][1] - ring[j][1]];
+    const sharp = (a[0] * b[0] + a[1] * b[1]) / (Math.hypot(a[0], a[1]) * Math.hypot(b[0], b[1]) || 1) < Math.cos(0.35);
+    if (sharp && seen[j] && seen[prev]) creases.push(pathOf([low[j], high[j]]));
+    ends.forEach(([, points], index) => capSeen[index] && seen[j] && creases.push(pathOf([points[j], points[(j + 1) % n]])));
+  }
+  return { fill: pathOf(hull, true), outline: pathOf(hull, true), crease: creases.join(""), top: buckets[4].join(""), shades: buckets.slice(0, 4).map((list) => list.join("")) };
+}
+
+function stadium(r0, r1, offset, steps = 32) {
+  const circle = (cx, r) => Array.from({ length: steps }, (_, index) => [cx + r * Math.cos((index / steps) * TAU), r * Math.sin((index / steps) * TAU)]);
+  return hullOf([...circle(0, r0), ...circle(offset, r1)]);
+}
+
+function sphereOf(centre, r, P, { steps = 48 } = {}) {
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const F = frameAlong(centre, V);
+  const flat = (p) => iso(p, P);
+  const rim = Array.from({ length: steps }, (_, index) => pointOf(F, 0, r, (index / steps) * TAU));
+  const outline = pathOf(rim.map(flat), true);
+  const capOf = (threshold) => {
+    const points = rim.filter((p) => dot3(sub3(p, centre), L) / r >= threshold).map(flat);
+    const c = dot3(L, V);
+    const LF = frameAlong(add3(centre, mul3(L, r * threshold)), L);
+    const radius = r * Math.sqrt(Math.max(0, 1 - threshold * threshold));
+    for (let index = 0; index < steps; index++) {
+      const p = pointOf(LF, 0, radius, (index / steps) * TAU);
+      if (dot3(sub3(p, centre), V) >= -1e-9) points.push(flat(p));
+    }
+    if (c > threshold) points.push(flat(add3(centre, mul3(V, r))));
+    return points.length > 2 ? pathOf(hullOf(points), true) : "";
+  };
+  const shades = [outline, capOf(BANDS[1]), capOf(BANDS[2]), capOf(BANDS[3])];
+  return { fill: outline, outline, crease: "", top: "", shades, seamless: true };
+}
+
+const disc = (s0, s1, r, F, P, options = {}) =>
+  lathe(
+    [
+      [s0, 0],
+      [s0, r],
+      [s1, r],
+      [s1, 0],
+    ],
+    F,
+    P,
+    { steps: stepsFor(r, 32, 160, scaleOf(P)), ...options },
+  );
+
+const ringBand = (s0, s1, rIn, rOut, F, P, options = {}) =>
+  lathe(
+    [
+      [s0, rIn],
+      [s0, rOut],
+      [s1, rOut],
+      [s1, rIn],
+    ],
+    F,
+    P,
+    { steps: stepsFor(rOut, 32, 160, scaleOf(P)), hole: null, ...options },
+  );
+
+function solidOf(profile, F, P, options = {}) {
+  const first = profile[0];
+  const last = profile[profile.length - 1];
+  const meridian = [[first[0], 0], ...profile, [last[0], 0]];
+  const most = Math.max(...profile.map(([, r]) => r));
+  return lathe(meridian, F, P, { steps: stepsFor(most, 32, 160, scaleOf(P)), ...options });
+}
+
+function bandOfProfile(profile, F, P, options = {}) {
+  const most = Math.max(...profile.map(([, r]) => r));
+  return lathe(profile, F, P, { steps: stepsFor(most, 32, 160, scaleOf(P)), ...options });
+}
+
+function silhouettePoints(profile, F, P, { samples = 72, slope: given = null, radius = null } = {}) {
+  const V = viewOf(P);
+  const aV = dot3(F.a, V);
+  const uV = dot3(F.u, V);
+  const vV = dot3(F.v, V);
+  const facing = Math.atan2(vV, uV);
+  const flat = Math.hypot(uV, vV) || 1e-9;
+  const s0 = profile[0][0];
+  const s1 = profile[profile.length - 1][0];
+  const radiusAt = radius ?? ((s) => {
+    let index = 1;
+    while (index < profile.length - 1 && profile[index][0] < s) index++;
+    const [sa, ra] = profile[index - 1];
+    const [sb, rb] = profile[index];
+    return ra + ((rb - ra) * (s - sa)) / (sb - sa || 1);
+  });
+  const side = (sign) => {
+    const points = [];
+    for (let step = 0; step <= samples; step++) {
+      const s = s0 + ((s1 - s0) * step) / samples;
+      const h = (s1 - s0) / samples / 2 || 0.01;
+      const slope = given ? given(s) : (radiusAt(Math.min(s1, s + h)) - radiusAt(Math.max(s0, s - h))) / (Math.min(s1, s + h) - Math.max(s0, s - h) || 1);
+      const c = (slope * aV) / flat;
+      if (Math.abs(c) > 1) continue;
+      points.push(pointOf(F, s, radiusAt(s), facing + sign * Math.acos(c)));
+    }
+    return points;
+  };
+  return [side(1), side(-1)];
+}
+
+const silhouetteOf = (profile, F, P, options = {}) =>
+  silhouettePoints(profile, F, P, options)
+    .map((points) => pathOf(points.map((point) => iso(point, P))))
+    .join("");
+
+function profileCurve(profile, { slope = null, radius = null } = {}) {
+  for (let index = 1; index < profile.length; index++) if (profile[index][0] - profile[index - 1][0] <= 1e-9) throw new Error(`profileCurve: s must rise along the profile (point ${index} at s = ${profile[index][0]})`);
+  const segments = curveRuns(profile);
+  const s0 = profile[0][0];
+  const s1 = profile[profile.length - 1][0];
+  const find = (s) => {
+    let lo = 0;
+    let hi = profile.length - 2;
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >> 1;
+      if (profile[mid][0] <= s) lo = mid;
+      else hi = mid - 1;
+    }
+    return lo;
+  };
+  const linear = (index, s) => {
+    const [sa, ra] = profile[index];
+    const [sb, rb] = profile[index + 1];
+    return [ra + ((rb - ra) * (s - sa)) / (sb - sa), (rb - ra) / (sb - sa)];
+  };
+  const radiusAt = radius ?? ((s) => {
+    const at = Math.max(s0, Math.min(s1, s));
+    const index = find(at);
+    return segments[index] ? segments[index].radius(at) : linear(index, at)[0];
+  });
+  const slopeAt = slope ?? ((s) => {
+    const at = Math.max(s0, Math.min(s1, s));
+    const index = find(at);
+    return segments[index] ? segments[index].slope(at) : linear(index, at)[1];
+  });
+  return { s0, s1, radius: radiusAt, slope: slopeAt, analytic: Boolean(slope && radius) };
+}
+
+function bandsOf(profile, cuts, F, P, { slope = null, radius = null, steps, rows = 6, rims = "none", fill = "auto", samples = 72 } = {}) {
+  const curve = profileCurve(profile, { slope, radius });
+  const { s0, s1 } = curve;
+  const stops = [s0, ...[...new Set(cuts)].filter((s) => s > s0 + 1e-6 && s < s1 - 1e-6).sort((a, b) => a - b), s1];
+  const most = Math.max(...profile.map(([, r]) => r), ...stops.map((s) => curve.radius(s)));
+  const n = steps ?? stepsFor(most, 32, 160, scaleOf(P));
+  const knot = (s, soft) => (soft ? [s, curve.radius(s), 1] : [s, curve.radius(s)]);
+  const meridianOf = (a, b) => [knot(a), ...profile.filter(([s]) => s > a + 1e-9 && s < b - 1e-9).map(([s, , soft]) => knot(s, soft)), knot(b)];
+  const shading = { slope: curve.slope, radius: curve.radius, rows };
+  const bands = stops.slice(0, -1).map((a, index) => {
+    const b = stops[index + 1];
+    const meridian = meridianOf(a, b);
+    const paths = lathe(meridian, F, P, { steps: n, rims, fill, smooth: shading });
+    const seam = index < stops.length - 2 ? arcOf(F, b, curve.radius(b), P, { slope: curve.slope(b) }) : "";
+    return { s0: a, s1: b, profile: meridian, paths: { ...paths, outline: "" }, outline: paths.outline, seam };
+  });
+  const sidesOf = (from = s0, to = s1, { ends = false, count = samples } = {}) => {
+    const span = [Math.max(s0, from), Math.min(s1, to)];
+    const dense = Array.from({ length: count + 1 }, (_, index) => knot(span[0] + ((span[1] - span[0]) * index) / count, true));
+    const points = silhouettePoints(dense, F, P, { samples: count, slope: curve.slope, radius: curve.radius });
+    const rim = (s) => arcOf(F, s, curve.radius(s), P, { slope: curve.slope(s) });
+    const rimsAt = ends === true ? span : ends === "first" ? [span[0]] : ends === "last" ? [span[1]] : [];
+    return { d: points.map((list) => pathOf(list.map((point) => iso(point, P)))).join("") + rimsAt.map(rim).join(""), points };
+  };
+  return { bands, sidesOf, radius: curve.radius, slope: curve.slope, steps: n, s0, s1 };
+}
+
+function arcOf(F, s, r, P, { slope = 0, steps = 0, least = 0.02, inward = false, from = 0, to = TAU, trim = 0.3 } = {}) {
+  const V = viewOf(P);
+  const aV = dot3(F.a, V);
+  const uV = dot3(F.u, V);
+  const vV = dot3(F.v, V);
+  const flat = Math.hypot(uV, vV);
+  const phi = Math.atan2(vV, uV);
+  const norm = Math.hypot(1, slope);
+  const full = Math.abs(to - from - TAU) < 1e-9;
+  let visible;
+  if (flat < 1e-9) visible = (inward ? slope * aV / norm > least : -slope * aV / norm > least) ? [[phi, phi + TAU]] : [];
+  else if (inward) {
+    const c = (slope * aV - least * norm) / flat;
+    visible = c <= -1 ? [] : c >= 1 ? [[phi, phi + TAU]] : [[phi + Math.acos(c), phi + TAU - Math.acos(c)]];
+  } else {
+    const c = (least * norm + slope * aV) / flat;
+    visible = c >= 1 ? [] : c <= -1 ? [[phi, phi + TAU]] : [[phi - Math.acos(c), phi + Math.acos(c)]];
+  }
+  const at = (t) => iso(pointOf(F, s, r, t), P);
+  const speed = (t) => {
+    const a = at(t - 1e-3);
+    const b = at(t + 1e-3);
+    return Math.hypot(b[0] - a[0], b[1] - a[1]) / 2e-3;
+  };
+  const count = (span) => Math.max(2, Math.ceil(((steps || stepsFor(r, 24, 112)) * span) / TAU), Math.ceil((span * r * scaleOf(P)) / 1.5));
+  const out = [];
+  for (const [a, b] of visible) {
+    if (b - a >= TAU - 1e-9 && full) {
+      const n = count(TAU);
+      out.push(pathOf(Array.from({ length: n }, (_, j) => at(from + (j / n) * TAU)), true));
+      continue;
+    }
+    const pieces = full ? [[a, b, true, true]] : [];
+    if (!full)
+      for (let turn = -2; turn <= 2; turn++) {
+        const lo = Math.max(a + turn * TAU, from);
+        const hi = Math.min(b + turn * TAU, to);
+        if (hi - lo > 1e-6) pieces.push([lo, hi, lo > from + 1e-9, hi < to - 1e-9]);
+      }
+    for (const [lo, hi, limb0, limb1] of pieces) {
+      const span = hi - lo;
+      const cut0 = limb0 && trim > 0 ? Math.min(span * 0.25, trim / (speed(lo) || 1)) : 0;
+      const cut1 = limb1 && trim > 0 ? Math.min(span * 0.25, trim / (speed(hi) || 1)) : 0;
+      const t0 = lo + cut0;
+      const t1 = hi - cut1;
+      const n = count(t1 - t0);
+      out.push(pathOf(Array.from({ length: n + 1 }, (_, j) => at(t0 + ((t1 - t0) * j) / n))));
+    }
+  }
+  return out.join("");
+}
+
+function circleOf(F, s, r, P, steps = 0) {
+  const count = steps || stepsFor(r, 24, 112);
+  return pathOf(
+    Array.from({ length: count }, (_, j) => iso(pointOf(F, s, r, (j / count) * TAU), P)),
+    true,
+  );
+}
+
+function spokesOf(F, s, r0, r1, count, P, { phase = 0, sweep = 0, from = 0, to = TAU } = {}) {
+  const lines = [];
+  for (let index = 0; index < count; index++) {
+    const t = phase + from + (index / count) * (to - from);
+    lines.push(pathOf([iso(pointOf(F, s, r0, t), P), iso(pointOf(F, s, r1, t + sweep), P)]));
+  }
+  return lines.join("");
+}
+
+const fadeOf = (value, [lo, hi]) => {
+  const t = Math.max(0, Math.min(1, (value - lo) / (hi - lo || 1e-9)));
+  return t * t * (3 - 2 * t);
+};
+
+function ribsOf(F, s0, s1, r, count, P, { phase = 0, twist = 0, least = 0.12, r1 = r, fade = null, seams = false } = {}) {
+  const V = viewOf(P);
+  const lines = [];
+  const slope = (r1 - r) / (s1 - s0 || 1);
+  for (let index = 0; index < count; index++) {
+    const t = phase + (index / count) * TAU;
+    const radial = radialOf(F, t + twist / 2);
+    const normal = unit3([radial[0] - slope * F.a[0], radial[1] - slope * F.a[1], radial[2] - slope * F.a[2]]);
+    const facing = dot3(normal, V);
+    const d = pathOf([iso(pointOf(F, s0, r, t), P), iso(pointOf(F, s1, r1, t + twist), P)]);
+    if (fade) {
+      const alpha = fadeOf(facing, fade);
+      if (alpha > 0.02) lines.push({ d, alpha });
+      continue;
+    }
+    if (facing < least) continue;
+    lines.push(d);
+  }
+  const ends = seams ? [seams === "last" ? "" : arcOf(F, s0, r, P, { slope }), seams === "first" ? "" : arcOf(F, s1, r1, P, { slope })].filter(Boolean) : [];
+  if (fade) return [...lines, ...ends.map((d) => ({ d, alpha: 1 }))];
+  return [...lines, ...ends].join("");
+}
+
+function rodOut(F, from, to, r, P, { stroke = 0, ...options } = {}) {
+  const pad = 0.35 / scaleOf(P);
+  const ring = (s) => Array.from({ length: 48 }, (_, index) => iso(pointOf(F, s, r + pad, (index / 48) * TAU), P));
+  return {
+    paths: disc(from - stroke, to, r, F, P, options),
+    clip: pathOf(hullOf([...ring(from), ...ring(to + stroke)]), true),
+    from,
+    to,
+    stroke,
+    reach: to + stroke,
+  };
+}
+
+function dotsOf(F, s, r, count, P, { phase = 0, slope = 0, least = 0.08, all = false, fade = null } = {}) {
+  const V = viewOf(P);
+  const out = [];
+  for (let index = 0; index < count; index++) {
+    const t = phase + (index / count) * TAU;
+    let alpha = 1;
+    if (!all) {
+      const radial = radialOf(F, t);
+      const normal = unit3([radial[0] - slope * F.a[0], radial[1] - slope * F.a[1], radial[2] - slope * F.a[2]]);
+      const facing = dot3(normal, V);
+      if (fade) alpha = fadeOf(facing, fade);
+      else if (facing < least) continue;
+      if (alpha <= 0.02) continue;
+    }
+    const [x, y] = iso(pointOf(F, s, r, t), P);
+    out.push(alpha < 1 ? [x, y, alpha] : [x, y]);
+  }
+  return out;
+}
+
+function facingOf(F, angle, P, slope = 0) {
+  const radial = radialOf(F, angle);
+  return dot3(unit3([radial[0] - slope * F.a[0], radial[1] - slope * F.a[1], radial[2] - slope * F.a[2]]), viewOf(P));
+}
+
+function fillet(points, radius, perArc = 7, { P = null, tube = 0, margin = 1.3 } = {}) {
+  if (points.length < 3) return points.map((p) => [...p]);
+  const V = P && tube ? viewOf(P) : null;
+  const out = [[...points[0]]];
+  for (let index = 1; index < points.length - 1; index++) {
+    const prev = points[index - 1];
+    const here = points[index];
+    const next = points[index + 1];
+    const into = unit3(sub3(here, prev));
+    const outOf = unit3(sub3(next, here));
+    const cosTurn = Math.max(-1, Math.min(1, dot3(into, outOf)));
+    const turn = Math.acos(cosTurn);
+    if (turn < 1e-3) {
+      out.push([...here]);
+      continue;
+    }
+    const room = Math.min(len3(sub3(here, prev)), len3(sub3(next, here))) * 0.48;
+    const facing = V ? Math.abs(dot3(unit3(cross3(into, outOf)), V)) : 1;
+    const bend = V ? Math.max(radius, (margin * tube) / (0.7 * Math.max(0.05, facing) ** 2)) : radius;
+    const cut = Math.min(bend * Math.tan(turn / 2), room);
+    const a = sub3(here, mul3(into, cut));
+    const b = add3(here, mul3(outOf, cut));
+    const count = Math.max(2, Math.ceil((perArc * turn) / (Math.PI / 2)));
+    for (let step = 0; step <= count; step++) {
+      const t = step / count;
+      const p0 = lerp3(a, here, t);
+      const p1 = lerp3(here, b, t);
+      out.push(lerp3(p0, p1, t));
+    }
+  }
+  out.push([...points[points.length - 1]]);
+  return out;
+}
+
+function resample(points, spacing) {
+  const lengths = [0];
+  for (let index = 1; index < points.length; index++) lengths.push(lengths[index - 1] + len3(sub3(points[index], points[index - 1])));
+  const total = lengths[lengths.length - 1];
+  const count = Math.max(1, Math.round(total / spacing));
+  const out = [];
+  let segment = 1;
+  for (let step = 0; step <= count; step++) {
+    const at = (total * step) / count;
+    while (segment < points.length - 1 && lengths[segment] < at) segment++;
+    const a = points[segment - 1];
+    const b = points[segment];
+    const span = lengths[segment] - lengths[segment - 1] || 1;
+    out.push(lerp3(a, b, Math.min(1, Math.max(0, (at - lengths[segment - 1]) / span))));
+  }
+  return out;
+}
+
+function pathLength(points) {
+  let total = 0;
+  for (let index = 1; index < points.length; index++) total += len3(sub3(points[index], points[index - 1]));
+  return total;
+}
+
+function cut(points, from, to) {
+  const out = [];
+  let walked = 0;
+  for (let index = 1; index < points.length; index++) {
+    const a = points[index - 1];
+    const b = points[index];
+    const length = len3(sub3(b, a));
+    const start = walked;
+    const end = walked + length;
+    if (end >= from && start <= to) {
+      const t0 = Math.max(0, (from - start) / (length || 1));
+      const t1 = Math.min(1, (to - start) / (length || 1));
+      if (!out.length) out.push(lerp3(a, b, t0));
+      out.push(lerp3(a, b, t1));
+    }
+    walked = end;
+  }
+  return out;
+}
+
+const pointAlong = (points, at) => {
+  const piece = cut(points, at, at + 0.01);
+  return piece[0] ?? points[points.length - 1];
+};
+
+function tangentAlong(points, at) {
+  const total = pathLength(points);
+  const a = pointAlong(points, Math.max(0, at - 0.6));
+  const b = pointAlong(points, Math.min(total, at + 0.6));
+  return unit3(sub3(b, a));
+}
+
+function spiral(F, s, r0, r1, a0, a1, steps = 28) {
+  const out = [];
+  for (let index = 0; index <= steps; index++) {
+    const t = index / steps;
+    out.push(pointOf(F, s, r0 + (r1 - r0) * t, a0 + (a1 - a0) * t));
+  }
+  return out;
+}
+
+function arcPoints(F, s, r, a0, a1, steps = 24) {
+  return Array.from({ length: steps + 1 }, (_, index) => pointOf(F, s, r, a0 + ((a1 - a0) * index) / steps));
+}
+
+return {dot3,add3,sub3,mul3,len3,unit3,cross3,lerp3,viewOf,lightOf,scaleOf,bandOf,toneOf,frameAlong,frameOf,pointOf,radialOf,tangentOf,angleToward,hullOf,runsOf,stepsFor,curveRuns,softOf,lathe,outlineOf,saddleStart,saddleOf,prismOf,stadium,sphereOf,disc,ringBand,solidOf,bandOfProfile,silhouettePoints,silhouetteOf,profileCurve,bandsOf,arcOf,circleOf,spokesOf,fadeOf,ribsOf,rodOut,dotsOf,facingOf,fillet,resample,pathLength,cut,pointAlong,tangentAlong,spiral,arcPoints};
+})();
+const anatomyKit = {...anatomyIso, ...anatomyLathe};
+const benchRegistry = new Map();
+const rigHitHandlers = new WeakMap();
+const reducedRigMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+function registerBench(id, bench) {
+  benchRegistry.set(String(id), bench);
+}
+
+function svgHit(id, label, x, y, r = 20) {
+  const safeLabel = String(label).replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;');
+  return `<g class="rig-hit" role="button" tabindex="0" data-rig-hit="${id}" aria-label="${safeLabel}"><title>${safeLabel}</title><circle class="rig-hit-area" cx="${x}" cy="${y}" r="${r}"/><circle class="rig-hit-marker" cx="${x}" cy="${y}" r="6"/></g>`;
+}
+
+function bindHits(host, handlers) {
+  if (!rigHitHandlers.has(host)) {
+    const activate = event => {
+      let target = event.target.closest('[data-rig-hit]');
+      if (event.type === 'click' && event.detail > 0 && target?.ownerSVGElement) {
+        let closest = Infinity;
+        for (const candidate of target.ownerSVGElement.querySelectorAll('[data-rig-hit]')) {
+          const area = candidate.querySelector('.rig-hit-area');
+          if (!area || !area.getClientRects().length) continue;
+          const box = area.getBoundingClientRect();
+          const dx = event.clientX - (box.left + box.width / 2);
+          const dy = event.clientY - (box.top + box.height / 2);
+          const distance = dx * dx + dy * dy;
+          if (box.width && box.height && (2*dx/box.width)**2+(2*dy/box.height)**2 <= 1 && distance < closest) {
+            target = candidate;
+            closest = distance;
+          }
+        }
+      }
+      const action = target && rigHitHandlers.get(host)?.[target.dataset.rigHit];
+      if (!action) return;
+      if (event.type === 'keydown') {
+        if (event.repeat || !['Enter', ' '].includes(event.key)) return;
+        event.preventDefault();
+      }
+      action(event, target);
+    };
+    host.addEventListener('click', activate);
+    host.addEventListener('keydown', activate);
+  }
+  rigHitHandlers.set(host, handlers);
+}
+
+function rigTimeline(host, durationMs, render) {
+  if (reducedRigMotion.matches || durationMs <= 0) {
+    render(1);
+    return () => {};
+  }
+  let first;
+  let frame = requestAnimationFrame(tick);
+  function tick(now) {
+    first ??= now;
+    const ended = document.hidden || host.closest('[hidden]');
+    const progress = ended ? 1 : Math.min(1, (now - first) / durationMs);
+    render(progress);
+    if (progress < 1) frame = requestAnimationFrame(tick);
+  }
+  return () => cancelAnimationFrame(frame);
+}
+
+function mountBench(chapter, bench) {
+  const section = chapter.querySelector('.rig-lab');
+  const host = section.querySelector('.rig-host');
+  const theme = matchMedia('(prefers-color-scheme: dark)');
+  const setTheme = () => { host.dataset.theme = theme.matches ? 'dark' : 'light'; };
+  setTheme();
+  theme.addEventListener('change', setTheme);
+  bench.mount(host, {k:anatomyKit, svgHit, bindHits, timeline:(ms, draw) => rigTimeline(host, ms, draw)});
+  const compact = ['lab-1','lab-5','lab-6'].includes(chapter.id);
+  const prepareDrawing = scene => {
+    for (const drawing of scene.querySelectorAll('svg:has([data-rig-hit])')) {
+      drawing.setAttribute('role','group');
+      if (!compact || drawing.hasAttribute('data-framed')) continue;
+      const {x,y,width,height} = drawing.viewBox.baseVal;
+      drawing.setAttribute('viewBox',`${x+width*.105} ${y+height*.025} ${width*.79} ${height*.95}`);
+      drawing.setAttribute('data-framed','');
+    }
+  };
+  for (const scene of host.querySelectorAll('.rig-scene')) {
+    if (compact) scene.classList.add('rig-scene-upright');
+    prepareDrawing(scene);
+    new MutationObserver(() => prepareDrawing(scene)).observe(scene,{childList:true});
+  }
+  const choices = section.querySelector('.rig-choices');
+  const feedback = section.querySelector('.rig-feedback');
+  for (const choice of bench.question.choices) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = choice.label;
+    button.setAttribute('aria-pressed', 'false');
+    button.addEventListener('click', () => {
+      for (const candidate of choices.children) candidate.setAttribute('aria-pressed', String(candidate === button));
+      feedback.textContent = choice.feedback;
+      feedback.dataset.correct = String(Boolean(choice.correct));
+    });
+    choices.append(button);
+  }
+}
+</script>
+<script>
+(() => {
+  'use strict';
+  const water = [[0,1.787],[1,1.728],[2,1.671],[3,1.618],[4,1.567],[5,1.519],[6,1.472],[7,1.428],[8,1.386],[9,1.346],[10,1.307],[11,1.271],[12,1.235],[13,1.202],[14,1.169],[15,1.139],[16,1.109],[17,1.081],[18,1.053],[19,1.027],[20,1.002],[21,.987],[22,.955],[23,.932],[24,.911],[25,.890],[26,.870],[27,.851],[28,.833],[29,.815],[30,.798]];
+  const alcohol = [[0,1.730],[5,1.623],[10,1.466],[15,1.332],[20,1.200],[25,1.096],[30,1.003],[35,.914],[40,.834]];
+  const castor = [[0,5.300],[5,3.760],[10,2.418],[15,1.514],[20,.950],[25,.621],[30,.451],[35,.312],[40,.231]];
+  const tension = [[0,75.64],[5,74.92],[10,74.22],[11,74.07],[12,73.93],[13,73.78],[14,73.64],[15,73.49],[16,73.34],[17,73.19],[18,73.05],[19,72.90],[20,72.75],[21,72.59],[22,72.44],[23,72.28],[24,72.13],[25,71.97],[26,71.82],[27,71.66],[28,71.50],[29,71.35],[30,71.18],[35,70.38],[40,69.56],[45,68.74]];
+  function referenceTable(data, valueTitle, digits) {
+    return `<div class="table-wrap"><table><thead><tr><th>温度 / °C</th><th>${valueTitle}</th></tr></thead><tbody>${data.map(([t,v])=>`<tr><td>${t}</td><td>${v.toFixed(digits)}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+  function interp(data,t) {
+    if(!Number.isFinite(t) || t<data[0][0] || t>data[data.length-1][0]) return null;
+    for(let i=1;i<data.length;i++) if(t<=data[i][0]) { const [a,b]=data[i-1], [c,d]=data[i]; return b+(d-b)*(t-a)/(c-a); }
+    return data[0][1];
+  }
+  const svgStart = (label) => `<figure style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px;margin:1rem 0"><svg viewBox="40 15 270 250" role="img" aria-label="${label}" style="display:block;flex:0 1 280px;width:280px;max-width:100%;height:auto;color:inherit"><title>${label}</title>`;
+  const svgEnd = (caption) => `</svg><figcaption style="flex:1 1 210px;min-width:0;font-size:14px;line-height:1.65">${caption}</figcaption></figure>`;
+  const calibration = [[.5,17.46],[1,19.90],[1.5,22.37],[2,24.80],[2.5,27.28],[3,29.70],[3.5,32.19],[4,34.62],[4.5,37.10],[5,39.51]];
+  function fitCalibration() {
+    const n=calibration.length, mx=calibration.reduce((s,p)=>s+p[1],0)/n, my=calibration.reduce((s,p)=>s+p[0]*9.81,0)/n;
+    const k=calibration.reduce((s,p)=>s+(p[1]-mx)*(p[0]*9.81-my),0)/calibration.reduce((s,p)=>s+(p[1]-mx)**2,0);
+    return {k,b:my-k*mx}; // mN/mm equals N/m.
+  }
+  addLesson({
+    id:'5', title:'液体黏度的测量', pages:'教材 pp.95–102（p.102 上部附表）',
+    summary:'让小球进入匀速下落区，测距离与时间，再按容器大小和雷诺数修正，得到液体在该温度下的动力黏度。',
+    sections:[
+      {title:'目标与装置',pages:'pp.95、99–100',html:`
+        <p>先抓住一个可观察的现象：小球刚投入油中会加速，随后下落速度几乎不变。在这段匀速区，重力恰好被浮力和黏滞阻力平衡。我们用“下落得有多慢”反推液体阻碍流动的程度。</p>
+        <p>本节测的是<strong>动力黏度 η</strong>，单位 Pa·s；运动黏度 ν＝η/ρ₀，单位 m²/s，两者不可混用。相邻液层有相对运动时，黏滞力沿接触面阻碍这种相对运动，与接触面积及速度梯度有关。</p>
+        <ul><li>理解黏滞力、斯托克斯公式及其适用条件和修正。</li><li>用落球法测黏度，了解黏度随温度的变化。</li><li>了解毛细管、旋转和扭摆测量方法；进一步比较方法与拟合黏度—温度关系。</li></ul>
+        <p>基础装置：装有蓖麻油的带刻度玻璃筒、不同规格小球、电子天平、螺旋测微器、温度计、密度计、直尺、游标卡尺和镊子，并配计时工具。温度计和密度计放在待测油中，读数时避免碰壁。</p>
+        <p>密度计依据漂浮平衡：自身重力等于排开液体的重力。相同密度计在不同密度液体中浸入深度不同，刻度直接给液体密度；按所用仪器的弯月面读数规定读数，记录单位。</p>
+        <p>方法选择：透明、较黏的液体适合落球法；毛细管比较法常用于黏度较小的液体。旋转法由已知转速下的阻力矩推知黏度；扭摆法由液体引起的振动阻尼推知黏度。后两项在本节列为扩展方向，教材没有给出具体装置的完整操作参数。</p>`},
+      {title:'原理与读数',pages:'pp.95–99',html:`
+        <p><strong>第一步：从受力平衡写出黏度。</strong>设球直径 d、半径 r＝d/2，球密度 ρ，液体密度 ρ₀，匀速速度 v。在小雷诺数、球较小、液体边界足够远的条件下：</p>
+        <div class="formula">F黏＝6πηrv；mg＝ρ₀Vg＋F黏；v＝L/t<br>η无限液体＝(ρ−ρ₀)gd²/(18v)</div>
+        <p>这解释了为何要测球径、质量、液体密度、下落距离和时间。若由球的质量 m 与直径求密度，ρ＝6m/(πd³)。同一材料的多球数据应一致；不要把单球质量和多球总质量混用。</p>
+        <p><strong>第二步：处理管壁和液面边界。</strong>令玻璃筒内径为 D、半径 R＝D/2，液体高度为 h。教材的边界修正给出：</p>
+        <div class="formula">C＝(1＋2.4d/D)(1＋1.65d/h)<br>η₀＝(ρ−ρ₀)gd²/(18vC)</div>
+        <p>η₀表示已作容器边界修正、尚未作雷诺数修正的结果。边界增加阻力；若直接套无限液体公式，通常会把黏度算大。本册始终用 D 表示内径，避免教材图5-3文字中 R 与公式 2R 的混淆。</p>
+        <p><strong>第三步：检查雷诺数。</strong>它比较惯性效应与黏滞效应：</p>
+        <div class="formula">Re＝ρ₀vd/η<br>F黏＝6πηrv C [1＋3Re/16−19Re²/1080＋…]</div>
+        <p>教材先以 η₀ 估算 Re：Re≤0.1 可用零级结果；0.1&lt;Re&lt;0.5 作一级修正；Re≥0.5 考虑二级修正。算完还要用修正后的 η 复核 Re。这里是低 Re 展开的分级，并不保证在任意大 Re 下仍然准确。教材提到的管流 Re≈2000、3000 的层流/湍流分界也不能拿来当作落球斯托克斯公式的适用上限。</p>
+        <div class="formula">a＝ρ₀vd<br>η₁＝η₀−3a/16<br>η₂＝½[η₁＋√(η₁²＋19a²/270)]</div>
+        <p>最后一式是教材式(5-12)的等价正根写法。若一级结果非正，或修正比例很大，应先反查单位和测量条件，不能把低阶展开当作万能补救。</p>
+        <details><summary>毛细管比较法：为什么只比较流出时间就够了？</summary>
+          <p>半径 r、长 L 的细管，在稳定层流下满足泊肃叶定律 Q＝πr⁴Δp/(8ηL)，Q＝V/t。竖直管还要计入重力产生的压差。教材对 U 形管用伯努利关系得到 Δp＝ρg(H−L)，因而 V＝πr⁴ρgHt/(8ηL)。管泡处截面较大，液面流速可近似忽略。</p>
+          <p>H 在流动中变化，难以直接精确读取。对同一支黏度计、同一段起止刻线、相同流出体积，分别测已知液体1和待测液体2的时间，几何因子与相同的液面变化过程相消：</p>
+          <div class="formula">η₂＝η₁(ρ₂t₂)/(ρ₁t₁)</div>
+          <p>U 形黏度计左侧管泡上下有 C、A 刻线，右侧为较粗管和管泡。装定量液体，用吸球将液体吸至左侧；保持仪器竖直，记录液面从同一上刻线流到下刻线的时间。两种液体各自密度与参考黏度都应对应实际测量温度。</p>
+        </details>`},
+      {title:'交互练习',pages:'对应 pp.96–100；以下数值为教学模拟',html:`
+        <div class="sim" data-vsim>
+          <p><strong>把一次落球读数换成黏度。</strong>固定教学条件：球密度 7800 kg/m³、液体密度 960 kg/m³、计时区 L＝20 cm、筒内径 D＝50 mm、液深 h＝40 cm，g＝9.81 m/s²。这里修改的是“测得的直径和时间”，不是在预测同一种油任意下落时的运动。</p>
+          <div class="sim-controls"><label>球直径 d / mm <input data-vd type="range" min="0.5" max="4" step="0.1" value="2"><output data-vdo>2.0</output></label><label>通过20 cm的时间 t / s <input data-vt type="range" min="2" max="40" step="0.2" value="8"><output data-vto>8.0</output></label><button type="button" data-vreset>恢复示例</button></div>
+          <div data-vsvg></div><p class="reading" data-vread aria-live="polite"></p>
+          <p class="hint">试一试：保持球径不变，把时间增加一倍，速度与 η₀ 怎样变化？再缩小球径并把时间调得很短，观察为什么修正会失效。图中的球位于计时区中部，只是装置示意。</p>
+          <details><summary>毛细管比较法计算练习</summary><p>教学示例：已知液体 η₁＝1.002 mPa·s、ρ₁＝998.2 kg/m³，待测液体 ρ₂＝789 kg/m³。保持相同管子、刻线与温度。</p><div class="sim-controls"><label>参考液时间 t₁ / s <input data-ct1 type="number" min="1" max="10000" value="60"></label><label>待测液时间 t₂ / s <input data-ct2 type="number" min="1" max="10000" value="90"></label></div><p class="reading" data-cread aria-live="polite"></p></details>
+        </div>`},
+      {title:'操作与记录',pages:'pp.99–100',html:`
+        <ol><li><strong>静置、检查。</strong>待测油长时间静置，排除气泡；测量中保持液体静止，不捞取落到底部的小球。检查球表面洁净、无明显损伤。</li>
+          <li><strong>找匀速区。</strong>先设计验证办法，例如比较相邻等长区间的通过时间，在重复测量不确定度范围内相等，才把该段当作匀速区。上边界应避开释放后的加速段，下边界应离底部足够远；选定 N₁、N₂，测 L。</li>
+          <li><strong>测球。</strong>用螺旋测微器测同一规格6个球的直径，用电子天平称质量，分别求平均值；记录是否采用合称后除以球数，以及各仪器分辨率和零点修正。</li>
+          <li><strong>投球、计时。</strong>在量筒中央、尽量接近液面处轻轻释放，使入液初速度接近零。球应沿中央下落；测通过 N₁、N₂的时间，重复6次，先平均时间，再求 v＝L/t̄。</li>
+          <li><strong>测环境和容器。</strong>R（或 D）、h、ρ₀和温度各测3次。温度按实验开始、中间、结束三次的均值记录，同时保留变化范围。</li>
+          <li><strong>计算并复核。</strong>算 η₀与 Re，按需要算 η₁或 η₂并复核。共选3种不同直径的小球，每种测6个，比较修正后的结果是否一致。</li></ol>
+        <div class="table-wrap"><table><thead><tr><th>每种球的原始记录</th><th>保留内容</th></tr></thead><tbody><tr><td>球1～6</td><td>d、m、t；异常轨迹或气泡备注</td></tr><tr><td>公共条件</td><td>N₁、N₂、L；D或R、h、ρ₀的3次读数</td></tr><tr><td>温度</td><td>T开始、T中间、T结束、平均及范围</td></tr><tr><td>结果</td><td>ρ、v、η₀、Re、修正阶数、最终η及不确定度</td></tr></tbody></table></div>
+        <details><summary>教材的提升、进阶、高阶任务，逐项保留</summary>
+          <ul><li><strong>提升：</strong>测不同温度的黏度，作 η—T 曲线；按 Andrade 关系把指数形式转成直线拟合。辅学表达：η＝Aexp(B/T)，即 lnη＝lnA＋B/T，T 必须用 K；此经验式的温区与液体需验证。</li>
+            <li><strong>进阶：</strong>了解旋转法、毛细管比较法、扭摆法的原理与操作，并分别测黏度；根据得到的黏度—温度曲线比较不同数学形式的拟合。比较残差和适用温区，不能只看拟合优度。</li>
+            <li><strong>高阶：</strong>设计利用加速度传感器、无线通信、自动采集等方法测半透明液体黏度。先明确传感器测什么、如何标定、传感装置是否改变球的质量/体积/阻力，再用已知液体检验。</li></ul>
+          <p class="hint">这些是教材列出的扩展要求；具体转子、扭摆和传感器的参数与安全操作应依实验室仪器说明书，不把本册的教学模型直接当作实际器材设置。</p>
+        </details>`},
+      {title:'数据处理与误差',pages:'pp.96–102',html:`
+        <p>先统一 SI 单位：mm→m、cm→m、g→kg、g/cm³→kg/m³；1 mPa·s＝10⁻³ Pa·s。计算顺序是原始数据平均→球密度→v→η₀→Re与修正→不同球径比较。中间值多保留几位，最终按不确定度确定有效数字。</p>
+        <p>主要误差：球径读数与球不圆；计时起止反应及视差；未达到匀速；偏离筒中央、碰壁或附着气泡；液体尚在流动；温度漂移；密度、筒内径及液深读数；边界与低 Re 近似本身。多测球只能减小部分随机误差，无法消除未达匀速、单位错误等系统偏差。</p>
+        <p>在把球密度作为独立测量量、暂不计边界修正误差时，可用下式看出敏感项：</p>
+        <div class="formula">[u(η)/η]²≈[u(ρ−ρ₀)/(ρ−ρ₀)]²＋[2u(d)/d]²＋[u(t)/t]²＋[u(L)/L]²</div>
+        <p>若 ρ 正是用同一个 d 和 m 算出来，ρ 与 d 有关联，不能把上式各项独立相加；应将 ρ＝6m/(πd³)代回完整黏度公式后对原始独立量传播。要求完整不确定度时还要包括 D、h、修正模型及温度的影响。对照表值必须先匹配液体种类与温度。</p>
+        <details><summary>教材全部黏度参考表：水、酒精、蓖麻油</summary>
+          <p>下列数值按教材表5-1～5-3转录。水、酒精的列单位为 mPa·s；蓖麻油为 Pa·s。水表中21°C的0.987也保留原书数值，使用精密参考值时应另核对可靠标准数据。</p>
+          <h4>蒸馏水（p.101）</h4>${referenceTable(water,'η / mPa·s',3)}
+          <h4>酒精（p.101）</h4>${referenceTable(alcohol,'η / mPa·s',3)}
+          <h4>蓖麻油（p.102）</h4>${referenceTable(castor,'η / Pa·s',3)}
+        </details>
+        <div class="sim"><p>按教材“温度有小数时用内插法”的做法，练习查表。这里只作相邻两点的线性内插，不作区间外推。</p><label>温度 / °C <input data-vtemp type="number" min="0" max="40" step="0.1" value="22.5"></label><p class="reading" data-vlookup aria-live="polite"></p></div>`},
+      {title:'思考题',pages:'pp.100–101',html:`
+        <p>教材的两道预习题、两道过程题和一道报告题均在这里。先用自己的话回答，再展开核对思路。</p>
+        <details><summary>预习1：落球法和毛细管法分别适合哪些液体？</summary><p>落球法要能观察球的运动、形成稳定匀速区并满足低 Re 条件，通常用于较黏、透明或半透明液体；毛细管法适合能在细管中稳定层流、管内无堵塞且与器壁相容的液体，常用于较小黏度液体。两者都需控温；不应仅凭“透明”或“稀”一项决定。</p></details>
+        <details><summary>预习2：什么是雷诺数，它表示什么？</summary><p>Re＝ρ₀vd/η，是无量纲量，反映惯性作用相对黏滞作用的强弱。v、d或ρ₀增大，Re增大；η增大，Re减小。落球公式要求很小的 Re；不要套用管流的2000阈值。</p></details>
+        <details><summary>过程1：落球法中可能引起误差的因素有哪些？</summary><p>从“长度、时间、质量/密度、温度、轨迹、模型”六条线排查：球径与球形、测距与视差、人工计时、液体密度、温漂、气泡/流动、球未匀速或偏壁，以及有限容器与惯性修正。逐项说明偏差能否靠重复测量减小。</p></details>
+        <details><summary>过程2：同种材料的大球能否沿用小球的匀速区？反过来呢？</summary><p>不能直接沿用。低 Re 模型中的速度弛豫时间约为 ρd²/(18η)，大球通常需要更长时间和距离才接近终速，且 Re 和边界效应更大；小球已经匀速并不证明大球匀速。若大球的某段确已匀速，小球一般更早接近终速，但仍须实测等长区间时间验证，并排除底部边界影响，不能只凭球径推断。</p></details>
+        <details><summary>报告题：直径1 m、速度10 m/s、水温10°C的球形水雷，附近海水的 Re 是多少？</summary><p>先写 Re＝ρ₀vd/η。题面给 η＝1.3×10⁻⁴ Pa·s，未给海水密度；若为数量级估算取 ρ₀≈1.0×10³ kg/m³，则 Re≈7.7×10⁷，远不能用斯托克斯阻力。</p><p><strong>原书数值需核对：</strong>同页蒸馏水10°C附表是1.307×10⁻³ Pa·s，与题面相差约一个数量级，且蒸馏水不等于海水。若题目本意为1.3×10⁻³，则同一密度假设下 Re≈7.7×10⁶。报告应写清采用题面数值及密度假设，指出差异，不能悄悄改题或宣称得到唯一精确值。</p></details>`}
+    ],
+    mount(chapter) {
+      const q=s=>chapter.querySelector(s);
+      function updateFall() {
+        const d=Number(q('[data-vd]').value)/1000,t=Number(q('[data-vt]').value),v=.2/t,rho0=960,a=rho0*v*d,C=(1+2.4*d/.05)*(1+1.65*d/.4);
+        const raw=(7800-rho0)*9.81*d*d/(18*v),e0=raw/C,e1=e0-3*a/16,e2=(e1+Math.sqrt(e1*e1+19*a*a/270))/2,re0=a/e0;
+        const order=re0<=.1?0:(e1>0&&a/e1<.5?1:2),eta=[e0,e1,e2][order],re=a/eta;
+        q('[data-vdo]').textContent=(d*1000).toFixed(1);q('[data-vto]').textContent=t.toFixed(1);
+        let warning='';if(e1<=0)warning=' 一级结果已非正：低 Re 修正前提明显失效，应反查单位并改变测量条件。';else if(re>=1)warning=' 当前 Re≥1，低阶展开可靠性不足，不能把显示值当成准确黏度。';else if(re>=.5)warning=' 当前需要考虑二级修正，同时检查低 Re 展开的适用程度。';
+        q('[data-vread]').textContent=`v＝${(v*100).toFixed(3)} cm/s；无限液体公式给 ${raw.toFixed(4)} Pa·s；容器修正后 η₀＝${e0.toFixed(4)} Pa·s，初算 Re＝${re0.toFixed(3)}。一级 η₁＝${e1.toFixed(4)} Pa·s；二级 η₂＝${e2.toFixed(4)} Pa·s。按教材分级${order?'采用'+order+'级':'保留零级'}结果 ${eta.toFixed(4)} Pa·s，复核 Re＝${re.toFixed(3)}。${warning}`;
+        const br=5+d*2600;
+        q('[data-vsvg]').innerHTML=svgStart('落球法装置示意：上虚线N₁开始计时，下虚线N₂停止计时')+`<path d="M80 25V255H250V25" fill="none" stroke="currentColor" stroke-width="3"/><path d="M82 50H248V253H82Z" fill="#60b7c0" opacity=".18"/><path d="M80 50H250" stroke="#25838a" stroke-width="2"/><path d="M65 95H275M65 215H275" stroke="currentColor" stroke-dasharray="5 5"/><circle cx="165" cy="155" r="${br}" fill="#397baa"/><path d="M165 175V198M159 191L165 199L171 191" fill="none" stroke="#397baa" stroke-width="2"/><path d="M285 95V215M279 95H291M279 215H291" stroke="currentColor"/>`+svgEnd(`<div><strong>上虚线 N₁：</strong>开始计时。</div><div><strong>下虚线 N₂：</strong>停止计时。</div><div>两线间距 L＝20 cm；筒内径 D＝50 mm。</div><div>通过两线的时间 t＝${t.toFixed(1)} s。</div>`);
+      }
+      function updateCap(){ const t1=Number(q('[data-ct1]').value),t2=Number(q('[data-ct2]').value);q('[data-cread]').textContent=t1>0&&t2>0?`η₂＝1.002 × (789 × ${t2}) / (998.2 × ${t1})＝${(1.002*789*t2/(998.2*t1)).toFixed(4)} mPa·s。时间比相同而密度不同，不能省掉密度比。`:'两个时间都必须大于零。'; }
+      function updateLookup(){const raw=String(q('[data-vtemp]').value).trim(),t=Number(raw);if(raw===''||!Number.isFinite(t)){q('[data-vlookup]').textContent='请输入有效温度。';return;}const values=[interp(water,t),interp(alcohol,t),interp(castor,t)];q('[data-vlookup]').textContent=`教材内插值：蒸馏水 ${values[0]===null?'超出0～30°C表区间':values[0].toFixed(4)+' mPa·s'}；酒精 ${values[1]===null?'超出0～40°C表区间':values[1].toFixed(4)+' mPa·s'}；蓖麻油 ${values[2]===null?'超出0～40°C表区间':values[2].toFixed(4)+' Pa·s'}。`;}
+      ['[data-vd]','[data-vt]'].forEach(s=>q(s).addEventListener('input',updateFall));q('[data-vreset]').addEventListener('click',()=>{q('[data-vd]').value=2;q('[data-vt]').value=8;updateFall();});
+      ['[data-ct1]','[data-ct2]'].forEach(s=>q(s).addEventListener('input',updateCap));q('[data-vtemp]').addEventListener('input',updateLookup);updateFall();updateCap();updateLookup();
+    }
+  });
+
+  addLesson({
+    id:'6', title:'表面张力系数的测量', pages:'教材 pp.102–108',
+    summary:'先标定约利弹簧秤，再测液膜破裂前增加的拉力；或测毛细管的半径和液面升高，求表面张力系数。',
+    sections:[
+      {title:'目标与装置',pages:'pp.102–106',html:`
+        <p>水滴趋向收缩、露珠近似球形、细玻璃管中的水面上升，都与液体表面有关。表面张力让液面趋向缩小；表面张力系数 σ 表示<strong>每单位接触线长度对应多大的沿面拉力</strong>，单位 N/m。它不是整个液面的总拉力，也不是上一节的黏度。</p>
+        <ul><li>了解表面张力的背景、测量方法及仪器结构。</li><li>掌握拉脱法与毛细管法原理；了解滴重、悬滴、卧滴、液桥、最大泡压和激光衍射表面毛细波等方法。</li><li>学会标定，再用作图或最小二乘法处理数据、分析误差。</li></ul>
+        <p><strong>基础拉脱装置：</strong>约利弹簧秤、砝码、游标卡尺、金属丝、烧杯及烧杯内的液体。秤由秤框、升降金属杆、升降钮、锥形弹簧、带小镜子的挂钩、平衡指示玻璃管、平台、平台调节螺丝和底脚螺丝组成。挂钩穿过玻璃管但不能相碰。</p>
+        <p><strong>毛细管装置：</strong>毛细管、温度计、读数显微镜、烧杯、玻璃皿、升降台、支架、蒸馏水、洗涤液和待测样品。</p>
+        <p>润湿取决于固体—液体相互作用、杂质、温度与表面清洁程度。水可润湿洁净玻璃，难以润湿石蜡；本实验清洗是否彻底会直接改变接触角和结果。</p>`},
+      {title:'原理与读数',pages:'pp.103–106',html:`
+        <p><strong>拉脱法：先扣除金属丝自己的重量。</strong>在液面画一条长 l 的线，线两侧液体的沿面作用力 F′＝σl。金属丝缓慢提起液膜，破裂前的最大测力读数 F 包含自重 mg 和液膜两面的拉力：</p>
+        <div class="formula">F＝mg＋2σl；σ＝(F−mg)/(2l)</div>
+        <p>“2”来自液膜的两面，不能漏掉。基础操作用游标卡尺测金属丝两脚间距 s，作为式中的有效水平长度 l；实际金属丝形状应符合装置要求。</p>
+        <p><strong>约利秤为什么要三线对齐？</strong>普通弹簧秤固定上端、读下端移动；约利秤在每次读数时把下端恢复到同一个基准位置，读取上端升降杆移动。因此要使小镜上的指示横线、平衡管刻线及其镜中像重合，减少视差并维持同一弹簧下端位置。</p>
+        <div class="formula">标定：F＝kΔl（弹性限度内）<br>空挂金属丝时读 l₀，拉脱前读 lₘ；σ＝k(lₘ−l₀)/(2s)</div>
+        <p>lₘ−l₀是扣除自重后的弹簧伸长增量，<strong>不是液膜高度</strong>。缓慢拉起到液膜将破裂时读 lₘ；若等破裂后才读，表面拉力已经消失。</p>
+        <p><strong>毛细管法：用上升液柱的重量平衡表面张力的竖直分量。</strong>半径 r，管内外液面高度差 h，接触角 θ 时，近似有 ρghπr²＝2πrσcosθ。教材的洁净玻璃—纯水取 θ≈0，得到 σ＝ρgrh/2。</p>
+        <p>h 从管内凹液面的<strong>最低点</strong>量到管外平液面。凹面周围尚有一部分液体，完全润湿时近似为半球面；补上的液体体积相当于 r/3 高的液柱，因此：</p>
+        <div class="formula">σ＝½ρgr(h＋r/3)</div>
+        <p>r/3是弯月面体积修正。式中 r 必须是半径，ρ对应测量温度；该修正式基于洁净、完全润湿与近似半球凹面。若接触角不再近零、容器有限或管径明显不均匀，不能只加 r/3就认为所有影响已消除。</p>`},
+      {title:'交互练习',pages:'对应 pp.105–107；以下数值为教学模拟',html:`
+        <div class="sim" data-ssim>
+          <div class="sim-controls"><label>练习方法 <select data-smode><option value="pull">约利弹簧秤拉脱</option><option value="cap">毛细管上升</option></select></label></div>
+          <div data-spull><p>把下列数据当作一次<strong>破裂前极限读数</strong>。空挂读数 l₀＝20.00 mm，改变的是弹簧增量，不是液膜高度。</p><div class="sim-controls"><label>标定系数 k / (N/m) <input data-sk type="number" min="0.1" max="20" step="0.01" value="2"></label><label>两脚间距 s / mm <input data-ss type="number" min="10" max="200" step="1" value="50"></label><label>增量 lₘ−l₀ / mm <input data-sdl type="range" min="0.2" max="8" step="0.05" value="3.6"><output data-sdlo>3.60</output></label><button type="button" data-sfit>用模拟标定点拟合 k</button></div><p data-sfitread class="hint">可先使用 k＝2.00 N/m；下方“数据处理”保留全部模拟标定点。</p></div>
+          <div data-scap hidden><p>练习把测得的 r、h 换成 σ。模型取完全润湿、ρ＝998.2 kg/m³、g＝9.81 m/s²。</p><div class="sim-controls"><label>内半径 r / mm <input data-sr type="number" min="0.1" max="2" step="0.05" value="0.5"></label><label>液面高度差 h / mm <input data-sh type="number" min="0.1" max="200" step="0.01" value="29.55"></label><button type="button" data-swater>填入20°C纯水的模型高度</button></div></div>
+          <div data-ssvg></div><p class="reading" data-sread aria-live="polite"></p>
+          <p class="hint" data-shint>观察：若漏掉液膜的第二个面，所得 σ 将大一倍。图上液膜形状仅作示意，不能用它反推伸长读数。</p>
+        </div>`},
+      {title:'操作与记录',pages:'pp.106–107',html:`
+        <p><strong>基础任务一：标定弹簧。</strong>按顺序装锥形弹簧、带镜挂钩和小砝码盘。调底脚使秤框竖直，使小镜处在玻璃管中央，挂钩上下运动不摩擦管壁。逐次加0.5 g砝码，在0.5～5 g范围内测量；每次调升降钮、恢复三线对齐，记升降杆位置。记录零载读数，必要时作增减载比较。</p>
+        <p><strong>基础任务二：测自来水。</strong></p>
+        <ol><li>用游标卡尺测金属丝两脚间距 s，记录重复读数与仪器分辨率。</li><li>取下砝码，在砝码盘下挂洁净金属丝。三线对齐，记空挂读数 l₀。</li><li>把盛自来水的烧杯放平台上，调平台微调螺丝和升降钮，使金属丝浸入水面下。</li><li>缓慢下降烧杯并升高上端金属杆，始终恢复三线对齐。在液膜将破裂时读 lₘ；重复5次并求平均。</li></ol>
+        <p><strong>基础任务三：测肥皂水。</strong>完成自来水后擦干金属丝，换成肥皂水，重复浸入、缓慢拉脱及读数。保持清洗和样品处理一致，避免把肥皂带进后续纯水样品；改变挂载后应核查空挂基线。</p>
+        <p><strong>基础任务四：</strong>用作图或最小二乘法处理数据，计算 σ，与给定参考值比较、求相对误差；分析误差来源和不确定度。附表是空气接触纯水，不应把未知浓度肥皂水或自来水都当作同一个标准样品。</p>
+        <div class="table-wrap"><table><thead><tr><th>记录组</th><th>必须保留的原始量</th></tr></thead><tbody><tr><td>标定</td><td>砝码质量m、F＝mg、杆位置、空载基准、三线对齐情况</td></tr><tr><td>各液体5次</td><td>液体/温度、s、l₀、每次lₘ、Δl、异常情况</td></tr><tr><td>毛细管法</td><td>多位置内径、管内凹面最低点/外液面读数、h、温度、ρ、清洗情况</td></tr></tbody></table></div>
+        <details><summary>提升内容：力敏传感器拉脱与毛细管测量</summary>
+          <ul><li><strong>力敏传感器：</strong>先标定拉力—电压曲线并拟合转换系数；测圆环拉脱前后电压，用电压差换成拉力，再按环的实际内外接触周长求 σ。研究拉力随液膜长度的变化，讨论各阶段的力，选取最佳读值并分析不确定度。不能直接把直金属丝的2s代入圆环装置。</li><li><strong>毛细管：</strong>搭建装置，测内径、上升高度和水温；作弯月面高度修正，并考虑有限截面外容器以及管内外压强差的修正。记录装置几何、分析误差和不确定度；具体附加修正式应按该装置模型推导。</li></ul>
+        </details>
+        <details><summary>进阶内容：教材列出的五项要求</summary><ol>
+          <li>用各种拉脱法和毛细管法，更换样品测量 σ。</li><li>学习最大泡压法，自行搭建负压测量装置，可采用低成本 U 形压差计或高精度压力计；也可用气泵改成正压测量。核心是辨认气泡形成过程中最大压差与管口曲率的关系，并扣除液柱静压。</li><li>学习滴重法：了解滴落液滴重量、管径与 σ 的关系；搭装置、测管径、多滴称重求平均，再用依管径与液滴体积而定的校正系数求 σ。脱落液滴并不等于管口全部悬挂液体，不能无条件直接套理想平衡。</li><li>学习悬滴法：拍摄悬滴轮廓，做图像识别，取得形状因子与特征长度之比，再查表求 σ；记录图像比例尺与密度差。</li><li>提高实验设计能力，学习图像分析相关知识。</li></ol></details>
+        <details><summary>高阶内容：教材列出的五项要求</summary><ol>
+          <li>给拉脱/毛细管装置加温控，研究温度与 σ 的关系。</li><li>掌握悬滴、液桥、卧滴的形象识别方法。</li><li>激光衍射表面毛细波法：改变信号发生器频率，测衍射条纹间距，拟合频率与光斑间距，用表面波色散关系求 σ；进一步探索与黏度等物性参数的关系。</li><li>研究生活中的相关现象，如铝箔小船、曲别针/图钉/硬币漂浮；用托里拆利规律等方法探索测量，并查阅资料设计其他实验。</li><li>设计新仪器，例如接触角测量仪或旋转滴表面张力测量仪。</li></ol><p class="hint">教材对这些方法给出研究方向，未给通用参数。实验方案应分别明确可观测量、标定、模型条件与独立验证。</p></details>`},
+      {title:'数据处理与误差',pages:'pp.106–108',html:`
+        <p><strong>先标定后测量。</strong>以弹簧伸长或升降杆位置作横轴，以砝码重力 F 作纵轴，拟合 F＝kx＋b，斜率是 k。若位置用 mm、力用 mN，斜率的数值恰好等于 N/m。截距可吸收固定基线，不应未经检查强迫直线过原点；观察残差有无弯曲或增减载差异。</p>
+        <details><summary>用于交互的全部模拟标定点（非教材实测）</summary>
+          <p>教学数据取 g＝9.81 m/s²，杆位置含任意15 mm附近的基线。点击“用模拟标定点拟合 k”计算含截距的最小二乘直线。</p>
+          <div class="table-wrap"><table><thead><tr><th>m / g</th><th>杆位置 / mm</th><th>F / mN</th></tr></thead><tbody>${calibration.map(([m,x])=>`<tr><td>${m.toFixed(1)}</td><td>${x.toFixed(2)}</td><td>${(m*9.81).toFixed(3)}</td></tr>`).join('')}</tbody></table></div>
+        </details>
+        <p>教学算例：k＝2.00 N/m，s＝50.0 mm，平均拉脱增量3.60 mm，则增力 ΔF＝7.20 mN，σ＝0.0720 N/m＝72.0 mN/m。若漏扣自重会偏大；若只算一个液膜面也会偏大。相对误差＝|测量值−参考值|/|参考值|；参考值须对应样品与温度。</p>
+        <p>约利秤的主要误差来自三线未对齐、挂钩碰壁、未在弹性范围标定、拉脱太快、错过破裂前极值、金属丝不水平或不洁、s读数、温漂和样品污染。空挂基线与极值作差，两次读数的不确定度都要计入。</p>
+        <div class="formula">σ＝kΔl/(2s)<br>[u(σ)/σ]²≈[u(k)/k]²＋[u(Δl)/Δl]²＋[u(s)/s]²</div>
+        <p>上式按独立量传播。若两次读数相关，应按协方差处理；重复5次主要降低随机读数误差，不能替代清洁和仪器标定。</p>
+        <p>毛细管法重点检查：内径不均匀/读数误差、管不竖直、内外液面高度差、弯月面最低点定位、接触角不为零、温度与密度变化、有限外容器和气泡。忽略正的 r/3 修正通常使算得的 σ 偏小；未完全润湿却仍用 cosθ＝1，也会使结果偏小（其余模型条件成立时）。</p>
+        <details><summary>毛细管修正式的不确定度传播</summary><div class="formula">σ＝½ρgr(h＋r/3)<br>[u(σ)/σ]²≈[u(ρ)/ρ]²＋{[(h＋2r/3)/(r(h＋r/3))]u(r)}²＋[u(h)/(h＋r/3)]²</div><p>此式只表达独立测量量的传播，未把接触角、形状近似和有限容器的模型偏差自动算进去。若 r 与 h 在同一图像中测得，还应考虑比例尺带来的相关性。</p></details>
+        <details><summary>教材附表6-1：不同温度下与空气接触纯水的 σ（p.108）</summary>${referenceTable(tension,'σ / mN·m⁻¹',2)}</details>
+        <div class="sim"><label>纯水参考温度 / °C <input data-stemp type="number" min="0" max="45" step="0.1" value="20"></label><p class="reading" data-slookup aria-live="polite"></p></div>`},
+      {title:'思考题',pages:'p.108',html:`
+        <p>保留教材的两道预习题、两道过程题和一道报告题；下面是作答思路，不能替代对实际装置的观察。</p>
+        <details><summary>预习1：约利弹簧秤测表面张力有什么优点？</summary><p>用已标定的弹簧把微小拉力转为可读的上端位移；每次恢复下端固定基准，以三线对齐减少视差；用空挂与拉脱前读数作差扣除自重。它适合缓慢读取临界拉力，但仍须及时捕捉破裂前读数并控制振动。</p></details>
+        <details><summary>预习2：毛细管法适用于哪些液体？</summary><p>液体需能形成稳定、可读的弯月面，与毛细管材料相容，密度已知，接触角可确定。本节 σ＝ρgr(h＋r/3)/2 尤其适用于洁净玻璃中近乎完全润湿的液体；对不润湿液体可出现下降，要改用相应接触角和弯月面模型，不能直接套本式。</p></details>
+        <details><summary>过程1：约利弹簧秤的弹簧为什么做成锥形？</summary><p>应结合实物观察各圈半径、圈间距和挂载方式。锥形使各圈的几何尺寸、受力响应不同，也影响稳定性和圈间干扰；“做成锥形就一定更灵敏”并不是普遍结论，实际灵敏度由标定得到的 k 决定，位移灵敏度为1/k。</p><p class="hint">教材只提出此题，未提供定量设计解释。不同仪器的锥形结构用途可能不同，正式作答还应核对本实验仪器说明书；不能把未核实的结构理由写成已知事实。</p></details>
+        <details><summary>过程2：毛细管法有哪些误差？</summary><p>列出 r、h、ρ及温度的测量误差，再检查完全润湿、管径均匀、管竖直、弯月面形状和外容器无限大等假设。区分可重复读数减小的随机项，与接触角/容器修正等系统项；特别说明 h 从凹面最低点量起，r/3修正不能漏掉。</p></details>
+        <details><summary>报告题：A管液面高于B管，B管就会持续滴水、构成“毛细管永动机”吗？</summary><p>不会。“连通器液面必等高”省略了弯曲液面两侧的表面张力压差。不同管径产生不同弯月面曲率和毛细压差，静止时水柱高度差正可与这些压差平衡；不能仅凭A管液面较高就断定B口会不断流出。</p><p>即使某次初始状态发生有限流动，形成/改变液面、生成液滴都需要改变表面能。系统达到平衡后停止，黏性还会耗散能量。没有持续外部能量输入就不能循环做功；毛细上升释放的润湿相关自由能不是无限能源。</p></details>`}
+    ],
+    mount(chapter) {
+      const q=s=>chapter.querySelector(s);
+      function update() {
+        const cap=q('[data-smode]').value==='cap';q('[data-spull]').hidden=cap;q('[data-scap]').hidden=!cap;
+        if(!cap){
+          const k=Number(q('[data-sk]').value),s=Number(q('[data-ss]').value),dl=Number(q('[data-sdl]').value);q('[data-sdlo]').textContent=dl.toFixed(2);
+          if(!(k>0&&s>0)){q('[data-sread]').textContent='k与两脚间距均须大于零。';q('[data-ssvg]').innerHTML='';return;}
+          const f=k*dl,sigma=f/(2*s)*1000;
+          q('[data-sread]').textContent=`lₘ＝${(20+dl).toFixed(2)} mm；ΔF＝kΔl＝${f.toFixed(3)} mN；σ＝${sigma.toFixed(2)} mN/m（${(sigma/1000).toFixed(5)} N/m）。这是模拟极限读数的换算结果。`;
+          q('[data-shint]').textContent='观察：漏掉液膜第二个面会使σ大一倍。杆读数增量是弹簧伸长增量，图上液膜高度只是示意。';
+          const spring=Array.from({length:15},(_,i)=>`${i%2?172:148},${35+i*4}`).join(' ');
+          q('[data-ssvg]').innerHTML=svgStart('约利弹簧秤与双面液膜示意：两个向下箭头表示液膜两面的拉力')+`<path d="M110 25H220M160 25V35" stroke="currentColor" stroke-width="3"/><polyline points="${spring}" fill="none" stroke="#397baa" stroke-width="2"/><path d="M160 91V135M120 152V135H200V152" fill="none" stroke="currentColor" stroke-width="3"/><path d="M120 137H200L220 205H100Z" fill="#60b7c0" opacity=".27"/><path d="M60 180V250H260V180M61 205H259" fill="none" stroke="currentColor" stroke-width="2"/><path d="M142 149V175M137 168L142 176L147 168M178 149V175M173 168L178 176L183 168" fill="none" stroke="#25838a" stroke-width="2"/>`+svgEnd(`<div>弹簧 k＝${k.toFixed(3)} N/m。</div><div>杆读数增量 Δl＝${dl.toFixed(2)} mm。</div><div>金属丝两脚间距 s＝${s.toFixed(1)} mm。</div><div><strong>液膜的两个面</strong>各向下拉 σs，总拉力为 2σs。</div>`);
+        } else {
+          const r=Number(q('[data-sr]').value)/1000,h=Number(q('[data-sh]').value)/1000;
+          if(!(r>0&&h>0)){q('[data-sread]').textContent='半径与上升高度均须大于零。';q('[data-ssvg]').innerHTML='';return;}
+          const plain=.5*998.2*9.81*r*h,correct=.5*998.2*9.81*r*(h+r/3);
+          q('[data-sread]').textContent=`h＋r/3＝${((h+r/3)*1000).toFixed(3)} mm；未加弯月面修正：${(plain*1000).toFixed(3)} mN/m；修正后 σ＝${(correct*1000).toFixed(3)} mN/m。修正相对未修正值增加 ${(r/(3*h)*100).toFixed(2)}%。`;
+          q('[data-shint]').textContent='先改变管半径，再按“填入20°C纯水的模型高度”：同种液体管越细，上升越高。每次都根据r与h重新计算σ。';
+          const yy=215-Math.min(150, h*3600), w=12+Math.min(24,r*12000);
+          q('[data-ssvg]').innerHTML=svgStart('毛细管上升：蓝色标尺表示凹液面最低点到管外液面的高度差')+`<path d="M55 180V255H270V180M56 215H269" fill="none" stroke="currentColor" stroke-width="2"/><path d="M${160-w} 30V235M${160+w} 30V235" stroke="currentColor" stroke-width="2"/><path d="M${160-w+1} ${yy-9}Q160 ${yy+9} ${160+w-1} ${yy-9}V254H${160-w+1}Z" fill="#60b7c0" opacity=".35"/><path d="M${160-w} ${yy-9}Q160 ${yy+9} ${160+w} ${yy-9}" fill="none" stroke="#25838a" stroke-width="2"/><path d="M215 ${yy}V215M210 ${yy}H220M210 215H220" stroke="#397baa" stroke-width="2"/>`+svgEnd(`<div>内半径 r＝${(r*1000).toFixed(2)} mm。</div><div><strong>蓝色标尺 h＝${(h*1000).toFixed(2)} mm：</strong>从凹液面最低点量到管外液面。</div><div>计算时再补 r/3。</div><div>此图为示意，几何不按同一比例。</div>`);
+        }
+      }
+      ['[data-smode]','[data-sk]','[data-ss]','[data-sdl]','[data-sr]','[data-sh]'].forEach(s=>q(s).addEventListener('input',update));
+      q('[data-sfit]').addEventListener('click',()=>{const fit=fitCalibration();q('[data-sk]').value=fit.k.toFixed(5);q('[data-sfitread]').textContent=`模拟点最小二乘拟合：F/mN＝${fit.k.toFixed(5)} × 杆位置/mm ${fit.b<0?'−':'＋'} ${Math.abs(fit.b).toFixed(5)}；因此 k＝${fit.k.toFixed(5)} N/m。截距对应位置基线。`;update();});
+      q('[data-swater]').addEventListener('click',()=>{const r=Number(q('[data-sr]').value)/1000;if(r>0){q('[data-sh]').value=((2*.07275/(998.2*9.81*r)-r/3)*1000).toFixed(4);update();}});
+      function lookup(){const raw=String(q('[data-stemp]').value).trim(),t=Number(raw);if(raw===''||!Number.isFinite(t)){q('[data-slookup]').textContent='请输入有效温度。';return;}const v=interp(tension,t);q('[data-slookup]').textContent=v===null?'超出教材0～45°C表区间，不作外推。':`教材纯水参考值（相邻点线性内插）：${v.toFixed(3)} mN/m＝${(v/1000).toFixed(6)} N/m。`;}
+      q('[data-stemp]').addEventListener('input',lookup);update();lookup();
+    }
+  });
+})();
+
+</script>
+<script>
+/* Anatomy Figure benches, based on 实验教材.pdf pp.95–108.
+ * Original educational geometry, not a replica of a manufacturer photograph.
+ * 5: base/feet/fasteners, cylinder foot/glass/lip, two movable timing collars,
+ *    ruler, support clamps, thermometer, three ball cups, release guide, stopwatch.
+ * 6: base/feet, upright/guides, upper carriage, conical spring, hook/pan,
+ *    mirror/reference tube, platform screw/handwheel, cup, wire, weight rack.
+ * Models and all numerical readouts share the same state. Diagram sizes are
+ * illustrative; small ball and spring displacements are enlarged for visibility.
+ */
+(() => {
+  'use strict';
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  function drawing(k,plan,top){
+    const P=k.fitProjection([...k.boxCorners(plan,-10,0),[plan.x,plan.y,top],[plan.x+plan.w,plan.y+plan.d,top]],620,470,{pad:36,azimuth:42,elevation:25});
+    let count=0;
+    const at=p=>k.iso(p,P), line=(a,b,t='lo')=>k.lineSvg(k.segment(a,b,P),{tone:t});
+    const S=(shape,name,tone='mid')=>{count++;return `<g data-component="${name}">${k.solidSvg(shape,{tone})}</g>`;};
+    const box=(x,y,w,d,z,h,name,tone='mid',r=1.4)=>S(k.slabOf({x,y,w,d,r},z,h,P,5,.5),name,tone);
+    const cyl=(x,y,r,z,h,name,tone='mid')=>S(k.cylinder(x,y,r,z,h,P,40,.35),name,tone);
+    const ring=(x,y,r,z,t='lo')=>k.lineSvg(k.ring(x,y,r,z,P,56),{tone:t});
+    const sphere=(x,y,z,r,name)=>{const p=at([x,y,z]),rr=r*k.cameraOf(P).k;count++;return `<g data-component="${name}"><circle cx="${p[0]}" cy="${p[1]}" r="${rr}" fill="var(--anatomy-paper)" stroke="var(--anatomy-hi,currentColor)" stroke-width="1.1"/><circle cx="${p[0]-rr*.25}" cy="${p[1]-rr*.28}" r="${rr*.42}" fill="currentColor" opacity=".3"/></g>`;};
+    function base(){let s=`<path class="iso-halo" d="${k.haloOf(plan,-10,8,P)}"/>`;
+      const pts=k.corners(plan,15).sort((a,b)=>k.depthOf([...a,0],P)-k.depthOf([...b,0],P));
+      pts.forEach(([x,y],i)=>{s+=cyl(x,y,6,-10,3,'foot-pad-'+i,'lo')+cyl(x,y,4,-7,3,'level-foot-'+i,'lo');});
+      s+=S(k.slabOf(plan,-4,4,P,8,.9),'base','lo')+k.lineSvg(k.planOutline(k.insetPlan(plan,3),0,P),{tone:'faint'});
+      k.corners(plan,8).forEach(([x,y],i)=>{s+=cyl(x,y,1.8,0,.5,'base-screw-'+i,'lo')+line([x-1,y,.6],[x+1,y,.6]);});
+      s+=box(plan.x+8,plan.y+plan.d-17,30,9,0,.6,'nameplate','lo');
+      for(let i=0;i<3;i++)s+=k.lineSvg(k.lineOnTop([plan.x+11,plan.y+plan.d-15+i*2],[plan.x+31-i*3,plan.y+plan.d-15+i*2],.7,P),{tone:'lo',free:true});
+      return s;
+    }
+    const knob=(x,y,z,name)=>cyl(x,y,3,z,3,name+'-shaft')+cyl(x,y,7,z+3,4,name+'-wheel')+k.lineSvg(k.knurl(x,y,7,z+3,z+7,32,P),{tone:'lo'})+ring(x,y,5,z+7,'hi');
+    return {P,at,S,box,cyl,ring,line,sphere,base,knob,get count(){return count;}};
+  }
+  function table(host,selector,rows){host.querySelector(selector).innerHTML=rows.length?rows.join(''):'<tr><td colspan="5">完成一次操作后，把读数记录在这里。</td></tr>';}
+  function fallModel(dmm,L){
+    const d=dmm/1000,eta=.95,rho=7800,rho0=960,g=9.81,D=.05,H=.4,C=(1+2.4*d/D)*(1+1.65*d/H);
+    const vt=(rho-rho0)*g*d*d/(18*eta*C),tau=rho*d*d/(18*eta*C),y=t=>vt*(t-tau*(-Math.expm1(-t/tau)));
+    const timeAt=depth=>{let lo=0,hi=depth/vt+tau+1;for(let i=0;i<60;i++){const m=(lo+hi)/2;if(y(m)<depth)lo=m;else hi=m;}return (lo+hi)/2;};
+    return {d,eta,rho,rho0,C,vt,tau,y,t1:timeAt(.05),t2:timeAt(.05+L),end:timeAt(.36),L};
+  }
+  registerBench('5',{
+    title:'落球法：让球和秒表一起说话',
+    intro:'先认出玻璃筒上的两条计时圈、投球导向口和秒表。球的位置与过线时刻由同一黏滞运动模型计算。',
+    task:'点球盘换球，点下标圈切换10/20 cm区段，再点筒口释放。球越过下标圈后记录；比较“从上标圈计时”和“从释放计时”的差别。',
+    question:{prompt:'用两条标线之间的距离L算速度时，应该采用哪段时间？',choices:[
+      {label:'从球过上标线到过下标线',correct:true,feedback:'时间与距离必须对应同一区段。下一步换球径再测，检查所得黏度是否仍接近。'},
+      {label:'从释放到过下标线',correct:false,feedback:'这段时间还包括液面到上标线的路程，若分子仍用L，就会低估速度、高估黏度。请切换错误计时模式验证。'},
+      {label:'从释放到落到底部',correct:false,feedback:'总下落时间对应总路程，还可能包含加速和底部边界效应，不能配两线间的L。先让计时起止与距离端点一致。'}]},
+    mount(host,{k,svgHit,bindHits,timeline}){
+      const q=s=>host.querySelector(s),plan={x:-106,y:-62,w:212,d:124,r:7},G=drawing(k,plan,255),{P,at}=G;
+      let dmm=2,L=.2,elapsed=0,run=false,cancel=()=>{},mode='lines',rows=[],recorded=false,phase='ready';
+      let model=fallModel(dmm,L);
+      let body=G.base();
+      // 15 base components; rigid rear structure and thermometer remain behind the glass.
+      body+=G.cyl(-43,-30,7,0,3,'post-flange')+G.cyl(-43,-30,3,3,235,'support-post')+G.cyl(-43,-30,4,238,2,'post-cap');
+      for(const z of [25,202])body+=G.box(-49,-36,12,12,z,8,'support-clamp-'+z)+G.box(-38,-33,28,6,z+2,4,'clamp-arm-'+z)+G.knob(-43,-39,z,'clamp-screw-'+z);
+      body+=G.box(-62,-40,10,6,65,154,'thermometer-backing','lo')+G.cyl(-57,-36,1.4,78,128,'thermometer-stem','hi')+G.sphere(-57,-36,76,3,'thermometer-bulb');
+      for(let z=85;z<210;z+=5)body+=G.line([-62,-33,z],[-62+(z%25===10?5:3),-33,z],'lo');
+      // Glass is deliberately translucent: split rear/liquid/ball/front to show the sphere through it.
+      body+=G.cyl(-5,0,24,0,4,'cylinder-foot','lo')+G.cyl(-5,0,20,4,3,'glass-bottom','hi');
+      body+=`<g opacity=".16">${G.cyl(-5,0,18,7,210,'glass-shell','hi')}</g><g opacity=".11">${G.cyl(-5,0,16.8,7,200,'oil-volume','hi')}</g>`;
+      body+=G.ring(-5,0,17,207,'hi');
+      body+=`<g data-fball>${G.sphere(-5,0,207,3.7,'falling-ball')}</g>`;
+      const ca=P.azimuth*Math.PI/180;
+      for(const side of [-1,1])body+=G.line([-5+side*18*Math.sin(ca),-side*18*Math.cos(ca),8],[-5+side*18*Math.sin(ca),-side*18*Math.cos(ca),217],'lo');
+      body+=G.ring(-5,0,18,217,'hi')+G.ring(-5,0,16.8,217,'lo');
+      body+=G.box(15,1,4,3,7,210,'height-scale','lo');
+      for(let z=12;z<=212;z+=5)body+=G.line([15,4,z],[z%25===12?19:17.5,4,z]);
+      body+=`<g data-upper>${G.ring(-5,0,18.5,182,'hi')}${G.box(13.5,-1,6,6,180,4,'upper-marker-tab','hi')}</g>`;
+      body+=`<g data-lower>${G.ring(-5,0,18.5,82,'hi')}${G.box(13.5,-1,6,6,80,4,'lower-marker-tab','hi')}</g>`;
+      body+=G.box(-43,-33,20,6,222,4,'release-rear-arm')+G.box(-29,-27,6,30,222,4,'release-side-arm')+G.box(-23,-3,13,6,222,4,'release-tip-arm')+G.cyl(-5,0,5,217,10,'release-guide','mid')+G.ring(-5,0,2,227,'hi');
+      // Small cups visibly hold the three available balls; this is the size selector.
+      body+=G.box(40,-35,45,27,0,3,'ball-tray','lo');
+      [1.5,2,3].forEach((v,i)=>{body+=G.cyl(48+i*14,-22,5,3,2,'ball-cup-'+i,'lo')+G.sphere(48+i*14,-22,6,v*1.5,'stored-ball-'+i);});
+      // Mechanical stopwatch with a genuine projected face, crown and moving hand.
+      body+=G.cyl(59,33,21,0,7,'stopwatch-case','mid')+G.cyl(59,33,19.5,7,1,'stopwatch-face','hi')+G.ring(59,33,18,8,'lo');
+      body+=G.box(54,10,10,6,2,5,'timer-crown-stem')+G.cyl(59,12,4,7,2,'timer-crown')+G.cyl(59,33,1.2,8,1,'timer-hand-hub');
+      const ticks=k.radialTicks(59,33,17,60,5,8,[1.2,3],P);body+=k.lineSvg(ticks.minor,{tone:'lo'})+k.lineSvg(ticks.major,{tone:'mid'});
+      body+=`<path data-fneedle class="iso-line" data-tone="lit" d="${k.lineOnTop([59,33],[59,18],8.2,P)}"/>`;
+      const hit=(id,label,p,r)=>svgHit(id,label,...at(p),r);
+      body+=hit('f-release','筒口：释放小球',[-5,0,227],23)+hit('f-balls','球盘：切换球径',[62,-22,6],25)+hit('f-timer','秒表：切换计时起点',[59,33,9],24)+hit('f-zone','下标圈：切换计时区段',[15,2,82],21)+hit('f-temp','温度计：查看液体条件',[-57,-36,150],18);
+      host.innerHTML=`<div class="rig-scene" data-parts="${G.count}">${k.figureSvg({width:620,height:470,label:'落球测黏度实验台，筒口、球盘、秒表、下标圈和温度计均可操作',body:[body]})}</div><p class="rig-readout" data-fread aria-live="off"></p><p data-fstatus role="status">先辨认两条标圈，再点筒口释放。键盘Tab可选中图中部件，Enter或空格操作。</p><div class="rig-tools"><button type="button" data-act="release">释放小球</button><button type="button" data-act="pause">暂停 / 继续</button><button type="button" data-act="step">前进0.20 s</button><button type="button" data-act="record">记录本次</button><button type="button" data-act="reset">复位</button></div><p class="hint">教学模型：20°C蓖麻油，η＝0.950 Pa·s、ρ₀＝960 kg/m³，钢球ρ＝7800 kg/m³；筒内径50 mm、液深40 cm。动画按物理时间4倍播放，球体放大以便辨认；刻线与计时来自同一位置函数。模型含容器修正，按小Re线性阻力计算；本练习的最高Re约0.10。</p><div class="table-wrap"><table><thead><tr><th>d / mm</th><th>L / cm</th><th>t / s</th><th>η₀ / Pa·s</th><th>诊断</th></tr></thead><tbody data-frows></tbody></table></div><p class="hint">依据：教材pp.95–102，尤其落球装置图5-3与p.100操作。图为原创仪器示意；原章节的完整修正与毛细管练习仍可独立使用。</p>`;
+      const announce=s=>{q('[data-fstatus]').textContent=s;};
+      function watch(){return mode==='release'?Math.min(elapsed,model.t2):clamp(elapsed-model.t1,0,model.t2-model.t1);}
+      function draw(){
+        q('[data-fball]').setAttribute('transform',k.translateAlong(P,[0,0,-500*model.y(elapsed)]));
+        const a=watch()/60*Math.PI*2;q('[data-fneedle]').setAttribute('d',k.lineOnTop([59,33],[59+15*Math.sin(a),33-15*Math.cos(a)],8.2,P));
+        const shift=500*(.2-L);q('[data-lower]').setAttribute('transform',k.translateAlong(P,[0,0,shift]));q('[data-rig-hit="f-zone"]').setAttribute('transform',k.translateAlong(P,[0,0,shift]));
+        const next=elapsed===0?'ready':elapsed<model.t1?'approach':elapsed<model.t2?'timing':'done';
+        if(next!==phase){phase=next;announce({ready:'准备释放。',approach:'小球正在接近上标线。',timing:'小球越过上标线：正常计时区开始。',done:'小球已越过下标线：秒表停止，可以记录。'}[phase]);}
+        q('[data-fread]').textContent=`球径 ${dmm.toFixed(1)} mm · 区段 ${(L*100).toFixed(0)} cm · ${mode==='lines'?'上标线起计':'释放即计（错误示例）'} · 秒表 ${watch().toFixed(3)} s · 入液深度 ${(model.y(elapsed)*100).toFixed(1)} cm`;
+      }
+      function halt(){cancel();run=false;}
+      function play(){if(elapsed>=model.end)return;halt();run=true;const start=elapsed;cancel=timeline((model.end-start)*250,p=>{elapsed=start+(model.end-start)*p;draw();if(p===1)run=false;});}
+      function reset(){halt();elapsed=0;recorded=false;phase='ready';model=fallModel(dmm,L);const b=at([-5,0,207]),r=dmm*1.85*k.cameraOf(P).k;q('[data-fball]').innerHTML=`<circle cx="${b[0]}" cy="${b[1]}" r="${r}" fill="var(--anatomy-paper)" stroke="currentColor" stroke-width="1.1"/><circle cx="${b[0]-r*.25}" cy="${b[1]-r*.28}" r="${r*.42}" fill="currentColor" opacity=".3"/>`;draw();announce('已复位。选球和计时区段后，再释放。');}
+      function release(){if(run)return;reset();play();}
+      function record(){if(elapsed<model.t2){announce('尚未越过下标线。先完成这一段下落，再记录完整时间。');return;}if(recorded){announce('本次已经记录；复位或换球后再测一次。');return;}
+        const t=watch(),v=L/t,eta=(model.rho-model.rho0)*9.81*model.d*model.d/(18*v*model.C),ok=mode==='lines';recorded=true;
+        rows.push(`<tr><td>${dmm.toFixed(1)}</td><td>${(L*100).toFixed(0)}</td><td>${t.toFixed(3)}</td><td>${eta.toFixed(4)}</td><td>${ok?'区间匹配':'计时起点错'}</td></tr>`);table(host,'[data-frows]',rows);
+        announce(ok?'本次距离与时间对应同一区段。换一种球径再测：模型给出的黏度应基本一致，观察球径如何改变下落时间。':'你把释放到上标圈的一段时间也计入，却仍用两线距离L，所以速度偏小、黏度偏大。把秒表改成上标圈起计，再测同一颗球。');
+      }
+      const actions={release,pause:()=>{if(run){halt();announce('暂停。可用“前进0.20 s”观察过线。');}else play();},step:()=>{halt();elapsed=Math.min(model.end,elapsed+.2);draw();},record,reset};
+      q('.rig-tools').addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b)actions[b.dataset.act]();});
+      bindHits(host,{'f-release':release,'f-balls':()=>{dmm=[1.5,2,3][([1.5,2,3].indexOf(dmm)+1)%3];reset();announce(`已换成${dmm} mm球；其他液体条件相同。`);},'f-zone':()=>{L=L===.2?.1:.2;reset();announce(`两线距离改为${L*100} cm；上标线仍在液面下5 cm。`);},'f-timer':()=>{mode=mode==='lines'?'release':'lines';reset();announce(mode==='lines'?'从上标圈到下标圈辅助计时。':'错误示例：从释放开始计时，距离却仍采用两标圈之间的L。');},'f-temp':()=>announce('温度计示20°C。液体黏度依赖温度；本次比较固定温度、密度和容器，只改变球径或计时区段。')});
+      table(host,'[data-frows]',rows);draw();
+      return {dispose:halt};
+    }
+  });
+
+  // Quasistatic teaching model: force grows as the meniscus turns vertical,
+  // reaches 2σs at a 6 mm film span, ruptures beyond 6.8 mm. These geometric
+  // thresholds are illustrative, not measured properties of this liquid.
+  function pullModel(p,a,broken,sigma=.07275){
+    const spring=2,s=.05,peak=2*sigma*s,peakStretch=peak/spring*1000;
+    let extra=broken?0:peak*clamp((p+a)/(6+peakStretch),0,1);
+    const stretch=extra/spring*1000,error=stretch-a,span=Math.max(0,p-error);
+    return {extra,stretch,error,span,peak,peakStretch,spring,s,sigma};
+  }
+  registerBench('6',{
+    title:'约利拉脱：先对齐，再读临界值',
+    intro:'找出锥形弹簧、挂盘、三线指示镜、烧杯平台和升降钮。下降平台会拉长液膜；调上杆才能把弹簧下端恢复到同一基准。',
+    task:'先空挂归零，再浸润金属丝。交替下降平台与上调杆位，保持三线对齐；接近液膜破裂前记录，再亲手观察破裂后读数为什么不能用。',
+    question:{prompt:'金属丝自重已经扣除，拉脱前的附加拉力ΔF应如何换成σ？',choices:[
+      {label:'σ＝ΔF/(2s)，液膜有两个面',correct:true,feedback:'两个面各拉σs。下一步比较破裂前和破裂后的附加伸长，说明为何必须读临界值。'},
+      {label:'σ＝ΔF/s，一个金属丝只算一次',correct:false,feedback:'容易把“只有一根丝”误当成“只有一面膜”。拉起的液膜前后两面都在拉丝，各贡献σs。'},
+      {label:'液膜破裂后弹簧稳定，等那时读',correct:false,feedback:'破裂后附加表面拉力已经消失。稳定不等于仍在测所需的力；请下降平台直到破裂，看附加力怎样归零。'}]},
+    mount(host,{k,svgHit,bindHits,timeline}){
+      const q=s=>host.querySelector(s),plan={x:-91,y:-65,w:182,d:130,r:7},G=drawing(k,plan,301),{P,at}=G;
+      let p=0,a=0,wet=false,zero=false,broken=false,rows=[],cancel=()=>{},weight=0,liquid='water',moving=false;
+      const sigma=()=>liquid==='water'?.07275:.032;
+      const model=()=>pullModel(p,a,broken,sigma());
+      let body=G.base();
+      body+=G.cyl(-45,-31,9,0,4,'upright-base')+G.cyl(-45,-31,4,4,294,'upright')+G.cyl(-45,-31,5,298,3,'upright-cap');
+      for(const z of [56,190,235])body+=G.box(-53,-39,16,16,z,9,'frame-collar-'+z)+G.cyl(-45,-31,5,z+9,2,'collar-rim-'+z);
+      body+=G.box(-37,-34,60,7,237,7,'top-arm')+G.cyl(-33,-30,1.5,244,1,'arm-screw')+G.cyl(15,-30,1.5,244,1,'arm-end-screw');
+      body+=G.box(-39,-29,60,6,145,5,'reference-arm')+G.box(18,-23,4,32,145,3,'reference-forward-arm');
+      // Platform screw, guide columns and stage are separate mounted components.
+      body+=G.box(-14,-22,58,53,0,4,'platform-lower-base','lo')+`<g data-pspindle>${G.cyl(15,4,3.3,4,47,'platform-spindle')}</g>`;
+      for(const [x,y] of [[-8,-16],[38,-16],[-8,25],[38,25]])body+=G.cyl(x,y,2.1,4,47,'platform-guide-'+x+'-'+y);
+      body+=G.knob(44,25,10,'platform-handwheel');
+      let stage=G.box(-15,-23,60,56,51,5,'moving-platform','mid')+G.cyl(15,4,24,56,2,'beaker-bottom','hi');
+      stage+=`<g opacity=".17">${G.cyl(15,4,24,58,45,'beaker-glass','hi')}</g><g opacity=".12">${G.cyl(15,4,22,58,34,'sample-water','hi')}</g>`+G.ring(15,4,24,103,'hi')+G.ring(15,4,22,92,'hi');
+      body+=`<g data-pstage>${stage}</g>`;
+      // The upper carriage moves; the spring lower end and mirror follow equilibrium.
+      let upper=G.box(-51,-37,12,12,250,10,'upper-slider','mid')+G.box(-39,-33,57,6,253,5,'upper-carriage-arm')+G.box(12,-27,6,34,253,5,'spring-forward-arm')+G.cyl(15,4,3,249,4,'spring-top-eye');
+      upper+=G.knob(-43,-35,260,'upper-handwheel');body+=`<g data-pupper>${upper}</g>`;
+      body+=`<path data-pcoil-back class="iso-line" data-tone="lo"/><path data-pcoil-front class="iso-line" data-tone="hi"/>`;
+      let hanger=G.cyl(15,4,1.2,126,25,'hook-stem')+G.cyl(15,4,9,121,2,'weight-pan','hi')+G.ring(15,4,9,123,'hi');
+      hanger+=G.box(10,3,10,2,137,10,'mirror-frame','mid')+G.box(11,5.2,8,.6,138,8,'mirror-face','hi');
+      hanger+=G.line([15,4,121],[15,4,92],'hi')+G.line([-1,4,86],[-1,4,92],'hi')+G.line([-1,4,92],[31,4,92],'hi')+G.line([31,4,92],[31,4,86],'hi');
+      body+=`<g data-phanger>${hanger}</g><path data-pfilm fill="currentColor" opacity=".11" stroke="currentColor" stroke-width=".6"/>`;
+      body+=G.box(8,9,1.2,2,120,44,'reference-glass-left-rail','lo')+G.box(20.8,9,1.2,2,120,44,'reference-glass-right-rail','lo')+G.box(9.2,9,11.6,2,120,1.2,'reference-glass-bottom-rail','lo')+G.box(9.2,9,11.6,2,162.8,1.2,'reference-glass-top-rail','lo')+`<g opacity=".18">${G.box(9.2,9.2,11.6,.6,121.2,41.6,'reference-glass','hi')}</g>`;
+      body+=`<path data-pmirror class="iso-line" data-tone="hi"/><path data-preflection class="iso-line" data-tone="lo"/>`+G.line([9,10,142],[21,10,142],'hi');
+      // Engraved vertical ruler and 0.5–5 g weight set.
+      body+=G.box(-52,-26,6,2,170,78,'rod-ruler','lo');for(let z=174;z<=246;z+=4)body+=G.line([-52,-24,z],[-52+(z%20===14?6:3),-24,z]);
+      body+=G.box(49,-40,30,49,0,3,'weights-tray','lo');
+      for(let i=0;i<10;i++){const x=56+(i%2)*15,y=-33+Math.floor(i/2)*9;body+=G.cyl(x,y,3.1,3,3,'calibration-weight-'+i,'mid')+G.cyl(x,y,1.2,6,1.6,'weight-grip-'+i,'hi');}
+      const hit=(id,label,pt,r)=>svgHit(id,label,...at(pt),r);
+      body+=hit('p-platform','平台手轮：下降0.5毫米',[44,25,16],22)+hit('p-upper','上杆手轮：上调0.25毫米',[-43,-35,265],22)+hit('p-mirror','三线镜：检查对齐',[15,10,142],22)+hit('p-pan','挂盘：空挂归零或浸润',[15,4,123],20)+hit('p-cup','烧杯：切换液体',[15,4,70],24)+hit('p-weights','砝码盘：查看下一组标定读数',[63,-15,6],23);
+      host.innerHTML=`<div class="rig-scene" data-parts="${G.count}">${k.figureSvg({width:620,height:470,label:'约利弹簧秤，手轮、三线镜、挂盘、烧杯、砝码均可用键盘或点击操作',body:[body]})}</div><p class="rig-readout" data-pread aria-live="off"></p><p data-pstatus role="status">先点挂盘：记录空挂基线。再点一次，浸润金属丝。</p><div class="rig-tools"><button data-pact="prepare" type="button">空挂归零 / 浸润</button><button data-pact="down" type="button">平台下降0.5 mm</button><button data-pact="up" type="button">上杆上调0.25 mm</button><button data-pact="align" type="button">辅助恢复三线对齐</button><button data-pact="record" type="button">记录临界读数</button><button data-pact="reset" type="button">重新浸润</button></div><div class="rig-tools"><label>上杆增量 / mm <input data-pad type="range" min="0" max="5" step="0.05" value="0"></label></div><p data-pcal class="hint">已标定弹簧 k＝2.00 N/m。点击砝码可逐次查看0.5～5 g的模拟标定读数；旧章节保留完整拟合练习。</p><p class="hint">教学模型：有效丝长 s＝50.0 mm，纯水20°C的σ＝72.75 mN/m；肥皂水32.0 mN/m为假设样品。附加伸长由ΔF/k决定；液膜拉力随形状逐渐增大至2σs。6 mm达到极限、6.8 mm破膜是示范用几何阈值，不是教材实测。弹簧位移放大4倍；用杆位移测力，不把液膜高度当成弹簧伸长。</p><div class="table-wrap"><table><thead><tr><th>样品</th><th>上杆增量 / mm</th><th>ΔF / mN</th><th>σ / mN·m⁻¹</th><th>诊断</th></tr></thead><tbody data-prows></tbody></table></div><p class="hint">依据：教材pp.103–108，约利装置图6-3与三线对齐、5次拉脱操作。原创示意；旧章节的毛细管上升模式仍可独立练习。</p>`;
+      const say=s=>q('[data-pstatus]').textContent=s;
+      function coil(bottom,top){const back=[],front=[];let old=at([15,4,bottom]);for(let i=0;i<=240;i++){const t=i/240,theta=t*Math.PI*20,r=3+6*t,pt=at([15+r*Math.cos(theta),4+r*Math.sin(theta),bottom+(top-bottom)*t]);const arr=Math.cos(theta-P.azimuth*Math.PI/180)>0?front:back;arr.push(`M${old[0]} ${old[1]}L${pt[0]} ${pt[1]}`);old=pt;}const end=at([15,4,top]);front.push(`M${old[0]} ${old[1]}L${end[0]} ${end[1]}`);return {back:back.join(''),front:front.join('')};}
+      function draw(){
+        let m=model();if(wet&&!broken&&m.span>6.8){broken=true;m=model();say('液膜已经破裂，附加拉力归零。此刻读数不能用来算表面张力；重新浸润后捕捉破裂前的极值。');}
+        q('[data-pstage]').setAttribute('transform',k.translateAlong(P,[0,0,-p*4]));q('[data-pupper]').setAttribute('transform',k.translateAlong(P,[0,0,a*4]));q('[data-pspindle]').innerHTML=k.solidSvg(k.cylinder(15,4,3.3,4,Math.max(3,47-p*4),P,40,.35),{tone:'mid'});
+        q('[data-phanger]').setAttribute('transform',k.translateAlong(P,[0,0,-m.error*4]));
+        const c=coil(151-m.error*4,249+a*4);q('[data-pcoil-back]').setAttribute('d',c.back);q('[data-pcoil-front]').setAttribute('d',c.front);
+        q('[data-pmirror]').setAttribute('d',k.segment([9,10,142-m.error*4],[21,10,142-m.error*4],P));q('[data-preflection]').setAttribute('d',k.segment([9,10,142+m.error*4],[21,10,142+m.error*4],P));
+        const zt=92-m.error*4,zb=92-p*4;
+        q('[data-pfilm]').setAttribute('d',wet&&!broken?k.pathOf([at([-1,4,zt]),at([31,4,zt]),at([36,4,zb]),at([-6,4,zb])],true):'');
+        q('[data-rig-hit="p-upper"]').setAttribute('transform',k.translateAlong(P,[0,0,a*4]));q('[data-rig-hit="p-pan"]').setAttribute('transform',k.translateAlong(P,[0,0,-m.error*4]));q('[data-pad]').value=a.toFixed(2);
+        q('[data-pread]').textContent=`${!zero?'空挂待归零':!wet?'基线已记':broken?'液膜破裂':'液膜连接'} · 平台下降 ${p.toFixed(2)} mm · 上杆增量 ${a.toFixed(2)} mm · 三线偏差 ${Math.abs(m.error).toFixed(2)} mm · 附加拉力 ${(m.extra*1000).toFixed(3)} mN`;
+      }
+      function move(np,na){cancel();const p0=p,a0=a;moving=true;cancel=timeline(260,t=>{const u=t*t*(3-2*t);p=p0+(np-p0)*u;a=a0+(na-a0)*u;draw();if(t===1)moving=false;});}
+      function reset(){cancel();moving=false;p=0;a=0;broken=false;wet=zero;draw();say(zero?'重新浸润。请慢慢下降平台，每次都恢复三线对齐。':'先记录空挂基线。');}
+      function prepare(){if(!zero){zero=true;draw();say('空挂基线l₀已记录，金属丝自重由后续读数差扣除。再点挂盘浸润。');}else {wet=true;reset();}}
+      function down(){if(!wet){say('尚未浸润：先空挂归零，再点挂盘。');return;}if(moving)return;if(broken){say('液膜已经破裂；重新浸润后再测。');return;}move(Math.min(10,p+.5),a);}
+      function up(){if(!wet){say('先完成空挂基线与浸润。');return;}if(moving)return;move(p,Math.min(5,a+.25));}
+      function align(){if(!wet||broken){say('先浸润完整液膜，再调三线。破裂后没有附加表面拉力可读。');return;}if(moving)return;const target=2*sigma()*.05*clamp(p/6,0,1)/2*1000;move(p,target);say('辅助调整上杆，令下端回到固定基准。观察三条线汇合后，再继续下降平台。');}
+      function record(){if(!wet){say('尚未形成液膜，不能记录拉脱读数。');return;}const m=model();if(broken){say('这次读数取晚了：液膜已破裂，表面附加力消失。重新浸润，尝试在破裂前读数。');return;}if(moving||Math.abs(m.error)>.08){say('三线尚未对齐。若下端位置变化，杆位移就不再等于弹簧伸长变化；先上调杆位恢复基准。');return;}
+        const estimate=2*a/1000/(2*.05)*1000,near=m.extra>=.995*m.peak;
+        rows.push(`<tr><td>${liquid==='water'?'纯水':'肥皂水（假设）'}</td><td>${a.toFixed(3)}</td><td>${(2*a).toFixed(3)}</td><td>${estimate.toFixed(2)}</td><td>${near?'临界且对齐':'尚未达极值'}</td></tr>`);table(host,'[data-prows]',rows);
+        say(near?'已在近临界且三线对齐时记录。再下降一小步观察破裂后的变化，然后重新浸润重复测量。':'三线对齐了，但液膜还没有接近最大拉力，因此σ偏小。再小步下降平台并重新对齐，比较下一次记录。');
+      }
+      const actions={prepare,down,up,align,record,reset};q('.rig-tools').addEventListener('click',e=>{const b=e.target.closest('[data-pact]');if(b)actions[b.dataset.pact]();});
+      q('[data-pad]').addEventListener('input',e=>{if(!wet){e.target.value=a;say('先空挂归零并浸润，再调杆位。');return;}move(p,Number(e.target.value));});
+      bindHits(host,{'p-platform':down,'p-upper':up,'p-mirror':()=>{const m=model();say(Math.abs(m.error)<.08?'三线已对齐：弹簧下端回到同一基准。':'三线未重合：调上杆位置，使镜中横线、基准线与反射像重合。');},'p-pan':prepare,'p-cup':()=>{liquid=liquid==='water'?'soap':'water';reset();say(liquid==='water'?'换为20°C纯水，重新测量。':'换为假设肥皂水样品，重新测量，比较临界伸长是否变小。');},'p-weights':()=>{weight=weight>=5?.5:weight+.5;q('[data-pcal]').textContent=`标定模拟：m＝${weight.toFixed(1)} g，F＝${(weight*9.81).toFixed(3)} mN，伸长＝${(weight*9.81/2).toFixed(3)} mm；F/Δl＝2.00 N/m。砝码标定应在测液体之前完成。`;}});
+      // Arrow keys on the physical handwheels offer finer control without leaving the figure.
+      host.addEventListener('keydown',e=>{const el=e.target.closest('[data-rig-hit]');if(!el||!['ArrowUp','ArrowDown'].includes(e.key))return;const id=el.dataset.rigHit;if(id==='p-upper'&&wet){e.preventDefault();move(p,clamp(a+(e.key==='ArrowUp'?.05:-.05),0,5));}if(id==='p-platform'&&wet&&!broken){e.preventDefault();move(clamp(p+(e.key==='ArrowDown'?.1:-.1),0,10),a);}});
+      table(host,'[data-prows]',rows);draw();return {dispose:()=>cancel()};
+    }
+  });
+})();
+
+</script>
+<script>const unitSettings = {"id":"6"};
+(function classroom() {
+  const lesson = lessons.get(unitSettings.id);
+  const bench = benchRegistry.get(unitSettings.id);
+  if (!lesson || !bench) throw new Error('缺少仿真实验内容');
+  const article = document.createElement('article');
+  const key = `lab-${lesson.id}`;
+  const sections = lesson.sections.map((section, index) => ({...section, key:`${key}-part-${index+1}`}));
+  article.id = key;
+  article.className = 'lesson';
+  article.setAttribute('aria-labelledby', `${key}-heading`);
+  const labelPages = pages => {
+    const clean = pages.replace(/^教材(?:\s*\/\s*PDF)?\s*/, '').replace(/^pp\.\s*/, '');
+    return /^\d+[\d–、-]*$/.test(clean) ? `第 ${clean} 页` : clean;
+  };
+  const legacyLink = unitSettings.id === '8' ? '<p class="source">继续练习：<a href="./index.html" target="_blank" rel="noopener">打开原声速学习页、面板操作与拟合工具 ↗</a></p>' : '';
+  article.innerHTML = `<header class="hero">
+    <p class="kicker">力学 · 实验 ${lesson.id} · 教材 ${labelPages(lesson.pages)}</p>
+    <h1 id="${key}-heading">${lesson.title}</h1>
+    <p class="lead">${lesson.summary}</p>
+    <p class="hint">页码按教材印刷页计。仪器读数与记录为教学模拟。</p>
+  </header>
+  <nav class="parts" aria-label="本节目录"><a href="#${key}-rig">仿真实验台</a>${sections.map(part => `<a href="#${part.key}">${part.title}</a>`).join('')}</nav>
+  <section class="rig-lab" id="${key}-rig"><div class="rig-head"><h2>${bench.title}</h2><p>${bench.intro}</p><p><strong>第一次操作</strong>　${bench.task}</p></div>
+    <div class="rig-instrument"><div class="rig-bar"><strong>实验 ${lesson.id} · 仪器台</strong><span>点击图中绿色标记操作，也可用 Tab 和 Enter。</span></div><div class="iso rig-host"></div></div>
+    <details class="rig-question"><summary>做完后，试着解释读数</summary><p>${bench.question.prompt}</p><div class="rig-choices"></div><p class="rig-feedback" aria-live="polite"></p></details>
+  </section>
+  ${legacyLink}
+  ${sections.map((part, index) => `<section class="lesson-part" id="${part.key}"><div class="part-head"><h2>${part.title}</h2><span class="page-ref">${labelPages(part.pages)}</span>${index === 0 ? `<a class="page-ref" href="#${key}-rig">打开本节仿真实验台 ↑</a>` : ''}</div>${part.html}</section>`).join('')}`;
+  const main = document.getElementById('course');
+  main.append(article);
+  lesson.mount?.(article);
+  mountBench(article, bench);
+  if (window === window.top) {
+    const navigation = document.createElement('nav');
+    navigation.className = 'unit-return';
+    navigation.setAttribute('aria-label','网站目录');
+    navigation.innerHTML = '<a href="../../index.html">← 返回实验站</a>';
+    main.before(navigation);
+  }
+  if (location.hash) requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView());
+})();</script>
+<script id="physlab-lesson-guide">(function mountLessonGuide(groups) {
+  const article = document.querySelector('.unit-content > .lesson');
+  const nav = article?.querySelector(':scope > nav.parts');
+  if (!nav) return;
+
+  const desktop = matchMedia('(min-width: 900px)');
+  function make(tag, className='', text='') {
+    const element = document.createElement(tag);
+    element.className = className;
+    element.textContent = text;
+    return element;
+  }
+
+  const rail = make('aside','lesson-rail');
+  rail.setAttribute('aria-label','本节学习导引');
+  const guide = make('details','lesson-guide');
+  guide.open = desktop.matches;
+  const summary = make('summary','','学习目录');
+  const currentTitle = make('span','lesson-guide-current');
+  currentTitle.setAttribute('aria-hidden','true');
+  summary.append(currentTitle);
+  nav.setAttribute('aria-label','本节学习目录');
+  const workspace = make('div','lesson-workspace');
+  const body = make('div','lesson-body');
+  const lab = article.querySelector('.rig-lab');
+  const lessonParts = Array.from(article.querySelectorAll('.lesson-part'));
+  const quiz = article.querySelector('.rig-question');
+  if (quiz) quiz.id ||= `${lab.id}-check`;
+
+  const task = make('details','lesson-task');
+  task.open = desktop.matches;
+  const taskSummary = make('summary');
+  const taskContent = make('div','lesson-task-content');
+  const taskTitle = make('strong','lesson-task-title');
+  const taskText = make('p','lesson-task-text');
+  taskText.setAttribute('aria-live','polite');
+  const pager = make('div','lesson-task-pager');
+  const previous = make('button','','上一项');
+  const next = make('button','','下一项');
+  previous.type = next.type = 'button';
+  pager.append(previous,next);
+  taskContent.append(taskTitle,taskText,pager);
+  task.append(taskSummary,taskContent);
+
+  function sectionOf(target) {
+    return target.startsWith('part:') ? lessonParts[Number(target.slice(5)) - 1] : lab;
+  }
+
+  function resolveTarget(step) {
+    if (step.target === 'quiz') return quiz;
+    if (step.target === 'rig' || step.target.startsWith('part:')) return step.section;
+    return Array.from(lab.querySelectorAll(step.target)).find(element=>element.getClientRects().length) || lab;
+  }
+
+  nav.replaceChildren();
+  const steps = [];
+  for (const [index,[group, items]] of groups.entries()) {
+    nav.append(make('p','lesson-guide-group',`${index + 1} · ${group}`));
+    for (const [title,target,instructions] of items) {
+      const index = steps.length;
+      const number = String(index + 1).padStart(2,'0');
+      const anchor = make('a');
+      const hash = `#${article.id}-step-${number}`;
+      anchor.href = hash;
+      anchor.dataset.stepTarget = target;
+      anchor.append(make('span','lesson-guide-number',number),make('span','lesson-guide-label',title));
+      const step = {title,target,instructions,index,number,hash,anchor,section:sectionOf(target)};
+      steps.push(step);
+      nav.append(anchor);
+      anchor.addEventListener('click',event=>{
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        event.preventDefault();
+        go(step);
+      });
+    }
+  }
+  while (nav.nextSibling) body.append(nav.nextSibling);
+  nav.before(workspace);
+  guide.append(summary,nav);
+  rail.append(guide,task);
+  workspace.append(rail,body);
+  article.parentElement.classList.add('unit-content-with-guide');
+
+  let active;
+  let targetHighlight;
+  let heldScroll;
+  function mark(step) {
+    if (!step || step === active) return;
+    active?.anchor.removeAttribute('aria-current');
+    active = step;
+    step.anchor.setAttribute('aria-current','step');
+    currentTitle.textContent = `${step.number} ${step.title}`;
+    taskSummary.textContent = `本步任务 ${step.index + 1}/${steps.length}`;
+    taskTitle.textContent = step.title;
+    taskText.textContent = step.instructions;
+    previous.disabled = step.index === 0;
+    next.disabled = step.index === steps.length - 1;
+    if (guide.open) {
+      const row = step.anchor.getBoundingClientRect();
+      const list = nav.getBoundingClientRect();
+      if (row.top < list.top) nav.scrollTop -= list.top - row.top + 4;
+      if (row.bottom > list.bottom) nav.scrollTop += row.bottom - list.bottom + 4;
+    }
+  }
+
+  function scrollToTarget(target, focus) {
+    if (!target) return;
+    if (target === quiz) quiz.open = true;
+    if (focus) {
+      targetHighlight?.classList.remove('lesson-step-target');
+      targetHighlight = target;
+      target.classList.add('lesson-step-target');
+      if (!target.matches('a,button,input,select,textarea,summary,[tabindex]')) target.setAttribute('tabindex','-1');
+      target.focus?.({preventScroll:true});
+    }
+    const offset = desktop.matches ? 44 : rail.getBoundingClientRect().height + 20;
+    window.scrollTo({top:window.scrollY + target.getBoundingClientRect().top - offset,behavior:'instant'});
+    heldScroll = window.scrollY;
+  }
+
+  function go(step, writeHistory=true) {
+    if (!step) return;
+    if (writeHistory && location.hash !== step.hash) history.pushState(null,'',step.hash);
+    if (!desktop.matches) guide.open = false;
+    mark(step);
+    task.open = true;
+    scrollToTarget(resolveTarget(step),writeHistory);
+  }
+
+  previous.addEventListener('click',()=>go(steps[active.index - 1]));
+  next.addEventListener('click',()=>go(steps[active.index + 1]));
+  guide.addEventListener('toggle',()=>{ if (!desktop.matches && guide.open) task.open = false; });
+  task.addEventListener('toggle',()=>{ if (!desktop.matches && task.open) guide.open = false; });
+
+  const lessonBlocks = [lab,...lessonParts];
+  let scheduled = false;
+  function track() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(()=>{
+      scheduled = false;
+      if (heldScroll !== undefined && Math.abs(window.scrollY - heldScroll) < 12) return;
+      heldScroll = undefined;
+      const readingLine = desktop.matches ? 92 : rail.getBoundingClientRect().height + 24;
+      const section = lessonBlocks.findLast(block=>block.getBoundingClientRect().top <= readingLine);
+      if (section && section !== active.section) mark(steps.find(step=>step.section===section));
+    });
+  }
+
+  window.addEventListener('scroll',track,{passive:true});
+  window.addEventListener('resize',track);
+  desktop.addEventListener('change',()=>{guide.open = task.open = desktop.matches;track();});
+  const followFragment = () => {
+    const step = steps.find(item=>item.hash===location.hash);
+    if (step) { go(step,false); return; }
+    const target = document.getElementById(location.hash.slice(1));
+    if (target === quiz) {
+      mark(steps.find(item=>item.target==='quiz'));
+      scrollToTarget(quiz,false);
+    } else if (lessonBlocks.includes(target)) {
+      mark(steps.find(item=>item.section===target));
+      scrollToTarget(target,false);
+    }
+  };
+  window.addEventListener('hashchange',followFragment);
+  mark(steps[0]);
+  followFragment();
+})([["标定约利弹簧秤",[["认出弹簧、吊片与三线重合标记","part:1","找到悬挂吊片的弹簧、调节机构和读数标记，弄清每次读数前需要恢复的参考位置。"],["依次加砝码以拟合弹簧劲度","[data-rig-hit=\"p-weights\"]","按质量顺序加砝码，登记平衡读数。用力对伸长量作直线拟合，斜率给出 k。"],["卸下砝码，挂洁净测量件并记 l₀","[data-pact=\"prepare\"]","实物按教材悬挂清洁的金属丝框，仿真以吊片示意。先使三线重合并记下未浸液时的 l₀，再让测量件接触液体。"]]],["逐步拉膜并捕捉脱离前一刻",[["量金属丝框间距，认出两面液膜","part:2","按教材用卡尺测金属丝框两脚之间的距离 s。结合液膜前后两面，写下总拉力 F=2sσ。"],["浸湿吊片，再分次降下载台","[data-pact=\"down\"]","在准备区继续让吊片浸液，再逐次降下载台拉伸液膜。每次只移动一小格，接近脱离时放慢。"],["每次读数前重新对准三线","[data-pact=\"align\"]","改变载台高度后调整约利弹簧秤的上杆，恢复三线重合。边观察液膜状态边读标尺。"],["记录膜刚要脱离时的 lₘ","[data-pact=\"record\"]","对准标记后，记录液膜保持连续时的最大拉力读数。实际操作按教材反复测量五次。"]]],["比较液体并核查计算",[["换水或肥皂水，重新建立基准","[data-rig-hit=\"p-cup\"]","更换液体前清洁吊片。复核 l₀，再重复拉膜，比较两种液体所得 σ。"],["由 k(lₘ−l₀)/(2s) 计算并核温","part:5","将伸长量和宽度换成米，写出表面张力系数的单位 N/m。用记录水温与附表对照。"],["用毛细管上升法检查读数差别","part:3","练习中辨认弯月面和液柱高度，按教材找出 h+r/3 修正与管半径的作用。"],["判断破膜前拉力该除以哪个长度","quiz","根据液膜两面受力的情况，从附加拉力和单面有效长度 s 求出表面张力系数。"]]]]);</script>
+</body>
+</html>

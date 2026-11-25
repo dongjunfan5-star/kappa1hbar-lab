@@ -1,0 +1,20 @@
+{
+  "title": "数字示波器的原理与使用",
+  "chapter": "电磁学",
+  "summary": "从探头补偿和游标读数入手，用双通道数字示波器测幅度、周期和相位，练习触发、李萨如图形、脉冲与同轴线回波。",
+  "tags": [
+    "示波器",
+    "探头补偿",
+    "游标测量",
+    "李萨如图形",
+    "采样与触发",
+    "同轴线回波"
+  ],
+  "level": 2,
+  "duration": 240,
+  "updated": "2026-11-10",
+  "cover": "anatomy-cover.png",
+  "entry": "index.html",
+  "interactive": true,
+  "order": 15
+}

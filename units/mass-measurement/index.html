@@ -1,0 +1,3160 @@
+<!doctype html>
+<!-- physlab-mechanics-export -->
+<!--
+MIT License
+
+Copyright (c) 2026 Ryan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>质量的测量 · 大学物理实验</title>
+  <style>
+.iso{
+  --anatomy-page:#0b0b0b;--anatomy-card:#131313;--anatomy-text:#a3a3a3;--anatomy-strong:#e6e6e6;--anatomy-muted:#6e6e6e;
+  --anatomy-paper:#131313;--anatomy-face:#1b1b1b;--anatomy-top:#1c1c1c;
+  --anatomy-shade-0:#0f0f0f;--anatomy-shade-1:#121212;--anatomy-shade-2:#151515;--anatomy-shade-3:#181818;
+  --anatomy-lit-top:#262626;--anatomy-lit-shade:#1d1d1d;
+  --anatomy-hi:#d4d4d4;--anatomy-mid:#6a6a6a;--anatomy-lo:#3e3e3e;--anatomy-faint:#2a2a2a;--anatomy-lit:#ffffff;
+  --anatomy-halo:#050505;--anatomy-halo-opacity:.9;--anatomy-dot:#e6e6e6;
+  --anatomy-red:#ff6b6b;--anatomy-green:#6be0a0;--anatomy-blue:#6b9bff;
+  --anatomy-weight:.6px;--anatomy-ease:cubic-bezier(.32,.72,0,1);
+  --anatomy-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --anatomy-lift:inset 0 1px 0 0 #ffffff0a,inset 0 0 0 1px #ffffff06,0 0 0 1px #00000026,0 1px 1px -.5px #00000014,0 3px 3px -1.5px #00000014,0 6px 6px -3px #00000014,0 12px 12px -6px #00000014;
+}
+.iso[data-theme="light"]{
+  --anatomy-page:#f2f2ef;--anatomy-card:#fbfbfa;--anatomy-text:#57575a;--anatomy-strong:#18181a;--anatomy-muted:#8c8c90;
+  --anatomy-paper:#fbfbfa;--anatomy-face:#ffffff;--anatomy-top:#ffffff;
+  --anatomy-shade-0:#dcdcd9;--anatomy-shade-1:#e5e5e2;--anatomy-shade-2:#ededea;--anatomy-shade-3:#f4f4f1;
+  --anatomy-lit-top:#ffffff;--anatomy-lit-shade:#eeeeeb;
+  --anatomy-hi:#26262a;--anatomy-mid:#8a8a8f;--anatomy-lo:#b4b4b8;--anatomy-faint:#d4d4d6;--anatomy-lit:#000000;
+  --anatomy-halo:#8a8a80;--anatomy-halo-opacity:.32;--anatomy-dot:#3a3a3e;
+  --anatomy-red:#e5484d;--anatomy-green:#30a46c;--anatomy-blue:#3e63dd;
+  --anatomy-lift:inset 0 1px 0 0 #ffffff,0 0 0 1px #0000000f,0 1px 1px -.5px #0000000a,0 3px 3px -1.5px #0000000a,0 6px 6px -3px #0000000a,0 12px 12px -6px #0000000a;
+}
+.iso-svg{display:block;width:100%;height:auto;overflow:visible}
+.iso-svg path,.iso-svg circle{vector-effect:non-scaling-stroke}
+.iso-fill{fill:var(--anatomy-paper);stroke:none}
+.iso-solid[data-lit]>.iso-fill{fill:var(--anatomy-face)}
+.iso-shade,.iso-top{stroke:none}
+.iso-shade[data-shade="0"]{fill:var(--anatomy-shade-0)}
+.iso-shade[data-shade="1"]{fill:var(--anatomy-shade-1)}
+.iso-shade[data-shade="2"]{fill:var(--anatomy-shade-2)}
+.iso-shade[data-shade="3"]{fill:var(--anatomy-shade-3)}
+.iso-top{fill:var(--anatomy-top)}
+.iso-solid[data-lit]>.iso-top{fill:var(--anatomy-lit-top)}
+.iso-solid[data-lit]>.iso-shade{fill:var(--anatomy-lit-shade)}
+.iso-solid[data-seamless]>.iso-shade,.iso-solid[data-seamless]>.iso-top{stroke-width:.4;stroke-linejoin:round}
+.iso-solid[data-seamless]>.iso-shade[data-shade="0"]{stroke:var(--anatomy-shade-0)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="1"]{stroke:var(--anatomy-shade-1)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="2"]{stroke:var(--anatomy-shade-2)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="3"]{stroke:var(--anatomy-shade-3)}
+.iso-solid[data-seamless]>.iso-top{stroke:var(--anatomy-top)}
+.iso-solid[data-seamless][data-lit]>.iso-top{stroke:var(--anatomy-lit-top)}
+.iso-solid[data-seamless][data-lit]>.iso-shade{stroke:var(--anatomy-lit-shade)}
+.iso-solid[data-lit]>.iso-edge{stroke:var(--anatomy-lit)}
+.iso-halo{fill:var(--anatomy-halo);stroke:none;filter:blur(9px);opacity:var(--anatomy-halo-opacity);transform:translateY(3px)}
+.iso-line{fill:none;stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight);stroke-linecap:round;stroke-linejoin:round}
+.iso-line[data-tone="hi"]{stroke:var(--anatomy-hi)}
+.iso-line[data-tone="mid"]{stroke:var(--anatomy-mid)}
+.iso-line[data-tone="lo"]{stroke:var(--anatomy-lo)}
+.iso-line[data-tone="faint"]{stroke:var(--anatomy-faint)}
+.iso-line[data-tone="lit"]{stroke:var(--anatomy-lit)}
+.iso-line[data-tone="red"]{stroke:var(--anatomy-red)}
+.iso-line[data-tone="green"]{stroke:var(--anatomy-green)}
+.iso-line[data-tone="blue"]{stroke:var(--anatomy-blue)}
+.iso-line[data-dotted]{stroke-dasharray:.01 3.5;stroke-width:1}
+.iso-line[data-dashed]{stroke-dasharray:3 3}
+.iso-line[data-flow]{stroke-dasharray:2 6}
+.iso-wire-end{fill:var(--anatomy-paper);stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight)}
+.iso-wire[data-tone="hi"] .iso-wire-end{stroke:var(--anatomy-hi)}
+.iso-wire[data-tone="mid"] .iso-wire-end{stroke:var(--anatomy-mid)}
+.iso-wire[data-tone="faint"] .iso-wire-end{stroke:var(--anatomy-faint)}
+.iso-wire[data-tone="lit"] .iso-wire-end{stroke:var(--anatomy-lit)}
+.iso-dots circle{fill:var(--anatomy-dot);stroke:none;opacity:.32}
+.iso-dots[data-tone="hi"] circle{opacity:.85}
+.iso-dots[data-tone="mid"] circle{opacity:.45}
+.iso-dots[data-tone="lo"] circle{opacity:.22}
+.iso-dots[data-tone="faint"] circle{opacity:.12}
+.iso-face-text{fill:var(--anatomy-mid);font-family:var(--anatomy-mono);letter-spacing:.04em}
+.iso-face-text[data-tone="hi"]{fill:var(--anatomy-hi)}
+.iso-face-text[data-tone="lo"]{fill:var(--anatomy-lo)}
+.iso-face-text[data-tone="faint"]{fill:var(--anatomy-faint)}
+.tb-body{fill:var(--anatomy-shade-2);stroke:none}
+.tb-shine{fill:var(--anatomy-top);stroke:none}
+.tb-shade{fill:var(--anatomy-shade-0);stroke:none}
+.tb-ring{fill:none;stroke:var(--anatomy-lo);stroke-width:.45;stroke-linecap:butt;stroke-linejoin:round}
+.tb-ring[data-tone="mid"]{stroke:var(--anatomy-mid)}
+.tb-ring[data-tone="faint"]{stroke:var(--anatomy-faint)}
+.tb-ring[data-tone="hi"]{stroke:var(--anatomy-hi)}
+@keyframes iso-flow{to{stroke-dashoffset:-32}}
+@keyframes iso-pulse{0%,100%{opacity:.18}12%{opacity:1}40%{opacity:.18}}
+.iso-line[data-flow]{animation:iso-flow 1600ms linear infinite}
+.iso-dots circle[data-pulse]{animation:iso-pulse 1600ms steps(1,end) infinite;animation-delay:var(--pulse-at,0ms)}
+.iso-figure{margin:32px 0 36px}
+.iso-plate{position:relative;padding:52px 24px;border-radius:0;background:var(--anatomy-card);box-shadow:0 0 0 1px var(--anatomy-mid);--anatomy-paper:var(--anatomy-card)}
+.iso-plate-corners{position:absolute;inset:18px 20px;pointer-events:none}
+.iso-plate-corner{position:absolute;color:var(--anatomy-muted);font-family:var(--anatomy-mono);font-size:10.5px;line-height:1;letter-spacing:.04em;white-space:nowrap}
+.iso-plate-corner[data-corner="fig"]{top:0;left:0;color:var(--anatomy-text)}
+.iso-plate-corner[data-corner="title"]{top:0;right:0;text-transform:uppercase;letter-spacing:.1em}
+.iso-plate-corner[data-corner="hint"]{bottom:0;left:0;text-transform:uppercase;letter-spacing:.1em}
+.iso-plate-corner[data-corner="readout"]{right:0;bottom:0;color:var(--anatomy-text);font-variant-numeric:tabular-nums}
+.iso-plate .iso-svg{margin:0 auto}
+.iso-legend{display:grid;gap:8px;margin-top:12px;color:var(--anatomy-muted);font-size:13px;line-height:1.55}
+.iso-keys{display:flex;flex-wrap:wrap;gap:6px 18px}
+.iso-key{display:inline-flex;align-items:center;gap:7px}
+.iso-swatch{width:16px;height:10px;flex:none;overflow:visible}
+.iso-swatch path{fill:none;stroke:var(--anatomy-hi);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.iso-swatch[data-mark="raised"] path,.iso-swatch[data-mark="flat"] path{stroke:var(--anatomy-mid)}
+.iso-swatch[data-mark="lit"] path{stroke:var(--anatomy-lit)}
+.iso-swatch[data-mark="dim"] path{stroke:var(--anatomy-lo)}
+.iso-swatch[data-mark="dotted"] path{stroke-dasharray:.01 3;stroke-width:1.4}
+.iso-swatch[data-mark="dashed"] path{stroke-dasharray:3 2.5}
+.iso-swatch[data-mark="red"] path{stroke:var(--anatomy-red)}
+.iso-swatch[data-mark="green"] path{stroke:var(--anatomy-green)}
+.iso-swatch[data-mark="blue"] path{stroke:var(--anatomy-blue)}
+.iso-swatch-crease{stroke:var(--anatomy-lo)!important}
+@media (max-width:560px){.iso-plate{padding:48px 12px 70px}.iso-plate-corner[data-corner="hint"]{bottom:18px}}
+@media (prefers-reduced-motion:reduce){.iso-line[data-flow],.iso-dots circle[data-pulse]{animation:none}}
+</style>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: light-dark(#f5f4ef,#191d1b);
+      --paper: light-dark(#fffefa,#232925);
+      --ink: light-dark(#202721,#eeefe8);
+      --muted: light-dark(#626b63,#b8c2b8);
+      --line: light-dark(#d7dcd2,#45534a);
+      --accent: light-dark(#1a614b,#a3e3c5);
+      --accent-soft: light-dark(#e7f0e7,#293e34);
+      --accent-ink: light-dark(#fff,#12281f);
+      --plot-grid: var(--line);
+      --plot-ink: var(--ink);
+      --plot-accent: var(--accent);
+      --plot-secondary: light-dark(#9b4f2d,#ffba91);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-padding-top: 20px; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.8 system-ui, 'Microsoft YaHei', sans-serif; }
+    a { color: var(--accent); text-underline-offset: 4px; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    button,input,select { font: inherit; }
+    button,select,input:not([type="range"]):not([type="radio"]):not([type="checkbox"]) { color: var(--ink); background: var(--paper); border: 1px solid var(--line); padding: .43rem .68rem; border-radius: .36rem; }
+    button { cursor: pointer; }
+    button:hover:not(:disabled),button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    button:disabled { cursor: default; opacity: .55; }
+    input { max-width: 100%; accent-color: var(--accent); }
+    input[type="range"] { min-width: 0; display: block; width: 100%; margin: 5px 0; }
+    select { max-width: 100%; }
+    [hidden] { display: none !important; }
+    .top { border-bottom: 1px solid var(--line); }
+    .top-inner { max-width: 1260px; margin: auto; padding: 22px 36px; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 4px 20px; }
+    .top-title { font-weight: 650; text-decoration: none; color: var(--ink); }
+    .top-source,.kicker,.page-ref,.caption,.hint,.source { color: var(--muted); font-size: .875rem; }
+    .layout { display: grid; grid-template-columns: 236px minmax(0,1fr); gap: 52px; max-width: 1260px; margin: 0 auto; padding: 38px 36px 70px; }
+    .toc { align-self: start; position: sticky; top: 18px; max-height: calc(100dvh - 36px); overflow: auto; padding: 4px 4px 4px 0; }
+    .toc a { display: grid; grid-template-columns: 2rem 1fr; gap: 4px; align-items: baseline; padding: 9px 10px; color: var(--muted); text-decoration: none; font-size: .9rem; line-height: 1.45; border-left: 3px solid transparent; }
+    .toc a:hover,.toc a[aria-current="page"] { border-left-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    .toc a span:first-child { font-variant-numeric: tabular-nums; }
+    h1,h2,h3,h4 { line-height: 1.35; }
+    h1 { font-size: clamp(2rem, 4.3vw, 3.7rem); letter-spacing: -.045em; margin: 9px 0 19px; }
+    h2 { font-size: clamp(1.35rem,2.25vw,1.75rem); margin: 6px 0 14px; }
+    h3 { font-size: 1.11rem; margin: 1.4em 0 .3em; }
+    p { margin: .75em 0; }
+    main { min-width: 0; }
+    .hero { border-bottom: 1px solid var(--line); padding-bottom: 24px; }
+    .hero p { max-width: 44em; }
+    .lead { font-size: clamp(1rem,1.5vw,1.19rem); }
+    .course-list { list-style: none; padding: 0; margin: 8px 0 0; }
+    .course-list li { display: grid; grid-template-columns: 2rem minmax(0,1fr) auto; align-items: start; gap: 10px; border-bottom: 1px solid var(--line); padding: 16px 0; }
+    .course-list .number { color: var(--accent); font-variant-numeric: tabular-nums; }
+    .course-list a { display: inline-block; color: var(--ink); font-weight: 650; }
+    .course-list p { margin: .25em 0 0; color: var(--muted); font-size: .93rem; line-height: 1.55; }
+    .lesson { min-width: 0; }
+    .lesson header h1 { font-size: clamp(1.75rem,3.4vw,2.85rem); }
+    .parts { display: flex; gap: .5rem 1.15rem; flex-wrap: wrap; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: .88rem; }
+    .lesson-part { margin: 1.9rem 0; scroll-margin-top: 1rem; }
+    .lesson-part li { margin: .36em 0; }
+    .lesson-part ul,.lesson-part ol { padding-left: 1.6em; }
+    .page-ref { font-variant-numeric: tabular-nums; }
+    .part-head { display: flex; align-items: baseline; gap: 0 1rem; flex-wrap: wrap; }
+    .formula,.equation { background: var(--paper); border-left: 3px solid var(--line); margin: 1em 0; padding: .75em 1em; overflow-wrap: anywhere; font-family: 'Cambria Math', Cambria, 'Microsoft YaHei', serif; }
+    .table-wrap,.table-responsive { overflow: auto; max-width: 100%; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    caption { text-align: left; color: var(--muted); padding: .6rem 0; }
+    td,th { text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); padding: .55rem .65rem; }
+    details { border-top: 1px solid var(--line); padding: .68em 0; }
+    summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+    .sim { background: var(--paper); border: 1px solid var(--line); border-radius: .45rem; padding: clamp(12px, 2.8vw, 26px); margin: 1em 0; min-width: 0; }
+    .sim-controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: end; margin: .6em 0 1em; }
+    .sim-controls > label,.sim-controls > div { flex: 1 1 175px; min-width: min(100%,155px); }
+    .sim-controls > label > :is(select,input:not([type="radio"]):not([type="checkbox"])) { display: block; }
+    .sim :is(canvas,svg,img) { display: block; width: 100%; max-width: 100%; object-fit: contain; }
+    .sim svg:not([height]) { height: auto; }
+    .reading { color: var(--accent); font-weight: 650; font-variant-numeric: tabular-nums; }
+    .next-links { border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; padding-top: 1rem; }
+    .rig-lab { margin: 1.85rem 0 2.5rem; min-width: 0; }
+    .rig-head { display: grid; gap: 7px; margin-bottom: 15px; }
+    .rig-head h2,.rig-head p { margin: 0; }
+    .rig-instrument { border: 1px solid var(--line); border-radius: 10px; background: var(--paper); overflow: clip; }
+    .rig-bar { display:flex; justify-content:space-between; gap: 8px 22px; flex-wrap:wrap; border-bottom:1px solid var(--line); padding: 12px 20px; font-size:.91rem; }
+    .rig-bar span { color:var(--muted); }
+    .rig-host { min-width:0; padding: clamp(10px, 2vw, 20px); }
+    .rig-scene { min-width: 0; position:relative; background: var(--anatomy-card,var(--paper)); border: 1px solid var(--line); border-radius: 6px; }
+    .rig-scene-upright { max-width: min(100%,680px); margin-inline:auto; }
+    .rig-scene > svg, .rig-scene > .iso-svg { display:block; width:100%; height:auto; margin:auto; }
+    .rig-host > svg { width:100%; height:auto; display:block; }
+    .rig-hit { cursor:pointer; outline:none; }
+    .rig-hit-area { fill:transparent; stroke:transparent; stroke-width:1.7; }
+    .rig-hit-marker { fill:var(--accent); stroke:var(--paper); stroke-width:2.2; pointer-events:none; }
+    .rig-hit:hover .rig-hit-area,.rig-hit:focus-visible .rig-hit-area { stroke:var(--accent); fill:var(--accent-soft); fill-opacity:.27; }
+    .rig-tools { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin: .65rem 0; }
+    .rig-tools label { min-width:0; }
+    .rig-readout { border-left: 3px solid var(--accent); padding: .4em .75em; color:var(--ink); font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+    .rig-question { margin-top:1rem; }
+    .rig-choices { display:flex; flex-wrap:wrap; align-items:start; gap: 7px; }
+    .rig-choices button { text-align:start; }
+    .rig-feedback { color:var(--ink); }
+    .rig-feedback[data-correct=true] { color:var(--accent); }
+    .rig-host .iso-svg { overflow:visible; }
+    @media (max-width:820px) {
+      .layout { display: block; padding: 22px 19px 50px; }
+      .top-inner { padding: 14px 19px; }
+      .toc { position: static; max-height: none; padding: 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); margin-bottom: 27px; border-bottom: 1px solid var(--line); }
+      .toc a { font-size: .82rem; grid-template-columns: 1.55rem 1fr; padding: 7px 5px; }
+      .course-list li { grid-template-columns: 1.5rem minmax(0,1fr); gap: 4px 10px; }
+      .course-list .page-ref { grid-column: 2; }
+      td,th { padding: .45rem .35rem; }
+      .rig-hit-marker { r: 8; }
+    }
+  </style>
+<style>
+  .unit-content,.unit-return { max-width: 1020px; margin-inline: auto; padding-inline: clamp(16px,4vw,52px); }
+  .unit-content { padding-block: clamp(18px,4vw,40px) 60px; }
+  .unit-return { padding-block-start: 16px; font-size: .9rem; }
+  .unit-content .hero { padding-bottom: 18px; }
+  .parts { overflow-wrap: anywhere; }
+  </style>
+<style id="physlab-bench-theme">
+:root {
+  color-scheme: light dark;
+  --lab-page: light-dark(#f1f5f7, #111820);
+  --lab-panel: light-dark(#fff, #18232d);
+  --lab-stage: light-dark(#e9f0f4, #111b24);
+  --lab-line: light-dark(#c8d5de, #334957);
+  --lab-control-line: light-dark(#a3b6c2, #516977);
+  --lab-ink: light-dark(#182832, #e7eef3);
+  --lab-muted: light-dark(#415563, #a9bac7);
+  --lab-signal: light-dark(#17634c, #a9efce);
+  --lab-signal-soft: light-dark(#e1f1eb, #223d3a);
+  --lab-signal-ink: light-dark(#fff, #132822);
+  --lab-font: system-ui, 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif;
+  --lab-radius: 10px;
+  --lab-key-radius: 7px;
+  --bg: var(--lab-page);
+  --paper: var(--lab-panel);
+  --ink: var(--lab-ink);
+  --muted: var(--lab-muted);
+  --line: var(--lab-line);
+  --accent: var(--lab-signal);
+  --accent-soft: var(--lab-signal-soft);
+  --accent-ink: var(--lab-signal-ink);
+}
+
+.iso:is(.rig-host, .cover-instrument) {
+  --anatomy-card: var(--lab-stage);
+  --anatomy-paper: var(--lab-stage);
+  --anatomy-text: var(--lab-muted);
+  --anatomy-strong: var(--lab-ink);
+  --anatomy-muted: var(--lab-muted);
+  --anatomy-face: light-dark(#d2e0e8, #314753);
+  --anatomy-top: light-dark(#e0ebf1, #3a505d);
+  --anatomy-shade-0: light-dark(#a2b6c3, #15212a);
+  --anatomy-shade-1: light-dark(#b7c9d4, #1e2e3a);
+  --anatomy-shade-2: light-dark(#c9d9e3, #263945);
+  --anatomy-shade-3: light-dark(#dce8ef, #304552);
+  --anatomy-hi: light-dark(#29424f, #e0ecf0);
+  --anatomy-mid: light-dark(#506b7b, #91adb9);
+  --anatomy-lo: light-dark(#647e8d, #617c8c);
+  --anatomy-faint: light-dark(#829aa8, #455d6a);
+  --anatomy-lit: light-dark(#153d3a, #effaff);
+  --anatomy-lit-top: light-dark(#aad3c6, #3c5e63);
+  --anatomy-lit-shade: light-dark(#8dbab2, #25454c);
+  --anatomy-weight: .86px;
+}
+
+body { font-family: var(--lab-font); }
+.unit-content { padding-block: clamp(16px, 2.8vw, 32px) 56px; }
+.unit-content .hero { padding-bottom: 16px; }
+.unit-content .lesson .hero h1 {
+  font-size: clamp(1.65rem, 3vw, 2.5rem);
+  margin: 4px 0 12px;
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+.unit-content .hero .kicker { margin: 0; }
+.unit-content .hero .lead { margin: 0 0 8px; line-height: 1.65; }
+.unit-content .hero .hint { margin: 0; }
+.unit-content .parts { gap: 4px 16px; padding-block: 12px; }
+.unit-content .parts a { color: var(--lab-muted); }
+.unit-content .parts a:first-child, .unit-content .parts a:hover { color: var(--lab-signal); }
+.unit-content .parts a:first-child { font-weight: 650; }
+.unit-content .rig-lab { margin-top: 24px; }
+.unit-content .rig-head { gap: 8px; margin-bottom: 12px; }
+.unit-content .rig-head :is(h2, p) { line-height: 1.55; }
+.unit-content .rig-instrument { border-radius: var(--lab-radius); }
+.unit-content .rig-bar { padding: 12px clamp(12px, 2vw, 20px); }
+.unit-content .rig-scene {
+  background: var(--lab-stage);
+  border-color: var(--lab-line);
+  border-radius: var(--lab-key-radius);
+}
+.unit-content .rig-host { padding: clamp(9px, 2vw, 18px); }
+.unit-content :is(button, select, input:not([type="range"]):not([type="radio"]):not([type="checkbox"])) {
+  border-radius: var(--lab-key-radius);
+  border-color: var(--lab-control-line);
+}
+.unit-content :is(button:hover:not(:disabled), button[aria-pressed="true"]) {
+  border-color: var(--lab-signal);
+}
+.unit-content .rig-readout {
+  border: 1px solid var(--lab-line);
+  border-inline-start: 3px solid var(--lab-signal);
+  border-radius: var(--lab-key-radius);
+  padding: .48em .75em;
+  background: var(--lab-stage);
+  font-variant-numeric: tabular-nums;
+}
+.unit-content .rig-readout :is(strong, output) { color: var(--lab-signal); }
+.unit-content :is(.rig-tools, .rig-choices) :is(button, select) { min-block-size: 40px; }
+.unit-content .rig-choices button { line-height: 1.45; }
+.unit-content :is(.sim, .formula, .equation) { border-color: var(--lab-line); }
+.unit-content .sim { border-radius: var(--lab-radius); }
+.unit-content .lesson-part { margin-block: 32px; }
+.unit-content .part-head { margin-bottom: 4px; }
+
+@media (max-width: 580px) {
+  .unit-content .rig-bar { gap: 3px 12px; }
+  .unit-content .rig-bar span { font-size: .83rem; }
+  .unit-content :is(.rig-tools, .rig-choices) :is(button, select) { min-block-size: 44px; }
+}
+</style>
+<style id="physlab-lesson-guide-style">
+.unit-content-with-guide, body:has(.unit-content-with-guide) > .unit-return {
+  max-width: 1280px;
+  padding-inline: clamp(16px, 3vw, 32px);
+}
+.lesson-workspace { min-width: 0; margin-block-start: 16px; }
+.lesson-body { min-width: 0; }
+.lesson-body > .rig-lab { margin-block-start: 0; }
+.lesson-body > :is(section[id], [id]) { scroll-margin-block-start: 76px; }
+.lesson-body .rig-question { scroll-margin-block-start: 76px; }
+
+.lesson-rail {
+  position: sticky;
+  inset-block-start: 8px;
+  z-index: 4;
+  display: grid;
+  gap: 8px;
+  align-self: start;
+  min-width: 0;
+  margin: 0 0 16px;
+}
+.lesson-guide, .lesson-task {
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--lab-line);
+  border-radius: var(--lab-radius);
+  background: var(--lab-panel);
+}
+.lesson-guide > summary, .lesson-task > summary {
+  min-block-size: 44px;
+  padding: 9px 12px;
+  color: var(--lab-signal);
+  font-size: .92rem;
+  line-height: 1.65;
+}
+.lesson-task > summary { min-block-size: 36px; padding-block: 6px; color: var(--lab-muted); font-size: .86rem; }
+.lesson-task-content { padding: 2px 12px 12px; }
+.lesson-task-title { display: block; color: var(--lab-signal); line-height: 1.4; }
+.lesson-task-text { margin: 5px 0 10px; color: var(--lab-ink); font-size: .86rem; line-height: 1.5; }
+.lesson-task-pager { display: flex; gap: 8px; }
+.unit-content .lesson-task-pager button { flex: 1; min-width: 0; padding: 6px; min-block-size: 38px; font-size: .85rem; }
+.lesson-step-target { outline: 2px solid var(--lab-signal); outline-offset: 3px; }
+.lesson-guide-current {
+  display: inline-block;
+  vertical-align: bottom;
+  margin-inline-start: .65em;
+  max-width: min(calc(100% - 8em), 24em);
+  overflow: hidden;
+  color: var(--lab-muted);
+  font-size: .82rem;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.unit-content .lesson-guide .parts {
+  display: block;
+  max-height: min(48dvh, 400px);
+  margin: 0;
+  padding: 4px 8px 10px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  border-bottom: 0;
+  font-size: .9rem;
+  line-height: 1.45;
+}
+.lesson-guide-group { margin: 0; padding: 5px 8px; color: var(--lab-muted); font-size: .82rem; }
+.lesson-guide-group:not(:first-child) { margin-block-start: 8px; padding-block-start: 10px; border-top: 1px solid var(--lab-line); }
+.unit-content .lesson-guide .parts a {
+  display: grid;
+  grid-template-columns: 2ch minmax(0,1fr);
+  gap: 8px;
+  align-items: baseline;
+  min-height: 40px;
+  padding: 7px 8px;
+  border-inline-start: 2px solid transparent;
+  border-radius: var(--lab-key-radius);
+  color: var(--lab-ink);
+  font-weight: 400;
+  text-decoration: none;
+}
+.lesson-guide-number { color: var(--lab-muted); font-variant-numeric: tabular-nums; }
+.unit-content .lesson-guide .parts a:hover { background: var(--lab-stage); }
+.unit-content .lesson-guide .parts a[aria-current="step"] {
+  background: var(--lab-signal-soft);
+  border-inline-start-color: var(--lab-signal);
+  color: var(--lab-signal);
+  font-weight: 650;
+}
+.lesson-guide a[aria-current="step"] .lesson-guide-number { color: inherit; }
+
+@media (min-width: 900px) {
+  .lesson-workspace { display: grid; grid-template-columns: clamp(190px, 19vw, 228px) minmax(0, 1fr); gap: clamp(16px, 2.5vw, 28px); }
+  .lesson-rail { inset-block-start: 16px; margin: 0; }
+  .lesson-guide-current { display: none; }
+  .unit-content .lesson-guide .parts { max-height: max(140px, calc(100dvh - 280px)); }
+  .lesson-body > :is(section[id], [id]), .lesson-body .rig-question { scroll-margin-block-start: 24px; }
+}
+@media (max-width: 899px) {
+  .unit-content .lesson-task-pager button { min-block-size: 44px; }
+}
+</style>
+</head>
+<body>
+<main id="course" class="unit-content"><noscript><p>请在浏览器中允许 JavaScript，以操作仿真实验台。</p></noscript></main>
+<script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id, lesson);</script>
+<script>const anatomyIso = (() => {
+const AZIMUTH = 45;
+const ELEVATION = 30;
+const SHADES = 4;
+const RADIANS = Math.PI / 180;
+const UNIT = Math.sqrt(1.6);
+function cameraOf({ scale, azimuth = AZIMUTH, elevation = ELEVATION }) {
+    const a = azimuth * RADIANS;
+    const e = elevation * RADIANS;
+    return { sinA: Math.sin(a), cosA: Math.cos(a), sinE: Math.sin(e), cosE: Math.cos(e), k: scale * UNIT };
+}
+function iso([x, y, z], projection) {
+    const { origin } = projection;
+    const { sinA, cosA, sinE, cosE, k } = cameraOf(projection);
+    return [origin[0] + (x * sinA - y * cosA) * k, origin[1] + ((x * cosA + y * sinA) * sinE - z * cosE) * k];
+}
+function towardViewer(projection) {
+    const { sinA, cosA } = cameraOf(projection);
+    return [cosA, sinA];
+}
+function depthOf([x, y, z], projection) {
+    const { sinA, cosA, sinE, cosE } = cameraOf(projection);
+    return (x * cosA + y * sinA) * cosE + z * sinE;
+}
+const tenth = (value) => {
+    const text = (Math.round(value * 10) / 10).toFixed(1).replace(/\.0$/, "");
+    return text === "-0" ? "0" : text;
+};
+function pathOf(points, closed = false) {
+    if (!points.length)
+        return "";
+    return points.map(([x, y], at) => `${at ? "L" : "M"}${tenth(x)} ${tenth(y)}`).join("") + (closed ? "Z" : "");
+}
+const joinPaths = (paths) => paths.filter(Boolean).join("");
+function roundedPlan({ x, y, w, d, r }, steps = 8) {
+    const radius = Math.max(0, Math.min(r, w / 2, d / 2));
+    const corners = [
+        [x + w - radius, y + radius, -90],
+        [x + w - radius, y + d - radius, 0],
+        [x + radius, y + d - radius, 90],
+        [x + radius, y + radius, 180],
+    ];
+    const out = [];
+    for (const [cx, cy, start] of corners) {
+        const count = radius > 0 ? steps : 0;
+        for (let step = 0; step <= count; step++) {
+            const angle = (start + (count ? (90 * step) / count : 45)) * RADIANS;
+            out.push([cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)]);
+        }
+    }
+    return out;
+}
+function signedArea(points) {
+    let area = 0;
+    for (let index = 0; index < points.length; index++) {
+        const [ax, ay] = points[index];
+        const [bx, by] = points[(index + 1) % points.length];
+        area += ax * by - bx * ay;
+    }
+    return area / 2;
+}
+const oriented = (points) => (signedArea(points) < 0 ? [...points].reverse() : points);
+function convexHull(points) {
+    const sorted = [...points].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    if (sorted.length < 3)
+        return sorted;
+    const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+    const lower = [];
+    for (const point of sorted) {
+        while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], point) <= 0)
+            lower.pop();
+        lower.push(point);
+    }
+    const upper = [];
+    for (let index = sorted.length - 1; index >= 0; index--) {
+        const point = sorted[index];
+        while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], point) <= 0)
+            upper.pop();
+        upper.push(point);
+    }
+    return [...lower.slice(0, -1), ...upper.slice(0, -1)];
+}
+function runsOf(flags, want) {
+    const count = flags.length;
+    const runs = [];
+    const start = flags.findIndex((flag, index) => flag !== flags[(index + count - 1) % count]);
+    if (start < 0)
+        return flags[0] === want ? [Array.from({ length: count + 1 }, (_, index) => index % count)] : [];
+    let run = null;
+    for (let step = 0; step < count; step++) {
+        const index = (start + step) % count;
+        if (flags[index] === want) {
+            if (!run)
+                run = [index];
+            run.push((index + 1) % count);
+        }
+        else if (run) {
+            runs.push(run);
+            run = null;
+        }
+    }
+    if (run)
+        runs.push(run);
+    return runs;
+}
+function extrude(ring, z, height, projection, options = {}) {
+    const convex = options.convex ?? true;
+    const count = ring.length;
+    const counter = signedArea(ring) > 0;
+    const [vx, vy] = towardViewer(projection);
+    const { sinA, cosA } = cameraOf(projection);
+    const normals = ring.map(([ax, ay], index) => {
+        const [bx, by] = ring[(index + 1) % count];
+        const dx = bx - ax;
+        const dy = by - ay;
+        const length = Math.hypot(dx, dy) || 1;
+        return (counter ? [dy / length, -dx / length] : [-dy / length, dx / length]);
+    });
+    const facing = normals.map(([nx, ny]) => nx * vx + ny * vy > 1e-9);
+    const top = ring.map(([x, y]) => iso([x, y, z + height], projection));
+    const bottom = ring.map(([x, y]) => iso([x, y, z], projection));
+    const outline = [];
+    const crease = [];
+    for (const run of runsOf(facing, false))
+        outline.push(pathOf(run.map((index) => top[index])));
+    for (const run of runsOf(facing, true)) {
+        crease.push(pathOf(run.map((index) => top[index])));
+        if (height > 0)
+            outline.push(pathOf(run.map((index) => bottom[index])));
+    }
+    if (height > 0) {
+        for (let index = 0; index < count; index++) {
+            if (facing[(index + count - 1) % count] !== facing[index])
+                outline.push(pathOf([top[index], bottom[index]]));
+        }
+    }
+    let fill;
+    if (convex) {
+        fill = pathOf(convexHull([...top, ...bottom]), true);
+    }
+    else {
+        const parts = [pathOf(oriented(top), true), pathOf(oriented(bottom), true)];
+        for (let index = 0; index < count; index++) {
+            if (!facing[index])
+                continue;
+            const next = (index + 1) % count;
+            parts.push(pathOf(oriented([top[index], top[next], bottom[next], bottom[index]]), true));
+        }
+        fill = parts.join("");
+    }
+    const buckets = Array.from({ length: SHADES }, () => []);
+    if (height > 0) {
+        const [lx, ly] = [-sinA, cosA];
+        for (let index = 0; index < count; index++) {
+            if (!facing[index])
+                continue;
+            const [nx, ny] = normals[index];
+            const lit = (nx * lx + ny * ly + 1) / 2;
+            const shade = Math.min(SHADES - 1, Math.max(0, Math.floor(lit * SHADES)));
+            const next = (index + 1) % count;
+            buckets[shade].push(pathOf(oriented([top[index], top[next], bottom[next], bottom[index]]), true));
+        }
+    }
+    let bevel;
+    if (options.bevel && options.bevel > 0) {
+        const by = options.bevel;
+        const inset = ring.map(([x, y], index) => {
+            const [ax, ay] = normals[(index + count - 1) % count];
+            const [bx, by2] = normals[index];
+            const mx = ax + bx;
+            const my = ay + by2;
+            const length = Math.hypot(mx, my) || 1;
+            return [x - (mx / length) * by, y - (my / length) * by];
+        });
+        const insetTop = inset.map(([x, y]) => iso([x, y, z + height], projection));
+        bevel = runsOf(facing, true)
+            .map((run) => pathOf([top[run[0]], ...run.slice(1, -1).map((index) => insetTop[index]), top[run[run.length - 1]]]))
+            .join("");
+    }
+    return {
+        fill,
+        outline: outline.join(""),
+        crease: crease.join(""),
+        top: pathOf(oriented(top), true),
+        shades: buckets.map((paths) => paths.join("")),
+        bevel,
+    };
+}
+const ringOf = (plan, steps = 8) => roundedPlan(plan, steps);
+function slabOf(plan, z, height, projection, steps = 8, bevel = 0) {
+    return extrude(ringOf(plan, steps), z, height, projection, { convex: true, bevel });
+}
+function circleRing(cx, cy, radius, steps = 40) {
+    return Array.from({ length: steps }, (_, step) => {
+        const angle = (step / steps) * Math.PI * 2;
+        return [cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)];
+    });
+}
+function cylinder(cx, cy, radius, z, height, projection, steps = 32, bevel = 0) {
+    return extrude(circleRing(cx, cy, radius, steps), z, height, projection, { convex: true, bevel });
+}
+const insetPlan = ({ x, y, w, d, r }, by) => ({ x: x + by, y: y + by, w: w - by * 2, d: d - by * 2, r: Math.max(0, r - by) });
+function onTop(points, z, projection, closed = false) {
+    return pathOf(points.map(([x, y]) => iso([x, y, z], projection)), closed);
+}
+const planOutline = (plan, z, projection, steps = 8) => onTop(ringOf(plan, steps), z, projection, true);
+const lineOnTop = (from, to, z, projection) => onTop([from, to], z, projection);
+const segment = (from, to, projection) => pathOf([iso(from, projection), iso(to, projection)]);
+const rise = (at, from, to, projection) => segment([at[0], at[1], from], [at[0], at[1], to], projection);
+const ring = (cx, cy, radius, z, projection, steps = 40) => onTop(circleRing(cx, cy, radius, steps), z, projection, true);
+const pointsAt = (points, projection) => points.map((point) => iso(point, projection));
+function dotGrid(x, y, columns, rows, gap, z, projection) {
+    const dots = [];
+    for (let row = 0; row < rows; row++) {
+        for (let column = 0; column < columns; column++)
+            dots.push(iso([x + column * gap, y + row * gap, z], projection));
+    }
+    return dots;
+}
+function corners({ x, y, w, d }, inset = 0) {
+    return [
+        [x + inset, y + inset],
+        [x + w - inset, y + inset],
+        [x + inset, y + d - inset],
+        [x + w - inset, y + d - inset],
+    ];
+}
+function boxCorners({ x, y, w, d }, z0, z1) {
+    const out = [];
+    for (const px of [x, x + w])
+        for (const py of [y, y + d])
+            for (const z of [z0, z1])
+                out.push([px, py, z]);
+    return out;
+}
+function knurl(cx, cy, radius, z0, z1, count, projection, inset = 0.4) {
+    const [vx, vy] = towardViewer(projection);
+    const lines = [];
+    for (let index = 0; index < count; index++) {
+        const angle = (index / count) * Math.PI * 2;
+        const nx = Math.cos(angle);
+        const ny = Math.sin(angle);
+        if (nx * vx + ny * vy < 0.15)
+            continue;
+        lines.push(segment([cx + radius * nx, cy + radius * ny, z0 + inset], [cx + radius * nx, cy + radius * ny, z1 - inset], projection));
+    }
+    return lines.join("");
+}
+function sideArc(cx, cy, radius, z, projection, steps = 24) {
+    const [vx, vy] = towardViewer(projection);
+    const facing = Math.atan2(vy, vx);
+    const points = [];
+    for (let step = 0; step <= steps; step++) {
+        const angle = facing - Math.PI / 2 + (step / steps) * Math.PI;
+        points.push(iso([cx + radius * Math.cos(angle), cy + radius * Math.sin(angle), z], projection));
+    }
+    return pathOf(points);
+}
+function ringSeam(ring, z, projection) {
+    const count = ring.length;
+    const counter = signedArea(ring) > 0;
+    const [vx, vy] = towardViewer(projection);
+    const facing = ring.map(([ax, ay], index) => {
+        const [bx, by] = ring[(index + 1) % count];
+        const dx = bx - ax;
+        const dy = by - ay;
+        const [nx, ny] = counter ? [dy, -dx] : [-dy, dx];
+        return nx * vx + ny * vy > 1e-9;
+    });
+    return runsOf(facing, true).map((run) => pathOf(run.map((index) => iso([ring[index][0], ring[index][1], z], projection)))).join("");
+}
+const sideSeam = (plan, z, projection, steps = 8) => ringSeam(ringOf(plan, steps), z, projection);
+function sideRing(center, radius, axis, projection, steps = 20) {
+    const [px, py, pz] = center;
+    const points = [];
+    for (let step = 0; step < steps; step++) {
+        const angle = (step / steps) * Math.PI * 2;
+        const u = radius * Math.cos(angle);
+        const v = radius * Math.sin(angle);
+        points.push(iso(axis === "x" ? [px, py + u, pz + v] : [px + u, py, pz + v], projection));
+    }
+    return pathOf(points, true);
+}
+function coil(from, to, center, radius, turns, axis, projection, perTurn = 16) {
+    const count = Math.max(1, Math.round(turns * perTurn));
+    const back = [];
+    const front = [];
+    let run = [];
+    let near = null;
+    for (let index = 0; index <= count; index++) {
+        const share = index / count;
+        const angle = share * turns * Math.PI * 2;
+        const u = radius * Math.cos(angle);
+        const v = radius * Math.sin(angle);
+        const along = from + (to - from) * share;
+        const point = axis === "x" ? [along, center[0] + u, center[1] + v] : [center[0] + u, along, center[1] + v];
+        const normal = axis === "x" ? [0, Math.cos(angle), Math.sin(angle)] : [Math.cos(angle), 0, Math.sin(angle)];
+        const facing = depthOf(normal, projection) > 0;
+        const flat = iso(point, projection);
+        if (near === null)
+            near = facing;
+        if (facing !== near) {
+            run.push(flat);
+            (near ? front : back).push(pathOf(run));
+            run = [flat];
+            near = facing;
+            continue;
+        }
+        run.push(flat);
+    }
+    if (run.length > 1)
+        (near ? front : back).push(pathOf(run));
+    return { back: back.join(""), front: front.join("") };
+}
+function topTicks(from, to, step, every, edge, z, lengths, projection, axis = "x") {
+    const minor = [];
+    const major = [];
+    const first = Math.ceil(from / step) * step;
+    for (let at = first, index = Math.round(first / step); at <= to + 1e-9; at += step, index++) {
+        const big = index % every === 0;
+        const length = big ? lengths[1] : lengths[0];
+        const a = axis === "x" ? [at, edge] : [edge, at];
+        const b = axis === "x" ? [at, edge + length] : [edge + length, at];
+        (big ? major : minor).push(lineOnTop(a, b, z, projection));
+    }
+    return { minor: minor.join(""), major: major.join("") };
+}
+function sideTicks(from, to, step, every, face, top, lengths, projection, axis = "x") {
+    const minor = [];
+    const major = [];
+    const first = Math.ceil(from / step) * step;
+    for (let at = first, index = Math.round(first / step); at <= to + 1e-9; at += step, index++) {
+        const big = index % every === 0;
+        const length = big ? lengths[1] : lengths[0];
+        const a = axis === "x" ? [at, face, top] : [face, at, top];
+        const b = axis === "x" ? [at, face, top - length] : [face, at, top - length];
+        (big ? major : minor).push(segment(a, b, projection));
+    }
+    return { minor: minor.join(""), major: major.join("") };
+}
+function radialTicks(cx, cy, radius, count, every, z, lengths, projection, from = 0, span = Math.PI * 2) {
+    const minor = [];
+    const major = [];
+    const closed = Math.abs(span - Math.PI * 2) < 1e-9;
+    const steps = closed ? count : count + 1;
+    for (let index = 0; index < steps; index++) {
+        const angle = from + (index / count) * span;
+        const big = index % every === 0;
+        const inner = radius - (big ? lengths[1] : lengths[0]);
+        const sx = Math.sin(angle);
+        const sy = -Math.cos(angle);
+        (big ? major : minor).push(lineOnTop([cx + sx * inner, cy + sy * inner], [cx + sx * radius, cy + sy * radius], z, projection));
+    }
+    return { minor: minor.join(""), major: major.join("") };
+}
+const haloOf = (plan, z, height, projection) => slabOf(plan, z, height, projection).fill;
+function axisVector(projection, [dx, dy, dz]) {
+    const origin = iso([0, 0, 0], projection);
+    const moved = iso([dx, dy, dz], projection);
+    return [moved[0] - origin[0], moved[1] - origin[1]];
+}
+const fine = (value) => Math.round(value * 100) / 100;
+function translateAlong(projection, by) {
+    const [x, y] = axisVector(projection, by);
+    return `translate(${fine(x)} ${fine(y)})`;
+}
+const thousandth = (value) => Math.round(value * 1000) / 1000;
+function axesAt(at, z, projection) {
+    const origin = iso([at[0], at[1], z], projection);
+    const along = (point) => {
+        const [px, py] = iso(point, projection);
+        return [px - origin[0], py - origin[1]];
+    };
+    return { origin, x: along([at[0] + 1, at[1], z]), y: along([at[0], at[1] + 1, z]), z: along([at[0], at[1], z + 1]) };
+}
+const matrixOf = (u, v, origin) => `matrix(${thousandth(u[0])} ${thousandth(u[1])} ${thousandth(v[0])} ${thousandth(v[1])} ${thousandth(origin[0])} ${thousandth(origin[1])})`;
+function holdStill(element, [dx, dy]) {
+    const text = dx || dy ? `translate(${-dx} ${-dy})` : "";
+    element.querySelectorAll("[data-hold]").forEach((node) => (text ? node.setAttribute("transform", text) : node.removeAttribute("transform")));
+}
+function topMatrix(at, z, projection, along = "x") {
+    const { origin, x, y } = axesAt(at, z, projection);
+    return along === "x" ? matrixOf(x, y, origin) : matrixOf([-y[0], -y[1]], x, origin);
+}
+function sideMatrix(at, z, projection, face) {
+    const { origin, x, y, z: up } = axesAt(at, z, projection);
+    const down = [-up[0], -up[1]];
+    return face === "left" ? matrixOf(x, down, origin) : matrixOf([-y[0], -y[1]], down, origin);
+}
+function screenRise(height, projection) {
+    const { cosE, k } = cameraOf(projection);
+    return height * cosE * k;
+}
+function fitProjection(points, width, height, { pad = 24, headroom = 0, azimuth = AZIMUTH, elevation = ELEVATION } = {}) {
+    const unit = { origin: [0, 0], scale: 1, azimuth, elevation };
+    const flat = points.map((point) => iso(point, unit));
+    const xs = flat.map(([x]) => x);
+    const ys = flat.map(([, y]) => y);
+    const left = Math.min(...xs);
+    const right = Math.max(...xs);
+    const up = Math.min(...ys);
+    const down = Math.max(...ys);
+    const scale = Math.min((width - pad * 2) / (right - left), (height - pad * 2 - headroom) / (down - up));
+    return {
+        origin: [width / 2 - ((left + right) / 2) * scale, headroom + (height - headroom) / 2 - ((up + down) / 2) * scale],
+        scale,
+        azimuth,
+        elevation,
+    };
+}
+const escape = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const attrs = (pairs) => Object.entries(pairs)
+    .filter(([, value]) => value !== undefined && value !== false)
+    .map(([key, value]) => ` ${key}="${escape(String(value))}"`)
+    .join("");
+function solidSvg(paths, { tone = "hi", crease = "faint", halo = false, lit = false, flat = false, className, inner = "" } = {}) {
+    const parts = [];
+    if (halo)
+        parts.push(`<path class="iso-halo" d="${paths.fill}"/>`);
+    parts.push(`<path class="iso-fill" d="${paths.fill}"/>`);
+    if (!flat) {
+        paths.shades.forEach((d, shade) => {
+            if (d)
+                parts.push(`<path class="iso-shade" data-shade="${shade}" d="${d}"/>`);
+        });
+        parts.push(`<path class="iso-top" d="${paths.top}"/>`);
+    }
+    if (crease !== "none" && paths.crease)
+        parts.push(`<path class="iso-line iso-crease" data-tone="${crease}" d="${paths.crease}"/>`);
+    if (crease !== "none" && paths.bevel)
+        parts.push(`<path class="iso-line iso-bevel" data-tone="${crease}" d="${paths.bevel}"/>`);
+    if (inner)
+        parts.push(inner);
+    parts.push(`<path class="iso-line iso-edge" data-tone="${tone}" d="${paths.outline}"/>`);
+    return `<g${attrs({ class: className ? `iso-solid ${className}` : "iso-solid", "data-lit": lit ? "" : undefined, "data-seamless": paths.seamless ? "" : undefined })}>${parts.join("")}</g>`;
+}
+function lineSvg(d, { tone = "lo", dotted = false, dashed = false, flow = false, className, free } = {}) {
+    if (!d)
+        return "";
+    return `<path${attrs({
+        class: className ? `iso-line ${className}` : "iso-line",
+        "data-tone": tone,
+        "data-free": free === true ? "" : free || undefined,
+        "data-dotted": dotted ? "" : undefined,
+        "data-dashed": dashed ? "" : undefined,
+        "data-flow": flow ? "" : undefined,
+        d,
+    })}/>`;
+}
+function dotsSvg(points, { size = 0.5, tone = "mid", pulse = false } = {}) {
+    const dots = points
+        .map(([x, y, alpha], index) => `<circle cx="${tenth(x)}" cy="${tenth(y)}" r="${size}"${alpha !== undefined && alpha < 1 ? ` fill-opacity="${Math.max(0, alpha).toFixed(2)}"` : ""}${pulse ? ` data-pulse="" style="--pulse-at:${(index * 137) % 1600}ms"` : ""}/>`)
+        .join("");
+    return `<g class="iso-dots" data-tone="${tone}">${dots}</g>`;
+}
+function fadedSvg(list, style = {}) {
+    const groups = new Map();
+    for (const entry of list) {
+        const [d, alpha] = Array.isArray(entry) ? entry : [entry.d, entry.alpha];
+        if (!d || !(alpha > 0.02))
+            continue;
+        const level = Math.min(1, Math.round(alpha * 20) / 20);
+        groups.set(level, (groups.get(level) ?? "") + d);
+    }
+    return [...groups].map(([alpha, d]) => (alpha >= 1 ? lineSvg(d, style) : `<g opacity="${alpha.toFixed(2)}">${lineSvg(d, style)}</g>`)).join("");
+}
+function fadeLineSvg(points, { fade = [0, 0], tone = "lo", className, stops = 6 } = {}) {
+    if (points.length < 2)
+        return "";
+    const ease = (t) => t * t * (3 - 2 * t);
+    const hashOf = (text) => {
+        let hash = 2166136261;
+        for (let index = 0; index < text.length; index++)
+            hash = Math.imul(hash ^ text.charCodeAt(index), 16777619);
+        return (hash >>> 0).toString(36);
+    };
+    const lengths = [0];
+    for (let index = 1; index < points.length; index++)
+        lengths.push(lengths[index - 1] + Math.hypot(points[index][0] - points[index - 1][0], points[index][1] - points[index - 1][1]));
+    const at = (length) => {
+        let index = 1;
+        while (index < points.length - 1 && lengths[index] < length)
+            index++;
+        const span = lengths[index] - lengths[index - 1] || 1;
+        const t = Math.max(0, Math.min(1, (length - lengths[index - 1]) / span));
+        return [points[index - 1][0] + (points[index][0] - points[index - 1][0]) * t, points[index - 1][1] + (points[index][1] - points[index - 1][1]) * t];
+    };
+    const pieceOf = (from, to) => [at(from), ...points.filter((_, index) => lengths[index] > from + 1e-6 && lengths[index] < to - 1e-6), at(to)];
+    const total = lengths[lengths.length - 1];
+    if (total < 1e-6)
+        return "";
+    let [start, end] = Array.isArray(fade) ? fade : [fade, fade];
+    if (start + end > total) {
+        const share = total / (start + end);
+        start *= share;
+        end *= share;
+    }
+    const paint = `var(--anatomy-${tone})`;
+    const ramp = (piece, rising) => {
+        const d = pathOf(piece);
+        const [x1, y1] = piece[0];
+        const [x2, y2] = piece[piece.length - 1];
+        const id = `iso-fade-${hashOf(`${d}|${tone}|${rising}`)}`;
+        const marks = Array.from({ length: stops + 1 }, (_, index) => {
+            const t = index / stops;
+            const alpha = ease(rising ? t : 1 - t);
+            return `<stop offset="${t.toFixed(3)}" stop-opacity="${alpha.toFixed(3)}" style="stop-color:${paint}"/>`;
+        }).join("");
+        const gradient = `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${tenth(x1)}" y1="${tenth(y1)}" x2="${tenth(x2)}" y2="${tenth(y2)}">${marks}</linearGradient>`;
+        return `<defs>${gradient}</defs><path${attrs({ class: className ? `iso-line ${className}` : "iso-line", "data-tone": tone, "data-free": rising ? "start" : "end", d, style: `stroke:url(#${id})` })}/>`;
+    };
+    const parts = [];
+    if (start > 0.05)
+        parts.push(ramp(pieceOf(0, start), true));
+    if (total - end - start > 0.05)
+        parts.push(lineSvg(pathOf(pieceOf(start, total - end)), { tone, className }));
+    if (end > 0.05)
+        parts.push(ramp(pieceOf(total - end, total), false));
+    return `<g class="iso-fade">${parts.join("")}</g>`;
+}
+function wireSvg(from, to, { via = [], tone = "lo", dotted = false, dashed = false, flow = false, ends = "both", size = 1.2 } = {}) {
+    const d = pathOf([from, ...via, to]);
+    const end = ([x, y]) => `<circle class="iso-wire-end" cx="${tenth(x)}" cy="${tenth(y)}" r="${size}"/>`;
+    return `<g class="iso-wire" data-tone="${tone}">${lineSvg(d, { tone, dotted, dashed, flow })}${ends === "both" || ends === "from" ? end(from) : ""}${ends === "both" || ends === "to" ? end(to) : ""}</g>`;
+}
+function faceTextSvg(transform, text, { size = 3, tone = "mid", anchor = "start" } = {}) {
+    return `<text class="iso-face-text" data-tone="${tone}" transform="${transform}" font-size="${size}" text-anchor="${anchor}">${escape(text)}</text>`;
+}
+function groupSvg(children, extra = {}) {
+    return `<g${attrs(extra)}>${Array.isArray(children) ? children.join("") : children}</g>`;
+}
+function figureSvg({ width, height, label, body, standalone = false, className }) {
+    const style = standalone ? `<style>${ISO_CSS}</style>` : "";
+    return `<svg${attrs({
+        xmlns: "http://www.w3.org/2000/svg",
+        class: `iso-svg${standalone ? " iso" : ""}${className ? ` ${className}` : ""}`,
+        "data-theme": standalone || undefined,
+        viewBox: `0 0 ${width} ${height}`,
+        role: "img",
+        "aria-label": label,
+    })}>${style}${Array.isArray(body) ? body.join("") : body}</svg>`;
+}
+function swatchSvg(mark) {
+    if (mark === "raised" || mark === "flat" || mark === "lit") {
+        const body = mark === "flat" ? "M2 6.5 8 3.5 14 6.5 8 9.5Z" : "M2 4.5 8 1.5 14 4.5 14 6 8 9 2 6Z";
+        const crease = mark === "flat" ? "" : `<path class="iso-swatch-crease" d="M2 4.5 8 7.5 14 4.5"/>`;
+        return `<svg class="iso-swatch" data-mark="${mark}" viewBox="0 0 16 10" aria-hidden="true"><path d="${body}"/>${crease}</svg>`;
+    }
+    return `<svg class="iso-swatch" data-mark="${mark}" viewBox="0 0 16 10" aria-hidden="true"><path d="M1.5 5h13"/></svg>`;
+}
+function plateHtml({ fig, title, hint, readout = "", keys = [], caption, body }) {
+    const corner = (name, text, extra = "") => `<span class="iso-plate-corner" data-corner="${name}"${extra}>${escape(text)}</span>`;
+    const legend = keys.length || caption
+        ? `<figcaption class="iso-legend">${keys.length ? `<span class="iso-keys">${keys.map((key) => `<span class="iso-key">${swatchSvg(key.mark)}${escape(key.label)}</span>`).join("")}</span>` : ""}${caption ? `<span class="iso-caption">${escape(caption)}</span>` : ""}</figcaption>`
+        : "";
+    return `<figure class="iso-figure"><div class="iso-plate"><div class="iso-plate-corners" aria-hidden="true">${corner("fig", fig)}${title ? corner("title", title) : ""}${hint ? corner("hint", hint) : ""}${corner("readout", readout, " data-readout")}</div>${body}</div>${legend}</figure>`;
+}
+function pageHtml({ title, theme = "dark", body, script = "", width = 650 }) {
+    return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${escape(title)}</title><style>${ISO_CSS}${PAGE_CSS.replace("__WIDTH__", String(width))}</style></head><body class="iso" data-theme="${theme}"><main class="iso-page">${body}</main>${script ? `<script type="module">${script.replace(/<\/(script)/gi, "<\\/$1")}<\/script>` : ""}</body></html>`;
+}
+const PAGE_CSS = `
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body[data-theme="light"]{color-scheme:light}
+body{margin:0;background:var(--anatomy-page);color:var(--anatomy-text);font:14px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.iso-page{width:min(__WIDTH__px,100% - 32px);margin:64px auto 96px}
+`;
+const ISO_CSS = `
+.iso{
+  --anatomy-page:#0b0b0b;--anatomy-card:#131313;--anatomy-text:#a3a3a3;--anatomy-strong:#e6e6e6;--anatomy-muted:#6e6e6e;
+  --anatomy-paper:#131313;--anatomy-face:#1b1b1b;--anatomy-top:#1c1c1c;
+  --anatomy-shade-0:#0f0f0f;--anatomy-shade-1:#121212;--anatomy-shade-2:#151515;--anatomy-shade-3:#181818;
+  --anatomy-lit-top:#262626;--anatomy-lit-shade:#1d1d1d;
+  --anatomy-hi:#d4d4d4;--anatomy-mid:#6a6a6a;--anatomy-lo:#3e3e3e;--anatomy-faint:#2a2a2a;--anatomy-lit:#ffffff;
+  --anatomy-halo:#050505;--anatomy-halo-opacity:.9;--anatomy-dot:#e6e6e6;
+  --anatomy-red:#ff6b6b;--anatomy-green:#6be0a0;--anatomy-blue:#6b9bff;
+  --anatomy-weight:.6px;--anatomy-ease:cubic-bezier(.32,.72,0,1);
+  --anatomy-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --anatomy-lift:inset 0 1px 0 0 #ffffff0a,inset 0 0 0 1px #ffffff06,0 0 0 1px #00000026,0 1px 1px -.5px #00000014,0 3px 3px -1.5px #00000014,0 6px 6px -3px #00000014,0 12px 12px -6px #00000014;
+}
+.iso[data-theme="light"]{
+  --anatomy-page:#f2f2ef;--anatomy-card:#fbfbfa;--anatomy-text:#57575a;--anatomy-strong:#18181a;--anatomy-muted:#8c8c90;
+  --anatomy-paper:#fbfbfa;--anatomy-face:#ffffff;--anatomy-top:#ffffff;
+  --anatomy-shade-0:#dcdcd9;--anatomy-shade-1:#e5e5e2;--anatomy-shade-2:#ededea;--anatomy-shade-3:#f4f4f1;
+  --anatomy-lit-top:#ffffff;--anatomy-lit-shade:#eeeeeb;
+  --anatomy-hi:#26262a;--anatomy-mid:#8a8a8f;--anatomy-lo:#b4b4b8;--anatomy-faint:#d4d4d6;--anatomy-lit:#000000;
+  --anatomy-halo:#8a8a80;--anatomy-halo-opacity:.32;--anatomy-dot:#3a3a3e;
+  --anatomy-red:#e5484d;--anatomy-green:#30a46c;--anatomy-blue:#3e63dd;
+  --anatomy-lift:inset 0 1px 0 0 #ffffff,0 0 0 1px #0000000f,0 1px 1px -.5px #0000000a,0 3px 3px -1.5px #0000000a,0 6px 6px -3px #0000000a,0 12px 12px -6px #0000000a;
+}
+.iso-svg{display:block;width:100%;height:auto;overflow:visible}
+.iso-svg path,.iso-svg circle{vector-effect:non-scaling-stroke}
+.iso-fill{fill:var(--anatomy-paper);stroke:none}
+.iso-solid[data-lit]>.iso-fill{fill:var(--anatomy-face)}
+.iso-shade,.iso-top{stroke:none}
+.iso-shade[data-shade="0"]{fill:var(--anatomy-shade-0)}
+.iso-shade[data-shade="1"]{fill:var(--anatomy-shade-1)}
+.iso-shade[data-shade="2"]{fill:var(--anatomy-shade-2)}
+.iso-shade[data-shade="3"]{fill:var(--anatomy-shade-3)}
+.iso-top{fill:var(--anatomy-top)}
+.iso-solid[data-lit]>.iso-top{fill:var(--anatomy-lit-top)}
+.iso-solid[data-lit]>.iso-shade{fill:var(--anatomy-lit-shade)}
+.iso-solid[data-seamless]>.iso-shade,.iso-solid[data-seamless]>.iso-top{stroke-width:.4;stroke-linejoin:round}
+.iso-solid[data-seamless]>.iso-shade[data-shade="0"]{stroke:var(--anatomy-shade-0)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="1"]{stroke:var(--anatomy-shade-1)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="2"]{stroke:var(--anatomy-shade-2)}
+.iso-solid[data-seamless]>.iso-shade[data-shade="3"]{stroke:var(--anatomy-shade-3)}
+.iso-solid[data-seamless]>.iso-top{stroke:var(--anatomy-top)}
+.iso-solid[data-seamless][data-lit]>.iso-top{stroke:var(--anatomy-lit-top)}
+.iso-solid[data-seamless][data-lit]>.iso-shade{stroke:var(--anatomy-lit-shade)}
+.iso-solid[data-lit]>.iso-edge{stroke:var(--anatomy-lit)}
+.iso-halo{fill:var(--anatomy-halo);stroke:none;filter:blur(9px);opacity:var(--anatomy-halo-opacity);transform:translateY(3px)}
+.iso-line{fill:none;stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight);stroke-linecap:round;stroke-linejoin:round}
+.iso-line[data-tone="hi"]{stroke:var(--anatomy-hi)}
+.iso-line[data-tone="mid"]{stroke:var(--anatomy-mid)}
+.iso-line[data-tone="lo"]{stroke:var(--anatomy-lo)}
+.iso-line[data-tone="faint"]{stroke:var(--anatomy-faint)}
+.iso-line[data-tone="lit"]{stroke:var(--anatomy-lit)}
+.iso-line[data-tone="red"]{stroke:var(--anatomy-red)}
+.iso-line[data-tone="green"]{stroke:var(--anatomy-green)}
+.iso-line[data-tone="blue"]{stroke:var(--anatomy-blue)}
+.iso-line[data-dotted]{stroke-dasharray:.01 3.5;stroke-width:1}
+.iso-line[data-dashed]{stroke-dasharray:3 3}
+.iso-line[data-flow]{stroke-dasharray:2 6}
+.iso-wire-end{fill:var(--anatomy-paper);stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight)}
+.iso-wire[data-tone="hi"] .iso-wire-end{stroke:var(--anatomy-hi)}
+.iso-wire[data-tone="mid"] .iso-wire-end{stroke:var(--anatomy-mid)}
+.iso-wire[data-tone="faint"] .iso-wire-end{stroke:var(--anatomy-faint)}
+.iso-wire[data-tone="lit"] .iso-wire-end{stroke:var(--anatomy-lit)}
+.iso-dots circle{fill:var(--anatomy-dot);stroke:none;opacity:.32}
+.iso-dots[data-tone="hi"] circle{opacity:.85}
+.iso-dots[data-tone="mid"] circle{opacity:.45}
+.iso-dots[data-tone="lo"] circle{opacity:.22}
+.iso-dots[data-tone="faint"] circle{opacity:.12}
+.iso-face-text{fill:var(--anatomy-mid);font-family:var(--anatomy-mono);letter-spacing:.04em}
+.iso-face-text[data-tone="hi"]{fill:var(--anatomy-hi)}
+.iso-face-text[data-tone="lo"]{fill:var(--anatomy-lo)}
+.iso-face-text[data-tone="faint"]{fill:var(--anatomy-faint)}
+.tb-body{fill:var(--anatomy-shade-2);stroke:none}
+.tb-shine{fill:var(--anatomy-top);stroke:none}
+.tb-shade{fill:var(--anatomy-shade-0);stroke:none}
+.tb-ring{fill:none;stroke:var(--anatomy-lo);stroke-width:.45;stroke-linecap:butt;stroke-linejoin:round}
+.tb-ring[data-tone="mid"]{stroke:var(--anatomy-mid)}
+.tb-ring[data-tone="faint"]{stroke:var(--anatomy-faint)}
+.tb-ring[data-tone="hi"]{stroke:var(--anatomy-hi)}
+@keyframes iso-flow{to{stroke-dashoffset:-32}}
+@keyframes iso-pulse{0%,100%{opacity:.18}12%{opacity:1}40%{opacity:.18}}
+.iso-line[data-flow]{animation:iso-flow 1600ms linear infinite}
+.iso-dots circle[data-pulse]{animation:iso-pulse 1600ms steps(1,end) infinite;animation-delay:var(--pulse-at,0ms)}
+.iso-figure{margin:32px 0 36px}
+.iso-plate{position:relative;padding:52px 24px;border-radius:0;background:var(--anatomy-card);box-shadow:0 0 0 1px var(--anatomy-mid);--anatomy-paper:var(--anatomy-card)}
+.iso-plate-corners{position:absolute;inset:18px 20px;pointer-events:none}
+.iso-plate-corner{position:absolute;color:var(--anatomy-muted);font-family:var(--anatomy-mono);font-size:10.5px;line-height:1;letter-spacing:.04em;white-space:nowrap}
+.iso-plate-corner[data-corner="fig"]{top:0;left:0;color:var(--anatomy-text)}
+.iso-plate-corner[data-corner="title"]{top:0;right:0;text-transform:uppercase;letter-spacing:.1em}
+.iso-plate-corner[data-corner="hint"]{bottom:0;left:0;text-transform:uppercase;letter-spacing:.1em}
+.iso-plate-corner[data-corner="readout"]{right:0;bottom:0;color:var(--anatomy-text);font-variant-numeric:tabular-nums}
+.iso-plate .iso-svg{margin:0 auto}
+.iso-legend{display:grid;gap:8px;margin-top:12px;color:var(--anatomy-muted);font-size:13px;line-height:1.55}
+.iso-keys{display:flex;flex-wrap:wrap;gap:6px 18px}
+.iso-key{display:inline-flex;align-items:center;gap:7px}
+.iso-swatch{width:16px;height:10px;flex:none;overflow:visible}
+.iso-swatch path{fill:none;stroke:var(--anatomy-hi);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.iso-swatch[data-mark="raised"] path,.iso-swatch[data-mark="flat"] path{stroke:var(--anatomy-mid)}
+.iso-swatch[data-mark="lit"] path{stroke:var(--anatomy-lit)}
+.iso-swatch[data-mark="dim"] path{stroke:var(--anatomy-lo)}
+.iso-swatch[data-mark="dotted"] path{stroke-dasharray:.01 3;stroke-width:1.4}
+.iso-swatch[data-mark="dashed"] path{stroke-dasharray:3 2.5}
+.iso-swatch[data-mark="red"] path{stroke:var(--anatomy-red)}
+.iso-swatch[data-mark="green"] path{stroke:var(--anatomy-green)}
+.iso-swatch[data-mark="blue"] path{stroke:var(--anatomy-blue)}
+.iso-swatch-crease{stroke:var(--anatomy-lo)!important}
+@media (max-width:560px){.iso-plate{padding:48px 12px 70px}.iso-plate-corner[data-corner="hint"]{bottom:18px}}
+@media (prefers-reduced-motion:reduce){.iso-line[data-flow],.iso-dots circle[data-pulse]{animation:none}}
+`;
+
+return {AZIMUTH,ELEVATION,SHADES,cameraOf,iso,towardViewer,depthOf,pathOf,joinPaths,roundedPlan,extrude,ringOf,slabOf,circleRing,cylinder,insetPlan,onTop,planOutline,lineOnTop,segment,rise,ring,pointsAt,dotGrid,corners,boxCorners,knurl,sideArc,ringSeam,sideSeam,sideRing,coil,topTicks,sideTicks,radialTicks,haloOf,axisVector,translateAlong,holdStill,topMatrix,sideMatrix,screenRise,fitProjection,solidSvg,lineSvg,dotsSvg,fadedSvg,fadeLineSvg,wireSvg,faceTextSvg,groupSvg,figureSvg,plateHtml,pageHtml,ISO_CSS};
+})();
+const anatomyLathe = (() => {
+const { cameraOf, iso, pathOf } = anatomyIso;
+const TAU = Math.PI * 2;
+const LIGHT_UP = 1.2;
+const BANDS = [0, 0.2, 0.42, 0.62];
+
+const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const add3 = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const sub3 = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const mul3 = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
+const len3 = (a) => Math.hypot(a[0], a[1], a[2]);
+const unit3 = (a) => {
+  const length = len3(a) || 1;
+  return [a[0] / length, a[1] / length, a[2] / length];
+};
+const cross3 = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const lerp3 = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+
+function viewOf(P) {
+  const { sinA, cosA, sinE, cosE } = cameraOf(P);
+  return [cosA * cosE, sinA * cosE, sinE];
+}
+
+function lightOf(P) {
+  const { sinA, cosA } = cameraOf(P);
+  return unit3([-sinA, cosA, LIGHT_UP]);
+}
+
+const scaleOf = (P) => cameraOf(P).k;
+
+function bandOf(score) {
+  let tone = 0;
+  while (tone < BANDS.length && score >= BANDS[tone]) tone++;
+  return tone;
+}
+
+const toneOf = (normal, P) => bandOf(dot3(unit3(normal), lightOf(P)));
+
+function frameAlong(o, a) {
+  const axis = unit3(a);
+  const helper = Math.abs(axis[2]) > 0.9 ? [1, 0, 0] : [0, 0, 1];
+  const u = unit3(cross3(helper, axis));
+  const v = cross3(axis, u);
+  return { o, a: axis, u, v };
+}
+
+const frameOf = (o, a, u, v) => ({ o, a, u, v });
+
+function pointOf(F, s, r, angle) {
+  const c = Math.cos(angle);
+  const n = Math.sin(angle);
+  return [
+    F.o[0] + F.a[0] * s + r * (c * F.u[0] + n * F.v[0]),
+    F.o[1] + F.a[1] * s + r * (c * F.u[1] + n * F.v[1]),
+    F.o[2] + F.a[2] * s + r * (c * F.u[2] + n * F.v[2]),
+  ];
+}
+
+const radialOf = (F, angle) => {
+  const c = Math.cos(angle);
+  const n = Math.sin(angle);
+  return [c * F.u[0] + n * F.v[0], c * F.u[1] + n * F.v[1], c * F.u[2] + n * F.v[2]];
+};
+
+const tangentOf = (F, angle) => {
+  const c = Math.cos(angle);
+  const n = Math.sin(angle);
+  return [-n * F.u[0] + c * F.v[0], -n * F.u[1] + c * F.v[1], -n * F.u[2] + c * F.v[2]];
+};
+
+const angleToward = (F, direction) => Math.atan2(dot3(direction, F.v), dot3(direction, F.u));
+
+function hullTagged(points) {
+  const sorted = [...points].sort((a, b) => a.p[0] - b.p[0] || a.p[1] - b.p[1]);
+  if (sorted.length < 3) return sorted;
+  const cross = (o, a, b) => (a.p[0] - o.p[0]) * (b.p[1] - o.p[1]) - (a.p[1] - o.p[1]) * (b.p[0] - o.p[0]);
+  const lower = [];
+  for (const point of sorted) {
+    while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], point) <= 1e-9) lower.pop();
+    lower.push(point);
+  }
+  const upper = [];
+  for (let index = sorted.length - 1; index >= 0; index--) {
+    const point = sorted[index];
+    while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], point) <= 1e-9) upper.pop();
+    upper.push(point);
+  }
+  return [...lower.slice(0, -1), ...upper.slice(0, -1)];
+}
+
+const hullOf = (points) => hullTagged(points.map((p) => ({ p }))).map(({ p }) => p);
+
+function runsOf(flags) {
+  const count = flags.length;
+  const start = flags.findIndex((flag, index) => flag !== flags[(index + count - 1) % count]);
+  if (start < 0) return flags[0] ? [Array.from({ length: count + 1 }, (_, index) => index % count)] : [];
+  const runs = [];
+  let run = null;
+  for (let step = 0; step < count; step++) {
+    const index = (start + step) % count;
+    if (flags[index]) {
+      if (!run) run = [index];
+      run.push((index + 1) % count);
+    } else if (run) {
+      runs.push(run);
+      run = null;
+    }
+  }
+  if (run) runs.push(run);
+  return runs;
+}
+
+function groupsOf(keys) {
+  const count = keys.length;
+  const out = [];
+  const start = keys.findIndex((key, index) => key !== keys[(index + count - 1) % count]);
+  if (start < 0) {
+    if (keys[0] !== null) out.push({ key: keys[0], run: Array.from({ length: count + 1 }, (_, index) => index % count) });
+    return out;
+  }
+  let current = null;
+  for (let step = 0; step < count; step++) {
+    const index = (start + step) % count;
+    const key = keys[index];
+    if (current && current.key === key) {
+      current.run.push((index + 1) % count);
+      continue;
+    }
+    if (current && current.key !== null) out.push(current);
+    current = { key, run: [index, (index + 1) % count] };
+  }
+  if (current && current.key !== null) out.push(current);
+  return out;
+}
+
+const stepsFor = (radius, least = 16, most = 112, scale = 0) => Math.max(least, Math.min(most, scale ? Math.ceil((TAU * radius * scale) / 3) : Math.round((radius * 1.3) / 4) * 4));
+
+function chains(edges) {
+  const out = [];
+  let current = null;
+  for (const [a, b, keep] of edges) {
+    if (!keep) {
+      if (current) out.push(current);
+      current = null;
+      continue;
+    }
+    if (!current) current = [a];
+    current.push(b);
+  }
+  if (current) out.push(current);
+  if (out.length > 1 && edges[0][2] && edges[edges.length - 1][2]) {
+    const last = out.pop();
+    out[0] = [...last, ...out[0].slice(1)];
+  }
+  return out;
+}
+
+function labelledArcs(nr, na, view, light, gr = nr, ga = na) {
+  const cuts = [];
+  if (Math.abs(gr) > 1e-9) {
+    const visibleCut = -(ga * view.a) / (gr * view.flat);
+    if (visibleCut > -1 && visibleCut < 1) {
+      const d = Math.acos(visibleCut);
+      cuts.push(view.phi - d, view.phi + d);
+    }
+  }
+  if (Math.abs(nr) > 1e-9) {
+    for (const threshold of BANDS) {
+      const c = (threshold - na * light.a) / (nr * light.flat);
+      if (c > -1 && c < 1) {
+        const d = Math.acos(c);
+        cuts.push(light.phi - d, light.phi + d);
+      }
+    }
+  }
+  const wrap = (angle) => ((angle % TAU) + TAU) % TAU;
+  const sorted = [...new Set(cuts.map((angle) => Math.round(wrap(angle) * 1e9) / 1e9))].sort((a, b) => a - b);
+  const label = (angle) => {
+    const facing = gr * view.flat * Math.cos(angle - view.phi) + ga * view.a;
+    if (facing <= 1e-9) return -1;
+    return bandOf(nr * light.flat * Math.cos(angle - light.phi) + na * light.a);
+  };
+  if (!sorted.length) {
+    const tone = label(0);
+    return tone < 0 ? [] : [{ tone, from: 0, to: TAU, full: true }];
+  }
+  const arcs = sorted.map((from, index) => {
+    const to = index + 1 < sorted.length ? sorted[index + 1] : sorted[0] + TAU;
+    return { tone: label((from + to) / 2), from, to };
+  });
+  const merged = [];
+  for (const arc of arcs) {
+    const last = merged[merged.length - 1];
+    if (last && last.tone === arc.tone && Math.abs(last.to - arc.from) < 1e-9) last.to = arc.to;
+    else merged.push({ ...arc });
+  }
+  if (merged.length > 1 && merged[0].tone === merged[merged.length - 1].tone && Math.abs(merged[merged.length - 1].to - TAU - merged[0].from) < 1e-9) {
+    const last = merged.pop();
+    merged[0].from = last.from - TAU;
+  }
+  return merged.filter((arc) => arc.tone >= 0);
+}
+
+function hermiteSlopes(run) {
+  const n = run.length - 1;
+  const h = Array.from({ length: n }, (_, j) => run[j + 1][0] - run[j][0]);
+  const delta = h.map((value, j) => (run[j + 1][1] - run[j][1]) / value);
+  const d = new Array(n + 1).fill(0);
+  const end = (h0, h1, d0, d1) => {
+    let value = ((2 * h0 + h1) * d0 - h0 * d1) / (h0 + h1);
+    if (Math.sign(value) !== Math.sign(d0)) value = 0;
+    else if (Math.sign(d0) !== Math.sign(d1) && Math.abs(value) > Math.abs(3 * d0)) value = 3 * d0;
+    return value;
+  };
+  if (n === 1) d[0] = d[1] = delta[0];
+  else {
+    d[0] = end(h[0], h[1], delta[0], delta[1]);
+    d[n] = end(h[n - 1], h[n - 2], delta[n - 1], delta[n - 2]);
+  }
+  for (let k = 1; k < n; k++) {
+    if (delta[k - 1] * delta[k] <= 0) continue;
+    const w1 = 2 * h[k] + h[k - 1];
+    const w2 = h[k] + 2 * h[k - 1];
+    d[k] = (w1 + w2) / (w1 / delta[k - 1] + w2 / delta[k]);
+  }
+  return d;
+}
+
+function curveRuns(meridian) {
+  const m = meridian.length;
+  const segments = new Array(m - 1).fill(null);
+  let start = 0;
+  while (start < m - 1) {
+    let end = start + 1;
+    while (end < m - 1 && meridian[end][2] && Math.abs(meridian[end + 1][0] - meridian[end][0]) > 1e-9 && Math.abs(meridian[end][0] - meridian[end - 1][0]) > 1e-9) end++;
+    const run = meridian.slice(start, end + 1);
+    const n = run.length - 1;
+    if (n >= 2 && run.every((point, j) => j === 0 || Math.abs(point[0] - run[j - 1][0]) > 1e-9)) {
+      const d = hermiteSlopes(run);
+      for (let j = 0; j < n; j++) {
+        const [s0, r0] = run[j];
+        const [s1, r1] = run[j + 1];
+        const hj = s1 - s0;
+        const d0 = d[j];
+        const d1 = d[j + 1];
+        const radius = (s) => {
+          const t = (s - s0) / hj;
+          return (2 * t ** 3 - 3 * t ** 2 + 1) * r0 + (t ** 3 - 2 * t ** 2 + t) * hj * d0 + (-2 * t ** 3 + 3 * t ** 2) * r1 + (t ** 3 - t ** 2) * hj * d1;
+        };
+        const slope = (s) => {
+          const t = (s - s0) / hj;
+          return ((6 * t ** 2 - 6 * t) * r0 + (6 * t - 6 * t ** 2) * r1) / hj + (3 * t ** 2 - 4 * t + 1) * d0 + (3 * t ** 2 - 2 * t) * d1;
+        };
+        segments[start + j] = { radius, slope };
+      }
+    }
+    start = end;
+  }
+  return segments;
+}
+
+function curved(meridian, P, segments, { error = 0.2, depth = 6 } = {}) {
+  const k = scaleOf(P);
+  const out = [meridian[0]];
+  for (let i = 0; i < meridian.length - 1; i++) {
+    const curve = segments[i];
+    const [s0] = meridian[i];
+    const [s1] = meridian[i + 1];
+    if (curve) {
+      const split = (a, b, level) => {
+        const mid = (a + b) / 2;
+        const chord = (curve.radius(a) + curve.radius(b)) / 2;
+        if (level < depth && Math.abs(curve.radius(mid) - chord) * k > error) {
+          split(a, mid, level + 1);
+          out.push([mid, curve.radius(mid), 1]);
+          split(mid, b, level + 1);
+        }
+      };
+      split(s0, s1, 0);
+    }
+    out.push(meridian[i + 1]);
+  }
+  return out;
+}
+
+function smoothRows(meridian, F, P, { rows = 6, slope = null, radius = null, steps = 48, error = 0.35, depth: deepest = 8, fineness = 0.1 } = {}) {
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const view = { a: dot3(F.a, V), flat: Math.hypot(dot3(F.u, V), dot3(F.v, V)), phi: Math.atan2(dot3(F.v, V), dot3(F.u, V)) };
+  const light = { a: dot3(F.a, L), flat: Math.hypot(dot3(F.u, L), dot3(F.v, L)), phi: Math.atan2(dot3(F.v, L), dot3(F.u, L)) };
+  const m = meridian.length;
+  const faces = [];
+  for (let i = 0; i < m - 1; i++) {
+    const ds = meridian[i + 1][0] - meridian[i][0];
+    const dr = meridian[i + 1][1] - meridian[i][1];
+    const length = Math.hypot(ds, dr) || 1;
+    faces.push([ds / length, -dr / length]);
+  }
+  const splines = slope ? null : curveRuns(meridian);
+  const vertexNormal = (k, own) => {
+    if (k <= 0 || k >= m - 1 || !meridian[k][2]) return own;
+    const a = faces[k - 1];
+    const b = faces[k];
+    const x = a[0] + b[0];
+    const y = a[1] + b[1];
+    const length = Math.hypot(x, y) || 1;
+    return [x / length, y / length];
+  };
+  const normalAt = (i, u) => {
+    const [s0] = meridian[i];
+    const [s1] = meridian[i + 1];
+    const s = s0 + (s1 - s0) * u;
+    const sign = Math.sign(s1 - s0) || 1;
+    const g = slope ? slope(s) : splines[i] ? splines[i].slope(s) : null;
+    if (g !== null) {
+      const length = Math.hypot(1, g);
+      return [sign / length, (-sign * g) / length];
+    }
+    const a = vertexNormal(i, faces[i]);
+    const b = vertexNormal(i + 1, faces[i]);
+    const x = a[0] + (b[0] - a[0]) * u;
+    const y = a[1] + (b[1] - a[1]) * u;
+    const length = Math.hypot(x, y) || 1;
+    return [x / length, y / length];
+  };
+  const pointAt = (i, u, angle) => {
+    const [s0, r0] = meridian[i];
+    const [s1, r1] = meridian[i + 1];
+    const s = s0 + (s1 - s0) * u;
+    return iso(pointOf(F, s, radius ? radius(s) : splines && splines[i] ? splines[i].radius(s) : r0 + (r1 - r0) * u, angle), P);
+  };
+  const buckets = [[], [], [], [], []];
+  const fine = TAU / Math.max(24, Math.min(192, steps * 1.5));
+  const arcPoints = (i, u, from, to) => {
+    const count = Math.max(1, Math.ceil((to - from) / fine));
+    return Array.from({ length: count + 1 }, (_, index) => pointAt(i, u, from + ((to - from) * index) / count));
+  };
+  const centreOf = (arc, reference) => {
+    let mid = (arc.from + arc.to) / 2 - reference;
+    mid = ((mid % TAU) + TAU) % TAU;
+    return mid;
+  };
+  const levelOf = (i, u) => {
+    const [nr, na] = normalAt(i, u);
+    const groups = new Map();
+    for (const arc of labelledArcs(nr, na, view, light, faces[i][0], faces[i][1])) {
+      if (!groups.has(arc.tone)) groups.set(arc.tone, []);
+      groups.get(arc.tone).push(arc);
+    }
+    for (const list of groups.values()) list.sort((x, y) => centreOf(x, light.phi) - centreOf(y, light.phi));
+    return { i, u, groups };
+  };
+  const same = (x, y) => {
+    if (x.groups.size !== y.groups.size) return false;
+    for (const [tone, list] of x.groups) if ((y.groups.get(tone) ?? []).length !== list.length) return false;
+    return true;
+  };
+  const align = (reference, arc) => {
+    const out = { ...arc };
+    const centre = (reference.from + reference.to) / 2;
+    while ((out.from + out.to) / 2 - centre > Math.PI) {
+      out.from -= TAU;
+      out.to -= TAU;
+    }
+    while (centre - (out.from + out.to) / 2 > Math.PI) {
+      out.from += TAU;
+      out.to += TAU;
+    }
+    return out;
+  };
+  const strayOf = (i, a, mid, b) => {
+    let worst = 0;
+    for (const [tone, list] of mid.groups) {
+      list.forEach((arc, index) => {
+        const lo = align(arc, a.groups.get(tone)[index]);
+        const hi = align(arc, b.groups.get(tone)[index]);
+        for (const key of ["from", "to"]) {
+          const p = pointAt(i, mid.u, arc[key]);
+          const p0 = pointAt(i, a.u, lo[key]);
+          const p1 = pointAt(i, b.u, hi[key]);
+          worst = Math.max(worst, Math.hypot(p[0] - (p0[0] + p1[0]) / 2, p[1] - (p0[1] + p1[1]) / 2));
+        }
+      });
+    }
+    return worst;
+  };
+  const sheet = (tone, levels) => {
+    levels[0].groups.get(tone).forEach((arc, index) => {
+      const chain = [arc];
+      for (let k = 1; k < levels.length; k++) chain.push(align(chain[k - 1], levels[k].groups.get(tone)[index]));
+      const last = levels.length - 1;
+      const points = [...arcPoints(levels[0].i, levels[0].u, chain[0].from, chain[0].to)];
+      for (let k = 1; k < last; k++) points.push(pointAt(levels[k].i, levels[k].u, chain[k].to));
+      points.push(...arcPoints(levels[last].i, levels[last].u, chain[last].from, chain[last].to).reverse());
+      for (let k = last - 1; k >= 1; k--) points.push(pointAt(levels[k].i, levels[k].u, chain[k].from));
+      buckets[tone].push(pathOf(oriented(points), true));
+    });
+  };
+  const overlap = (x, y) => Math.min(x.to, y.to) - Math.max(x.from, y.from);
+  const strip = (tone, a, b) => {
+    const below = a.groups.get(tone) ?? [];
+    const above = (b.groups.get(tone) ?? []).map((arc) => ({ arc, used: false }));
+    const quad = (lo, hi) => {
+      const points = [...arcPoints(a.i, a.u, lo.from, lo.to), ...arcPoints(b.i, b.u, hi.from, hi.to).reverse()];
+      buckets[tone].push(pathOf(oriented(points), true));
+    };
+    for (const arc of below) {
+      let best = null;
+      let score = -Infinity;
+      for (const entry of above) {
+        if (entry.used) continue;
+        const aligned = align(arc, entry.arc);
+        const value = overlap(arc, aligned);
+        if (value > score) (score = value), (best = entry);
+      }
+      if (best && score > -0.05) {
+        best.used = true;
+        quad(arc, align(arc, best.arc));
+      } else {
+        const centre = (arc.from + arc.to) / 2;
+        quad(arc, { from: centre, to: centre });
+      }
+    }
+    for (const entry of above) {
+      if (entry.used) continue;
+      const centre = (entry.arc.from + entry.arc.to) / 2;
+      quad({ from: centre, to: centre }, entry.arc);
+    }
+  };
+  const k = scaleOf(P);
+  let run = [];
+  const flush = () => {
+    const tones = [...new Set(run.flatMap((level) => [...level.groups.keys()]))].sort((x, y) => x - y);
+    for (const tone of tones) {
+      const countOf = (level) => (level.groups.get(tone) ?? []).length;
+      let start = 0;
+      for (let at = 1; at <= run.length; at++) {
+        if (at < run.length && countOf(run[at - 1]) === countOf(run[at])) continue;
+        if (at - 1 > start && countOf(run[start])) sheet(tone, run.slice(start, at));
+        if (at < run.length) strip(tone, run[at - 1], run[at]);
+        start = at;
+      }
+    }
+    run = [];
+  };
+  for (let i = 0; i < m - 1; i++) {
+    const ds = meridian[i + 1][0] - meridian[i][0];
+    if (Math.abs(ds) < 1e-9) {
+      flush();
+      continue;
+    }
+    const count = Math.max(1, rows);
+    const reach = (Math.hypot(ds, meridian[i + 1][1] - meridian[i][1]) * k) / count;
+    const limit = Math.max(1, Math.min(deepest, Math.ceil(Math.log2(Math.max(2, reach / fineness)))));
+    const coarse = Array.from({ length: count + 1 }, (_, index) => levelOf(i, index / count));
+    run.push(coarse[0]);
+    const refine = (a, b, depth) => {
+      const mid = levelOf(i, (a.u + b.u) / 2);
+      const split = depth < limit && (!same(a, b) || !same(a, mid) || (depth < 6 && strayOf(i, a, mid, b) > error));
+      if (!split) {
+        run.push(b);
+        return;
+      }
+      refine(a, mid, depth + 1);
+      refine(mid, b, depth + 1);
+    };
+    for (let index = 1; index <= count; index++) refine(coarse[index - 1], coarse[index], 0);
+  }
+  flush();
+  return buckets;
+}
+
+function sideOf(meridian) {
+  const m = meridian.length;
+  let first = 0;
+  let last = m - 1;
+  if (meridian[0][1] <= 1e-9) first = 1;
+  if (meridian[m - 1][1] <= 1e-9) last = m - 2;
+  const side = meridian.slice(first, last + 1);
+  for (let index = 1; index < side.length; index++) if (side[index][0] - side[index - 1][0] <= 1e-9) return null;
+  return side.length >= 3 ? side : null;
+}
+
+function surfaceOf(side, F, P, rims, { samples = 96, slope = null } = {}) {
+  const V = viewOf(P);
+  const aV = dot3(F.a, V);
+  const facing = Math.atan2(dot3(F.v, V), dot3(F.u, V));
+  const [left, right] = silhouettePoints(side, F, P, { samples, slope });
+  if (left.length <= samples || right.length <= samples) return null;
+  const s0 = side[0][0];
+  const s1 = side[side.length - 1][0];
+  const angleOf = (point) => angleToward(F, sub3(point, add3(F.o, mul3(F.a, dot3(sub3(point, F.o), F.a)))));
+  const wrap = (angle) => ((angle % TAU) + TAU) % TAU;
+  const arc = (s, r, from, to, through) => {
+    let sweep = wrap(to - from);
+    if (wrap(through - from) > sweep) sweep -= TAU;
+    const count = Math.max(4, Math.ceil(Math.abs(sweep) / (TAU / 96)), Math.ceil((Math.abs(sweep) * r * scaleOf(P)) / 1.5));
+    return Array.from({ length: count + 1 }, (_, index) => iso(pointOf(F, s, r, from + (sweep * index) / count), P));
+  };
+  const r0 = side[0][1];
+  const r1 = side[side.length - 1][1];
+  const bottom = -aV > 0 ? facing + Math.PI : facing;
+  const top = aV > 0 ? facing + Math.PI : facing;
+  const L = left.map((point) => iso(point, P));
+  const R = right.map((point) => iso(point, P));
+  const topArc = arc(s1, r1, angleOf(left[left.length - 1]), angleOf(right[right.length - 1]), top);
+  const bottomArc = arc(s0, r0, angleOf(right[0]), angleOf(left[0]), bottom);
+  const keepFirst = rims === "all" || rims === "first" || rims === "ends";
+  const keepLast = rims === "all" || rims === "last" || rims === "ends";
+  const fill = pathOf([...L, ...topArc, ...[...R].reverse(), ...bottomArc], true);
+  const outline = [pathOf(L), pathOf(R), keepLast ? pathOf(topArc) : "", keepFirst ? pathOf(bottomArc) : ""].join("");
+  const hull = hullOf([...arc(s0, r0, 0, TAU - 1e-6, Math.PI), ...arc(s1, r1, 0, TAU - 1e-6, Math.PI), ...L, ...R]);
+  let gap = 0;
+  for (const p of [...L, ...R]) {
+    let best = Infinity;
+    for (let index = 0; index < hull.length; index++) {
+      const a = hull[index];
+      const b = hull[(index + 1) % hull.length];
+      const dx = b[0] - a[0];
+      const dy = b[1] - a[1];
+      const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy || 1)));
+      best = Math.min(best, Math.hypot(p[0] - a[0] - dx * t, p[1] - a[1] - dy * t));
+    }
+    gap = Math.max(gap, best);
+  }
+  return { fill, outline, gap };
+}
+
+const softOf = (meridian) => meridian.some((point) => Boolean(point[2]));
+
+function lathe(meridian, F, P, { steps = stepsFor(Math.max(...meridian.map(([, r]) => r)), 32, 160, scaleOf(P)), fill = "auto", hole = null, bevel = 0, rims = "all", smooth: asked = "auto", waist = 0.5 } = {}) {
+  const smooth = asked === "auto" ? softOf(meridian) : asked;
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const aV = dot3(F.a, V);
+  const uV = dot3(F.u, V);
+  const vV = dot3(F.v, V);
+  const aL = dot3(F.a, L);
+  const uL = dot3(F.u, L);
+  const vL = dot3(F.v, L);
+  const n = steps;
+  const m = meridian.length;
+  const rings = meridian.map(([s, r]) => Array.from({ length: n }, (_, j) => iso(pointOf(F, s, r, (j / n) * TAU), P)));
+  const midC = [];
+  const midS = [];
+  for (let j = 0; j < n; j++) {
+    const t = ((j + 0.5) / n) * TAU;
+    midC.push(Math.cos(t));
+    midS.push(Math.sin(t));
+  }
+  const seen = [];
+  const tones = [];
+  for (let i = 0; i < m - 1; i++) {
+    const ds = meridian[i + 1][0] - meridian[i][0];
+    const dr = meridian[i + 1][1] - meridian[i][1];
+    const length = Math.hypot(ds, dr);
+    const row = [];
+    const toneRow = [];
+    for (let j = 0; j < n; j++) {
+      if (length < 1e-9) {
+        row.push(false);
+        toneRow.push(0);
+        continue;
+      }
+      const facing = ds * (midC[j] * uV + midS[j] * vV) - dr * aV;
+      const lit = (ds * (midC[j] * uL + midS[j] * vL) - dr * aL) / length;
+      row.push(facing > 1e-6 * length);
+      toneRow.push(bandOf(lit));
+    }
+    seen.push(row);
+    tones.push(toneRow);
+  }
+  const buckets = [[], [], [], [], []];
+  const all = [];
+  const smoothed = smooth ? smoothRows(meridian, F, P, { steps, ...(smooth === true ? {} : smooth) }) : null;
+  if (smoothed) smoothed.forEach((list, tone) => list.forEach((d) => (buckets[tone].push(d), all.push(d))));
+  for (let i = 0; i < m - 1; i++) {
+    if (smoothed && Math.abs(meridian[i + 1][0] - meridian[i][0]) > 1e-9) continue;
+    const keys = seen[i].map((visible, j) => (visible ? tones[i][j] : null));
+    for (const { key, run } of groupsOf(keys)) {
+      const a = run.map((j) => rings[i][j]);
+      const b = run.map((j) => rings[i + 1][j]).reverse();
+      const d = pathOf(oriented([...a, ...b]), true);
+      buckets[key].push(d);
+      all.push(d);
+    }
+  }
+  const phi = Math.atan2(vV, uV);
+  const flatV = Math.hypot(uV, vV);
+  const rangeOf = (i) => {
+    const ds = meridian[i + 1][0] - meridian[i][0];
+    const dr = meridian[i + 1][1] - meridian[i][1];
+    if (Math.hypot(ds, dr) < 1e-9) return null;
+    if (Math.abs(ds) < 1e-9 || flatV < 1e-9) return -dr * aV > 1e-9 ? [-1, 1] : null;
+    const c = (dr * aV) / (ds * flatV);
+    return ds > 0 ? [Math.max(-1, c), 1] : [-1, Math.min(1, c)];
+  };
+  const arcsOf = (ranges) => {
+    if (ranges.some((range) => !range)) return [];
+    const lo = Math.max(...ranges.map(([x]) => x));
+    const hi = Math.min(...ranges.map(([, x]) => x));
+    if (lo >= hi - 1e-9) return [];
+    const near = Math.acos(Math.min(1, hi));
+    const far = Math.acos(Math.max(-1, lo));
+    if (hi >= 1 && lo <= -1) return [[phi, phi + TAU]];
+    if (hi >= 1) return [[phi - far, phi + far]];
+    if (lo <= -1) return [[phi + near, phi + TAU - near]];
+    return [[phi + near, phi + far], [phi - far, phi - near]];
+  };
+  const along = (s, r, [from, to]) => {
+    const count = Math.max(2, Math.ceil(((to - from) * Math.max(r, 1e-6) * scaleOf(P)) / 1.5));
+    return Array.from({ length: count + 1 }, (_, j) => iso(pointOf(F, s, r, from + ((to - from) * j) / count), P));
+  };
+  const creases = [];
+  for (let i = 1; i < m - 1; i++) {
+    if (meridian[i][2] || meridian[i][1] <= 1e-9) continue;
+    for (const arc of arcsOf([rangeOf(i - 1), rangeOf(i)])) creases.push(pathOf(along(meridian[i][0], meridian[i][1], arc)));
+  }
+  let bevelPath = "";
+  if (bevel > 0 && m > 2) {
+    const ends = [];
+    if (meridian[0][1] <= 1e-9) ends.push([0, 1, 1]);
+    if (meridian[m - 1][1] <= 1e-9) ends.push([m - 2, m - 2, m - 3]);
+    for (const [cap, rim, side] of ends) {
+      const [s, r] = meridian[rim];
+      for (const arc of arcsOf([rangeOf(cap), rangeOf(side)])) {
+        const inset = along(s, Math.max(0, r - bevel), arc);
+        const edge = along(s, r, arc);
+        bevelPath += pathOf([edge[0], ...inset.slice(1, -1), edge[edge.length - 1]]);
+      }
+    }
+  }
+  const { fill: fillPath, outline } = outlineOf(meridian, F, P, { steps: n, fill, hole, rims, smooth, waist, all });
+  return {
+    fill: fillPath,
+    outline,
+    crease: creases.join(""),
+    top: buckets[4].join(""),
+    shades: buckets.slice(0, 4).map((list) => list.join("")),
+    bevel: bevelPath || undefined,
+    seamless: Boolean(smoothed),
+  };
+}
+
+function shapeOf(meridian, P, smooth) {
+  if (smooth && smooth.radius) {
+    const segments = meridian.slice(0, -1).map(([s0], index) => (Math.abs(meridian[index + 1][0] - s0) > 1e-9 ? { radius: smooth.radius, slope: smooth.slope } : null));
+    return curved(meridian, P, segments);
+  }
+  const curves = smooth && !smooth.slope ? curveRuns(meridian) : null;
+  return curves && curves.some(Boolean) ? curved(meridian, P, curves) : meridian;
+}
+
+function outlineOf(meridian, F, P, { steps = stepsFor(Math.max(...meridian.map(([, r]) => r)), 32, 160, scaleOf(P)), fill = "auto", hole = null, rims = "all", smooth: asked = "auto", waist = 0.5, all = null } = {}) {
+  const smooth = asked === "auto" ? softOf(meridian) : asked;
+  const n = steps;
+  let fillPath;
+  let outline;
+  const shape = shapeOf(meridian, P, smooth);
+  const side = fill === "auto" || fill === "surface" ? sideOf(shape) : null;
+  const surface = side && !hole ? surfaceOf(side, F, P, rims, { slope: smooth && smooth.slope ? smooth.slope : null }) : null;
+  if (surface && (fill === "surface" || surface.gap > waist)) {
+    fillPath = surface.fill;
+    outline = surface.outline;
+  } else if (fill === "hull" || fill === "auto" || fill === "surface") {
+    const most = Math.max(...shape.map(([, r]) => r));
+    const around = Math.min(320, Math.max(n, Math.ceil((TAU * most * scaleOf(P)) / 1.5)));
+    const tagged = [];
+    shape.forEach(([s, r], index) => {
+      for (let j = 0; j < around; j++) tagged.push({ p: iso(pointOf(F, s, r, (j / around) * TAU), P), ring: index });
+    });
+    const hull = hullTagged(tagged);
+    const holePath = hole ? pathOf(Array.from({ length: around }, (_, j) => iso(pointOf(F, hole[0], hole[1], (j / around) * TAU), P)), true) : "";
+    fillPath = pathOf(hull.map(({ p }) => p), true) + holePath;
+    if (rims === "all") {
+      outline = pathOf(hull.map(({ p }) => p), true) + holePath;
+    } else {
+      const keepFirst = rims === "first" || rims === "ends";
+      const keepLast = rims === "last" || rims === "ends";
+      const edges = hull.map((a, index) => {
+        const b = hull[(index + 1) % hull.length];
+        const same = a.ring === b.ring;
+        const keep = !same || (a.ring !== 0 && a.ring !== shape.length - 1) || (keepFirst && a.ring === 0) || (keepLast && a.ring === shape.length - 1);
+        return [a.p, b.p, keep];
+      });
+      outline = chains(edges).map((points) => pathOf(points)).join("") + holePath;
+    }
+  } else {
+    fillPath = all ? all.join("") : (({ shades, top }) => [...shades, top].join(""))(lathe(meridian, F, P, { steps: n, fill: "auto", hole, rims, smooth, waist }));
+    outline = "";
+  }
+  return { fill: fillPath, outline };
+}
+
+const signedArea = (points) => points.reduce((sum, [x, y], index) => {
+  const [nx, ny] = points[(index + 1) % points.length];
+  return sum + x * ny - nx * y;
+}, 0);
+
+const oriented = (points) => (signedArea(points) < 0 ? [...points].reverse() : points);
+
+const saddleStart = (R, a, angle) => Math.sqrt(Math.max(0, R * R - a * a * Math.cos(angle) ** 2));
+
+function saddleOf(F, a, start, s1, P, { steps = stepsFor(a, 24) } = {}) {
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const n = steps;
+  const angle = (j) => (j / n) * TAU;
+  const from = typeof start === "function" ? start : (t) => saddleStart(start, a, t);
+  const low = Array.from({ length: n }, (_, j) => iso(pointOf(F, from(angle(j)), a, angle(j)), P));
+  const high = Array.from({ length: n }, (_, j) => iso(pointOf(F, s1, a, angle(j)), P));
+  const seen = [];
+  const tones = [];
+  for (let j = 0; j < n; j++) {
+    const normal = radialOf(F, angle(j + 0.5));
+    seen.push(dot3(normal, V) > 1e-6);
+    tones.push(bandOf(dot3(normal, L)));
+  }
+  const buckets = [[], [], [], [], []];
+  const fills = [];
+  const keys = seen.map((visible, j) => (visible ? tones[j] : null));
+  for (const { key, run } of groupsOf(keys)) {
+    const d = pathOf(oriented([...run.map((j) => low[j]), ...run.map((j) => high[j]).reverse()]), true);
+    buckets[key].push(d);
+    fills.push(d);
+  }
+  const capSeen = dot3(F.a, V) > 1e-6;
+  if (capSeen) {
+    const d = pathOf(oriented(high), true);
+    buckets[bandOf(dot3(F.a, L))].push(d);
+    fills.push(d);
+  }
+  const front = runsOf(seen);
+  const back = runsOf(seen.map((visible) => !visible));
+  const edges = [];
+  for (const run of front) {
+    edges.push(pathOf(run.map((j) => low[j])));
+    edges.push(pathOf([low[run[0]], high[run[0]]]), pathOf([low[run[run.length - 1]], high[run[run.length - 1]]]));
+  }
+  for (const run of capSeen ? back : front) edges.push(pathOf(run.map((j) => high[j])));
+  return {
+    fill: fills.join(""),
+    outline: edges.join(""),
+    crease: capSeen ? front.map((run) => pathOf(run.map((j) => high[j]))).join("") : "",
+    top: buckets[4].join(""),
+    shades: buckets.slice(0, 4).map((list) => list.join("")),
+    seamless: true,
+  };
+}
+
+function prismOf(F, polygon, s0, s1, P) {
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const ring = oriented(polygon.map(([x, y]) => [x, y]));
+  const n = ring.length;
+  const at = (s, [x, y]) => [F.o[0] + F.a[0] * s + F.u[0] * x + F.v[0] * y, F.o[1] + F.a[1] * s + F.u[1] * x + F.v[1] * y, F.o[2] + F.a[2] * s + F.u[2] * x + F.v[2] * y];
+  const low = ring.map((point) => iso(at(s0, point), P));
+  const high = ring.map((point) => iso(at(s1, point), P));
+  const buckets = [[], [], [], [], []];
+  const seen = [];
+  for (let j = 0; j < n; j++) {
+    const [x0, y0] = ring[j];
+    const [x1, y1] = ring[(j + 1) % n];
+    const normal = unit3(add3(mul3(F.u, y1 - y0), mul3(F.v, -(x1 - x0))));
+    const visible = dot3(normal, V) > 1e-6;
+    seen.push(visible);
+    if (visible) buckets[bandOf(dot3(normal, L))].push(pathOf([low[j], low[(j + 1) % n], high[(j + 1) % n], high[j]], true));
+  }
+  const ends = [[s0, low, mul3(F.a, -1)], [s1, high, F.a]];
+  const capSeen = ends.map(([, , normal]) => dot3(normal, V) > 1e-6);
+  ends.forEach(([, points, normal], index) => capSeen[index] && buckets[bandOf(dot3(normal, L))].push(pathOf(points, true)));
+  const hull = hullOf([...low, ...high]);
+  const creases = [];
+  for (let j = 0; j < n; j++) {
+    const prev = (j - 1 + n) % n;
+    const a = [ring[j][0] - ring[prev][0], ring[j][1] - ring[prev][1]];
+    const b = [ring[(j + 1) % n][0] - ring[j][0], ring[(j + 1) % n][1] - ring[j][1]];
+    const sharp = (a[0] * b[0] + a[1] * b[1]) / (Math.hypot(a[0], a[1]) * Math.hypot(b[0], b[1]) || 1) < Math.cos(0.35);
+    if (sharp && seen[j] && seen[prev]) creases.push(pathOf([low[j], high[j]]));
+    ends.forEach(([, points], index) => capSeen[index] && seen[j] && creases.push(pathOf([points[j], points[(j + 1) % n]])));
+  }
+  return { fill: pathOf(hull, true), outline: pathOf(hull, true), crease: creases.join(""), top: buckets[4].join(""), shades: buckets.slice(0, 4).map((list) => list.join("")) };
+}
+
+function stadium(r0, r1, offset, steps = 32) {
+  const circle = (cx, r) => Array.from({ length: steps }, (_, index) => [cx + r * Math.cos((index / steps) * TAU), r * Math.sin((index / steps) * TAU)]);
+  return hullOf([...circle(0, r0), ...circle(offset, r1)]);
+}
+
+function sphereOf(centre, r, P, { steps = 48 } = {}) {
+  const V = viewOf(P);
+  const L = lightOf(P);
+  const F = frameAlong(centre, V);
+  const flat = (p) => iso(p, P);
+  const rim = Array.from({ length: steps }, (_, index) => pointOf(F, 0, r, (index / steps) * TAU));
+  const outline = pathOf(rim.map(flat), true);
+  const capOf = (threshold) => {
+    const points = rim.filter((p) => dot3(sub3(p, centre), L) / r >= threshold).map(flat);
+    const c = dot3(L, V);
+    const LF = frameAlong(add3(centre, mul3(L, r * threshold)), L);
+    const radius = r * Math.sqrt(Math.max(0, 1 - threshold * threshold));
+    for (let index = 0; index < steps; index++) {
+      const p = pointOf(LF, 0, radius, (index / steps) * TAU);
+      if (dot3(sub3(p, centre), V) >= -1e-9) points.push(flat(p));
+    }
+    if (c > threshold) points.push(flat(add3(centre, mul3(V, r))));
+    return points.length > 2 ? pathOf(hullOf(points), true) : "";
+  };
+  const shades = [outline, capOf(BANDS[1]), capOf(BANDS[2]), capOf(BANDS[3])];
+  return { fill: outline, outline, crease: "", top: "", shades, seamless: true };
+}
+
+const disc = (s0, s1, r, F, P, options = {}) =>
+  lathe(
+    [
+      [s0, 0],
+      [s0, r],
+      [s1, r],
+      [s1, 0],
+    ],
+    F,
+    P,
+    { steps: stepsFor(r, 32, 160, scaleOf(P)), ...options },
+  );
+
+const ringBand = (s0, s1, rIn, rOut, F, P, options = {}) =>
+  lathe(
+    [
+      [s0, rIn],
+      [s0, rOut],
+      [s1, rOut],
+      [s1, rIn],
+    ],
+    F,
+    P,
+    { steps: stepsFor(rOut, 32, 160, scaleOf(P)), hole: null, ...options },
+  );
+
+function solidOf(profile, F, P, options = {}) {
+  const first = profile[0];
+  const last = profile[profile.length - 1];
+  const meridian = [[first[0], 0], ...profile, [last[0], 0]];
+  const most = Math.max(...profile.map(([, r]) => r));
+  return lathe(meridian, F, P, { steps: stepsFor(most, 32, 160, scaleOf(P)), ...options });
+}
+
+function bandOfProfile(profile, F, P, options = {}) {
+  const most = Math.max(...profile.map(([, r]) => r));
+  return lathe(profile, F, P, { steps: stepsFor(most, 32, 160, scaleOf(P)), ...options });
+}
+
+function silhouettePoints(profile, F, P, { samples = 72, slope: given = null, radius = null } = {}) {
+  const V = viewOf(P);
+  const aV = dot3(F.a, V);
+  const uV = dot3(F.u, V);
+  const vV = dot3(F.v, V);
+  const facing = Math.atan2(vV, uV);
+  const flat = Math.hypot(uV, vV) || 1e-9;
+  const s0 = profile[0][0];
+  const s1 = profile[profile.length - 1][0];
+  const radiusAt = radius ?? ((s) => {
+    let index = 1;
+    while (index < profile.length - 1 && profile[index][0] < s) index++;
+    const [sa, ra] = profile[index - 1];
+    const [sb, rb] = profile[index];
+    return ra + ((rb - ra) * (s - sa)) / (sb - sa || 1);
+  });
+  const side = (sign) => {
+    const points = [];
+    for (let step = 0; step <= samples; step++) {
+      const s = s0 + ((s1 - s0) * step) / samples;
+      const h = (s1 - s0) / samples / 2 || 0.01;
+      const slope = given ? given(s) : (radiusAt(Math.min(s1, s + h)) - radiusAt(Math.max(s0, s - h))) / (Math.min(s1, s + h) - Math.max(s0, s - h) || 1);
+      const c = (slope * aV) / flat;
+      if (Math.abs(c) > 1) continue;
+      points.push(pointOf(F, s, radiusAt(s), facing + sign * Math.acos(c)));
+    }
+    return points;
+  };
+  return [side(1), side(-1)];
+}
+
+const silhouetteOf = (profile, F, P, options = {}) =>
+  silhouettePoints(profile, F, P, options)
+    .map((points) => pathOf(points.map((point) => iso(point, P))))
+    .join("");
+
+function profileCurve(profile, { slope = null, radius = null } = {}) {
+  for (let index = 1; index < profile.length; index++) if (profile[index][0] - profile[index - 1][0] <= 1e-9) throw new Error(`profileCurve: s must rise along the profile (point ${index} at s = ${profile[index][0]})`);
+  const segments = curveRuns(profile);
+  const s0 = profile[0][0];
+  const s1 = profile[profile.length - 1][0];
+  const find = (s) => {
+    let lo = 0;
+    let hi = profile.length - 2;
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >> 1;
+      if (profile[mid][0] <= s) lo = mid;
+      else hi = mid - 1;
+    }
+    return lo;
+  };
+  const linear = (index, s) => {
+    const [sa, ra] = profile[index];
+    const [sb, rb] = profile[index + 1];
+    return [ra + ((rb - ra) * (s - sa)) / (sb - sa), (rb - ra) / (sb - sa)];
+  };
+  const radiusAt = radius ?? ((s) => {
+    const at = Math.max(s0, Math.min(s1, s));
+    const index = find(at);
+    return segments[index] ? segments[index].radius(at) : linear(index, at)[0];
+  });
+  const slopeAt = slope ?? ((s) => {
+    const at = Math.max(s0, Math.min(s1, s));
+    const index = find(at);
+    return segments[index] ? segments[index].slope(at) : linear(index, at)[1];
+  });
+  return { s0, s1, radius: radiusAt, slope: slopeAt, analytic: Boolean(slope && radius) };
+}
+
+function bandsOf(profile, cuts, F, P, { slope = null, radius = null, steps, rows = 6, rims = "none", fill = "auto", samples = 72 } = {}) {
+  const curve = profileCurve(profile, { slope, radius });
+  const { s0, s1 } = curve;
+  const stops = [s0, ...[...new Set(cuts)].filter((s) => s > s0 + 1e-6 && s < s1 - 1e-6).sort((a, b) => a - b), s1];
+  const most = Math.max(...profile.map(([, r]) => r), ...stops.map((s) => curve.radius(s)));
+  const n = steps ?? stepsFor(most, 32, 160, scaleOf(P));
+  const knot = (s, soft) => (soft ? [s, curve.radius(s), 1] : [s, curve.radius(s)]);
+  const meridianOf = (a, b) => [knot(a), ...profile.filter(([s]) => s > a + 1e-9 && s < b - 1e-9).map(([s, , soft]) => knot(s, soft)), knot(b)];
+  const shading = { slope: curve.slope, radius: curve.radius, rows };
+  const bands = stops.slice(0, -1).map((a, index) => {
+    const b = stops[index + 1];
+    const meridian = meridianOf(a, b);
+    const paths = lathe(meridian, F, P, { steps: n, rims, fill, smooth: shading });
+    const seam = index < stops.length - 2 ? arcOf(F, b, curve.radius(b), P, { slope: curve.slope(b) }) : "";
+    return { s0: a, s1: b, profile: meridian, paths: { ...paths, outline: "" }, outline: paths.outline, seam };
+  });
+  const sidesOf = (from = s0, to = s1, { ends = false, count = samples } = {}) => {
+    const span = [Math.max(s0, from), Math.min(s1, to)];
+    const dense = Array.from({ length: count + 1 }, (_, index) => knot(span[0] + ((span[1] - span[0]) * index) / count, true));
+    const points = silhouettePoints(dense, F, P, { samples: count, slope: curve.slope, radius: curve.radius });
+    const rim = (s) => arcOf(F, s, curve.radius(s), P, { slope: curve.slope(s) });
+    const rimsAt = ends === true ? span : ends === "first" ? [span[0]] : ends === "last" ? [span[1]] : [];
+    return { d: points.map((list) => pathOf(list.map((point) => iso(point, P)))).join("") + rimsAt.map(rim).join(""), points };
+  };
+  return { bands, sidesOf, radius: curve.radius, slope: curve.slope, steps: n, s0, s1 };
+}
+
+function arcOf(F, s, r, P, { slope = 0, steps = 0, least = 0.02, inward = false, from = 0, to = TAU, trim = 0.3 } = {}) {
+  const V = viewOf(P);
+  const aV = dot3(F.a, V);
+  const uV = dot3(F.u, V);
+  const vV = dot3(F.v, V);
+  const flat = Math.hypot(uV, vV);
+  const phi = Math.atan2(vV, uV);
+  const norm = Math.hypot(1, slope);
+  const full = Math.abs(to - from - TAU) < 1e-9;
+  let visible;
+  if (flat < 1e-9) visible = (inward ? slope * aV / norm > least : -slope * aV / norm > least) ? [[phi, phi + TAU]] : [];
+  else if (inward) {
+    const c = (slope * aV - least * norm) / flat;
+    visible = c <= -1 ? [] : c >= 1 ? [[phi, phi + TAU]] : [[phi + Math.acos(c), phi + TAU - Math.acos(c)]];
+  } else {
+    const c = (least * norm + slope * aV) / flat;
+    visible = c >= 1 ? [] : c <= -1 ? [[phi, phi + TAU]] : [[phi - Math.acos(c), phi + Math.acos(c)]];
+  }
+  const at = (t) => iso(pointOf(F, s, r, t), P);
+  const speed = (t) => {
+    const a = at(t - 1e-3);
+    const b = at(t + 1e-3);
+    return Math.hypot(b[0] - a[0], b[1] - a[1]) / 2e-3;
+  };
+  const count = (span) => Math.max(2, Math.ceil(((steps || stepsFor(r, 24, 112)) * span) / TAU), Math.ceil((span * r * scaleOf(P)) / 1.5));
+  const out = [];
+  for (const [a, b] of visible) {
+    if (b - a >= TAU - 1e-9 && full) {
+      const n = count(TAU);
+      out.push(pathOf(Array.from({ length: n }, (_, j) => at(from + (j / n) * TAU)), true));
+      continue;
+    }
+    const pieces = full ? [[a, b, true, true]] : [];
+    if (!full)
+      for (let turn = -2; turn <= 2; turn++) {
+        const lo = Math.max(a + turn * TAU, from);
+        const hi = Math.min(b + turn * TAU, to);
+        if (hi - lo > 1e-6) pieces.push([lo, hi, lo > from + 1e-9, hi < to - 1e-9]);
+      }
+    for (const [lo, hi, limb0, limb1] of pieces) {
+      const span = hi - lo;
+      const cut0 = limb0 && trim > 0 ? Math.min(span * 0.25, trim / (speed(lo) || 1)) : 0;
+      const cut1 = limb1 && trim > 0 ? Math.min(span * 0.25, trim / (speed(hi) || 1)) : 0;
+      const t0 = lo + cut0;
+      const t1 = hi - cut1;
+      const n = count(t1 - t0);
+      out.push(pathOf(Array.from({ length: n + 1 }, (_, j) => at(t0 + ((t1 - t0) * j) / n))));
+    }
+  }
+  return out.join("");
+}
+
+function circleOf(F, s, r, P, steps = 0) {
+  const count = steps || stepsFor(r, 24, 112);
+  return pathOf(
+    Array.from({ length: count }, (_, j) => iso(pointOf(F, s, r, (j / count) * TAU), P)),
+    true,
+  );
+}
+
+function spokesOf(F, s, r0, r1, count, P, { phase = 0, sweep = 0, from = 0, to = TAU } = {}) {
+  const lines = [];
+  for (let index = 0; index < count; index++) {
+    const t = phase + from + (index / count) * (to - from);
+    lines.push(pathOf([iso(pointOf(F, s, r0, t), P), iso(pointOf(F, s, r1, t + sweep), P)]));
+  }
+  return lines.join("");
+}
+
+const fadeOf = (value, [lo, hi]) => {
+  const t = Math.max(0, Math.min(1, (value - lo) / (hi - lo || 1e-9)));
+  return t * t * (3 - 2 * t);
+};
+
+function ribsOf(F, s0, s1, r, count, P, { phase = 0, twist = 0, least = 0.12, r1 = r, fade = null, seams = false } = {}) {
+  const V = viewOf(P);
+  const lines = [];
+  const slope = (r1 - r) / (s1 - s0 || 1);
+  for (let index = 0; index < count; index++) {
+    const t = phase + (index / count) * TAU;
+    const radial = radialOf(F, t + twist / 2);
+    const normal = unit3([radial[0] - slope * F.a[0], radial[1] - slope * F.a[1], radial[2] - slope * F.a[2]]);
+    const facing = dot3(normal, V);
+    const d = pathOf([iso(pointOf(F, s0, r, t), P), iso(pointOf(F, s1, r1, t + twist), P)]);
+    if (fade) {
+      const alpha = fadeOf(facing, fade);
+      if (alpha > 0.02) lines.push({ d, alpha });
+      continue;
+    }
+    if (facing < least) continue;
+    lines.push(d);
+  }
+  const ends = seams ? [seams === "last" ? "" : arcOf(F, s0, r, P, { slope }), seams === "first" ? "" : arcOf(F, s1, r1, P, { slope })].filter(Boolean) : [];
+  if (fade) return [...lines, ...ends.map((d) => ({ d, alpha: 1 }))];
+  return [...lines, ...ends].join("");
+}
+
+function rodOut(F, from, to, r, P, { stroke = 0, ...options } = {}) {
+  const pad = 0.35 / scaleOf(P);
+  const ring = (s) => Array.from({ length: 48 }, (_, index) => iso(pointOf(F, s, r + pad, (index / 48) * TAU), P));
+  return {
+    paths: disc(from - stroke, to, r, F, P, options),
+    clip: pathOf(hullOf([...ring(from), ...ring(to + stroke)]), true),
+    from,
+    to,
+    stroke,
+    reach: to + stroke,
+  };
+}
+
+function dotsOf(F, s, r, count, P, { phase = 0, slope = 0, least = 0.08, all = false, fade = null } = {}) {
+  const V = viewOf(P);
+  const out = [];
+  for (let index = 0; index < count; index++) {
+    const t = phase + (index / count) * TAU;
+    let alpha = 1;
+    if (!all) {
+      const radial = radialOf(F, t);
+      const normal = unit3([radial[0] - slope * F.a[0], radial[1] - slope * F.a[1], radial[2] - slope * F.a[2]]);
+      const facing = dot3(normal, V);
+      if (fade) alpha = fadeOf(facing, fade);
+      else if (facing < least) continue;
+      if (alpha <= 0.02) continue;
+    }
+    const [x, y] = iso(pointOf(F, s, r, t), P);
+    out.push(alpha < 1 ? [x, y, alpha] : [x, y]);
+  }
+  return out;
+}
+
+function facingOf(F, angle, P, slope = 0) {
+  const radial = radialOf(F, angle);
+  return dot3(unit3([radial[0] - slope * F.a[0], radial[1] - slope * F.a[1], radial[2] - slope * F.a[2]]), viewOf(P));
+}
+
+function fillet(points, radius, perArc = 7, { P = null, tube = 0, margin = 1.3 } = {}) {
+  if (points.length < 3) return points.map((p) => [...p]);
+  const V = P && tube ? viewOf(P) : null;
+  const out = [[...points[0]]];
+  for (let index = 1; index < points.length - 1; index++) {
+    const prev = points[index - 1];
+    const here = points[index];
+    const next = points[index + 1];
+    const into = unit3(sub3(here, prev));
+    const outOf = unit3(sub3(next, here));
+    const cosTurn = Math.max(-1, Math.min(1, dot3(into, outOf)));
+    const turn = Math.acos(cosTurn);
+    if (turn < 1e-3) {
+      out.push([...here]);
+      continue;
+    }
+    const room = Math.min(len3(sub3(here, prev)), len3(sub3(next, here))) * 0.48;
+    const facing = V ? Math.abs(dot3(unit3(cross3(into, outOf)), V)) : 1;
+    const bend = V ? Math.max(radius, (margin * tube) / (0.7 * Math.max(0.05, facing) ** 2)) : radius;
+    const cut = Math.min(bend * Math.tan(turn / 2), room);
+    const a = sub3(here, mul3(into, cut));
+    const b = add3(here, mul3(outOf, cut));
+    const count = Math.max(2, Math.ceil((perArc * turn) / (Math.PI / 2)));
+    for (let step = 0; step <= count; step++) {
+      const t = step / count;
+      const p0 = lerp3(a, here, t);
+      const p1 = lerp3(here, b, t);
+      out.push(lerp3(p0, p1, t));
+    }
+  }
+  out.push([...points[points.length - 1]]);
+  return out;
+}
+
+function resample(points, spacing) {
+  const lengths = [0];
+  for (let index = 1; index < points.length; index++) lengths.push(lengths[index - 1] + len3(sub3(points[index], points[index - 1])));
+  const total = lengths[lengths.length - 1];
+  const count = Math.max(1, Math.round(total / spacing));
+  const out = [];
+  let segment = 1;
+  for (let step = 0; step <= count; step++) {
+    const at = (total * step) / count;
+    while (segment < points.length - 1 && lengths[segment] < at) segment++;
+    const a = points[segment - 1];
+    const b = points[segment];
+    const span = lengths[segment] - lengths[segment - 1] || 1;
+    out.push(lerp3(a, b, Math.min(1, Math.max(0, (at - lengths[segment - 1]) / span))));
+  }
+  return out;
+}
+
+function pathLength(points) {
+  let total = 0;
+  for (let index = 1; index < points.length; index++) total += len3(sub3(points[index], points[index - 1]));
+  return total;
+}
+
+function cut(points, from, to) {
+  const out = [];
+  let walked = 0;
+  for (let index = 1; index < points.length; index++) {
+    const a = points[index - 1];
+    const b = points[index];
+    const length = len3(sub3(b, a));
+    const start = walked;
+    const end = walked + length;
+    if (end >= from && start <= to) {
+      const t0 = Math.max(0, (from - start) / (length || 1));
+      const t1 = Math.min(1, (to - start) / (length || 1));
+      if (!out.length) out.push(lerp3(a, b, t0));
+      out.push(lerp3(a, b, t1));
+    }
+    walked = end;
+  }
+  return out;
+}
+
+const pointAlong = (points, at) => {
+  const piece = cut(points, at, at + 0.01);
+  return piece[0] ?? points[points.length - 1];
+};
+
+function tangentAlong(points, at) {
+  const total = pathLength(points);
+  const a = pointAlong(points, Math.max(0, at - 0.6));
+  const b = pointAlong(points, Math.min(total, at + 0.6));
+  return unit3(sub3(b, a));
+}
+
+function spiral(F, s, r0, r1, a0, a1, steps = 28) {
+  const out = [];
+  for (let index = 0; index <= steps; index++) {
+    const t = index / steps;
+    out.push(pointOf(F, s, r0 + (r1 - r0) * t, a0 + (a1 - a0) * t));
+  }
+  return out;
+}
+
+function arcPoints(F, s, r, a0, a1, steps = 24) {
+  return Array.from({ length: steps + 1 }, (_, index) => pointOf(F, s, r, a0 + ((a1 - a0) * index) / steps));
+}
+
+return {dot3,add3,sub3,mul3,len3,unit3,cross3,lerp3,viewOf,lightOf,scaleOf,bandOf,toneOf,frameAlong,frameOf,pointOf,radialOf,tangentOf,angleToward,hullOf,runsOf,stepsFor,curveRuns,softOf,lathe,outlineOf,saddleStart,saddleOf,prismOf,stadium,sphereOf,disc,ringBand,solidOf,bandOfProfile,silhouettePoints,silhouetteOf,profileCurve,bandsOf,arcOf,circleOf,spokesOf,fadeOf,ribsOf,rodOut,dotsOf,facingOf,fillet,resample,pathLength,cut,pointAlong,tangentAlong,spiral,arcPoints};
+})();
+const anatomyKit = {...anatomyIso, ...anatomyLathe};
+const benchRegistry = new Map();
+const rigHitHandlers = new WeakMap();
+const reducedRigMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+function registerBench(id, bench) {
+  benchRegistry.set(String(id), bench);
+}
+
+function svgHit(id, label, x, y, r = 20) {
+  const safeLabel = String(label).replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;');
+  return `<g class="rig-hit" role="button" tabindex="0" data-rig-hit="${id}" aria-label="${safeLabel}"><title>${safeLabel}</title><circle class="rig-hit-area" cx="${x}" cy="${y}" r="${r}"/><circle class="rig-hit-marker" cx="${x}" cy="${y}" r="6"/></g>`;
+}
+
+function bindHits(host, handlers) {
+  if (!rigHitHandlers.has(host)) {
+    const activate = event => {
+      let target = event.target.closest('[data-rig-hit]');
+      if (event.type === 'click' && event.detail > 0 && target?.ownerSVGElement) {
+        let closest = Infinity;
+        for (const candidate of target.ownerSVGElement.querySelectorAll('[data-rig-hit]')) {
+          const area = candidate.querySelector('.rig-hit-area');
+          if (!area || !area.getClientRects().length) continue;
+          const box = area.getBoundingClientRect();
+          const dx = event.clientX - (box.left + box.width / 2);
+          const dy = event.clientY - (box.top + box.height / 2);
+          const distance = dx * dx + dy * dy;
+          if (box.width && box.height && (2*dx/box.width)**2+(2*dy/box.height)**2 <= 1 && distance < closest) {
+            target = candidate;
+            closest = distance;
+          }
+        }
+      }
+      const action = target && rigHitHandlers.get(host)?.[target.dataset.rigHit];
+      if (!action) return;
+      if (event.type === 'keydown') {
+        if (event.repeat || !['Enter', ' '].includes(event.key)) return;
+        event.preventDefault();
+      }
+      action(event, target);
+    };
+    host.addEventListener('click', activate);
+    host.addEventListener('keydown', activate);
+  }
+  rigHitHandlers.set(host, handlers);
+}
+
+function rigTimeline(host, durationMs, render) {
+  if (reducedRigMotion.matches || durationMs <= 0) {
+    render(1);
+    return () => {};
+  }
+  let first;
+  let frame = requestAnimationFrame(tick);
+  function tick(now) {
+    first ??= now;
+    const ended = document.hidden || host.closest('[hidden]');
+    const progress = ended ? 1 : Math.min(1, (now - first) / durationMs);
+    render(progress);
+    if (progress < 1) frame = requestAnimationFrame(tick);
+  }
+  return () => cancelAnimationFrame(frame);
+}
+
+function mountBench(chapter, bench) {
+  const section = chapter.querySelector('.rig-lab');
+  const host = section.querySelector('.rig-host');
+  const theme = matchMedia('(prefers-color-scheme: dark)');
+  const setTheme = () => { host.dataset.theme = theme.matches ? 'dark' : 'light'; };
+  setTheme();
+  theme.addEventListener('change', setTheme);
+  bench.mount(host, {k:anatomyKit, svgHit, bindHits, timeline:(ms, draw) => rigTimeline(host, ms, draw)});
+  const compact = ['lab-1','lab-5','lab-6'].includes(chapter.id);
+  const prepareDrawing = scene => {
+    for (const drawing of scene.querySelectorAll('svg:has([data-rig-hit])')) {
+      drawing.setAttribute('role','group');
+      if (!compact || drawing.hasAttribute('data-framed')) continue;
+      const {x,y,width,height} = drawing.viewBox.baseVal;
+      drawing.setAttribute('viewBox',`${x+width*.105} ${y+height*.025} ${width*.79} ${height*.95}`);
+      drawing.setAttribute('data-framed','');
+    }
+  };
+  for (const scene of host.querySelectorAll('.rig-scene')) {
+    if (compact) scene.classList.add('rig-scene-upright');
+    prepareDrawing(scene);
+    new MutationObserver(() => prepareDrawing(scene)).observe(scene,{childList:true});
+  }
+  const choices = section.querySelector('.rig-choices');
+  const feedback = section.querySelector('.rig-feedback');
+  for (const choice of bench.question.choices) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = choice.label;
+    button.setAttribute('aria-pressed', 'false');
+    button.addEventListener('click', () => {
+      for (const candidate of choices.children) candidate.setAttribute('aria-pressed', String(candidate === button));
+      feedback.textContent = choice.feedback;
+      feedback.dataset.correct = String(Boolean(choice.correct));
+    });
+    choices.append(button);
+  }
+}
+</script>
+<script>
+(() => {
+  const qa = (q,a) => `<details><summary>${q}</summary>${a}</details>`;
+  const waterRows = [
+    [0,.999867,.999727,.998229,.995672],[.5,.999899,.999681,.998124,.995520],
+    [1,.999926,.999632,.998017,.995366],[1.5,.999949,.999580,.997907,.995210],
+    [2,.999968,.999524,.997795,.995051],[2.5,.999982,.999465,.997680,.994891],
+    [3,.999992,.999404,.997563,.994728],[3.5,.999993,.999339,.997443,.994564],
+    [4,1,.999271,.997321,.994397],[4.5,.999998,.999200,.997196,.994263],
+    [5,.999992,.999126,.997069,.994058],[5.5,.999982,.999049,.996940,.993885],
+    [6,.999968,.998969,.996808,.993711],[6.5,.999951,.998886,.996674,.993534],
+    [7,.999929,.998800,.996538,.993356],[7.5,.999904,.998712,.996399,.993175],
+    [8,.999876,.998621,.996258,.992993],[8.5,.999844,.998527,.996115,.992808],
+    [9,.999808,.998430,.995969,.992622],[9.5,.999769,.998331,.995822,.992434],
+    [10,.999727,.998229,.995672,.992244]
+  ];
+  addLesson({
+    id:'1', title:'质量的测量', pages:'72–77',
+    summary:'先学会稳定称量，再用体积或浮力求密度；失重时改用弹簧振动测惯性质量。',
+    sections:[
+      {title:'目标与装置',pages:'72–75',html:`
+        <p>质量描述物体的惯性，也决定引力作用的大小。电子天平在地面上利用力的测量来显示质量；失重时物体仍有惯性，只是普通称重方式失效。本实验把“直接称量”和“由其他量推算质量或密度”连在一起。</p>
+        <ol><li>掌握物体质量的精确称量方法。</li><li>测量均匀规则物体、不规则固体及液体的密度。</li><li>理解失重环境中用动力学测质量的原理和方法。</li></ol>
+        <p>基础器材：电子天平、金属圆柱、游标卡尺或螺旋测微器、烧杯、细线及悬挂架、已知密度的液体和温度计。提升需比重瓶、小块固体及不规则石蜡；高阶需水平气垫导轨、滑块、弹簧及位置/时间/速度测量工具。</p>
+        <p>天平图1-2的部件包括称量盘、称量室、三个玻璃门、防对流圈、显示部、水准仪、水平调节螺丝、键开关部、主体和标牌。称量室和防对流圈减少空气扰动；水准仪与底脚用于调平；键区可执行去皮、功能设置和灵敏度校准。</p>
+        <p>教材举例的分度值：普通电子天平10 mg、精密天平1 mg、电子分析天平0.1 mg。分度值是显示的最小步进，不能直接等同于测量准确度；以实际仪器标牌和校准状态为准。质量用kg，力用N，密度用kg/m³或g/cm³，1 g/cm³=1000 kg/m³。</p>`},
+      {title:'原理与读数',pages:'72–74',html:`
+        <h3>一、引力质量与惯性质量</h3>
+        <div class="formula">F<sub>引</sub> = Gm<sub>g</sub>m<sub>地</sub>/R² = gm<sub>g</sub>；F = m<sub>i</sub>a</div>
+        <p>m<sub>g</sub>描述引力耦合，m<sub>i</sub>描述抗拒加速的程度；实验表明两者在精度范围内成正比，采用一致单位后数值相等。教材还回顾了国际千克原器和以普朗克常量定义千克的转变，并介绍原子质量单位u；这些背景不参与本实验的密度计算。</p>
+        <h3>二、天平为何能显示质量</h3>
+        <p>传感器把载荷作用转换成电信号，经放大、低通滤波、A/D转换和微处理器处理后显示。图1-1给出的反馈结构还含位置检测器和PID调节器。调零消除空载偏移，去皮扣除容器质量，校准则检查示值与标准质量的对应关系，三者用途不同。</p>
+        <h3>三、密度由质量与体积得到</h3>
+        <div class="formula">ρ = m/V；圆柱 V = πD²H/4，ρ = 4m/(πD²H)</div>
+        <p>测D、H时选择不同位置和方向，检查是否为均匀圆柱；形状不规则时，改用排开液体的体积。</p>
+        <p>流体静力称衡法：先称空气中质量m，再把物体完全浸没在密度ρ<sub>0</sub>的液体中且不接触容器。设排开液体的等效质量为b，则浮力F<sub>浮</sub>=bg=ρ<sub>0</sub>Vg，故：</p>
+        <div class="formula">ρ = (m/b)ρ<sub>0</sub>；若测得浸液表观质量m<sub>浸</sub>，b=m−m<sub>浸</sub></div>
+        <p>教材式(1-9)—(1-11)把b写成m<sub>0</sub>，它不是“浸液后的剩余质量”。若改为称烧杯受浮力反作用后的示值增加量，该增加量也等于b，但物体必须由天平外部支架悬挂。两种布置的读数定义不能混用。</p>
+        <p>同一物体在参照液体和未知液体中所排液体的等效质量分别为b、b′，体积相同，则未知液体密度ρ′=(b′/b)ρ<sub>0</sub>。液体温度改变时应使用相应温度下的参照密度。</p>
+        <h3>四、比重瓶：比较被固体挤走多少液体</h3>
+        <p>设空瓶m<sub>0</sub>，瓶加干固体m<sub>1</sub>，瓶加固体并用液体装至同一体积标记m<sub>2</sub>，瓶仅装同温参照液体至标记m<sub>3</sub>。固体质量是m<sub>1</sub>−m<sub>0</sub>，排开液体的质量是m<sub>3</sub>−m<sub>2</sub>+m<sub>1</sub>−m<sub>0</sub>：</p>
+        <div class="formula">ρ<sub>固</sub> = [(m<sub>1</sub>−m<sub>0</sub>)/(m<sub>3</sub>−m<sub>2</sub>+m<sub>1</sub>−m<sub>0</sub>)]ρ<sub>0</sub></div>
+        <p>测液体时，分别装同体积的参照液体和待测液体：ρ<sub>液</sub>=[(M<sub>待满</sub>−M<sub>空</sub>)/(M<sub>参满</sub>−M<sub>空</sub>)]ρ<sub>参</sub>。条件是同一体积、温度稳定、瓶外干燥、无气泡，试样不溶解且不与液体反应。</p>
+        <h3>五、失重时改测惯性</h3>
+        <div class="formula">T<sub>0</sub>=2π√(m<sub>0</sub>/k)，T=2π√(m/k) → m=m<sub>0</sub>(T/T<sub>0</sub>)²</div>
+        <p>在水平气垫导轨上，用同一弹簧系统分别测已知质量和未知质量的周期；测多个完整周期再除以次数。m、m<sub>0</sub>须包含共同运动的滑块及附件。如果目标是附加物质量，要先得到总振动质量再扣除滑块基准质量；弹簧有效质量不可忽略时也要校准。</p>
+        <div class="formula">½kx<sub>1</sub>²+½mv<sub>1</sub>²=½kx<sub>2</sub>²+½mv<sub>2</sub>²<br>m=k(x<sub>1</sub>²−x<sub>2</sub>²)/(v<sub>2</sub>²−v<sub>1</sub>²)</div>
+        <p>x从弹簧平衡位置量起。教材第74页式(1-7)的印刷式漏了k；这里按式(1-6)的能量守恒式补回，量纲才是质量。应选择位置平方和速度平方差明显不同的两点，避免小差值放大误差。</p>`},
+      {title:'交互练习：气泡如何影响称衡结果',pages:'74–76',html:`
+        <p>这是理想流体静力称衡模型，质量和体积为教学设定。调整样品，再给表面增加气泡；读取空气中质量和浸液表观质量，比较真实密度与按无气泡公式计算的密度。</p>
+        <div class="sim"><div class="sim-controls">
+          <label>样品质量 / g <input data-role="ma" type="range" min="50" max="250" value="120" step="1"><output data-role="mao"></output></label>
+          <label>真实密度 / (g/cm³) <input data-role="rho" type="range" min="2" max="10" value="7.8" step="0.1"><output data-role="rhoo"></output></label>
+          <label>附着气泡体积 / cm³ <input data-role="bubble" type="range" min="0" max="5" value="0" step="0.1"><output data-role="bo"></output></label>
+          <label>参照水温 <select data-role="temp"><option value="0.999727">10 °C</option><option value="0.998229" selected>20 °C</option><option value="0.995672">30 °C</option></select></label>
+        </div><svg data-role="mass-svg" role="img" aria-label="空气中与完全浸液后的示值比较" style="width:100%;height:245px"></svg>
+        <p class="reading" data-role="mass-reading" aria-live="polite"></p><button data-role="clean" type="button">排除气泡再称</button>
+        <p class="hint">气泡质量忽略，只增加排液体积。图示为物体由外部称力装置悬挂，容器独立支承；没有模拟空气浮力、细线浮力或表面张力。</p></div>
+        <details><summary>另一个操作：用周期比测未知质量</summary><p>保持弹簧不变。已知系统总质量m₀=200.0 g、周期T₀=1.000 s；把未知系统周期输入下方。</p><div class="sim-controls"><label>T / s <input data-role="period" type="number" min="0.1" max="5" step="0.001" value="1.200"></label></div><p data-role="period-reading" class="reading" aria-live="polite"></p></details>`},
+      {title:'操作与记录：全部层级',pages:'75–76',html:`
+        <h3>基础：称量与金属圆柱密度</h3><ol>
+        <li>调天平水平，按仪器要求预热和校准，检查空盘零点。称量前把样品和容器清洁、干燥并与环境温度接近。</li>
+        <li>必要时放容器去皮；样品居中，关玻璃门，等示值稳定再读。取下后检查能否回零，记录分度值，保留原始读数。</li>
+        <li>用卡尺测圆柱直径与高度，多方向、多位置重复；由几何体积求ρ及不确定度。</li>
+        <li>用静力称衡法重测同一圆柱：记录空气中质量、完全浸没示值或排液反力示值、水温及ρ₀；去气泡，不触底壁，求ρ及不确定度，与几何法比较。</li></ol>
+        <h3>提升：小块固体与浮在水上的石蜡</h3>
+        <p>用比重瓶称m₀、m₁、m₂、m₃，测小块固体（教材例为锌粒），计算密度与不确定度。石蜡密度小于水，需用沉子辅助完全浸没：分别测沉子单独浸没及沉子带石蜡浸没的浮力，作差得到石蜡排液质量；扣除沉子和细线影响，再用石蜡自身质量求密度。也可选密度更小、且不溶解石蜡的适当参照液体，但必须核对相容性。</p>
+        <h3>进阶：两种方法测液体</h3>
+        <p>对酒精或甘油等，用同一沉体比较参照液体与未知液体的排液质量，或用同一比重瓶比较相同体积液体的净质量。控制温度、挥发、附着液滴和气泡；报告密度及不确定度，比较两种方法的适用条件。</p>
+        <h3>高阶：动力学、能量与天体质量</h3>
+        <p>在调平的气垫导轨上测已知/未知总质量的弹簧周期，保持同一弹簧和小振幅，设计重复测量与误差分析；也可预先标定k，再测两个位置及速度，按能量差求质量。它们演示如何不靠静态称重测惯性质量，并不要求地面装置真正消除引力。</p>
+        <p>教材还要求查阅系外行星或超大质量黑洞质量的间接测量方案。可从“测到什么 → 使用什么动力学模型 → 哪些条件未知”写短报告：例如已知中央天体质量时由伴星轨道求动力学约束，或由绕中心运动的可见天体轨道估计中心质量。只用亮度推质量通常还需辐射/吸积模型，不能把亮度当成质量的直接读数。</p>
+        <div class="table-wrap"><table><thead><tr><th>方法</th><th>原始记录</th><th>共同条件</th></tr></thead><tbody><tr><td>圆柱几何</td><td>m；各次D、H及零点；仪器分度</td><td>均匀性、有效几何体积</td></tr><tr><td>静力称衡</td><td>m、m浸或b；液温、ρ₀</td><td>完全浸没、无气泡、不接触容器</td></tr><tr><td>比重瓶</td><td>m₀、m₁、m₂、m₃</td><td>同温、同体积、瓶外干燥</td></tr><tr><td>周期法</td><td>基准总质量；N周期总时间；T₀、T</td><td>同一弹簧/附件、小振幅</td></tr><tr><td>能量法</td><td>k、x₁、x₂、v₁、v₂</td><td>平衡点一致、耗散可忽略</td></tr></tbody></table></div>`},
+      {title:'数据处理、误差与水密度表',pages:'74–77',html:`
+        <p><strong>教学例：</strong>圆柱m=169.60 g、D=2.000 cm、H=3.000 cm，则V=9.4248 cm³，ρ≈17.995 g/cm³。若同温ρ₀=0.998229 g/cm³、排液等效质量b=9.4081 g，静力法也得到约17.995 g/cm³。它们是为了展示运算而构造的数据，不是教材材料的实测密度。</p>
+        <p>比重瓶例：空瓶25.000 g、瓶加固体35.000 g、瓶加固体和水82.000 g、满水瓶75.000 g。固体质量10.000 g，排水质量3.000 g，ρ=(10/3)×0.998229≈3.3274 g/cm³。分母不是“瓶中剩余水的质量”。</p>
+        <p>几何法在各输入独立、小误差条件下：u(ρ)/ρ≈√[(u(m)/m)²+(2u(D)/D)²+(u(H)/H)²]，直径的相对误差被放大两倍。静力法若把m和排液质量b视为独立输入，u(ρ)/ρ≈√[(u(m)/m)²+(u(b)/b)²+(u(ρ₀)/ρ₀)²]；若b=m−m浸，m在分子、分母重复出现，严格传播时应从原始读数求偏导并处理相关性。</p>
+        <p>主要误差：未校准或未调平、气流和温差、读数漂移、圆柱不规则、悬线/沉子的附加浮力、样品触底壁、附着气泡、液体温度或浓度变化、比重瓶未达同体积、液滴/蒸发。多次读数取平均能减小随机分散，不能消除这些系统偏差。</p>
+        ${qa('教材附录：不同温度纯水密度表（第76—77页）',`<p>按教材表1-1转录，ρ₀单位g/cm³。实际温度t=t₁+t₂：先选列t₁，再选行t₂。例如23 °C读20列、3.0行，得0.997563 g/cm³。表内相邻值可在要求允许时作插值；报告注明温度与所用数据来源。</p><div class="table-wrap"><table><thead><tr><th>t₂ / °C</th><th>t₁=0 °C</th><th>10 °C</th><th>20 °C</th><th>30 °C</th></tr></thead><tbody>${waterRows.map(r=>`<tr><td>${r[0].toFixed(1)}</td>${r.slice(1).map(v=>`<td>${v.toFixed(6)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`)}
+        <p class="hint">本实验正文在第76页结束，纯水密度续表位于第77页上部；第77页下部才进入实验2。教材要求计算不确定度，但未给本实验统一的置信水平或固定重复次数，应按课程要求选择。</p>`},
+      {title:'全部思考题与解析',pages:'76',html:`
+        ${qa('预习1：引力质量和惯性质量有什么关系？','<p>前者出现在引力定律，后者出现在F=ma。它们概念和测量路径不同，实验表明成正比；统一单位后数值相等。失重是失去通常的支持力读数，并不是惯性质量消失。</p>')}
+        ${qa('预习2：如何自制秤？试举例说明。','<p>可做等臂天平，以已知砝码平衡未知物；或做弹簧秤，用已知质量标定伸长与示值。前者比较同一地点的重力，后者依赖弹性标定和当地g。制作后要检查零点、量程、重复性，不能只画刻度。</p>')}
+        ${qa('预习3：如何用流体静力称衡法测量物体密度？','<p>测空气中质量m，完全浸入密度已知的液体，测表观质量差b，即排开液体的质量；ρ=mρ₀/b。排除气泡和容器接触，记录温度并校正悬线等附加浮力。</p>')}
+        ${qa('预习4：如何用比重瓶法测量液体密度？','<p>称空瓶、装满参照液体、装满待测液体三种质量。保持同一温度和体积，ρ待=ρ参×(M待满−M空)/(M参满−M空)，擦干瓶外并排气泡。</p>')}
+        ${qa('过程1：使用电子天平测量前应进行哪些调节？','<p>检查环境与量程，按说明预热，调水平，检查或执行校准，再调零/必要时去皮。关门稳定后称量，并记录分度值。校准、调零、去皮不能相互替代。</p>')}
+        ${qa('过程2：如何测量失重环境中物体的质量？','<p>给物体一个可测的作用力并测加速度，或利用同一弹簧系统测周期比；也可用已知弹性势能变化和速度变化求质量。必须计入一起运动的载体及附件。</p>')}
+        ${qa('报告1：比较几种物体密度测量方法的适用范围和特点。','<p>几何法适合形状规则、尺寸可测的均匀物体；静力法适合能完全浸入且不溶解/反应的固体，也可用同一沉体比较液体；比重瓶适合液体、小块或颗粒固体。后两者需温度和液体密度，且对气泡、润湿与体积一致性敏感。</p>')}
+        ${qa('报告2：不规则固体浸水后表面有气泡，密度偏大还是偏小？为什么？','<p>忽略气泡质量时，气泡增加排水体积及浮力，测得b偏大，ρ=mρ₀/b偏小。交互中的“排除气泡”可直接检验此方向。</p>')}
+        ${qa('报告3：待测不规则物体密度比水小，如何测量？','<p>用沉子使其完全浸没，分别测沉子与沉子加样品的浮力，差值是样品浮力；再用样品质量求密度。也可选更低密度、不会与样品反应或使之溶解的液体。不能把部分漂浮时排水体积当作样品总体积。</p>')}
+        ${qa('报告4：如何测量大米的密度？','<p>先明确要测米粒材料/颗粒密度，还是一堆大米连同粒间空气的堆积密度。前者可用比重瓶及不明显吸收、溶解或改变米粒的参照液体，控制浸泡时间并排泡；米粒吸水会改变质量和体积，不能随意套用浸水结果。后者用规定装填方式称质量、量总体积，另报“堆积密度”。</p>')}`}
+    ],
+    mount(chapter){
+      const q=s=>chapter.querySelector(s),svg=q('[data-role="mass-svg"]');
+      function draw(){
+        const m=+q('[data-role="ma"]').value,r=+q('[data-role="rho"]').value,bv=+q('[data-role="bubble"]').value,rw=+q('[data-role="temp"]').value,V=m/r,B=rw*(V+bv),app=m-B,calc=m/B*rw;
+        q('[data-role="mao"]').textContent=m.toFixed(0);q('[data-role="rhoo"]').textContent=r.toFixed(1);q('[data-role="bo"]').textContent=bv.toFixed(1);
+        q('[data-role="mass-reading"]').textContent=`空气中 ${m.toFixed(3)} g；浸液表观 ${app.toFixed(3)} g；差值 b=${B.toFixed(3)} g。按无气泡公式求得 ρ=${calc.toFixed(4)} g/cm³，相对真实值偏差 ${((calc/r-1)*100).toFixed(2)}%。`;
+        const w=Math.max(280,svg.clientWidth),cx=w/2,max=270,x=v=>38+(w-58)*v/max;
+        svg.setAttribute('viewBox',`0 0 ${w} 245`);
+        svg.innerHTML=`<title>称量示值：空气中${m.toFixed(1)}克，浸液${app.toFixed(2)}克</title><text x="12" y="24" fill="currentColor">质量示值 / g</text><text x="12" y="56" fill="currentColor">空气中</text><line x1="38" y1="78" x2="${x(m)}" y2="78" stroke="#2878a5" stroke-width="15"/><text x="12" y="114" fill="currentColor">完全浸液</text><line x1="38" y1="136" x2="${x(app)}" y2="136" stroke="#c47b25" stroke-width="15"/><line x1="38" y1="178" x2="${w-20}" y2="178" stroke="currentColor" opacity=".5"/>${[0,100,200].map(v=>`<text x="${x(v)}" y="201" text-anchor="middle" fill="currentColor">${v}</text>`).join('')}<text x="${cx}" y="232" text-anchor="middle" fill="currentColor">示值差对应浮力，非质量消失</text>`;
+      }
+      ['ma','rho','bubble','temp'].forEach(k=>q(`[data-role="${k}"]`).addEventListener('input',draw));
+      q('[data-role="clean"]').addEventListener('click',()=>{q('[data-role="bubble"]').value=0;draw();});
+      const pr=()=>{const t=Number(q('[data-role="period"]').value);q('[data-role="period-reading"]').textContent=t>0&&Number.isFinite(t)?`系统总质量 = 200.0×(${t.toFixed(3)}/1.000)² = ${(200*t*t).toFixed(2)} g。若只要附加物质量，还要扣除载体。`:'请输入正的周期。';};
+      q('[data-role="period"]').addEventListener('input',pr);pr();draw();new ResizeObserver(draw).observe(svg);
+    }
+  });
+
+  addLesson({
+    id:'2',title:'用气垫导轨研究匀加速运动与碰撞',pages:'77–85',
+    summary:'把遮光时间变成速度，再拟合加速度；用带方向的速度比较碰撞前后的动量与动能。',
+    sections:[
+      {title:'目标与装置',pages:'77–78、81、83–85',html:`
+        <p>气垫让滑块与导轨之间形成薄空气层，显著减小接触摩擦。先用斜轨研究匀加速运动，再调回水平研究碰撞：同一组测时工具能回答“运动怎样变化”和“碰撞中哪些量守恒”。</p>
+        <ol><li>测直线运动的平均速度、近似瞬时速度和加速度。</li><li>研究斜面自由下滑，测当地重力加速度。</li><li>研究三种一维碰撞，检验动量与动能关系。</li><li>用可控作用力验证牛顿第二定律。</li></ol>
+        <p>装置有气垫导轨、稳定气源、数字毫秒计和光电门、物理天平、大/小滑块、游标卡尺、卷尺、弹簧钢圈、尼龙粘扣、金属碰撞器、固定螺丝、U形挡光片。称滑块时需包含挡光片、碰撞器和其他附件。</p>
+        <p>附录说明：气孔喷出的压缩空气形成约0.05–0.20 mm空气层。教材示例导轨长1.2–2.0 m、面宽约40 mm，气孔间距20–25 mm、孔径0.5–0.9 mm；这些是器材结构例，不是必须照搬的实验设定。整套装置分为导轨、气源和计时系统。</p>
+        <p>使用时先通气再让滑块运动，轻拿轻放，不在导轨表面加压或划伤；没有气垫时不要沿轨滑动。小型气源易发热，不测时关闭，按说明控制连续工作时间。教材建议用酒精棉轻擦导轨并防尘；维护应服从实际器材说明。</p>`},
+      {title:'原理与读数',pages:'78–81、84–85',html:`
+        <h3>光电门测的首先是时间</h3>
+        <div class="formula">平均速度 v̄=Δs/Δt；Δt足够短时，v≈Δs/Δt</div>
+        <p>这里Δs必须与触发的两个边沿对应。U形挡光片在S2档，计的是同一光电门两次挡光起始边沿之间的时间：相应Δs是两次同类边沿之间的距离，不一定是一条遮光板的宽度；S1则测一次挡光时长。开机默认挡光片宽度1 cm是仪器初值，必须核对并设置实测Δs。</p>
+        <p>Δs/Δt是该小段的平均速度。在匀加速运动中它等于时间中点的瞬时速度，但不严格等于空间中点速度；把它作为门位置处速度是短挡光间隔近似。挡光片太长近似变差，太短又让计时误差占比增大。</p>
+        <h3>三种直线拟合都能测a</h3>
+        <div class="formula">v=v₀+at；s=v₀t+½at²；v²=v₀²+2as</div>
+        <p>v–t斜率为a，截距v₀；(s/t)–t斜率为a/2，截距v₀；v²–s斜率为2a，截距v₀²。本教材实际基础步骤要求拟合<strong>v²–2s</strong>，因此斜率直接是a，不能再除以2。</p>
+        <div class="formula">a=g sinθ≈gh/L → g=aL/h</div>
+        <p>h是垫高产生的高度差，L需与相应倾斜几何长度一致；教材在小倾角下使用h/L。若L取水平支点间距，严格sinθ应由几何求出；不要把总轨道外形长度与支承点长度混用。</p>
+        <h3>碰撞：先规定正方向，再算守恒量</h3>
+        <p>记碰前速度u₁、u₂，碰后v₁、v₂，向右为正。动量是有方向的；光电门给出的速率正值还需按运动方向加正负号。短碰撞期间外力冲量可忽略时：</p>
+        <div class="formula">p₀=m₁u₁+m₂u₂=p₁=m₁v₁+m₂v₂<br>E₀=½m₁u₁²+½m₂u₂²；E₁=½m₁v₁²+½m₂v₂²</div>
+        <p>弹簧钢圈近似完全弹性碰撞，e≈1、动量及动能近似守恒；尼龙粘扣使两滑块粘合，e≈0、共速而动能损失；金属碰撞器用于一般碰撞，常有0&lt;e&lt;1。e=(v₂−v₁)/(u₁−u₂)是分离速率与接近速率之比；只有确实相向接近并发生碰撞时才这样使用。</p>
+        <div class="formula">完全弹性：v₁=[(m₁−m₂)u₁+2m₂u₂]/(m₁+m₂)<br>v₂=[(m₂−m₁)u₂+2m₁u₁]/(m₁+m₂)<br>完全非弹性：v₁=v₂=(m₁u₁+m₂u₂)/(m₁+m₂)</div>
+        <p>一般碰撞可由动量守恒和恢复系数联立求解。动量相对差(p₀−p₁)/p₀与动能损失率(E₀−E₁)/E₀并非一回事；p₀接近零时相对动量差不稳定，应报绝对差及不确定度。u₂=0、完全非弹性时，动能损失率=m₂/(m₁+m₂)。动能损失转为形变、内能和声音等，并非总能量消失。</p>`},
+      {title:'交互练习：光电门与碰撞',pages:'81–82',html:`
+        <h3>动作一：把五组遮光时间变成g</h3>
+        <p>理想教学模型取g=9.8 m/s²、L=1.000 m，由静止释放，计时间隔的空间中心距释放点为s。选择距离、记录时间，再拟合v²对2s；可改Δs观察有限挡光间隔的影响。</p>
+        <div class="sim"><div class="sim-controls"><label>s / cm <select data-role="distance"><option>20</option><option>30</option><option>40</option><option>50</option><option>60</option></select></label><label>垫高h / mm <input data-role="height" type="range" min="10" max="50" value="20" step="1"><output data-role="ho"></output></label><label>挡光间隔Δs / mm <input data-role="width" type="range" min="5" max="30" value="10" step="1"><output data-role="wo"></output></label></div>
+        <p data-role="gate-reading" class="reading" aria-live="polite"></p><div class="sim-controls"><button type="button" data-role="record">记录本次</button><button type="button" data-role="fill">填入五组教学数据</button><button type="button" data-role="clear">清空记录</button></div>
+        <div class="table-wrap"><table><thead><tr><th>s / cm</th><th>Δt / ms</th><th>v / (m/s)</th></tr></thead><tbody data-role="gate-table"></tbody></table></div><svg data-role="gate-svg" style="width:100%;height:245px" role="img" aria-label="以2s为横轴、v平方为纵轴的拟合图"></svg><p data-role="fit-reading" class="reading" aria-live="polite"></p><p class="hint">改变h或Δs会清空本轮模拟记录，以免把不同条件混在一次拟合中。模型含有限间隔平均速度的影响，不含随机计时噪声。</p></div>
+        <h3>动作二：预测碰后速度，再看动量和动能</h3>
+        <div class="sim"><div class="sim-controls"><label>m₁ / g <input data-role="m1" type="range" min="100" max="500" value="300" step="10"><output data-role="m1o"></output></label><label>m₂ / g <input data-role="m2" type="range" min="100" max="500" value="200" step="10"><output data-role="m2o"></output></label><label>u₁ / (m/s) <input data-role="u1" type="range" min="0.1" max="1.2" value="0.6" step="0.05"><output data-role="u1o"></output></label><label>u₂ / (m/s) <input data-role="u2" type="range" min="-0.8" max="0" value="0" step="0.05"><output data-role="u2o"></output></label><label>碰撞类型 <select data-role="etype"><option value="1">钢圈：理想弹性 e=1</option><option value="0.4">金属：示例 e=0.4</option><option value="0">粘合：完全非弹性 e=0</option></select></label></div>
+        <svg data-role="collision-svg" style="width:100%;height:250px" role="img" aria-label="碰撞前后两滑块的速度方向及大小"></svg><p data-role="collision-reading" class="reading" aria-live="polite"></p><p class="hint">图显示碰前/碰后速度示意，不是连续位置动画。e=0.4是教学设定，并非教材金属的标定值；理想模型无外力，所以动量差总为零，真实实验必须由测量检验。</p></div>`},
+      {title:'操作与记录：从基础到高阶',pages:'81–85',html:`
+        <h3>基础：调平、测速度、拟合a和g</h3><ol>
+        <li>每次使用前调纵、横两向水平。通气后轻放滑块，调单底脚使它静止或只有不固定方向的微小滑动；横向调双底脚使两侧气隙相近，必要时借助气泡水准仪。</li>
+        <li>按图2-3测U形挡光片的有效Δs，计时器选S2，核对实际触发边沿及单位。</li>
+        <li>在单底脚下垫块形成斜面。由距光电门s=20.00 cm处从静止释放，不推滑块，测Δt。</li>
+        <li>再取s=30.00、40.00、50.00、60.00 cm，每处重复测量。教材表2-1给三次读数及均值；另记录Δs/mm、h/cm、L/cm。</li>
+        <li>算v≈Δs/Δt，统一成SI单位，最小二乘拟合v²–2s，斜率为a，再用g=aL/h并与当地参考值比较。</li></ol>
+        <h3>提升：三种碰撞都要测</h3>
+        <p>恢复水平后选计时器“碰撞”档。按教材取m₁&gt;m₂，称质量时包含挡光片及碰撞附件。m₂放在两光电门之间静止，m₁撞向它；记录m₁碰前门时间Δt₁₀、碰后Δt₁，以及m₂碰后Δt₂，各自用各自的Δs换算。先装弹簧钢圈，再换尼龙粘扣、金属碰撞器，分别多次测量。教材表2-2列五次，表头还包括v₁₀、v₁、v₂、Δp/p、ΔE/E及e。</p>
+        <p>两门需容纳整个碰撞区域，保证各次速度测量属于明确的碰前或碰后，不能在碰撞尚未结束时遮光；又应尽可能接近碰撞区，减小在门与碰撞点之间受到额外冲量的影响。门距及被撞滑块位置要结合挡光片、滑块长度和碰后运动方向安排。</p>
+        <h3>进阶：验证牛顿第二定律</h3>
+        <p>方案一：水平导轨上的滑块经细线、滑轮连悬挂砝码盘。保持总系统质量不变，把砝码在滑块与悬挂盘之间转移，使悬挂质量mₙ依次5.00、10.00、15.00、20.00、25.00 g；起点与光电门位置不变。由vₙ²=2aₙs求aₙ，以aₙ为横轴、Fₙ=mₙg为纵轴拟合。</p>
+        <div class="formula">Fₙ = mₙg = (m₀+m+mₑ)aₙ</div>
+        <p>m₀是滑块质量，m是砝码盘及盘上、滑块上全部砝码的恒定总质量；mₑ是滑轮转动惯量折算的等效质量，教材示例约0.30 g。直线斜率给出包含mₑ的有效惯性质量；要报实际平动总质量，应按模型扣除mₑ。mₙg是整个系统的驱动力，不是任意情况下细线对滑块的拉力。</p>
+        <p>方案二：不用气垫导轨，设计摩擦较小或微重力等系统，用力传感器测合力，用光栅、毫秒计或加速度传感器测a，逐项改变作用力和系统质量，检验F与ma。必须说明什么是被研究系统、所测是否合外力。</p>
+        <h3>高阶：视频与传感器</h3>
+        <p>教材建议用Tracker分析抛体或二维碰撞：先标定长度与时间，固定相机、减小透视，逐帧追踪位置，再由差分求速度、加速度，并报告差分放大噪声的影响。另比较多普勒测速、Phyphox手机加速度、望远镜/视频跟踪、飞行器测速等方法：列出直接测量量、标定方式、采样率、适用运动和误差。手机读数还需区分设备方向和重力/比力分量，不能直接当作某方向的运动学加速度。</p>
+        <details><summary>附录计时器功能与边沿对应（第84—85页）</summary><p>P1、P2接光电门。功能键循环选择并清零当前测量；转换键可切换时间/速度显示，也用于设置挡光间隔等；取数键查看已存储数据。</p><ul><li>S1：一次挡光时间。</li><li>S2：同门两次挡光之间的时间及据此换算的速度。</li><li>a：通过光电门的时间、速度及相应加速度。</li><li>PZh：碰撞模式，测两滑块通过门的速度。</li><li>T：若干简谐振动周期的时间。</li></ul><p>仪器还列出重力加速度、计数、频率、电周期、信号源等功能指示。以上按教材型号说明；实物界面不同应核实说明书。开机默认Δs=1 cm不代表你的挡光片恰好1 cm。</p></details>`},
+      {title:'数据处理与误差',pages:'79–83',html:`
+        <p><strong>匀加速教学例：</strong>L=1.000 m、h=0.0200 m、Δs=0.01000 m。理想小段近似下，s=0.20、0.30、0.40、0.50、0.60 m对应v约0.2800、0.3429、0.3960、0.4427、0.4850 m/s，Δt约35.71、29.16、25.25、22.59、20.62 ms。拟合v²对2s得a约0.196 m/s²，g约9.80 m/s²。交互使用精确的有限时间区间，所以最后几位可与此短间隔近似略有不同。</p>
+        <div class="formula">令xᵢ=2sᵢ，yᵢ=vᵢ²：a=Σ(xᵢ−x̄)(yᵢ−ȳ)/Σ(xᵢ−x̄)²；b=ȳ−ax̄</div>
+        <p>理论截距b=v₀²；明显非零时检查是否推了一下、位置零点和有限挡光间隔，不要仅凭一个截距就确定误差来源。每个释放距离重复测量，先检查异常读数，再依课程规范处理平均时间与速度。不同条件的数据不能混合拟合。</p>
+        <p><strong>碰撞教学例：</strong>m₁=0.300 kg、m₂=0.200 kg、u₁=0.600 m/s、u₂=0。弹性时v₁=0.120、v₂=0.720 m/s，前后p=0.180 kg·m/s、E=0.0540 J；粘合时v=0.360 m/s、E=0.0324 J，动能损失40%，但p仍为0.180 kg·m/s。金属模型e=0.4时v₁=0.264、v₂=0.504 m/s，动能损失33.6%。这些是理想演算值，不能代替实测检验。</p>
+        <p>速度不确定度近似u(v)/v=√[(u(Δs)/Δs)²+(u(Δt)/Δt)²]；g由a、L、h共同决定，独立小误差近似下u(g)/g=√[(u(a)/a)²+(u(L)/L)²+(u(h)/h)²]。h较小，相同绝对读数误差的相对影响会更大。</p>
+        <p>主要误差包括：纵向未调平导致额外加速度、气流阻力和摩擦、从静止释放不一致、位置定义不一致、边沿/Δs选错、门到碰撞点过远、碰撞不对心导致转动、质量未计附件、计时饱和或漏触发。两滑块外力冲量不可忽略时动量可能真实改变；动量差并不自动都归于仪器误差。</p>`},
+      {title:'全部思考题与解析',pages:'83',html:`
+        ${qa('预习：本实验中平均速度如何测量？','<p>先确定两个计时触发边沿对应的位移Δs，再读它们之间的Δt，求v̄=Δs/Δt。U形挡光片S2档使用两次同类遮光边沿间距；不能把门间距或单片宽度随意代入。</p>')}
+        ${qa('过程1：滑块位移s如何确定？起点和终点在哪里？','<p>选择滑块上固定标记（常结合有效挡光区中心），起点是从静止释放时该标记位置；终点应与用来代表速度的计时区间位置一致。若采用短区间中心近似，s量到该有效区间中心。不要一端量滑块前沿、另一端量挡光片中心而不作修正。</p>')}
+        ${qa('过程2：两光电门距离应注意什么？被撞滑块如何放置？','<p>初始静止滑块放在两门之间，留出完整碰撞及挡光片通过所需空间，使碰前、碰后的计时不重叠且可辨认方向；门尽量接近碰撞区以减小额外冲量，但不能近到碰撞过程中就触发。根据滑块长度、附件及碰后反弹方向安排。</p>')}
+        ${qa('报告1：如何判断气垫导轨是否调平？','<p>通气后在不同位置轻放滑块，看它是否静止或只有无固定方向的小漂移；也可分别向两方向轻推并比较速率变化。单靠某一点恰好静止不够，还需检查横向气隙和导轨局部弯曲。</p>')}
+        ${qa('报告2：气垫未调平对v、a测量结果有何影响？','<p>倾斜引入沿轨重力分量。速度随位置改变，原本应匀速的过程出现系统加速度；求a或碰撞前后量时混入额外外力作用。偏大还是偏小取决于倾斜方向、运动方向以及测量位置，不能笼统说总偏大。</p>')}
+        ${qa('报告3：恢复系数e的大小取决于哪些因素？','<p>教材以碰撞材料为主要因素；实际还受接触结构、表面状态、形变、温度和冲击速度等影响。相同材料并不保证所有速度下e恒定。必须根据相对接近和分离速度测量，并防止转动、非对心和外力冲量影响解释。</p>')}
+        <p class="hint">实验2从第77页下部开始；第83—85页的气垫技术、毫秒计功能和使用注意事项也属于本实验。第85页下部才开始实验3。</p>`}
+    ],
+    mount(chapter){
+      const q=s=>chapter.querySelector(s),gs=q('[data-role="gate-svg"]'),cs=q('[data-role="collision-svg"]');let rows=[];
+      const val=k=>Number(q(`[data-role="${k}"]`).value);
+      const gate=s=>{const a=9.8*val('height')/1000,w=val('width')/1000,dt=Math.sqrt(2*(s+w/2)/a)-Math.sqrt(2*(s-w/2)/a);return {s,dt,v:w/dt};};
+      function showGate(){
+        const r=gate(val('distance')/100);q('[data-role="ho"]').textContent=val('height');q('[data-role="wo"]').textContent=val('width');
+        q('[data-role="gate-reading"]').textContent=`s=${(r.s*100).toFixed(2)} cm：Δt=${(r.dt*1000).toFixed(3)} ms，v̄=${r.v.toFixed(5)} m/s。`;
+        q('[data-role="gate-table"]').innerHTML=rows.map(r=>`<tr><td>${(r.s*100).toFixed(2)}</td><td>${(r.dt*1000).toFixed(3)}</td><td>${r.v.toFixed(5)}</td></tr>`).join('');
+        const w=Math.max(280,gs.clientWidth),left=51,right=w-16,top=34,bottom=194,ymax=Math.max(.65,...rows.map(r=>r.v*r.v*1.2)),x=s=>left+(right-left)*(2*s)/1.3,y=v=>bottom-(bottom-top)*v/ymax;
+        gs.setAttribute('viewBox',`0 0 ${w} 245`);let h=`<title>v平方对2s的拟合，记录${rows.length}组</title><text x="8" y="20" fill="currentColor">v² / (m²/s²)</text><line x1="${left}" y1="${top}" x2="${left}" y2="${bottom}" stroke="currentColor"/><line x1="${left}" y1="${bottom}" x2="${right}" y2="${bottom}" stroke="currentColor"/><text x="${right}" y="237" text-anchor="end" fill="currentColor">2s / m</text>`;
+        for(const t of [0,.4,.8,1.2])h+=`<text x="${x(t/2)}" y="215" text-anchor="middle" fill="currentColor">${t.toFixed(1)}</text>`;
+        for(const t of [0,.2,.4,.6])h+=`<text x="${left-6}" y="${y(t)+4}" text-anchor="end" fill="currentColor">${t.toFixed(1)}</text>`;
+        if(new Set(rows.map(r=>r.s)).size>=2){const n=rows.length,mx=rows.reduce((s,r)=>s+2*r.s,0)/n,my=rows.reduce((s,r)=>s+r.v*r.v,0)/n,a=rows.reduce((s,r)=>s+(2*r.s-mx)*(r.v*r.v-my),0)/rows.reduce((s,r)=>s+(2*r.s-mx)**2,0),b=my-a*mx,g=a/(val('height')/1000);q('[data-role="fit-reading"]').textContent=`拟合a=${a.toFixed(5)} m/s²，截距=${b.toExponential(2)} m²/s²，g=${g.toFixed(4)} m/s²（模型9.8）。已记录${new Set(rows.map(r=>r.s)).size}/5种释放距离。`;h+=`<line x1="${x(.17)}" y1="${y(a*.34+b)}" x2="${x(.62)}" y2="${y(a*1.24+b)}" stroke="#2878a5" stroke-width="2"/>`;}else q('[data-role="fit-reading"]').textContent='至少记录两种距离可拟合；按教材完成五种距离，并在真实实验中每处重复测量。';
+        rows.forEach(r=>h+=`<circle cx="${x(r.s)}" cy="${y(r.v*r.v)}" r="5" fill="#c47b25"/>`);gs.innerHTML=h;
+      }
+      q('[data-role="distance"]').addEventListener('input',showGate);['height','width'].forEach(k=>q(`[data-role="${k}"]`).addEventListener('input',()=>{rows=[];showGate();}));
+      q('[data-role="record"]').addEventListener('click',()=>{if(rows.length<30)rows.push(gate(val('distance')/100));showGate();if(rows.length===30)q('[data-role="fit-reading"]').textContent+=' 达到30条上限，可清空后重新练习。';});
+      q('[data-role="fill"]').addEventListener('click',()=>{rows=[.2,.3,.4,.5,.6].map(gate);showGate();});q('[data-role="clear"]').addEventListener('click',()=>{rows=[];showGate();});
+      function showCollision(){const m1=val('m1')/1000,m2=val('m2')/1000,u1=val('u1'),u2=val('u2'),e=val('etype'),p0=m1*u1+m2*u2,v1=(p0-m2*e*(u1-u2))/(m1+m2),v2=(p0+m1*e*(u1-u2))/(m1+m2),E0=(m1*u1*u1+m2*u2*u2)/2,E1=(m1*v1*v1+m2*v2*v2)/2;
+        ['m1','m2','u1','u2'].forEach(k=>q(`[data-role="${k}o"]`).textContent=val(k).toFixed(k[0]==='u'?2:0));
+        const near=Math.abs(p0)<1e-9;q('[data-role="collision-reading"]').textContent=`碰后v₁=${v1.toFixed(3)}、v₂=${v2.toFixed(3)} m/s；总动量前后均${p0.toFixed(4)} kg·m/s。动能${E0.toFixed(5)} → ${E1.toFixed(5)} J，损失${((E0-E1)/E0*100).toFixed(2)}%。${near?'总动量接近零，用绝对动量差，不计算相对百分比。':''}`;
+        const w=Math.max(280,cs.clientWidth);cs.setAttribute('viewBox',`0 0 ${w} 250`);let out='<title>碰前碰后速度方向，向右为正</title>';
+        function item(x,y,v,label){const len=Math.abs(v)<1e-9?0:Math.sign(v)*(16+Math.min(Math.abs(v),1.8)*19),end=x+len;return `<rect x="${x-29}" y="${y}" width="58" height="32" rx="3" fill="none" stroke="currentColor"/><text x="${x}" y="${y+21}" text-anchor="middle" fill="currentColor">${label}</text><line x1="${x}" y1="${y-14}" x2="${end}" y2="${y-14}" stroke="#2878a5" stroke-width="2"/>${len?`<path d="M${end-5*Math.sign(len)},${y-19} L${end},${y-14} L${end-5*Math.sign(len)},${y-9}" fill="none" stroke="#2878a5"/>`:''}<text x="${x}" y="${y+54}" text-anchor="middle" fill="currentColor">${v.toFixed(3)}</text>`;}
+        out+=`<text x="8" y="20" fill="currentColor">碰前：速度 / (m/s)</text>`+item(w*.28,53,u1,'m₁')+item(w*.73,53,u2,'m₂')+`<text x="8" y="146" fill="currentColor">碰后：向右为正</text>`+item(w*.28,176,v1,'m₁')+item(w*.73,176,v2,'m₂');cs.innerHTML=out;
+      }
+      ['m1','m2','u1','u2','etype'].forEach(k=>q(`[data-role="${k}"]`).addEventListener('input',showCollision));showGate();showCollision();new ResizeObserver(showGate).observe(gs);new ResizeObserver(showCollision).observe(cs);
+    }
+  });
+})();
+
+</script>
+<script>
+/* Anatomy Figure tier. Textbook references: 实验教材.pdf pp.72–77, 77–85.
+ * No manufacturer calibration is claimed. All masses, geometry and noise-free
+ * readings below are explicitly labelled teaching examples.
+ * Figure 1 parts: four two-part feet; chassis/base/deck; pan pedestal and pan;
+ * display recess/glass; three keys; level vial; tray and sample; independent
+ * stand base/feet/post/collars/clamp/arm/knob/thread; beaker bottom/walls/rim/water.
+ * Figure 2 parts: three adjustable foot assemblies, extrusion/ridge/side rails,
+ * ruler/end stops/air inlet, two eight-part gates, timer body/face/keys/sockets,
+ * air supply and hose, two seven-part carts and replaceable collision heads.
+ * Geometry is built with the official Anatomy iso-kit, including four-tone solids.
+ */
+(() => {
+  'use strict';
+  const W=820,H=440, clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  const fixed=(x,n=3)=>(Math.abs(Number(x))<.5*10**(-n)?0:Number(x)).toFixed(n);
+  const table=(heads)=>`<div class="table-wrap"><table><thead><tr>${heads.map(s=>`<th scope="col">${s}</th>`).join('')}</tr></thead><tbody data-records></tbody></table></div>`;
+  const toolsButtons=`<div class="rig-tools"><button type="button" data-record>记录本次读数</button><button type="button" data-clear>清空记录</button></div>`;
+  function maker(k,P){
+    const at=p=>k.iso(p,P), plan=(x,y,w,d,r=2)=>({x,y,w,d,r});
+    const slab=(x,y,w,d,z,h,tone='mid',r=2)=>k.solidSvg(k.slabOf(plan(x,y,w,d,r),z,h,P,5,Math.min(.8,h*.3)),{tone});
+    const round=(x,y,r,z,h,tone='mid',lit=false)=>k.solidSvg(k.cylinder(x,y,r,z,h,P,32,Math.min(.6,h*.2)),{tone,lit});
+    const line=(p,tone='lo')=>k.lineSvg(k.pathOf(p.map(at)),{tone});
+    const screw=(x,y,z)=>k.lineSvg(k.ring(x,y,1.7,z,P,16),{tone:'lo'})+k.dotsSvg([at([x,y,z])],{size:.5,tone:'hi'});
+    const knob=(x,y,z,r=5)=>round(x,y,r,z,4,'hi')+k.lineSvg(k.knurl(x,y,r,z,z+4,24,P),{tone:'lo'})+line([[x-2,y,z+4],[x+r-1,y,z+4]],'hi');
+    const face=(pts,fill,opacity=1)=>`<path d="${k.pathOf(pts.map(at),true)}" fill="${fill}" fill-opacity="${opacity}" stroke="var(--anatomy-lo)" stroke-width=".6"/>`;
+    const label=(p,text,size=7)=>{const [x,y]=at(p);return `<text x="${x}" y="${y}" font-size="${size}" fill="var(--anatomy-hi)" text-anchor="middle" font-family="ui-monospace,monospace">${text}</text>`;};
+    return {at,plan,slab,round,line,screw,knob,face,label};
+  }
+  function setStatus(el,s){el.textContent=s;}
+  function rememberFocus(host,render){const id=host.ownerDocument.activeElement?.dataset?.rigHit;render();if(id)host.querySelector(`[data-rig-hit="${id}"]`)?.focus({preventScroll:true});}
+
+  registerBench('1',{
+    title:'亲手称量，再用浮力求体积',
+    intro:'点图上的样品、调平脚、去皮键和支架旋钮。这里采用教材的“烧杯放在天平上、样品由外部支架悬挂”接法；浮力使天平读数增加。',
+    task:'先在空气中称出样品质量并记录；再切换静力称衡，将装水烧杯去皮，完全浸没样品后记录增加量。最后加入一个附着气泡，观察密度结果如何改变。',
+    question:{prompt:'烧杯在天平上，样品悬挂于天平外的支架。样品完全浸水且不接触杯壁、杯底时，天平增加量 b 代表什么？',choices:[
+      {label:'排开水的质量：b = ρ水V',correct:true,feedback:'对。水对样品有向上的浮力；样品对水的反作用力向下，经烧杯传给天平。因此增加量 b = ρ水V，样品密度 ρ = mρ水/b。'},
+      {label:'样品在水中的表观质量',correct:false,feedback:'这是另一种接法：样品悬在天平上、烧杯由外部承托时才读表观质量。本图支架独立，天平读的是烧杯受到的额外作用力。'},
+      {label:'仍等于样品的全部质量',correct:false,feedback:'样品重量主要由外部支架承担。只有样品对水的向下反作用力传给天平；若碰到杯底，就破坏了当前模型的受力条件。'}
+    ]},
+    mount(host,{k,svgHit,bindHits,timeline}){
+      const P=k.fitProjection(k.boxCorners({x:-185,y:-95,w:365,d:210,r:8},-15,188),W,H,{pad:24,azimuth:54,elevation:27});
+      const q=maker(k,P), {at,slab,round,line,screw,knob,face,label}=q;
+      const s={mode:'mass',onPan:false,level:-2,lower:0,bubble:false,tare:0,tareGood:false,mass:null,buoy:null,moving:false,rows:[],note:'先点前面的调平脚，直到气泡居中；再点右侧托盘上的样品。'};
+      const M=120,RHO=7.8,RW=.998229,V=M/RHO,CUP=86.420;
+      let stop=()=>{};
+      host.innerHTML=`<div class="rig-tools"><label>接法 <select data-mode><option value="mass">基础称量：样品放在秤盘上</option><option value="hydro">静力称衡：烧杯在秤盘上</option></select></label></div><div class="rig-scene"></div><p class="rig-readout" aria-live="polite"></p><p class="hint" data-guidance></p><div class="rig-tools"><button type="button" data-level>调平脚 +1 格</button><button type="button" data-sample>放置／取下样品</button><button type="button" data-tare>去皮</button><button type="button" data-lower>降低／升起悬样</button><button type="button" data-bubble>附着／去除气泡</button></div>${toolsButtons}${table(['接法','读数 / g','解释'])}<p class="hint" data-result></p><p class="hint">教学模型：样品质量 120 g、密度 7.8 g/cm³；水温 20 ℃，ρ水 = 0.998229 g/cm³（教材附录）。天平分度示例 0.001 g；本图无随机噪声，实测应等待稳定。独立支架不放在天平上；杯壁用教学剖视显示，样品始终不接触杯底或杯壁。</p>`;
+      const scene=host.querySelector('.rig-scene'),read=host.querySelector('.rig-readout'),note=host.querySelector('[data-guidance]'),result=host.querySelector('[data-result]');
+      function riseFull(){return (V+(s.bubble?.45:0))*1000/(56*46);}
+      function immersion(){return clamp((88-(110-50*s.lower))/(22-riseFull()),0,1);}
+      function raw(){return s.mode==='mass'?(s.onPan?M:0):CUP+RW*(V+(s.bubble?.45:0))*immersion();}
+      function stable(){return s.level===0&&!s.moving;}
+      function value(){return raw()-s.tare;}
+      function instrument(){
+        let a=`<path class="iso-halo" d="${k.haloOf({x:-140,y:-65,w:170,d:150,r:12},-14,8,P)}"/>`;
+        for(const [x,y] of [[-120,-44],[10,-44],[-120,63],[10,63]]) a+=round(x,y,7,-14,3,'lo')+round(x,y,5,-11,11,'mid');
+        a+=slab(-140,-65,170,150,-2,14,'mid',12)+slab(-136,-61,162,142,12,8,'hi',10)+slab(-129,-54,148,98,20,3,'mid',6);
+        a+=round(-54,-7,10,23,9,'mid')+round(-54,-7,43,32,4,'hi')+k.lineSvg(k.ring(-54,-7,38,36,P),{tone:'faint'});
+        a+=slab(-124,48,79,25,20,2,'lo',3)+slab(-121,51,73,19,22,.6,'lo',1);
+        a+=`<g data-display></g>`;
+        for(const x of [-30,-9,12])a+=slab(x-7,52,14,14,20,3,x===-30?'hi':'mid',3);
+        a+=round(-111,-38,10,23,2,'mid')+k.lineSvg(k.ring(-111,-38,5,25,P),{tone:'hi'})+round(-111+s.level*2.3,-38,2.8,25,.3,'hi',true);
+        a+=[[-128,-51],[18,-51],[-128,38],[18,38]].map(([x,y])=>screw(x,y,23)).join('');
+        // The supporting stand is physically separate from the scale platform.
+        for(const [x,y] of [[45,-78],[107,-78],[45,-25],[107,-25]])a+=round(x,y,5,-12,7,'lo');
+        a+=slab(35,-88,82,74,-5,9,'mid',6)+slab(45,-78,62,54,4,5,'mid',4);
+        a+=round(78,-58,9,9,7,'mid')+round(78,-58,3.5,16,163,'hi')+round(78,-58,5,177,3,'mid');
+        a+=slab(70,-66,16,16,161,14,'hi',3)+slab(-58,-61,128,6,167,6,'hi',2)+slab(-61,-61,6,57,167,6,'hi',2);
+        a+=knob(88,-58,164,7)+round(-58,-7,3.5,167,5,'hi');
+        a+=slab(67,38,91,63,-6,8,'mid',6)+slab(72,43,81,53,2,2,'lo',5);
+        a+=k.lineSvg(k.planOutline({x:78,y:49,w:69,d:41,r:4},4,P),{tone:'faint'});
+        a+=[[42,-81],[109,-81],[42,-18],[109,-18]].map(([x,y])=>screw(x,y,4)).join('');
+        return a;
+      }
+      function beaker(){
+        if(s.mode!=='hydro')return '';
+        // An open rectangular vessel makes the cutaway and non-contact gap explicit.
+        const x=-85,y=-33,w=62,d=52,z=37,top=103;
+        let a=slab(x,y,w,d,z,3,'mid',3);
+        a+=face([[x,y,z+3],[x+w,y,z+3],[x+w,y,top],[x,y,top]],'var(--anatomy-shade-1)',.30);
+        a+=face([[x,y,z+3],[x,y+d,z+3],[x,y+d,top],[x,y,top]],'var(--anatomy-shade-2)',.30);
+        a+=slab(x+1,y+1,w-2,2,top,2,'mid',.8)+slab(x+1,y+1,2,d-2,top,2,'mid',.8);
+        a+=slab(x+w-3,y+1,2,d-2,top,2,'mid',.8)+slab(x+1,y+d-3,w-2,2,top,2,'mid',.8);
+        return a+`<g data-water></g>`;
+      }
+      function drawStatic(){
+        const part=s.mode==='mass'?(s.onPan?[-54,-7,54]:[112,68,25]):[-58,-7,136-50*s.lower];
+        const hits=[['level','转动调平脚；每次一格，气泡居中为零',-120,63,-5],['tare','天平去皮键',-30,58,24],['sample','移动样品：托盘与秤盘之间',...part],['lower','支架旋钮：降低或升起样品',88,-58,170],['bubble','样品表面的气泡：附着或去除',...part]];
+        let body=instrument()+beaker()+`<g data-specimen></g>`;
+        body+=hits.filter(([id])=>id!=='bubble'&&!(s.mode==='mass'&&id==='lower')&&!(s.mode==='hydro'&&id==='sample')).map(([id,l,x,y,z])=>svgHit(id,l,...at([x,y,z]),id==='sample'?26:19)).join('');
+        if(s.mode==='hydro')body+=svgHit('bubble','附着或去除气泡',...at([-77,13,72]),17);
+        scene.innerHTML=k.figureSvg({width:W,height:H,label:'电子天平、独立悬挂支架与浸水容器；点击圆形操作点或用 Tab 和回车操作。',body});
+        drawLive();
+      }
+      function drawLive(){
+        let x,y,z;
+        if(s.mode==='mass'){[x,y,z]=s.onPan?[-54,-7,36]:[112,68,4];}
+        else [x,y,z]=[-58,-7,110-50*s.lower];
+        let a='';
+        if(s.mode==='hydro')a+=line([[x,y,167],[x,y,z+24]],'hi');
+        a+=round(x,y,12,z,22,'hi',true)+round(x,y,3,z+22,2,'mid')+k.lineSvg(k.ring(x,y,9,z+22,P),{tone:'lo'});
+        if(s.mode==='hydro'&&s.bubble)a+=round(x+9,y+5,4.5,z+6,1.2,'lo');
+        scene.querySelector('[data-specimen]').innerHTML=a;
+        if(s.mode==='hydro'){
+          // Water level and submerged fraction solve the same displaced-volume model.
+          const wz=88+immersion()*riseFull();
+          scene.querySelector('[data-water]').innerHTML=face([[-82,-30,wz],[-26,-30,wz],[-26,16,wz],[-82,16,wz]],'var(--anatomy-shade-2)',.40)+line([[-82,16,40],[-26,16,40],[-26,16,103]],'lo');
+        }
+        scene.querySelector('[data-display]').innerHTML=label([-84,61,24],`${stable()?fixed(value()):'···'} g`,11);
+        read.setAttribute('aria-live',s.moving?'off':'polite');
+        setStatus(read,stable()?`天平：${fixed(value())} g · ${s.mode==='mass'?'基础称量':`浸没 ${fixed(immersion()*100,0)}%`} · 气泡${s.level===0?'居中':'未居中'}`:`${s.moving?'样品正在移动，等稳定再记录':'尚未调平，请点调平脚'} · 即时模型负载 ${fixed(value())} g`);
+        setStatus(note,s.note);
+        result.textContent=s.mass!==null&&s.buoy!==null?`已记录 m = ${fixed(s.mass)} g，b = ${fixed(s.buoy)} g。ρ = mρ水/b = ${fixed(s.mass*RW/s.buoy,4)} g/cm³。${s.bubble?'气泡使排水体积变大，结果偏小。':''}`:'记录空气中质量 m 和完全浸没后的增加量 b，再计算 ρ = mρ水/b。';
+      }
+      function level(){if(s.moving)return;s.level=s.level>=2?-2:s.level+1;s.note=s.level===0?'气泡已居中。现在可以称量；去皮应在你要扣除的容器单独放上天平时进行。':'气泡偏离中央圆圈；继续逐格调平。';rememberFocus(host,drawStatic);}
+      function tare(){if(!stable()){s.note='先调平并等待稳定，随后去皮。';drawLive();return;}s.tare=raw();s.tareGood=s.mode==='hydro'&&immersion()===0;s.note=s.tareGood?'烧杯及水已经去皮。现在点支架旋钮，将样品完全浸没。':s.mode==='mass'?(s.onPan?'你把样品也去皮了；取下样品再去皮，之后重新称量。':'空秤盘已归零。'): '浸水时去皮会把浮力增加量也扣掉。先升起样品，重新去皮。';drawLive();}
+      function sample(){if(s.mode!=='mass'){s.note='静力称衡时样品由独立支架悬挂，请操作支架旋钮。';drawLive();return;}s.onPan=!s.onPan;s.note=s.onPan?'样品已放上秤盘。稳定后记录空气中的质量 m。':'样品已取下；空秤盘可以去皮归零。';rememberFocus(host,drawStatic);}
+      function lower(){if(s.mode!=='hydro'){s.note='先把接法切换到静力称衡。';drawLive();return;}if(s.moving)return;const start=s.lower,target=start<.5?1:0;s.moving=true;s.note=target?'样品下降。读数增加来自样品对水的向下反作用力。':'样品上升。完全离水后才给烧杯重新去皮。';stop=timeline(1050,p=>{const e=p*p*(3-2*p);s.lower=start+(target-start)*e;if(p===1){s.moving=false;s.note=target?'样品完全浸没，且不接触杯底或杯壁；可以记录 b。':'样品已完全离水；此时可以给烧杯及水去皮。';}drawLive();});}
+      function bubble(){if(s.mode!=='hydro')return;if(s.moving)return;s.bubble=!s.bubble;s.note=s.bubble?'附着气泡几乎不增加样品质量，却增加排水体积；再次记录，比较计算密度。':'已去除气泡；真实实验还要检查挂线、浸没程度和接触。';drawLive();}
+      const actions={level,tare,sample,lower,bubble};bindHits(host,actions);
+      for(const id of Object.keys(actions))host.querySelector(`[data-${id}]`).addEventListener('click',actions[id]);
+      host.querySelector('[data-mode]').addEventListener('change',e=>{stop();s.mode=e.target.value;s.lower=0;s.moving=false;s.tare=0;s.tareGood=false;s.onPan=false;s.note=s.mode==='hydro'?'烧杯及水已经放上天平；先去皮，再浸没样品。':'点样品，把它放在秤盘上。';drawStatic();});
+      host.querySelector('[data-record]').addEventListener('click',()=>{
+        if(!stable()){s.note='读数未稳定或天平未调平，先完成相应操作。';drawLive();return;}
+        let what;
+        if(s.mode==='mass'){
+          if(!s.onPan||s.tare!==0){s.note='先在空秤盘上归零，再把样品放上；当前不能把净读数当样品质量。';drawLive();return;}
+          s.mass=Number(fixed(value()));what='空气中样品质量 m';
+        }else{
+          if(!s.tareGood||immersion()<1){s.note='先在样品离水时给烧杯去皮，再将样品完全浸没。';drawLive();return;}
+          s.buoy=Number(fixed(value()));what=s.bubble?'增加量 b（附着气泡）':'增加量 b（无气泡）';
+        }
+        s.rows.push(`<tr><td>${s.mode==='mass'?'基础称量':'静力称衡'}</td><td>${fixed(value())}</td><td>${what}</td></tr>`);host.querySelector('[data-records]').innerHTML=s.rows.join('');s.note='本次读数已记录。';drawLive();
+      });
+      host.querySelector('[data-clear]').addEventListener('click',()=>{s.rows=[];s.mass=s.buoy=null;host.querySelector('[data-records]').innerHTML='';drawLive();});
+      drawStatic();
+    }
+  });
+
+  registerBench('2',{
+    title:'打开气源，让滑块经过光电门',
+    intro:'同一套导轨可做垫高后的匀加速运动，也可放平后研究碰撞。点气泵、垫块、滑块、光电门和碰撞头，仪器上的位置、光电触发和读数共用一个模型。',
+    task:'匀加速模式：开气源，设定垫高和释放距离，点滑块释放，记录多组 v² 与 2s。碰撞模式：换装三种碰撞头，观察速度方向、动量和动能的变化。',
+    question:{prompt:'在水平气垫导轨上，两滑块碰后粘在一起。在忽略外力冲量的模型中，哪项判断成立？',choices:[
+      {label:'总动量守恒；总动能一般减少',correct:true,feedback:'对。相互作用力是一对内力，总动量保持不变。粘合使部分机械能转化为形变、热和声；动量守恒不要求动能守恒。'},
+      {label:'总动量与总动能都守恒',correct:false,feedback:'动能守恒对应理想弹性碰撞。粘合碰撞要比较碰前后 ½mv²；只有总动量在当前外力冲量可忽略的条件下守恒。'},
+      {label:'碰后同速，所以总动量为零',correct:false,feedback:'同速不等于静止。若初始总动量不为零，粘在一起的两个滑块仍会共同运动，v = p初/(m₁+m₂)。'}
+    ]},
+    mount(host,{k,svgHit,bindHits,timeline}){
+      const P=k.fitProjection(k.boxCorners({x:-65,y:-65,w:730,d:250,r:8},-25,135),W,H,{pad:25,azimuth:72,elevation:24});
+      const q=maker(k,P),{at,slab,round,line,screw,knob,face,label}=q;
+      const s={mode:'accel',air:false,height:.02,start:.15,gate:.75,coupling:0,running:false,t:0,x1:.15,x2:.53,rows:[],last:null,gateTimes:[null,null],note:'先点击左后方气泵的电源开关。'};
+      const SCALE=600,L=1,G=9.8,DS=.01,ARM=.002,m1=.2,m2=.4,U=.6;
+      const couplings=[{e:1,name:'弹性钢片环'},{e:.5,name:'部分非弹性示例'},{e:0,name:'粘合碰撞'}];
+      let stop=()=>{},events=[],runDuration=0,markerStart=.15;
+      host.innerHTML=`<div class="rig-tools"><label>实验模式 <select data-mode><option value="accel">倾斜导轨：匀加速运动</option><option value="collision">水平导轨：三类碰撞</option></select></label><label data-height-wrap>垫高 h / mm <input data-height type="range" min="10" max="30" step="5" value="20"></label><label data-start-wrap>释放位置 x / m <input data-start type="range" min="0.10" max="0.50" step=".05" value=".15"></label><button type="button" data-run>释放滑块</button><button type="button" data-reset>复位</button></div><div class="rig-scene"></div><p class="rig-readout" aria-live="polite"></p><p class="hint" data-guidance></p><div class="rig-tools"><button type="button" data-air>开／关气源</button><button type="button" data-raise>垫高 +5 mm</button><button type="button" data-gate>光电门移动 +5 cm</button><button type="button" data-coupling>切换碰撞头</button></div>${toolsButtons}${table(['模式','几何／装置','光电计时 / ms','速度 / m·s⁻¹','处理结果'])}<p class="hint" data-result></p><p class="hint">教学参数：支脚间距 L = 1.000 m，遮光框两前沿间距 Δs = 10.00 mm，每臂宽 2.00 mm；无摩擦、无计时噪声。碰撞示例 m₁ = 200 g、m₂ = 400 g，u₁ = +0.600 m/s、u₂ = 0；部分非弹性碰撞的 e = 0.5 是示例，须由真实数据求实物的 e。碰撞前先放平导轨；图中升降量按几何比例绘制。</p>`;
+      const scene=host.querySelector('.rig-scene'),read=host.querySelector('.rig-readout'),note=host.querySelector('[data-guidance]'),result=host.querySelector('[data-result]');
+      const trackZ=x=>40+(s.mode==='accel'?s.height*SCALE*(1-x/SCALE):0);
+      function tiltSlab(x,y,w,d,z,h,tone='mid'){
+        const p=(a,b,c)=>[a,b,c+trackZ(a)];
+        const top=[p(x,y,z+h),p(x+w,y,z+h),p(x+w,y+d,z+h),p(x,y+d,z+h)];
+        const front=[p(x,y+d,z),p(x+w,y+d,z),top[2],top[3]];
+        const end=[p(x+w,y,z),p(x+w,y+d,z),top[2],top[1]];
+        const path=pts=>k.pathOf(pts.map(at),true);
+        return k.solidSvg({fill:path([p(x,y,z),p(x+w,y,z),p(x+w,y+d,z),p(x,y+d,z),top[3],top[0]]),top:path(top),shades:['',path(front),path(end),''],outline:path(top)+path(front)+path(end),crease:'',bevel:''},{tone});
+      }
+      function gate(x,index,front=false){
+        const xx=x*SCALE,z=trackZ(xx),a=[];
+        if(front)return round(xx,29,3.5,z-11,63,'hi')+slab(xx-6,17,12,9,z+30,12,'hi',2)+knob(xx,33,z-10,4.5);
+        a.push(slab(xx-12,-40,24,80,z-15,4,'mid',3),round(xx,-29,3.5,z-11,63,'hi'));
+        a.push(slab(xx-8,-34,16,68,z+49,8,'hi',3),slab(xx-6,-26,12,9,z+30,12,'hi',2));
+        a.push(screw(xx,-32,z-11),screw(xx,32,z-11));
+        a.push(`<g data-beam="${index}">${line([[xx,-17,z+36],[xx,17,z+36]],'faint')}</g>`);
+        return a.join('');
+      }
+      function cart(x,second=false){
+        const xx=x*SCALE,z=trackZ(xx),a=[];
+        // Every cart component is located in the inclined track coordinate frame.
+        a.push(tiltSlab(xx-22,-18,44,36,2,5,'hi'),tiltSlab(xx-17,-13,34,26,7,12,'hi'));
+        a.push(tiltSlab(xx-12,-11,24,22,19,3,'mid'));
+        if(second)a.push(tiltSlab(xx-12,-10,24,20,22,7,'mid'));
+        // U-shaped flag: two arms separated by 10 mm between corresponding edges.
+        const flagBase=second?29:22;
+        a.push(tiltSlab(xx-3.6,-2,1.2,4,flagBase,19,'hi'),tiltSlab(xx+2.4,-2,1.2,4,flagBase,19,'hi'),tiltSlab(xx-3.6,-2,7.2,4,flagBase+19,2,'hi'));
+        a.push(screw(xx-12,9,z+19),screw(xx+12,9,z+19));
+        const dir=second?-1:1,cx=xx+dir*23;
+        if(s.mode==='collision'){
+          if(s.coupling===0){a.push(line([[cx,-14,z+10],[cx+dir*6,-11,z+12],[cx+dir*8,0,z+13],[cx+dir*6,11,z+12],[cx,14,z+10]],'hi'));}
+          else a.push(tiltSlab(cx+(dir<0?-3:0),-14,3,28,6,11,'hi'));
+        }
+        return a.join('');
+      }
+      function art(){
+        markerStart=s.x1;
+        let a=`<path class="iso-halo" d="${k.haloOf({x:-20,y:-42,w:650,d:92,r:8},-12,5,P)}"/>`;
+        // Adjustable tripod, long extrusion, edge strips and air outlet rows.
+        if(s.mode==='accel')a+=slab(8,-17,34,34,-15,s.height*SCALE,'mid',3);
+        for(const [x,y] of [[25,0],[570,-31],[570,31]]){
+          const lift=x===25&&s.mode==='accel'?s.height*SCALE:0;
+          a+=round(x,y,11,-15+lift,3,'lo')+round(x,y,7,-12+lift,9,'mid')+round(x,y,3.5,-3+lift,trackZ(x)-15-lift,'hi')+knob(x,y,8+lift,7);
+        }
+        for(const x of [25,570])a+=slab(x-12,-41,24,82,trackZ(x)-18,6,'mid',3);
+        a+=tiltSlab(0,-23,600,46,-12,12,'mid')+tiltSlab(0,-3,600,6,0,3,'hi');
+        a+=tiltSlab(0,-23,600,5,0,2,'mid')+tiltSlab(0,18,600,5,0,2,'mid');
+        for(const x of [0,588])a+=tiltSlab(x,-26,12,52,-3,13,'hi');
+        a+=tiltSlab(8,24,584,7,-6,.8,'lo');
+        for(let x=12;x<=588;x+=6){const z=trackZ(x)-5.2;a+=line([[x,24,z],[x,x%30===0?30:27,z]],x%30===0?'hi':'lo');}
+        a+=k.dotsSvg(Array.from({length:29},(_,i)=>[...at([12+i*20,-10,trackZ(12+i*20)+.3])]),{size:.55,tone:'hi'});
+        a+=k.dotsSvg(Array.from({length:29},(_,i)=>[...at([12+i*20,10,trackZ(12+i*20)+.3])]),{size:.55,tone:'hi'});
+        // Pump and cable are mounted to actual sockets; no floating line ends.
+        a+=slab(-51,-57,62,52,-13,40,'mid',7)+slab(-47,-53,54,44,27,3,'mid',5)+knob(-19,-31,30,7);
+        for(let i=0;i<5;i++)a+=slab(-42+i*9,-47,4,19,30,.8,'lo',1);
+        a+=line([[-5,-31,17],[7,-42,17],[28,-42,20],[28,-23,trackZ(28)-7]],s.air?'hi':'lo');
+        const gates=s.mode==='accel'?[s.gate]:[.28,.70];
+        // Back portions, then moving carts, then near gate posts produce readable occlusion.
+        gates.forEach((x,i)=>{a+=gate(x,i);});
+        a+=`<g data-cart1>${cart(s.x1)}</g>`+(s.mode==='collision'?`<g data-cart2>${cart(s.x2,true)}</g>`:'');
+        gates.forEach((x,i)=>{a+=gate(x,i,true);});
+        a+=slab(365,95,165,66,-12,25,'mid',7)+slab(370,100,155,56,13,4,'hi',5)+slab(379,107,105,29,17,1,'lo',2);
+        a+=`<g data-timer></g>`;
+        for(const x of [493,511])a+=slab(x,108,10,11,17,3,'hi',2);
+        a+=round(391,147,3,17,2,'mid')+round(411,147,3,17,2,'mid');
+        for(const [x,y] of [[374,104],[522,104],[374,151],[522,151]])a+=screw(x,y,17);
+        a+=line([[391,147,19],[344,145,0],[332,60,0],[gates[0]*SCALE,33,trackZ(gates[0]*SCALE)-10]],'lo');
+        if(gates[1])a+=line([[411,147,19],[545,158,0],[609,55,0],[gates[1]*SCALE,33,trackZ(gates[1]*SCALE)-10]],'lo');
+        const hits=[['air','气源开关',-19,-31,35],['run','释放滑块',s.x1*SCALE,-1,trackZ(s.x1*SCALE)+30],['reset','数字计时器复位键',508,114,21]];
+        if(s.mode==='accel')hits.push(['raise','改变支脚垫高',25,0,12],['gate','将光电门向前移动 5 cm',s.gate*SCALE,33,trackZ(s.gate*SCALE)+15]);
+        else hits.push(['coupling','更换碰撞头',s.x1*SCALE+28,12,trackZ(s.x1*SCALE)+13]);
+        a+=hits.map(([id,l,x,y,z])=>svgHit(id,l,...at([x,y,z]),id==='run'?23:18)).join('');
+        scene.innerHTML=k.figureSvg({width:W,height:H,label:'气垫导轨、两光电门、遮光框、气泵与数字计时器；圆形操作点可以点击或按回车。',body:a});
+        live();
+      }
+      function velocities(){const e=couplings[s.coupling].e;return {v1:(m1-e*m2)/(m1+m2)*U,v2:(1+e)*m1/(m1+m2)*U};}
+      function acceleration(){return G*s.height/L;}
+      function live(){
+        const c1=scene.querySelector('[data-cart1]'),c2=scene.querySelector('[data-cart2]');
+        // Rebuild only the moving assemblies; the stationary 50+ parts stay untouched.
+        if(c1)c1.innerHTML=cart(s.x1);if(c2)c2.innerHTML=cart(s.x2,true);
+        const movement=k.translateAlong(P,[(s.x1-markerStart)*SCALE,0,trackZ(s.x1*SCALE)-trackZ(markerStart*SCALE)]);
+        scene.querySelector('[data-rig-hit="run"]')?.setAttribute('transform',movement);
+        scene.querySelector('[data-rig-hit="coupling"]')?.setAttribute('transform',movement);
+        const gates=s.mode==='accel'?[s.gate]:[.28,.70];
+        gates.forEach((g,i)=>{const blocked=[s.x1,...(s.mode==='collision'?[s.x2]:[])].some(x=>[-DS/2,DS/2].some(a=>Math.abs(g-(x+a))<ARM/2));const el=scene.querySelector(`[data-beam="${i}"]`);if(el)el.innerHTML=line([[g*SCALE,-17,trackZ(g*SCALE)+36],[g*SCALE,17,trackZ(g*SCALE)+36]],blocked?'hi':'faint');});
+        const ds=s.gateTimes.map(v=>v===null?'—':fixed(v*1000,2));
+        scene.querySelector('[data-timer]').innerHTML=label([430,118,19],`P1 ${ds[0]} ms`,9)+label([430,130,19],`P2 ${ds[1]} ms`,9);
+        read.setAttribute('aria-live',s.running?'off':'polite');
+        read.textContent=s.mode==='accel'?`气源${s.air?'已开':'关闭'} · h = ${fixed(s.height*1000,0)} mm · x = ${fixed(s.x1)} m · t = ${fixed(s.t)} s · P1 = ${ds[0]} ms`:`${couplings[s.coupling].name} · t = ${fixed(s.t)} s · x₁ = ${fixed(s.x1)} m，x₂ = ${fixed(s.x2)} m · P1/P2 = ${ds.join(' / ')} ms`;
+        note.textContent=s.note;
+      }
+      function reset(){stop();s.running=false;s.t=0;s.last=null;s.gateTimes=[null,null];s.x1=s.mode==='accel'?s.start:.12;s.x2=.55;s.note='已复位。确认气源、导轨状态与读数方法，再释放滑块。';rememberFocus(host,art);}
+      function mutate(fn){if(s.running){s.note='运动中先复位，再改变装置。';live();return;}fn();reset();}
+      function air(){if(s.running){s.note='运动中的关气会破坏无摩擦模型；先按计时器复位，再关气。';live();return;}s.air=!s.air;s.note=s.air?'气源已开，滑块由薄空气层支承。现在可以点滑块释放。':'气源已关闭。无气时不推动滑块，以免划伤导轨。';rememberFocus(host,art);}
+      function raise(){if(s.mode==='collision'){s.note='碰撞需保持水平导轨；垫高只用于匀加速模式。';live();return;}mutate(()=>{s.height=s.height>=.03?.01:s.height+.005;host.querySelector('[data-height]').value=s.height*1000;});}
+      function movegate(){if(s.mode!=='accel')return;mutate(()=>{s.gate=s.gate>=.85?.6:s.gate+.05;});}
+      function coupling(){if(s.mode!=='collision'){s.note='请先切到水平碰撞模式。';live();return;}mutate(()=>{s.coupling=(s.coupling+1)%3;});s.note=`已换为${couplings[s.coupling].name}；先预测动量与动能，再点滑块。`;live();}
+      function run(){
+        if(s.running)return;if(!s.air){s.note='先开气源。真实实验中不要在无气时推动滑块。';live();return;}
+        reset();s.running=true;s.note='运动中：光电框的两次同向前沿触发 S2 计时；等本次运行结束后记录。';events=[];
+        if(s.mode==='accel'){
+          const a=acceleration(),x0=s.start,g=s.gate;
+          const xa=g-DS/2-ARM/2,xb=g+DS/2-ARM/2;
+          const ta=Math.sqrt(2*(xa-x0)/a),tb=Math.sqrt(2*(xb-x0)/a),dt=tb-ta;
+          events=[{at:tb,gate:0,dt}];runDuration=Math.sqrt(2*(.94-x0)/a);
+          s.last={mode:'accel',h:s.height,d:(xa+xb)/2-x0,dt,v:DS/dt,a};
+          stop=timeline(runDuration*1200,p=>{s.t=p*runDuration;s.x1=x0+.5*a*s.t*s.t;events.filter(e=>s.t>=e.at).forEach(e=>s.gateTimes[e.gate]=e.dt);if(p===1){s.running=false;s.note='本次释放结束。s 取两次触发位置的中点到释放点的距离；v = Δs/Δt 是短程平均速度。';}live();});
+        }else{
+          const {v1,v2}=velocities(),x10=.12,x20=.55,contactX=x20-(s.coupling===0?62:52)/SCALE,contact=(contactX-x10)/U;
+          const segments=[{cart:1,x:x10,v:U,t0:0,t1:contact},{cart:1,x:contactX,v:v1,t0:contact,t1:8},{cart:2,x:x20,v:v2,t0:contact,t1:8}];
+          for(const seg of segments){if(Math.abs(seg.v)<1e-9)continue;for(const [gi,g]of [[0,.28],[1,.70]]){const sign=Math.sign(seg.v);const xa=g-sign*(DS/2+ARM/2),xb=g+sign*(DS/2-ARM/2);const ta=seg.t0+(xa-seg.x)/seg.v,tb=seg.t0+(xb-seg.x)/seg.v;if(ta>=seg.t0-1e-9&&tb<=seg.t1&&tb>ta)events.push({at:tb,gate:gi,dt:tb-ta,cart:seg.cart,after:seg.t0>0});}}
+          const end1=Math.abs(v1)<1e-9?Infinity:contact+((v1>0?.91:.08)-contactX)/v1,end2=contact+(.91-x20)/v2;runDuration=Math.min(end1,end2);
+          events=events.filter(e=>e.at<=runDuration).sort((a,b)=>a.at-b.at);
+          s.last={mode:'collision',name:couplings[s.coupling].name,e:couplings[s.coupling].e,v1,v2,u:U,p0:m1*U,p1:m1*v1+m2*v2,e0:.5*m1*U*U,e1:.5*m1*v1*v1+.5*m2*v2*v2,events};
+          stop=timeline(runDuration*1400,p=>{s.t=p*runDuration;if(s.t<=contact){s.x1=x10+U*s.t;s.x2=x20;}else{s.x1=contactX+v1*(s.t-contact);s.x2=x20+v2*(s.t-contact);}events.filter(e=>s.t>=e.at).forEach(e=>s.gateTimes[e.gate]=e.dt);if(p===1){s.running=false;s.note=Math.abs(v1)<1e-9?'碰后滑块 1 停止；通过持续位置不变判断 v₁ = 0，不能把“没有光电脉冲”自动当成零速度。':'本次碰撞结束；速度向右为正，向左为负。计时器显示最后一次经过，各次脉冲见记录。';}live();});
+        }
+      }
+      bindHits(host,{air,raise,gate:movegate,coupling,run,reset});
+      for(const [sel,fn]of [['air',air],['raise',raise],['gate',movegate],['coupling',coupling],['run',run],['reset',reset]])host.querySelector(`[data-${sel}]`).addEventListener('click',fn);
+      host.querySelector('[data-height]').addEventListener('input',e=>mutate(()=>s.height=Number(e.target.value)/1000));
+      host.querySelector('[data-start]').addEventListener('input',e=>mutate(()=>s.start=Number(e.target.value)));
+      host.querySelector('[data-mode]').addEventListener('change',e=>{stop();s.running=false;s.mode=e.target.value;host.querySelector('[data-height-wrap]').hidden=s.mode!=='accel';host.querySelector('[data-start-wrap]').hidden=s.mode!=='accel';reset();});
+      host.querySelector('[data-record]').addEventListener('click',()=>{
+        if(s.running||!s.last){s.note='先完成一次释放；记录来自本次光电触发，不预先填入结果。';live();return;}
+        const r=s.last;let cells;
+        if(r.mode==='accel'){
+          cells=['匀加速',`h=${fixed(r.h*1000,0)} mm；s=${fixed(r.d,3)} m`,fixed(r.dt*1000,3),fixed(r.v,5),`2s=${fixed(2*r.d,3)} m；v²=${fixed(r.v*r.v,6)} m²/s²`];
+        }else{
+          const pulse=r.events.map(e=>`P${e.gate+1}：${e.after?'碰后':'碰前'}块${e.cart} ${fixed(e.dt*1000,2)}`).join('；');
+          cells=['碰撞',r.name,pulse,`u₁=+${fixed(U)}；v₁=${fixed(r.v1)}；v₂=+${fixed(r.v2)}`,`p：${fixed(r.p0,4)} → ${fixed(r.p1,4)} kg·m/s；E：${fixed(r.e0,4)} → ${fixed(r.e1,4)} J`];
+        }
+        s.rows.push(r);host.querySelector('[data-records]').insertAdjacentHTML('beforeend',`<tr>${cells.map(c=>`<td>${c}</td>`).join('')}</tr>`);
+        if(r.mode==='accel'){
+          const rows=s.rows.filter(a=>a.mode==='accel'&&Math.abs(a.h-r.h)<1e-8),n=rows.length,x=rows.map(a=>2*a.d),y=rows.map(a=>a.v*a.v),sx=x.reduce((a,b)=>a+b,0),sy=y.reduce((a,b)=>a+b,0),sxx=x.reduce((a,b)=>a+b*b,0),sxy=x.reduce((a,b,i)=>a+b*y[i],0),den=n*sxx-sx*sx;
+          result.textContent=n>=2&&Math.abs(den)>1e-12?`同一 h 的 ${n} 组数据拟合 v² = a·(2s)+b：a=${fixed((n*sxy-sx*sy)/den,6)} m/s²；g=aL/h=${fixed((n*sxy-sx*sy)/den*L/r.h,4)} m/s²。有限遮光长度会使短程平均速度与中点瞬时速度有小偏差。`:'再保持 h 不变，改变释放点，至少记录两种 s；建议按教材做多组，再用 v² 对 2s 的斜率求 a。';
+        }else result.textContent=`总动量相对差 ${fixed((r.p1-r.p0)/r.p0*100,3)}%；动能减少 ${fixed((r.e0-r.e1)/r.e0*100,2)}%。模型中 e=${r.e}；实际实验应由带方向的碰前后速度计算。${r.e===0?'两个遮光框先后经过 P2，得到相同共同速度。':''}`;
+        s.note='本次数据已加入记录表。';live();
+      });
+      host.querySelector('[data-clear]').addEventListener('click',()=>{s.rows=[];host.querySelector('[data-records]').innerHTML='';result.textContent='';});
+      art();
+    }
+  });
+})();
+
+</script>
+<script>const unitSettings = {"id":"1"};
+(function classroom() {
+  const lesson = lessons.get(unitSettings.id);
+  const bench = benchRegistry.get(unitSettings.id);
+  if (!lesson || !bench) throw new Error('缺少仿真实验内容');
+  const article = document.createElement('article');
+  const key = `lab-${lesson.id}`;
+  const sections = lesson.sections.map((section, index) => ({...section, key:`${key}-part-${index+1}`}));
+  article.id = key;
+  article.className = 'lesson';
+  article.setAttribute('aria-labelledby', `${key}-heading`);
+  const labelPages = pages => {
+    const clean = pages.replace(/^教材(?:\s*\/\s*PDF)?\s*/, '').replace(/^pp\.\s*/, '');
+    return /^\d+[\d–、-]*$/.test(clean) ? `第 ${clean} 页` : clean;
+  };
+  const legacyLink = unitSettings.id === '8' ? '<p class="source">继续练习：<a href="./index.html" target="_blank" rel="noopener">打开原声速学习页、面板操作与拟合工具 ↗</a></p>' : '';
+  article.innerHTML = `<header class="hero">
+    <p class="kicker">力学 · 实验 ${lesson.id} · 教材 ${labelPages(lesson.pages)}</p>
+    <h1 id="${key}-heading">${lesson.title}</h1>
+    <p class="lead">${lesson.summary}</p>
+    <p class="hint">页码按教材印刷页计。仪器读数与记录为教学模拟。</p>
+  </header>
+  <nav class="parts" aria-label="本节目录"><a href="#${key}-rig">仿真实验台</a>${sections.map(part => `<a href="#${part.key}">${part.title}</a>`).join('')}</nav>
+  <section class="rig-lab" id="${key}-rig"><div class="rig-head"><h2>${bench.title}</h2><p>${bench.intro}</p><p><strong>第一次操作</strong>　${bench.task}</p></div>
+    <div class="rig-instrument"><div class="rig-bar"><strong>实验 ${lesson.id} · 仪器台</strong><span>点击图中绿色标记操作，也可用 Tab 和 Enter。</span></div><div class="iso rig-host"></div></div>
+    <details class="rig-question"><summary>做完后，试着解释读数</summary><p>${bench.question.prompt}</p><div class="rig-choices"></div><p class="rig-feedback" aria-live="polite"></p></details>
+  </section>
+  ${legacyLink}
+  ${sections.map((part, index) => `<section class="lesson-part" id="${part.key}"><div class="part-head"><h2>${part.title}</h2><span class="page-ref">${labelPages(part.pages)}</span>${index === 0 ? `<a class="page-ref" href="#${key}-rig">打开本节仿真实验台 ↑</a>` : ''}</div>${part.html}</section>`).join('')}`;
+  const main = document.getElementById('course');
+  main.append(article);
+  lesson.mount?.(article);
+  mountBench(article, bench);
+  if (window === window.top) {
+    const navigation = document.createElement('nav');
+    navigation.className = 'unit-return';
+    navigation.setAttribute('aria-label','网站目录');
+    navigation.innerHTML = '<a href="../../index.html">← 返回实验站</a>';
+    main.before(navigation);
+  }
+  if (location.hash) requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView());
+})();</script>
+<script id="physlab-lesson-guide">(function mountLessonGuide(groups) {
+  const article = document.querySelector('.unit-content > .lesson');
+  const nav = article?.querySelector(':scope > nav.parts');
+  if (!nav) return;
+
+  const desktop = matchMedia('(min-width: 900px)');
+  function make(tag, className='', text='') {
+    const element = document.createElement(tag);
+    element.className = className;
+    element.textContent = text;
+    return element;
+  }
+
+  const rail = make('aside','lesson-rail');
+  rail.setAttribute('aria-label','本节学习导引');
+  const guide = make('details','lesson-guide');
+  guide.open = desktop.matches;
+  const summary = make('summary','','学习目录');
+  const currentTitle = make('span','lesson-guide-current');
+  currentTitle.setAttribute('aria-hidden','true');
+  summary.append(currentTitle);
+  nav.setAttribute('aria-label','本节学习目录');
+  const workspace = make('div','lesson-workspace');
+  const body = make('div','lesson-body');
+  const lab = article.querySelector('.rig-lab');
+  const lessonParts = Array.from(article.querySelectorAll('.lesson-part'));
+  const quiz = article.querySelector('.rig-question');
+  if (quiz) quiz.id ||= `${lab.id}-check`;
+
+  const task = make('details','lesson-task');
+  task.open = desktop.matches;
+  const taskSummary = make('summary');
+  const taskContent = make('div','lesson-task-content');
+  const taskTitle = make('strong','lesson-task-title');
+  const taskText = make('p','lesson-task-text');
+  taskText.setAttribute('aria-live','polite');
+  const pager = make('div','lesson-task-pager');
+  const previous = make('button','','上一项');
+  const next = make('button','','下一项');
+  previous.type = next.type = 'button';
+  pager.append(previous,next);
+  taskContent.append(taskTitle,taskText,pager);
+  task.append(taskSummary,taskContent);
+
+  function sectionOf(target) {
+    return target.startsWith('part:') ? lessonParts[Number(target.slice(5)) - 1] : lab;
+  }
+
+  function resolveTarget(step) {
+    if (step.target === 'quiz') return quiz;
+    if (step.target === 'rig' || step.target.startsWith('part:')) return step.section;
+    return Array.from(lab.querySelectorAll(step.target)).find(element=>element.getClientRects().length) || lab;
+  }
+
+  nav.replaceChildren();
+  const steps = [];
+  for (const [index,[group, items]] of groups.entries()) {
+    nav.append(make('p','lesson-guide-group',`${index + 1} · ${group}`));
+    for (const [title,target,instructions] of items) {
+      const index = steps.length;
+      const number = String(index + 1).padStart(2,'0');
+      const anchor = make('a');
+      const hash = `#${article.id}-step-${number}`;
+      anchor.href = hash;
+      anchor.dataset.stepTarget = target;
+      anchor.append(make('span','lesson-guide-number',number),make('span','lesson-guide-label',title));
+      const step = {title,target,instructions,index,number,hash,anchor,section:sectionOf(target)};
+      steps.push(step);
+      nav.append(anchor);
+      anchor.addEventListener('click',event=>{
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        event.preventDefault();
+        go(step);
+      });
+    }
+  }
+  while (nav.nextSibling) body.append(nav.nextSibling);
+  nav.before(workspace);
+  guide.append(summary,nav);
+  rail.append(guide,task);
+  workspace.append(rail,body);
+  article.parentElement.classList.add('unit-content-with-guide');
+
+  let active;
+  let targetHighlight;
+  let heldScroll;
+  function mark(step) {
+    if (!step || step === active) return;
+    active?.anchor.removeAttribute('aria-current');
+    active = step;
+    step.anchor.setAttribute('aria-current','step');
+    currentTitle.textContent = `${step.number} ${step.title}`;
+    taskSummary.textContent = `本步任务 ${step.index + 1}/${steps.length}`;
+    taskTitle.textContent = step.title;
+    taskText.textContent = step.instructions;
+    previous.disabled = step.index === 0;
+    next.disabled = step.index === steps.length - 1;
+    if (guide.open) {
+      const row = step.anchor.getBoundingClientRect();
+      const list = nav.getBoundingClientRect();
+      if (row.top < list.top) nav.scrollTop -= list.top - row.top + 4;
+      if (row.bottom > list.bottom) nav.scrollTop += row.bottom - list.bottom + 4;
+    }
+  }
+
+  function scrollToTarget(target, focus) {
+    if (!target) return;
+    if (target === quiz) quiz.open = true;
+    if (focus) {
+      targetHighlight?.classList.remove('lesson-step-target');
+      targetHighlight = target;
+      target.classList.add('lesson-step-target');
+      if (!target.matches('a,button,input,select,textarea,summary,[tabindex]')) target.setAttribute('tabindex','-1');
+      target.focus?.({preventScroll:true});
+    }
+    const offset = desktop.matches ? 44 : rail.getBoundingClientRect().height + 20;
+    window.scrollTo({top:window.scrollY + target.getBoundingClientRect().top - offset,behavior:'instant'});
+    heldScroll = window.scrollY;
+  }
+
+  function go(step, writeHistory=true) {
+    if (!step) return;
+    if (writeHistory && location.hash !== step.hash) history.pushState(null,'',step.hash);
+    if (!desktop.matches) guide.open = false;
+    mark(step);
+    task.open = true;
+    scrollToTarget(resolveTarget(step),writeHistory);
+  }
+
+  previous.addEventListener('click',()=>go(steps[active.index - 1]));
+  next.addEventListener('click',()=>go(steps[active.index + 1]));
+  guide.addEventListener('toggle',()=>{ if (!desktop.matches && guide.open) task.open = false; });
+  task.addEventListener('toggle',()=>{ if (!desktop.matches && task.open) guide.open = false; });
+
+  const lessonBlocks = [lab,...lessonParts];
+  let scheduled = false;
+  function track() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(()=>{
+      scheduled = false;
+      if (heldScroll !== undefined && Math.abs(window.scrollY - heldScroll) < 12) return;
+      heldScroll = undefined;
+      const readingLine = desktop.matches ? 92 : rail.getBoundingClientRect().height + 24;
+      const section = lessonBlocks.findLast(block=>block.getBoundingClientRect().top <= readingLine);
+      if (section && section !== active.section) mark(steps.find(step=>step.section===section));
+    });
+  }
+
+  window.addEventListener('scroll',track,{passive:true});
+  window.addEventListener('resize',track);
+  desktop.addEventListener('change',()=>{guide.open = task.open = desktop.matches;track();});
+  const followFragment = () => {
+    const step = steps.find(item=>item.hash===location.hash);
+    if (step) { go(step,false); return; }
+    const target = document.getElementById(location.hash.slice(1));
+    if (target === quiz) {
+      mark(steps.find(item=>item.target==='quiz'));
+      scrollToTarget(quiz,false);
+    } else if (lessonBlocks.includes(target)) {
+      mark(steps.find(item=>item.section===target));
+      scrollToTarget(target,false);
+    }
+  };
+  window.addEventListener('hashchange',followFragment);
+  mark(steps[0]);
+  followFragment();
+})([["调平电子天平",[["辨认秤盘、水平泡和防风门","part:1","按教材图 1-2 同时找出称量室和调节脚，把样品放在秤盘中央。实际称量时关闭防风门，等示数稳定。"],["调节脚直到气泡居中","[data-level]","逐次调节水平脚并观察气泡，气泡进入中心圆后才称量。"],["空载去皮，称出样品质量","[data-tare]","保持秤盘空载，按去皮键。随后把样品放上去，等读数稳定后记下空气中的质量 m。"]]],["用两种办法测金属圆柱密度",[["量圆柱直径与高度","part:4","按教材多次量取圆柱直径和高度，由体积 πd²h/4 结合称得的质量求密度。"],["切到浸没法并再次去皮","[data-mode]","切换到浸没法，在样品还未入水时以盛水烧杯的状态去皮。"],["悬空浸没样品并记录增量","[data-lower]","将样品完全浸入水中，保持样品与杯壁、杯底分离。等示数稳定后记录增量 b，并用 ρ=mρ水/b 计算。"],["比较气泡附着前后的读数","[data-bubble]","附加气泡后观察 b 怎样改变。想一想为什么把这部分浮力算给样品会使密度偏低。"]]],["换样品与复核结果",[["用比重瓶测小块固体，跟着教材处理石蜡","part:4","按教材用比重瓶的差值确定不规则小块排出的水量。换石蜡时找到沉子的两次浸没状态，确定哪个差值对应石蜡体积。"],["用比重瓶的称量差求液体密度","part:2","写出同一瓶装满水、装满待测液和空瓶的三个质量。用两个净质量的比求待测密度，再与教材的静力称衡法比较。"],["查水温、核对密度量纲","part:5","按记录的水温选择水密度，统一质量和体积单位，并说明气泡或触底会怎样影响计算。"],["判断秤盘增加量代表哪份质量","quiz","辨清烧杯和液体在秤盘上、样品由外部支架悬挂时，哪一部分力经液体传到了天平。"]]]]);</script>
+</body>
+</html>

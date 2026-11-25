@@ -1,0 +1,17 @@
+{
+  "title": "直流电源特性的研究",
+  "chapter": "电磁学",
+  "summary": "用检流计找零点测干电池开路电压，再观察负载怎样改变端电压和电流。顺便练习测表头内阻与改装电压表。",
+  "tags": [
+    "电动势",
+    "内阻",
+    "补偿法",
+    "电源输出特性",
+    "仿真实验"
+  ],
+  "level": 1,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png",
+  "order": 12
+}

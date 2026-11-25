@@ -1,0 +1,16 @@
+{
+  "title": "用密立根油滴法测电子电荷",
+  "chapter": "近代物理学实验",
+  "summary": "在显微镜下用电场托住一颗带电油滴，再撤去电场计时。由下落时间和平衡电压求单滴电荷，从多颗油滴寻找共同的最小电荷单位。",
+  "tags": [
+    "平衡电压",
+    "终端速度",
+    "电荷量子化",
+    "仿真实验"
+  ],
+  "level": 2,
+  "order": 25,
+  "entry": "index.html",
+  "interactive": true,
+  "cover": "anatomy-cover.png"
+}
