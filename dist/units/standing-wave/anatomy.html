@@ -365,7 +365,14 @@ body { font-family: var(--lab-font); }
 }
 .lesson-workspace { min-width: 0; margin-block-start: 16px; }
 .lesson-body { min-width: 0; }
-.lesson-body > .rig-lab { margin-block-start: 0; }
+.lesson-reading-step { min-width: 0; padding-block: 16px 20px; border-block-start: 1px solid var(--lab-line); }
+.lesson-reading-step + .lesson-reading-step { margin-block-start: 12px; }
+.lesson-reading-step .lesson-reading-title { margin: 0 0 8px; font-size: clamp(1.08rem, 1.7vw, 1.38rem); line-height: 1.4; }
+.lesson-reading-step .lesson-reading-instructions { margin: 0 0 12px; color: var(--lab-muted); }
+.unit-content .lesson-reading-step > .lesson-part { margin-block: 16px 0; }
+.unit-content .lesson-bench-slot > .rig-lab { margin-block-start: 12px; }
+.unit-content .lesson-open-bench { margin-block: 6px 0; }
+.lesson-reading-step .rig-question { margin-block: 14px 0; }
 .lesson-body > :is(section[id], [id]) { scroll-margin-block-start: 76px; }
 .lesson-body .rig-question { scroll-margin-block-start: 76px; }
 
@@ -3068,7 +3075,7 @@ function mountBench(chapter, bench) {
   }
   if (location.hash) requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView());
 })();</script>
-<script id="physlab-lesson-guide">(function mountLessonGuide(groups) {
+<script id="physlab-lesson-guide">(function mountLessonGuide(groups, partSteps) {
   const article = document.querySelector('.unit-content > .lesson');
   const nav = article?.querySelector(':scope > nav.parts');
   if (!nav) return;
@@ -3113,12 +3120,12 @@ function mountBench(chapter, bench) {
   task.append(taskSummary,taskContent);
 
   function sectionOf(target) {
-    return target.startsWith('part:') ? lessonParts[Number(target.slice(5)) - 1] : lab;
+    return target.startsWith('part:') ? lessonParts[Number(target.slice(5)) - 1] : target === 'quiz' ? quiz : lab;
   }
 
   function resolveTarget(step) {
-    if (step.target === 'quiz') return quiz;
-    if (step.target === 'rig' || step.target.startsWith('part:')) return step.section;
+    if (!step.usesBench) return step.topic || step.section;
+    if (step.target === 'rig') return lab;
     return Array.from(lab.querySelectorAll(step.target)).find(element=>element.getClientRects().length) || lab;
   }
 
@@ -3134,7 +3141,13 @@ function mountBench(chapter, bench) {
       anchor.href = hash;
       anchor.dataset.stepTarget = target;
       anchor.append(make('span','lesson-guide-number',number),make('span','lesson-guide-label',title));
-      const step = {title,target,instructions,index,number,hash,anchor,section:sectionOf(target)};
+      const node = make('section','lesson-reading-step');
+      node.id = hash.slice(1);
+      const heading = make('h2','lesson-reading-title',`${number} ${title}`);
+      heading.tabIndex = -1;
+      node.append(heading,make('p','lesson-reading-instructions',instructions));
+      const section = sectionOf(target);
+      const step = {title,target,instructions,index,number,hash,anchor,section,node,heading,usesBench:section===lab};
       steps.push(step);
       nav.append(anchor);
       anchor.addEventListener('click',event=>{
@@ -3150,6 +3163,68 @@ function mountBench(chapter, bench) {
   rail.append(guide,task);
   workspace.append(rail,body);
   article.parentElement.classList.add('unit-content-with-guide');
+
+  const supplemental = Array.from(body.children).filter(child=>child!==lab && !lessonParts.includes(child));
+  body.append(...steps.map(step=>step.node));
+  for (const [index, part] of lessonParts.entries()) steps[partSteps[index]-1].node.append(part);
+
+  function continueIn(stepNumber, nodes, className = 'lesson-part') {
+    const step = steps[stepNumber - 1];
+    const continuation = make('div',className);
+    continuation.append(...nodes);
+    step.node.append(continuation);
+    step.topic = continuation;
+  }
+
+  // Some textbook sections cover multiple steps. Keep each original passage with its task.
+  if (article.id === 'lab-1') {
+    const subsections = lessonParts[3].querySelectorAll(':scope > h3');
+    for (const [index, stepNumber] of [8,9,11].entries()) {
+      const heading = subsections[index + 1];
+      continueIn(stepNumber,[heading,heading.nextElementSibling]);
+    }
+  } else if (article.id === 'lab-5') {
+    continueIn(10,[lessonParts[2].querySelector('[data-vsim] details:has([data-ct1])')],'lesson-part sim');
+  } else if (article.id === 'lab-7') {
+    const [,,drive,link,hint] = lessonParts[0].querySelectorAll(':scope > p, :scope > .formula');
+    continueIn(9,[drive]);
+    continueIn(10,[link,hint]);
+  }
+
+  const quizStep = steps.find(step=>step.target==='quiz');
+  quizStep?.node.append(quiz);
+  for (const node of supplemental) steps.at(-1).node.append(node);
+
+  for (const step of steps) {
+    if (step.usesBench) {
+      step.benchSlot = make('div','lesson-bench-slot');
+      step.openBench = make('button','lesson-open-bench','打开仿真实验台');
+      step.openBench.type = 'button';
+      step.node.append(step.openBench,step.benchSlot);
+      step.openBench.addEventListener('click',()=>{
+        moveBench(step);
+        mark(step);
+        scrollToTarget(resolveTarget(step),true);
+      });
+    } else if (!step.topic && step.target.startsWith('part:') && step.section?.parentElement!==step.node) {
+      const link = make('a','lesson-related-part',step.section.querySelector('h2').textContent);
+      link.href = `#${step.section.id}`;
+      step.node.append(link);
+      step.topic = link;
+    }
+  }
+
+  let benchStep;
+  function moveBench(step) {
+    if (step===benchStep) return;
+    if (benchStep) benchStep.openBench.textContent = '打开仿真实验台';
+    // An instrument can serve multiple steps. Move its mounted node and keep its measurements.
+    step.benchSlot.append(lab);
+    step.openBench.textContent = '定位本步操作';
+    benchStep = step;
+  }
+
+  moveBench(steps.find(step=>step.usesBench));
 
   let active;
   let targetHighlight;
@@ -3173,16 +3248,21 @@ function mountBench(chapter, bench) {
     }
   }
 
-  function scrollToTarget(target, focus) {
+  function highlight(target, focus) {
     if (!target) return;
-    if (target === quiz) quiz.open = true;
+    targetHighlight?.classList.remove('lesson-step-target');
+    targetHighlight = target;
+    target.classList.add('lesson-step-target');
     if (focus) {
-      targetHighlight?.classList.remove('lesson-step-target');
-      targetHighlight = target;
-      target.classList.add('lesson-step-target');
       if (!target.matches('a,button,input,select,textarea,summary,[tabindex]')) target.setAttribute('tabindex','-1');
       target.focus?.({preventScroll:true});
     }
+  }
+
+  function scrollToTarget(target, focus) {
+    if (!target) return;
+    if (target === quiz) quiz.open = true;
+    if (focus) highlight(target,true);
     const offset = desktop.matches ? 44 : rail.getBoundingClientRect().height + 20;
     window.scrollTo({top:window.scrollY + target.getBoundingClientRect().top - offset,behavior:'instant'});
     heldScroll = window.scrollY;
@@ -3194,7 +3274,11 @@ function mountBench(chapter, bench) {
     if (!desktop.matches) guide.open = false;
     mark(step);
     task.open = true;
-    scrollToTarget(resolveTarget(step),writeHistory);
+    if (step.usesBench) moveBench(step);
+    if (step.target === 'quiz') quiz.open = true;
+    highlight(resolveTarget(step),false);
+    if (writeHistory) step.heading.focus({preventScroll:true});
+    scrollToTarget(step.node,false);
   }
 
   previous.addEventListener('click',()=>go(steps[active.index - 1]));
@@ -3202,7 +3286,6 @@ function mountBench(chapter, bench) {
   guide.addEventListener('toggle',()=>{ if (!desktop.matches && guide.open) task.open = false; });
   task.addEventListener('toggle',()=>{ if (!desktop.matches && task.open) guide.open = false; });
 
-  const lessonBlocks = [lab,...lessonParts];
   let scheduled = false;
   function track() {
     if (scheduled) return;
@@ -3212,8 +3295,8 @@ function mountBench(chapter, bench) {
       if (heldScroll !== undefined && Math.abs(window.scrollY - heldScroll) < 12) return;
       heldScroll = undefined;
       const readingLine = desktop.matches ? 92 : rail.getBoundingClientRect().height + 24;
-      const section = lessonBlocks.findLast(block=>block.getBoundingClientRect().top <= readingLine);
-      if (section && section !== active.section) mark(steps.find(step=>step.section===section));
+      const atEnd = window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+      mark(atEnd ? steps.at(-1) : steps.findLast(step=>step.node.getBoundingClientRect().top <= readingLine) || steps[0]);
     });
   }
 
@@ -3224,17 +3307,14 @@ function mountBench(chapter, bench) {
     const step = steps.find(item=>item.hash===location.hash);
     if (step) { go(step,false); return; }
     const target = document.getElementById(location.hash.slice(1));
-    if (target === quiz) {
-      mark(steps.find(item=>item.target==='quiz'));
-      scrollToTarget(quiz,false);
-    } else if (lessonBlocks.includes(target)) {
-      mark(steps.find(item=>item.section===target));
+    if (target === lab || target === quiz || lessonParts.includes(target)) {
+      mark(steps.find(item=>item.node===target.closest('.lesson-reading-step')));
       scrollToTarget(target,false);
     }
   };
   window.addEventListener('hashchange',followFragment);
   mark(steps[0]);
   followFragment();
-})([["认装置，量弦的有效长度",[["找出驱动端、弦线和滑轮",".rig-scene","沿弦线确认驱动、反射和张力的来源。读弦长时取驱动节点到滑轮处的水平段。"],["放好初始砝码，开启音叉","[data-wave-power]","检查滑轮能自由转动且砝码盘没有摆动。接通音叉电源后观察弦线整体的振动。"]]],["每档固定张力，微调弦长找共振",[["移动音叉，调到振幅最大的稳定驻波","[data-wave-length-control]","先固定砝码，改变音叉位置以微调有效弦长。波节和波腹位置稳定、振幅较大时，再读弦长。"],["数波腹 n，检查端点与相邻波节","[data-wave-status]","沿整段有效弦长数波腹，核对两端位置。用 L=nλ/2 将波腹数换成波长。"],["记录同一张力下的有效弦长与波腹数","[data-log]","记录 L、n、f 和总悬挂质量。实物实验在这档张力下先调离共振，再调回共振并复测几次。"],["每次加 10 g，重新调弦长并记录","[data-wave-plus]","每换一档砝码，微调有效弦长找回清晰的驻波。按教材至少记录五组不同张力的数据。"]]],["计算波速和线密度",[["用 λf 求波速并用悬挂质量求张力",".table-wrap","用已记的 L、n、f 计算 v=2Lf/n。质量包括砝码与挂件，换成 kg 后再近似用 F=mg 求张力。"],["拟合 v² 对 F，求弦的线密度","part:1","进入完整教学页，用实测多组共振数据拟合 v² 对 F 的斜率，取倒数求线密度。实做时再称取已知长度的弦，独立核对线密度。"]]],["进阶观看教材的驱动与波形",[["辨明电磁驱动的电频率和钢弦振动频率","part:1","打开完整教学页的驱动部分，观察钢弦在交变电磁铁作用下何时被吸引，再推导电频率与钢弦振动频率的关系。"],["观察共振曲线、阻尼和克拉尼图形","part:1","在完整教学页切到共振曲线和弹性板，比较改变阻尼后的峰宽，并认出聚集细沙处对应的节点线。"],["预测同长同频时减重会怎样","quiz","从张力减小推到波速和波长的变化，再预测下一组达到共振时可能看到更多还是更少波腹。"]]]]);</script>
+})([["认装置，量弦的有效长度",[["找出驱动端、弦线和滑轮",".rig-scene","沿弦线确认驱动、反射和张力的来源。读弦长时取驱动节点到滑轮处的水平段。"],["放好初始砝码，开启音叉","[data-wave-power]","检查滑轮能自由转动且砝码盘没有摆动。接通音叉电源后观察弦线整体的振动。"]]],["每档固定张力，微调弦长找共振",[["移动音叉，调到振幅最大的稳定驻波","[data-wave-length-control]","先固定砝码，改变音叉位置以微调有效弦长。波节和波腹位置稳定、振幅较大时，再读弦长。"],["数波腹 n，检查端点与相邻波节","[data-wave-status]","沿整段有效弦长数波腹，核对两端位置。用 L=nλ/2 将波腹数换成波长。"],["记录同一张力下的有效弦长与波腹数","[data-log]","记录 L、n、f 和总悬挂质量。实物实验在这档张力下先调离共振，再调回共振并复测几次。"],["每次加 10 g，重新调弦长并记录","[data-wave-plus]","每换一档砝码，微调有效弦长找回清晰的驻波。按教材至少记录五组不同张力的数据。"]]],["计算波速和线密度",[["用 λf 求波速并用悬挂质量求张力",".table-wrap","用已记的 L、n、f 计算 v=2Lf/n。质量包括砝码与挂件，换成 kg 后再近似用 F=mg 求张力。"],["拟合 v² 对 F，求弦的线密度","part:1","进入完整教学页，用实测多组共振数据拟合 v² 对 F 的斜率，取倒数求线密度。实做时再称取已知长度的弦，独立核对线密度。"]]],["进阶观看教材的驱动与波形",[["辨明电磁驱动的电频率和钢弦振动频率","part:1","打开完整教学页的驱动部分，观察钢弦在交变电磁铁作用下何时被吸引，再推导电频率与钢弦振动频率的关系。"],["观察共振曲线、阻尼和克拉尼图形","part:1","在完整教学页切到共振曲线和弹性板，比较改变阻尼后的峰宽，并认出聚集细沙处对应的节点线。"],["预测同长同频时减重会怎样","quiz","从张力减小推到波速和波长的变化，再预测下一组达到共振时可能看到更多还是更少波腹。"]]]],[8]);</script>
 </body>
 </html>

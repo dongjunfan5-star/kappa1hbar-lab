@@ -366,7 +366,14 @@ body { font-family: var(--lab-font); }
 }
 .lesson-workspace { min-width: 0; margin-block-start: 16px; }
 .lesson-body { min-width: 0; }
-.lesson-body > .rig-lab { margin-block-start: 0; }
+.lesson-reading-step { min-width: 0; padding-block: 16px 20px; border-block-start: 1px solid var(--lab-line); }
+.lesson-reading-step + .lesson-reading-step { margin-block-start: 12px; }
+.lesson-reading-step .lesson-reading-title { margin: 0 0 8px; font-size: clamp(1.08rem, 1.7vw, 1.38rem); line-height: 1.4; }
+.lesson-reading-step .lesson-reading-instructions { margin: 0 0 12px; color: var(--lab-muted); }
+.unit-content .lesson-reading-step > .lesson-part { margin-block: 16px 0; }
+.unit-content .lesson-bench-slot > .rig-lab { margin-block-start: 12px; }
+.unit-content .lesson-open-bench { margin-block: 6px 0; }
+.lesson-reading-step .rig-question { margin-block: 14px 0; }
 .lesson-body > :is(section[id], [id]) { scroll-margin-block-start: 76px; }
 .lesson-body .rig-question { scroll-margin-block-start: 76px; }
 
@@ -2714,7 +2721,7 @@ function mountBench(chapter, bench) {
   }
   if(location.hash)requestAnimationFrame(()=>document.getElementById(location.hash.slice(1))?.scrollIntoView());
 })("电磁学");</script>
-<script id="physlab-lesson-guide">(function mountLessonGuide(groups) {
+<script id="physlab-lesson-guide">(function mountLessonGuide(groups, partSteps) {
   const article = document.querySelector('.unit-content > .lesson');
   const nav = article?.querySelector(':scope > nav.parts');
   if (!nav) return;
@@ -2759,12 +2766,12 @@ function mountBench(chapter, bench) {
   task.append(taskSummary,taskContent);
 
   function sectionOf(target) {
-    return target.startsWith('part:') ? lessonParts[Number(target.slice(5)) - 1] : lab;
+    return target.startsWith('part:') ? lessonParts[Number(target.slice(5)) - 1] : target === 'quiz' ? quiz : lab;
   }
 
   function resolveTarget(step) {
-    if (step.target === 'quiz') return quiz;
-    if (step.target === 'rig' || step.target.startsWith('part:')) return step.section;
+    if (!step.usesBench) return step.topic || step.section;
+    if (step.target === 'rig') return lab;
     return Array.from(lab.querySelectorAll(step.target)).find(element=>element.getClientRects().length) || lab;
   }
 
@@ -2780,7 +2787,13 @@ function mountBench(chapter, bench) {
       anchor.href = hash;
       anchor.dataset.stepTarget = target;
       anchor.append(make('span','lesson-guide-number',number),make('span','lesson-guide-label',title));
-      const step = {title,target,instructions,index,number,hash,anchor,section:sectionOf(target)};
+      const node = make('section','lesson-reading-step');
+      node.id = hash.slice(1);
+      const heading = make('h2','lesson-reading-title',`${number} ${title}`);
+      heading.tabIndex = -1;
+      node.append(heading,make('p','lesson-reading-instructions',instructions));
+      const section = sectionOf(target);
+      const step = {title,target,instructions,index,number,hash,anchor,section,node,heading,usesBench:section===lab};
       steps.push(step);
       nav.append(anchor);
       anchor.addEventListener('click',event=>{
@@ -2796,6 +2809,68 @@ function mountBench(chapter, bench) {
   rail.append(guide,task);
   workspace.append(rail,body);
   article.parentElement.classList.add('unit-content-with-guide');
+
+  const supplemental = Array.from(body.children).filter(child=>child!==lab && !lessonParts.includes(child));
+  body.append(...steps.map(step=>step.node));
+  for (const [index, part] of lessonParts.entries()) steps[partSteps[index]-1].node.append(part);
+
+  function continueIn(stepNumber, nodes, className = 'lesson-part') {
+    const step = steps[stepNumber - 1];
+    const continuation = make('div',className);
+    continuation.append(...nodes);
+    step.node.append(continuation);
+    step.topic = continuation;
+  }
+
+  // Some textbook sections cover multiple steps. Keep each original passage with its task.
+  if (article.id === 'lab-1') {
+    const subsections = lessonParts[3].querySelectorAll(':scope > h3');
+    for (const [index, stepNumber] of [8,9,11].entries()) {
+      const heading = subsections[index + 1];
+      continueIn(stepNumber,[heading,heading.nextElementSibling]);
+    }
+  } else if (article.id === 'lab-5') {
+    continueIn(10,[lessonParts[2].querySelector('[data-vsim] details:has([data-ct1])')],'lesson-part sim');
+  } else if (article.id === 'lab-7') {
+    const [,,drive,link,hint] = lessonParts[0].querySelectorAll(':scope > p, :scope > .formula');
+    continueIn(9,[drive]);
+    continueIn(10,[link,hint]);
+  }
+
+  const quizStep = steps.find(step=>step.target==='quiz');
+  quizStep?.node.append(quiz);
+  for (const node of supplemental) steps.at(-1).node.append(node);
+
+  for (const step of steps) {
+    if (step.usesBench) {
+      step.benchSlot = make('div','lesson-bench-slot');
+      step.openBench = make('button','lesson-open-bench','打开仿真实验台');
+      step.openBench.type = 'button';
+      step.node.append(step.openBench,step.benchSlot);
+      step.openBench.addEventListener('click',()=>{
+        moveBench(step);
+        mark(step);
+        scrollToTarget(resolveTarget(step),true);
+      });
+    } else if (!step.topic && step.target.startsWith('part:') && step.section?.parentElement!==step.node) {
+      const link = make('a','lesson-related-part',step.section.querySelector('h2').textContent);
+      link.href = `#${step.section.id}`;
+      step.node.append(link);
+      step.topic = link;
+    }
+  }
+
+  let benchStep;
+  function moveBench(step) {
+    if (step===benchStep) return;
+    if (benchStep) benchStep.openBench.textContent = '打开仿真实验台';
+    // An instrument can serve multiple steps. Move its mounted node and keep its measurements.
+    step.benchSlot.append(lab);
+    step.openBench.textContent = '定位本步操作';
+    benchStep = step;
+  }
+
+  moveBench(steps.find(step=>step.usesBench));
 
   let active;
   let targetHighlight;
@@ -2819,16 +2894,21 @@ function mountBench(chapter, bench) {
     }
   }
 
-  function scrollToTarget(target, focus) {
+  function highlight(target, focus) {
     if (!target) return;
-    if (target === quiz) quiz.open = true;
+    targetHighlight?.classList.remove('lesson-step-target');
+    targetHighlight = target;
+    target.classList.add('lesson-step-target');
     if (focus) {
-      targetHighlight?.classList.remove('lesson-step-target');
-      targetHighlight = target;
-      target.classList.add('lesson-step-target');
       if (!target.matches('a,button,input,select,textarea,summary,[tabindex]')) target.setAttribute('tabindex','-1');
       target.focus?.({preventScroll:true});
     }
+  }
+
+  function scrollToTarget(target, focus) {
+    if (!target) return;
+    if (target === quiz) quiz.open = true;
+    if (focus) highlight(target,true);
     const offset = desktop.matches ? 44 : rail.getBoundingClientRect().height + 20;
     window.scrollTo({top:window.scrollY + target.getBoundingClientRect().top - offset,behavior:'instant'});
     heldScroll = window.scrollY;
@@ -2840,7 +2920,11 @@ function mountBench(chapter, bench) {
     if (!desktop.matches) guide.open = false;
     mark(step);
     task.open = true;
-    scrollToTarget(resolveTarget(step),writeHistory);
+    if (step.usesBench) moveBench(step);
+    if (step.target === 'quiz') quiz.open = true;
+    highlight(resolveTarget(step),false);
+    if (writeHistory) step.heading.focus({preventScroll:true});
+    scrollToTarget(step.node,false);
   }
 
   previous.addEventListener('click',()=>go(steps[active.index - 1]));
@@ -2848,7 +2932,6 @@ function mountBench(chapter, bench) {
   guide.addEventListener('toggle',()=>{ if (!desktop.matches && guide.open) task.open = false; });
   task.addEventListener('toggle',()=>{ if (!desktop.matches && task.open) guide.open = false; });
 
-  const lessonBlocks = [lab,...lessonParts];
   let scheduled = false;
   function track() {
     if (scheduled) return;
@@ -2858,8 +2941,8 @@ function mountBench(chapter, bench) {
       if (heldScroll !== undefined && Math.abs(window.scrollY - heldScroll) < 12) return;
       heldScroll = undefined;
       const readingLine = desktop.matches ? 92 : rail.getBoundingClientRect().height + 24;
-      const section = lessonBlocks.findLast(block=>block.getBoundingClientRect().top <= readingLine);
-      if (section && section !== active.section) mark(steps.find(step=>step.section===section));
+      const atEnd = window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+      mark(atEnd ? steps.at(-1) : steps.findLast(step=>step.node.getBoundingClientRect().top <= readingLine) || steps[0]);
     });
   }
 
@@ -2870,17 +2953,14 @@ function mountBench(chapter, bench) {
     const step = steps.find(item=>item.hash===location.hash);
     if (step) { go(step,false); return; }
     const target = document.getElementById(location.hash.slice(1));
-    if (target === quiz) {
-      mark(steps.find(item=>item.target==='quiz'));
-      scrollToTarget(quiz,false);
-    } else if (lessonBlocks.includes(target)) {
-      mark(steps.find(item=>item.section===target));
+    if (target === lab || target === quiz || lessonParts.includes(target)) {
+      mark(steps.find(item=>item.node===target.closest('.lesson-reading-step')));
       scrollToTarget(target,false);
     }
   };
   window.addEventListener('hashchange',followFragment);
   mark(steps[0]);
   followFragment();
-})([["用同一只 NTC 设计电桥",[["从阻温曲线查 20 ℃ 与 70 ℃ 对应电阻","part:2","用上个实验标定的同一探头查 Rₜ₁、Rₜ₂。让 R₁＝R₂，并按 70 ℃ 时需达到 100 μA 的条件计算比例臂。"],["核对桥臂、接线与量程开关","part:3","根据图 14-4、14-5 查桥臂和微安表的位置。焊接、检线及独立复测桥臂时，开关置 1 挡断开。"]]],["先设零点，再设满量程",[["合闸并用 20 ℃ 等效阻值调零","[data-t14-zero]","合上电源，选择「NTC 温度计」。在 3 挡把电阻箱设为 20 ℃ 的等效值，调 R₃ 使表针归零。"],["保持 R₃，用 70 ℃ 等效阻值调满度","[data-t14-span]","保持刚确定的 R₃。把电阻箱换成 70 ℃ 对应的阻值，调串联 R 直到微安表指向 100 μA。"],["用 2 挡设置机内满度参考","[data-t14-check]","切到 2 挡，调 R₄ 使表针也满偏。使用前可借这只内置电阻复核满度。"]]],["刻表盘，用恒温水浴检验",[["标定 20–70 ℃ 的 21 个刻度","[data-t14-calibrate]","在 3 挡用电阻箱替代探头，从 20 ℃ 到 70 ℃ 每 2.5 ℃ 取得一组温度和微安表读数。展开标定表查看刻度疏密。"],["换回设计时的那只 NTC","[data-t14-probe]","标定完成后把电阻箱换回原探头。改变水浴温度，观察表针和温度示值一起变化。"],["测 35 ℃ 和 55 ℃，比较示值误差","[data-t14-temperature]","依次设定两个恒温点，点「保存本次测温」。核对表中的示值减去浴温所得的温差，以及温差的绝对值占浴温的比例。"],["解释为什么要逐点标定表盘","quiz","先想同样大小的温升在不同温区是否产生相同的电流改变量，再判断如何为表盘标温度。"]]],["用 PTC 设报警门槛",[["在 60 ℃ 调单温报警","[data-t14-mode]","选「单温报警」。把水浴调到 60 ℃，点「60 ℃ 调 R₃」，再比较略低和略高于门槛时的红灯。"],["让红灯和蓝灯先后触发","[data-t14-mode]","选「双温报警」，按 60 ℃ 重新调试。分别在低于 60 ℃、60–90 ℃、高于 90 ℃ 的温度记录两灯状态。"]]]]);</script>
+})([["用同一只 NTC 设计电桥",[["从阻温曲线查 20 ℃ 与 70 ℃ 对应电阻","part:2","用上个实验标定的同一探头查 Rₜ₁、Rₜ₂。让 R₁＝R₂，并按 70 ℃ 时需达到 100 μA 的条件计算比例臂。"],["核对桥臂、接线与量程开关","part:3","根据图 14-4、14-5 查桥臂和微安表的位置。焊接、检线及独立复测桥臂时，开关置 1 挡断开。"]]],["先设零点，再设满量程",[["合闸并用 20 ℃ 等效阻值调零","[data-t14-zero]","合上电源，选择「NTC 温度计」。在 3 挡把电阻箱设为 20 ℃ 的等效值，调 R₃ 使表针归零。"],["保持 R₃，用 70 ℃ 等效阻值调满度","[data-t14-span]","保持刚确定的 R₃。把电阻箱换成 70 ℃ 对应的阻值，调串联 R 直到微安表指向 100 μA。"],["用 2 挡设置机内满度参考","[data-t14-check]","切到 2 挡，调 R₄ 使表针也满偏。使用前可借这只内置电阻复核满度。"]]],["刻表盘，用恒温水浴检验",[["标定 20–70 ℃ 的 21 个刻度","[data-t14-calibrate]","在 3 挡用电阻箱替代探头，从 20 ℃ 到 70 ℃ 每 2.5 ℃ 取得一组温度和微安表读数。展开标定表查看刻度疏密。"],["换回设计时的那只 NTC","[data-t14-probe]","标定完成后把电阻箱换回原探头。改变水浴温度，观察表针和温度示值一起变化。"],["测 35 ℃ 和 55 ℃，比较示值误差","[data-t14-temperature]","依次设定两个恒温点，点「保存本次测温」。核对表中的示值减去浴温所得的温差，以及温差的绝对值占浴温的比例。"],["解释为什么要逐点标定表盘","quiz","先想同样大小的温升在不同温区是否产生相同的电流改变量，再判断如何为表盘标温度。"]]],["用 PTC 设报警门槛",[["在 60 ℃ 调单温报警","[data-t14-mode]","选「单温报警」。把水浴调到 60 ℃，点「60 ℃ 调 R₃」，再比较略低和略高于门槛时的红灯。"],["让红灯和蓝灯先后触发","[data-t14-mode]","选「双温报警」，按 60 ℃ 重新调试。分别在低于 60 ℃、60–90 ℃、高于 90 ℃ 的温度记录两灯状态。"]]]],[1,1,2,6,10,9]);</script>
 </body>
 </html>

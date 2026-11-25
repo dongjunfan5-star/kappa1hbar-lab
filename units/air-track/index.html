@@ -365,7 +365,14 @@ body { font-family: var(--lab-font); }
 }
 .lesson-workspace { min-width: 0; margin-block-start: 16px; }
 .lesson-body { min-width: 0; }
-.lesson-body > .rig-lab { margin-block-start: 0; }
+.lesson-reading-step { min-width: 0; padding-block: 16px 20px; border-block-start: 1px solid var(--lab-line); }
+.lesson-reading-step + .lesson-reading-step { margin-block-start: 12px; }
+.lesson-reading-step .lesson-reading-title { margin: 0 0 8px; font-size: clamp(1.08rem, 1.7vw, 1.38rem); line-height: 1.4; }
+.lesson-reading-step .lesson-reading-instructions { margin: 0 0 12px; color: var(--lab-muted); }
+.unit-content .lesson-reading-step > .lesson-part { margin-block: 16px 0; }
+.unit-content .lesson-bench-slot > .rig-lab { margin-block-start: 12px; }
+.unit-content .lesson-open-bench { margin-block: 6px 0; }
+.lesson-reading-step .rig-question { margin-block: 14px 0; }
 .lesson-body > :is(section[id], [id]) { scroll-margin-block-start: 76px; }
 .lesson-body .rig-question { scroll-margin-block-start: 76px; }
 
@@ -2988,7 +2995,7 @@ function mountBench(chapter, bench) {
   }
   if (location.hash) requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView());
 })();</script>
-<script id="physlab-lesson-guide">(function mountLessonGuide(groups) {
+<script id="physlab-lesson-guide">(function mountLessonGuide(groups, partSteps) {
   const article = document.querySelector('.unit-content > .lesson');
   const nav = article?.querySelector(':scope > nav.parts');
   if (!nav) return;
@@ -3033,12 +3040,12 @@ function mountBench(chapter, bench) {
   task.append(taskSummary,taskContent);
 
   function sectionOf(target) {
-    return target.startsWith('part:') ? lessonParts[Number(target.slice(5)) - 1] : lab;
+    return target.startsWith('part:') ? lessonParts[Number(target.slice(5)) - 1] : target === 'quiz' ? quiz : lab;
   }
 
   function resolveTarget(step) {
-    if (step.target === 'quiz') return quiz;
-    if (step.target === 'rig' || step.target.startsWith('part:')) return step.section;
+    if (!step.usesBench) return step.topic || step.section;
+    if (step.target === 'rig') return lab;
     return Array.from(lab.querySelectorAll(step.target)).find(element=>element.getClientRects().length) || lab;
   }
 
@@ -3054,7 +3061,13 @@ function mountBench(chapter, bench) {
       anchor.href = hash;
       anchor.dataset.stepTarget = target;
       anchor.append(make('span','lesson-guide-number',number),make('span','lesson-guide-label',title));
-      const step = {title,target,instructions,index,number,hash,anchor,section:sectionOf(target)};
+      const node = make('section','lesson-reading-step');
+      node.id = hash.slice(1);
+      const heading = make('h2','lesson-reading-title',`${number} ${title}`);
+      heading.tabIndex = -1;
+      node.append(heading,make('p','lesson-reading-instructions',instructions));
+      const section = sectionOf(target);
+      const step = {title,target,instructions,index,number,hash,anchor,section,node,heading,usesBench:section===lab};
       steps.push(step);
       nav.append(anchor);
       anchor.addEventListener('click',event=>{
@@ -3070,6 +3083,68 @@ function mountBench(chapter, bench) {
   rail.append(guide,task);
   workspace.append(rail,body);
   article.parentElement.classList.add('unit-content-with-guide');
+
+  const supplemental = Array.from(body.children).filter(child=>child!==lab && !lessonParts.includes(child));
+  body.append(...steps.map(step=>step.node));
+  for (const [index, part] of lessonParts.entries()) steps[partSteps[index]-1].node.append(part);
+
+  function continueIn(stepNumber, nodes, className = 'lesson-part') {
+    const step = steps[stepNumber - 1];
+    const continuation = make('div',className);
+    continuation.append(...nodes);
+    step.node.append(continuation);
+    step.topic = continuation;
+  }
+
+  // Some textbook sections cover multiple steps. Keep each original passage with its task.
+  if (article.id === 'lab-1') {
+    const subsections = lessonParts[3].querySelectorAll(':scope > h3');
+    for (const [index, stepNumber] of [8,9,11].entries()) {
+      const heading = subsections[index + 1];
+      continueIn(stepNumber,[heading,heading.nextElementSibling]);
+    }
+  } else if (article.id === 'lab-5') {
+    continueIn(10,[lessonParts[2].querySelector('[data-vsim] details:has([data-ct1])')],'lesson-part sim');
+  } else if (article.id === 'lab-7') {
+    const [,,drive,link,hint] = lessonParts[0].querySelectorAll(':scope > p, :scope > .formula');
+    continueIn(9,[drive]);
+    continueIn(10,[link,hint]);
+  }
+
+  const quizStep = steps.find(step=>step.target==='quiz');
+  quizStep?.node.append(quiz);
+  for (const node of supplemental) steps.at(-1).node.append(node);
+
+  for (const step of steps) {
+    if (step.usesBench) {
+      step.benchSlot = make('div','lesson-bench-slot');
+      step.openBench = make('button','lesson-open-bench','打开仿真实验台');
+      step.openBench.type = 'button';
+      step.node.append(step.openBench,step.benchSlot);
+      step.openBench.addEventListener('click',()=>{
+        moveBench(step);
+        mark(step);
+        scrollToTarget(resolveTarget(step),true);
+      });
+    } else if (!step.topic && step.target.startsWith('part:') && step.section?.parentElement!==step.node) {
+      const link = make('a','lesson-related-part',step.section.querySelector('h2').textContent);
+      link.href = `#${step.section.id}`;
+      step.node.append(link);
+      step.topic = link;
+    }
+  }
+
+  let benchStep;
+  function moveBench(step) {
+    if (step===benchStep) return;
+    if (benchStep) benchStep.openBench.textContent = '打开仿真实验台';
+    // An instrument can serve multiple steps. Move its mounted node and keep its measurements.
+    step.benchSlot.append(lab);
+    step.openBench.textContent = '定位本步操作';
+    benchStep = step;
+  }
+
+  moveBench(steps.find(step=>step.usesBench));
 
   let active;
   let targetHighlight;
@@ -3093,16 +3168,21 @@ function mountBench(chapter, bench) {
     }
   }
 
-  function scrollToTarget(target, focus) {
+  function highlight(target, focus) {
     if (!target) return;
-    if (target === quiz) quiz.open = true;
+    targetHighlight?.classList.remove('lesson-step-target');
+    targetHighlight = target;
+    target.classList.add('lesson-step-target');
     if (focus) {
-      targetHighlight?.classList.remove('lesson-step-target');
-      targetHighlight = target;
-      target.classList.add('lesson-step-target');
       if (!target.matches('a,button,input,select,textarea,summary,[tabindex]')) target.setAttribute('tabindex','-1');
       target.focus?.({preventScroll:true});
     }
+  }
+
+  function scrollToTarget(target, focus) {
+    if (!target) return;
+    if (target === quiz) quiz.open = true;
+    if (focus) highlight(target,true);
     const offset = desktop.matches ? 44 : rail.getBoundingClientRect().height + 20;
     window.scrollTo({top:window.scrollY + target.getBoundingClientRect().top - offset,behavior:'instant'});
     heldScroll = window.scrollY;
@@ -3114,7 +3194,11 @@ function mountBench(chapter, bench) {
     if (!desktop.matches) guide.open = false;
     mark(step);
     task.open = true;
-    scrollToTarget(resolveTarget(step),writeHistory);
+    if (step.usesBench) moveBench(step);
+    if (step.target === 'quiz') quiz.open = true;
+    highlight(resolveTarget(step),false);
+    if (writeHistory) step.heading.focus({preventScroll:true});
+    scrollToTarget(step.node,false);
   }
 
   previous.addEventListener('click',()=>go(steps[active.index - 1]));
@@ -3122,7 +3206,6 @@ function mountBench(chapter, bench) {
   guide.addEventListener('toggle',()=>{ if (!desktop.matches && guide.open) task.open = false; });
   task.addEventListener('toggle',()=>{ if (!desktop.matches && task.open) guide.open = false; });
 
-  const lessonBlocks = [lab,...lessonParts];
   let scheduled = false;
   function track() {
     if (scheduled) return;
@@ -3132,8 +3215,8 @@ function mountBench(chapter, bench) {
       if (heldScroll !== undefined && Math.abs(window.scrollY - heldScroll) < 12) return;
       heldScroll = undefined;
       const readingLine = desktop.matches ? 92 : rail.getBoundingClientRect().height + 24;
-      const section = lessonBlocks.findLast(block=>block.getBoundingClientRect().top <= readingLine);
-      if (section && section !== active.section) mark(steps.find(step=>step.section===section));
+      const atEnd = window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+      mark(atEnd ? steps.at(-1) : steps.findLast(step=>step.node.getBoundingClientRect().top <= readingLine) || steps[0]);
     });
   }
 
@@ -3144,17 +3227,14 @@ function mountBench(chapter, bench) {
     const step = steps.find(item=>item.hash===location.hash);
     if (step) { go(step,false); return; }
     const target = document.getElementById(location.hash.slice(1));
-    if (target === quiz) {
-      mark(steps.find(item=>item.target==='quiz'));
-      scrollToTarget(quiz,false);
-    } else if (lessonBlocks.includes(target)) {
-      mark(steps.find(item=>item.section===target));
+    if (target === lab || target === quiz || lessonParts.includes(target)) {
+      mark(steps.find(item=>item.node===target.closest('.lesson-reading-step')));
       scrollToTarget(target,false);
     }
   };
   window.addEventListener('hashchange',followFragment);
   mark(steps[0]);
   followFragment();
-})([["让滑块在气垫上自由运动",[["开气源，检查滑块有无单向滑移","[data-air]","先给导轨送气，放上滑块并观察是否持续滑向一端。按教材先调纵向再调横向，做碰撞时保留水平状态。"],["分清挡光片的边距和下滑距离","part:2","沿滑动方向找出 S2 挡光片两条触发前沿。速度用两前沿间距 Δs 除以计时 Δt，位移 s 量到两次触发位置的中点。"]]],["测斜轨加速度与重力加速度",[["给导轨一端加垫块","[data-height]","选斜轨测加速度模式，设置垫高量 h 并记下支点间距 L。本组测量中保持倾角不变。"],["从静止释放，读第一次速度","[data-run]","确认起点在光电门上游，释放时给滑块零初速。通过光电门后读取 Δt 和速度。"],["换起点并记录五组 s、v","[data-start]","逐次移动起点，每次从静止释放并登记数据。按教材至少取五组不同下滑距离。"],["由 v²–2s 图线求 a 和 g",".table-wrap","记录不同下滑距离的数据后，读表下的拟合斜率 a，再由 g=aL/h 换算重力加速度。若截距明显偏离零，回查起点、计时与零初速。"]]],["在水平轨道上比较碰撞",[["切到双滑块，规定速度正方向","[data-mode]","选择水平碰撞。约定向右为正，整理碰前碰后速度时把向左的读数记为负。"],["更换连接件，观察反弹和粘连","[data-coupling]","分别运行钢环、部分非弹性和粘连碰撞，观察 A、B 两个滑块碰前与碰后如何运动。"],["逐组计算总动量与总动能","[data-record]","碰后记录各滑块速度，按质量逐项求 p 和 K。用同一正方向比较总动量，单独判断总动能减少了多少。"],["复查光电门漏读与调平误差","part:5","把某滑块没有触发光电门与确实静止区分开。若总动量偏差较大，回查调平、外力和速度符号。"],["判断两滑块粘住后哪些量守恒","quiz","用整个双滑块系统判断外力冲量，分别比较碰撞前后的总动量和总动能。"]]]]);</script>
+})([["让滑块在气垫上自由运动",[["开气源，检查滑块有无单向滑移","[data-air]","先给导轨送气，放上滑块并观察是否持续滑向一端。按教材先调纵向再调横向，做碰撞时保留水平状态。"],["分清挡光片的边距和下滑距离","part:2","沿滑动方向找出 S2 挡光片两条触发前沿。速度用两前沿间距 Δs 除以计时 Δt，位移 s 量到两次触发位置的中点。"]]],["测斜轨加速度与重力加速度",[["给导轨一端加垫块","[data-height]","选斜轨测加速度模式，设置垫高量 h 并记下支点间距 L。本组测量中保持倾角不变。"],["从静止释放，读第一次速度","[data-run]","确认起点在光电门上游，释放时给滑块零初速。通过光电门后读取 Δt 和速度。"],["换起点并记录五组 s、v","[data-start]","逐次移动起点，每次从静止释放并登记数据。按教材至少取五组不同下滑距离。"],["由 v²–2s 图线求 a 和 g",".table-wrap","记录不同下滑距离的数据后，读表下的拟合斜率 a，再由 g=aL/h 换算重力加速度。若截距明显偏离零，回查起点、计时与零初速。"]]],["在水平轨道上比较碰撞",[["切到双滑块，规定速度正方向","[data-mode]","选择水平碰撞。约定向右为正，整理碰前碰后速度时把向左的读数记为负。"],["更换连接件，观察反弹和粘连","[data-coupling]","分别运行钢环、部分非弹性和粘连碰撞，观察 A、B 两个滑块碰前与碰后如何运动。"],["逐组计算总动量与总动能","[data-record]","碰后记录各滑块速度，按质量逐项求 p 和 K。用同一正方向比较总动量，单独判断总动能减少了多少。"],["复查光电门漏读与调平误差","part:5","把某滑块没有触发光电门与确实静止区分开。若总动量偏差较大，回查调平、外力和速度符号。"],["判断两滑块粘住后哪些量守恒","quiz","用整个双滑块系统判断外力冲量，分别比较碰撞前后的总动量和总动能。"]]]],[1,2,7,3,10,11]);</script>
 </body>
 </html>
