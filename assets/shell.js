@@ -5,6 +5,7 @@
   const $ = (s, r) => (r || document).querySelector(s);
   const esc = (s) =>
     String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const durationLabel = (minutes) => minutes > 0 ? `建议 ${minutes} 分钟` : '';
 
   const WIDE = window.matchMedia('(min-width: 1200px)');
   const icons = {
@@ -157,7 +158,8 @@
         : '<span class="ph">暂无仪器图</span>';
       const tags = (it.tags || []).filter(tag => tag !== '仿真实验').slice(0, 3)
         .map((tag) => `<span class="tag">${esc(tag)}</span>`).join('');
-      const duration = it.duration ? `<span>${esc(it.duration)} 分钟</span>` : '';
+      const time = durationLabel(it.duration);
+      const duration = time ? `<span class="card-duration">${esc(time)}</span>` : '';
       return `<a class="card" href="./unit.html?u=${encodeURIComponent(it.slug)}">
         <div class="card-cover">${cover}</div>
         <div class="card-body">
@@ -204,9 +206,12 @@
 
     document.title = `${item.title} · 物理实验交互站`;
     $('#title').textContent = item.title;
-    $('#meta').textContent = [item.chapter, item.duration ? `${item.duration} 分钟` : '', item.author]
-      .filter(Boolean)
-      .join(' · ');
+    const time = durationLabel(item.duration);
+    $('#meta').innerHTML = [
+      item.chapter && `<span class="unit-meta-context">${esc(item.chapter)}</span>`,
+      time && `<span class="unit-duration">${esc(time)}</span>`,
+      item.author && `<span class="unit-meta-context">${esc(item.author)}</span>`,
+    ].filter(Boolean).join('<span class="unit-meta-context"> · </span>');
 
     const src = `./${item.entryUrl}`;
     $('#open').href = src;
