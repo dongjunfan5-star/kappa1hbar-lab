@@ -26,7 +26,11 @@ function button(label) {
   return control;
 }
 
-export function mountExperimentImport(root, slug, onApply) {
+function columnHeading(column) {
+  return column.label + (column.unit ? ' / ' + column.unit : '');
+}
+
+export function mountExperimentImport(root, slug, onApply, onSelectionChange) {
   if (!validExperimentSlug(slug)) return false;
   const snapshot = loadExperimentReadings(slug);
   const dataSets = [...(snapshot?.native ?? []), ...(snapshot?.manual ?? [])];
@@ -122,7 +126,7 @@ export function mountExperimentImport(root, slug, onApply) {
     const table = node('table');
     table.setAttribute('aria-label', current.label);
     const header = table.createTHead().insertRow();
-    for (const caption of ['选取', '组', ...current.columns.map(column => column.label + (column.unit ? ' / ' + column.unit : ''))]) {
+    for (const caption of ['选取', '组', ...current.columns.map(columnHeading)]) {
       const th = node('th', caption);
       th.scope = 'col';
       header.append(th);
@@ -146,10 +150,12 @@ export function mountExperimentImport(root, slug, onApply) {
 
   selector.addEventListener('change', renderRows);
   method.addEventListener('change', () => renderMapping());
+  body.addEventListener('change', () => onSelectionChange?.());
   for (const [control, checked] of [[selectAll, true], [clear, false]]) {
     control.addEventListener('click', () => {
       for (const check of checks) check.checked = checked;
       updateChoices();
+      onSelectionChange?.();
     });
   }
 
@@ -157,8 +163,18 @@ export function mountExperimentImport(root, slug, onApply) {
     event.preventDefault();
     const indices = selectedRows();
     try {
-      const values = applyImportedMethod(current, indices, method.value, currentMapping());
-      onApply(method.value, values, current.label, indices.length);
+      const columnKeys = currentMapping();
+      const values = applyImportedMethod(current, indices, method.value, columnKeys);
+      const columnSettings = methodList.find(item => item.id === method.value).fields.flatMap(field => {
+        const column = current.columns.find(item => item.key === columnKeys[field.name]);
+        return column ? [{ label: field.label, value: columnHeading(column) }] : [];
+      });
+      onApply(method.value, values, current.label, indices.length, {
+        experiment: snapshot.title,
+        columns: ['原记录组号', ...current.columns.map(columnHeading)],
+        rows: indices.map(index => [index + 1, ...current.rows[index]]),
+        columnSettings
+      });
       status.textContent = '已导入 ' + indices.length + ' 组。';
       status.classList.remove('error');
     } catch (error) {

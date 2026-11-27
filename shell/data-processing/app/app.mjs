@@ -1,5 +1,6 @@
 import { tools, defaultToolId, advancedMethods, runAdvancedTool } from './tools.mjs';
 import { mountExperimentImport } from './import-view.mjs';
+import { createReportFile, downloadReport } from './report-download.mjs';
 
 const byId = id => document.getElementById(id);
 const methods = new Map(tools.map(tool => [tool.id, tool]));
@@ -14,6 +15,8 @@ const chart = byId('chart');
 const error = byId('form-error');
 const copy = byId('copy-result');
 const copyStatus = byId('copy-status');
+const exportButton = byId('export-report');
+const exportStatus = byId('export-status');
 const choices = new Map();
 let selected;
 let advancedExample;
@@ -21,6 +24,8 @@ let chartUrl;
 let copyText;
 let studyRequest;
 let dataSource;
+let reportSnapshot;
+let importSelectionPending = false;
 
 function element(tag, value, className) {
   const node = document.createElement(tag);
@@ -187,6 +192,9 @@ function resetResult() {
   copy.hidden = true;
   copyText = '';
   copyStatus.hidden = true;
+  reportSnapshot = undefined;
+  exportButton.hidden = true;
+  exportStatus.hidden = true;
   error.hidden = true;
   chart.hidden = true;
   chart.replaceChildren();
@@ -194,6 +202,47 @@ function resetResult() {
   chartUrl = undefined;
   summary.replaceChildren();
   detail.replaceChildren();
+}
+
+function reportMessage(message, failed = false) {
+  exportStatus.textContent = message;
+  exportStatus.classList.toggle('error', failed);
+  exportStatus.hidden = false;
+}
+
+function invalidateReport(message) {
+  if (!reportSnapshot) return;
+  reportSnapshot = undefined;
+  exportButton.disabled = true;
+  reportMessage(message);
+}
+
+function prepareReport(result, values) {
+  const selectedRecords = dataSource.selection;
+  const advancedTitle = selected === advanced ? advancedMethods.find(method => method.id === values.method)?.title : null;
+  const inputs = [...(selectedRecords?.columnSettings ?? [])];
+  for (const field of selected.fields) {
+    const value = values[field.name];
+    if (value === '' || value === null || value === undefined) continue;
+    const recordedField = field.type === 'textarea' || (selectedRecords?.columnSettings?.length && ['xLabel', 'yLabel'].includes(field.name));
+    if (recordedField && selectedRecords && dataSource.importValues[field.name] === value) continue;
+    const option = field.options?.find(option => option.value === value);
+    inputs.push({ label: field.label, value: option?.label ?? (field.type === 'textarea' ? value : display(value)) });
+  }
+  const primary = (result.primary ?? []).map(metric => ({ ...metric, value: display(metric.value) }));
+  const tables = result.tables ?? [];
+  const calculationDetails = !primary.length && !tables.length && !result.svg && result.raw !== undefined
+    ? JSON.stringify(result.raw, (_, value) => typeof value === 'number' && !Number.isFinite(value) ? display(value) : value, 2)
+    : undefined;
+  return {
+    content: {
+      title: '实验数据处理报告', experiment: selectedRecords?.experiment,
+      method: advancedTitle ?? selected.title, source: dataSource.label,
+      columns: selectedRecords?.columns ?? [], rows: selectedRecords?.rows ?? [], inputs,
+      primary, tables, notes: result.notes ?? [], calculationDetails, createdAt: new Date()
+    },
+    svg: result.svg
+  };
 }
 
 function addTable({ title, headers, rows }, open) {
@@ -265,7 +314,14 @@ function renderResult(result) {
 function calculate() {
   resetResult();
   try {
-    renderResult(selected.run(readFields()));
+    const values = readFields();
+    const result = selected.run(values);
+    renderResult(result);
+    const pending = dataSource.kind === 'imported' && importSelectionPending;
+    if (!pending) reportSnapshot = prepareReport(result, values);
+    exportButton.hidden = false;
+    exportButton.disabled = pending;
+    if (pending) reportMessage('实验记录选择已修改，重新导入并计算后可导出报告。');
     return true;
   } catch (failure) {
     error.textContent = failure.message;
@@ -286,9 +342,26 @@ byId('example').addEventListener('click', () => {
   calculate();
 });
 form.addEventListener('input', () => {
+  invalidateReport('输入已修改，重新计算后可导出报告。');
   if (dataSource.kind === 'example') setSource({ kind: 'manual', label: '手动输入' });
   else if (dataSource.kind === 'imported' && !dataSource.edited) {
     setSource({ ...dataSource, edited: true, label: dataSource.label + '（已编辑）' });
+  }
+});
+exportButton.addEventListener('click', async () => {
+  const requested = reportSnapshot;
+  if (!requested) return;
+  exportButton.disabled = true;
+  reportMessage('正在生成 Word 报告…');
+  try {
+    const file = await createReportFile(requested.content, requested.svg);
+    if (reportSnapshot !== requested) return;
+    downloadReport(file, requested.content.experiment || requested.content.method);
+    reportMessage('Word 报告已生成。');
+  } catch (failure) {
+    if (reportSnapshot === requested) reportMessage(failure.message || '生成报告失败，请重试。', true);
+  } finally {
+    if (reportSnapshot === requested) exportButton.disabled = false;
   }
 });
 copy.addEventListener('click', async () => {
@@ -305,10 +378,16 @@ const textbook = byId('textbook');
 const studyStatus = byId('study-status');
 const studyRetry = byId('study-retry');
 const importPanel = byId('experiment-import');
-const hasExperiment = mountExperimentImport(importPanel, from, (methodId, values, dataLabel, total) => {
+const hasExperiment = mountExperimentImport(importPanel, from, (methodId, values, dataLabel, total, selection) => {
   if (!methods.has(methodId)) throw new Error('此方法暂时无法接收实验数据。');
-  choose(methodId, { values, source: { kind: 'imported', label: dataLabel + ' · 已导入 ' + total + ' 组' } });
+  importSelectionPending = false;
+  choose(methodId, { values, source: { kind: 'imported', label: dataLabel + ' · 已导入 ' + total + ' 组', selection, importValues: values } });
   byId('input-title').focus();
+}, () => {
+  if (dataSource?.kind === 'imported') {
+    importSelectionPending = true;
+    invalidateReport('实验记录选择已修改，重新导入并计算后可导出报告。');
+  }
 });
 function loadStudy() {
   if (!studyRequest) {
