@@ -7,6 +7,7 @@
   <title>数据处理 · 物理实验交互站</title>
   <link rel="stylesheet" href="../assets/shell.css">
   <link rel="stylesheet" href="./workbench.css">
+  <link rel="stylesheet" href="./handoff.css">
   <link rel="stylesheet" href="./study.css">
 </head>
 <body class="data-page">
@@ -23,6 +24,7 @@
       <h1>数据处理</h1>
       <p>录入实验读数，计算不确定度、拟合参数与校准结果。</p>
     </header>
+    <section id="experiment-import" class="experiment-import" aria-label="本实验记录" hidden data-ui></section>
     <div id="calculator" class="calculator" data-ui>
       <aside class="tool-rail" aria-label="计算方法">
         <nav id="method-list" class="methods" aria-label="方法目录"></nav>
@@ -40,7 +42,8 @@
         </header>
         <div class="tool-grid">
           <section class="input-panel" aria-labelledby="input-title">
-            <h3 id="input-title">实验读数</h3>
+            <h3 id="input-title" tabindex="-1">实验读数</h3>
+            <p id="data-origin" class="reading-hint" aria-live="polite"></p>
             <form id="measurement-form">
               <div id="tool-fields" class="fields"></div>
               <div class="input-actions">

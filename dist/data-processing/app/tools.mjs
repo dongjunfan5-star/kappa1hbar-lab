@@ -272,8 +272,9 @@ const fitTool = {
   description: '求拟合参数、标准误差、决定系数和逐行残差。观测的误差杆随散点图保留。',
   fields: [pointField, select('model', '拟合模型', fitOptions),
     input('degree', '多项式次数', { required: false, min: 0, max: 12, step: 1, hint: '仅多项式模型使用，留空取 2。' }),
-    checkbox('throughOrigin', '线性模型约束过原点')],
-  example: { points: lines(standardPoints), model: 'linear', degree: '', throughOrigin: false },
+    checkbox('throughOrigin', '线性模型约束过原点'), text('xLabel', '横轴名称', { required: false }),
+    text('yLabel', '纵轴名称', { required: false })],
+  example: { points: lines(standardPoints), model: 'linear', degree: '', throughOrigin: false, xLabel: '', yLabel: '' },
   run(values) {
     const rows = points(values.points);
     const model = values.model ?? 'linear';
@@ -288,9 +289,9 @@ const fitTool = {
       : Object.entries(raw.parameters).map(([key, value]) => [parameterNames[key] ?? key, value, raw.parameterStandardErrors?.[key] ?? null]);
     return {
       primary: [...parameters.slice(0, 2).map(([label, value]) => metric(label, value)), metric(model === 'linear' || model === 'polynomial' ? '决定系数 R²' : '改直后的 R²', fit.rSquared)],
-      svg: fittedGraph(rows, raw.fitted, { title: '数据与拟合结果' }),
+      svg: fittedGraph(rows, raw.fitted, { title: '数据与拟合结果', xLabel: values.xLabel || 'x', yLabel: values.yLabel || 'y' }),
       tables: [table('模型参数', ['参数', '估计值', '标准误差'], parameters),
-        table('拟合残差', ['x', '观测值', '预测值', '残差'], raw.fitted.map(({ x, y, predicted, residual }) => [x, y, predicted, residual]))],
+        table('拟合残差', [values.xLabel || 'x', values.yLabel || '观测值', '预测值', '残差'], raw.fitted.map(({ x, y, predicted, residual }) => [x, y, predicted, residual]))],
       notes: ['误差杆用于作图。拟合按教材的普通最小二乘法计算。'], raw,
     };
   },
@@ -299,15 +300,16 @@ const fitTool = {
 const differencesTool = {
   id: 'differences', title: '逐差法', category: group.plot, source: '教材 §2.2 · 逐差法',
   description: '对等间距观测点配对作差，由各对的斜率估计线性关系。',
-  fields: [pointField, input('stride', '配对跨距', { required: false, min: 1, step: 1, hint: '留空时按前后两组配对，奇数点跳过中点。' })],
-  example: { points: lines(standardPoints), stride: '' },
+  fields: [pointField, input('stride', '配对跨距', { required: false, min: 1, step: 1, hint: '留空时按前后两组配对，奇数点跳过中点。' }),
+    text('xLabel', '横轴名称', { required: false }), text('yLabel', '纵轴名称', { required: false })],
+  example: { points: lines(standardPoints), stride: '', xLabel: '', yLabel: '' },
   run(values) {
     const rows = points(values.points);
     const stride = number(values.stride, '配对跨距', { optional: true, min: 1, integer: true });
     const raw = lab.successiveDifferences(rows, { stride });
     return {
       primary: [metric('斜率', raw.slope), metric('截距', raw.intercept), metric('平均纵向差值', raw.meanDifference)],
-      svg: straightGraph(rows, raw.slope, raw.intercept, { title: '逐差法估计' }),
+      svg: straightGraph(rows, raw.slope, raw.intercept, { title: '逐差法估计', xLabel: values.xLabel || 'x', yLabel: values.yLabel || 'y' }),
       tables: [table('观测点配对', ['x₁', 'x₂', 'Δx', 'Δy', 'Δy / Δx'], raw.pairs.map(({ a, b, dx, dy, slope }) => [a.x, b.x, dx, dy, slope]))], raw,
     };
   },

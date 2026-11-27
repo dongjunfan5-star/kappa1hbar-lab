@@ -1,4 +1,5 @@
 import { tools, defaultToolId, advancedMethods, runAdvancedTool } from './tools.mjs';
+import { mountExperimentImport } from './import-view.mjs';
 
 const byId = id => document.getElementById(id);
 const methods = new Map(tools.map(tool => [tool.id, tool]));
@@ -19,6 +20,7 @@ let advancedExample;
 let chartUrl;
 let copyText;
 let studyRequest;
+let dataSource;
 
 function element(tag, value, className) {
   const node = document.createElement(tag);
@@ -130,15 +132,21 @@ function makeField(field) {
   if (selected === advanced && field.name === 'method') {
     control.addEventListener('change', () => {
       useAdvancedExample(control.value);
+      setSource({ kind: 'example', label: '示例数据' });
       calculate();
     });
   }
   return label;
 }
 
-function choose(id) {
-  if (selected?.id === id) return;
-  if (selected) drafts.set(selected.id, readFields());
+function setSource(source) {
+  dataSource = source;
+  byId('data-origin').textContent = source.label;
+}
+
+function choose(id, imported) {
+  if (selected?.id === id && !imported) return;
+  if (selected) drafts.set(selected.id, { values: readFields(), source: dataSource });
   selected = methods.get(id);
   byId('tool-title').textContent = selected.title;
   byId('tool-description').textContent = selected.description;
@@ -155,8 +163,10 @@ function choose(id) {
   }
   methodSelect.value = id;
   fields.replaceChildren(...selected.fields.map(makeField));
-  const values = drafts.get(id) ?? selected.example;
+  const draft = imported ?? drafts.get(id);
+  const values = draft?.values ?? selected.example;
   writeFields(values);
+  setSource(draft?.source ?? { kind: 'example', label: '示例数据' });
   if (selected === advanced) {
     const hint = advancedMethods.find(method => method.id === values.method)?.hint;
     if (hint) advancedExample.textContent = hint;
@@ -272,7 +282,14 @@ form.addEventListener('submit', event => {
 byId('example').addEventListener('click', () => {
   if (selected === advanced) useAdvancedExample(form.elements.namedItem('method').value);
   else writeFields(selected.example);
+  setSource({ kind: 'example', label: '示例数据' });
   calculate();
+});
+form.addEventListener('input', () => {
+  if (dataSource.kind === 'example') setSource({ kind: 'manual', label: '手动输入' });
+  else if (dataSource.kind === 'imported' && !dataSource.edited) {
+    setSource({ ...dataSource, edited: true, label: dataSource.label + '（已编辑）' });
+  }
 });
 copy.addEventListener('click', async () => {
   try {
@@ -287,6 +304,12 @@ copy.addEventListener('click', async () => {
 const textbook = byId('textbook');
 const studyStatus = byId('study-status');
 const studyRetry = byId('study-retry');
+const importPanel = byId('experiment-import');
+const hasExperiment = mountExperimentImport(importPanel, from, (methodId, values, dataLabel, total) => {
+  if (!methods.has(methodId)) throw new Error('此方法暂时无法接收实验数据。');
+  choose(methodId, { values, source: { kind: 'imported', label: dataLabel + ' · 已导入 ' + total + ' 组' } });
+  byId('input-title').focus();
+});
 function loadStudy() {
   if (!studyRequest) {
     textbook.setAttribute('aria-busy', 'true');
@@ -313,6 +336,7 @@ async function updateView() {
   const study = hash === 'textbook' || hash === 'method-index' || /^section-[12]-[1-4]$/.test(hash);
   textbook.hidden = !study;
   byId('calculator').hidden = study;
+  importPanel.hidden = study || !hasExperiment;
   const active = byId(study ? 'study-tab' : 'calculator-tab');
   const idle = byId(study ? 'calculator-tab' : 'study-tab');
   active.setAttribute('aria-current', 'page');
