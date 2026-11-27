@@ -34,7 +34,7 @@ async function loadGuide(slug) {
 
 export async function createReportFile(report, svg, experimentSlug) {
   const [{ buildReportDocx }, png, experimentGuide] = await Promise.all([
-    import('./report-docx.mjs'),
+    import('./report-docx.mjs?v=report-info'),
     svg ? rasterizeChart(svg) : null,
     experimentSlug ? loadGuide(experimentSlug) : null
   ]);

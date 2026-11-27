@@ -1,6 +1,6 @@
 import { tools, defaultToolId, advancedMethods, runAdvancedTool } from './tools.mjs';
 import { mountExperimentImport } from './import-view.mjs';
-import { createReportFile, downloadReport } from './report-download.mjs';
+import { createReportFile, downloadReport } from './report-download.mjs?v=report-info';
 import { validExperimentSlug } from './experiment-readings.mjs';
 
 const byId = id => document.getElementById(id);
@@ -18,6 +18,10 @@ const copy = byId('copy-result');
 const copyStatus = byId('copy-status');
 const exportButton = byId('export-report');
 const exportStatus = byId('export-status');
+const reportDialog = byId('report-dialog');
+const reportForm = byId('report-form');
+const reportFormStatus = byId('report-form-status');
+const reportSubmit = byId('download-report');
 const choices = new Map();
 let selected;
 let advancedExample;
@@ -26,6 +30,7 @@ let copyText;
 let studyRequest;
 let dataSource;
 let reportSnapshot;
+let reportRequest;
 let importSelectionPending = false;
 
 function element(tag, value, className) {
@@ -206,9 +211,8 @@ function resetResult() {
   detail.replaceChildren();
 }
 
-function reportMessage(message, failed = false) {
+function reportMessage(message) {
   exportStatus.textContent = message;
-  exportStatus.classList.toggle('error', failed);
   exportStatus.hidden = false;
 }
 
@@ -241,7 +245,7 @@ function prepareReport(result, values) {
       experiment: selectedRecords?.experiment,
       method: advancedTitle ?? selected.title, source: dataSource.label,
       columns: selectedRecords?.columns ?? [], rows: selectedRecords?.rows ?? [], inputs,
-      primary, tables, notes: result.notes ?? [], calculationDetails, createdAt: new Date()
+      primary, tables, notes: result.notes ?? [], calculationDetails
     },
     svg: result.svg
   };
@@ -350,20 +354,48 @@ form.addEventListener('input', () => {
     setSource({ ...dataSource, edited: true, label: dataSource.label + '（已编辑）' });
   }
 });
-exportButton.addEventListener('click', async () => {
+exportButton.addEventListener('click', () => {
+  if (!reportSnapshot) return;
+  reportRequest = undefined;
+  reportFormStatus.hidden = true;
+  reportSubmit.disabled = false;
+  reportDialog.showModal();
+});
+byId('cancel-report').addEventListener('click', () => reportDialog.close());
+reportForm.addEventListener('submit', async event => {
+  event.preventDefault();
   const requested = reportSnapshot;
-  if (!requested) return;
-  exportButton.disabled = true;
-  reportMessage('正在生成 Word 报告…');
+  if (!requested || reportRequest) return;
+
+  const request = {};
+  reportRequest = request;
+  const isCurrent = () => reportDialog.open && reportRequest === request;
+  const student = Object.fromEntries([...new FormData(reportForm)].map(([key, value]) => [key, value.trim()]));
+  reportSubmit.disabled = true;
+  reportFormStatus.textContent = '正在生成 Word 报告…';
+  reportFormStatus.classList.remove('error');
+  reportFormStatus.hidden = false;
   try {
-    const { file, name } = await createReportFile(requested.content, requested.svg, experimentSlug);
-    if (reportSnapshot !== requested) return;
+    const report = { ...requested.content, student, createdAt: new Date() };
+    const { file, name } = await createReportFile(report, requested.svg, experimentSlug);
+    if (!isCurrent()) return;
+    if (reportSnapshot !== requested) {
+      reportDialog.close();
+      return;
+    }
     downloadReport(file, name);
+    reportDialog.close();
     reportMessage('Word 报告已生成。');
   } catch (failure) {
-    if (reportSnapshot === requested) reportMessage(failure.message || '生成报告失败，请重试。', true);
+    if (isCurrent()) {
+      reportFormStatus.textContent = failure.message || '生成报告失败，请重试。';
+      reportFormStatus.classList.add('error');
+    }
   } finally {
-    if (reportSnapshot === requested) exportButton.disabled = false;
+    if (reportRequest === request) {
+      reportRequest = undefined;
+      reportSubmit.disabled = false;
+    }
   }
 });
 copy.addEventListener('click', async () => {

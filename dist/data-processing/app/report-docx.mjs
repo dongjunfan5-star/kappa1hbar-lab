@@ -144,7 +144,13 @@ function reportDocument(report, png) {
   const margin = 1134;
   const width = pageWidth - 2 * margin;
   const experiment = guide.title || report.experiment;
-  const meta = ['实验名称　' + (experiment || '____________________________')];
+  const { name, studentId, className, experimentDate } = report.student ?? {};
+  const studentField = (label, value) => label + '　' + (value?.trim() || '____________');
+  const meta = [
+    [studentField('姓名', name), studentField('学号', studentId)].join('　　　'),
+    [studentField('班级', className), studentField('实验日期', experimentDate)].join('　　　'),
+    '实验名称　' + (experiment || '____________________________')
+  ];
   if (report.method) meta.push('数据处理方法　' + report.method);
   if (report.source) meta.push('读数来源　' + report.source);
   if (report.createdAt) {
