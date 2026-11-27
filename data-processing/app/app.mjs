@@ -22,6 +22,9 @@ const reportDialog = byId('report-dialog');
 const reportForm = byId('report-form');
 const reportFormStatus = byId('report-form-status');
 const reportSubmit = byId('download-report');
+const reportRemember = byId('remember-report-student');
+const reportStudentKey = 'physlab:report-student:v1';
+const reportStudentFields = ['name', 'studentId', 'className'];
 const choices = new Map();
 let selected;
 let advancedExample;
@@ -216,6 +219,31 @@ function reportMessage(message) {
   exportStatus.hidden = false;
 }
 
+function restoreReportStudent() {
+  let saved;
+  try {
+    saved = JSON.parse(localStorage.getItem(reportStudentKey));
+  } catch {
+    // A missing, corrupt, or unavailable record leaves the fields blank.
+  }
+  for (const field of reportStudentFields) {
+    const value = saved?.[field];
+    reportForm.elements.namedItem(field).value = typeof value === 'string' ? value : '';
+  }
+  reportForm.elements.namedItem('experimentDate').value = '';
+  reportRemember.checked = reportRemember.defaultChecked;
+}
+
+function saveReportStudent(student, remember) {
+  const saved = Object.fromEntries(reportStudentFields.map(field => [field, student[field]]));
+  try {
+    if (remember && Object.values(saved).some(Boolean)) localStorage.setItem(reportStudentKey, JSON.stringify(saved));
+    else localStorage.removeItem(reportStudentKey);
+  } catch {
+    // The report download can still succeed when browser storage is unavailable.
+  }
+}
+
 function invalidateReport(message) {
   if (!reportSnapshot) return;
   reportSnapshot = undefined;
@@ -359,6 +387,7 @@ exportButton.addEventListener('click', () => {
   reportRequest = undefined;
   reportFormStatus.hidden = true;
   reportSubmit.disabled = false;
+  restoreReportStudent();
   reportDialog.showModal();
 });
 byId('cancel-report').addEventListener('click', () => reportDialog.close());
@@ -371,6 +400,7 @@ reportForm.addEventListener('submit', async event => {
   reportRequest = request;
   const isCurrent = () => reportDialog.open && reportRequest === request;
   const student = Object.fromEntries([...new FormData(reportForm)].map(([key, value]) => [key, value.trim()]));
+  const remember = reportRemember.checked;
   reportSubmit.disabled = true;
   reportFormStatus.textContent = '正在生成 Word 报告…';
   reportFormStatus.classList.remove('error');
@@ -384,6 +414,7 @@ reportForm.addEventListener('submit', async event => {
       return;
     }
     downloadReport(file, name);
+    saveReportStudent(student, remember);
     reportDialog.close();
     reportMessage('Word 报告已生成。');
   } catch (failure) {

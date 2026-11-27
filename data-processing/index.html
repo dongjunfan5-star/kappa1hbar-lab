@@ -79,13 +79,14 @@
   </main>
   <dialog class="report-dialog" id="report-dialog" aria-labelledby="report-dialog-title" aria-describedby="report-form-hint">
     <h2 id="report-dialog-title">填写报告信息</h2>
-    <p id="report-form-hint">可留空，稍后在 Word 中补填。</p>
+    <p id="report-form-hint">姓名、学号和班级可保存在此浏览器。各项也可留空，稍后在 Word 中补填。</p>
     <form id="report-form" method="dialog" autocomplete="off">
       <div class="fields">
         <label class="field">姓名<input name="name" autofocus></label>
         <label class="field">学号<input name="studentId" spellcheck="false"></label>
         <label class="field">班级<input name="className"></label>
         <label class="field">实验日期<input name="experimentDate" type="date"></label>
+        <label class="field check full"><span>在此浏览器记住资料</span><input id="remember-report-student" type="checkbox" checked></label>
       </div>
       <p class="message" id="report-form-status" role="status" hidden></p>
       <div class="report-actions">
@@ -94,6 +95,6 @@
       </div>
     </form>
   </dialog>
-  <script type="module" src="./app/app.mjs?v=report-info"></script>
+  <script type="module" src="./app/app.mjs?v=remember-report"></script>
 </body>
 </html>
