@@ -1,0 +1,5764 @@
+<!-- 由 build-study.mjs 和前两章详解.md 生成 -->
+<article class="study-article" aria-labelledby="study-heading">
+<h2 id="study-heading">大学物理实验教材前两章详解</h2>
+<p>依据大学物理实验教材第 9–70 页整理。正文所引页码与原书印刷页码一致。第一章跨第 9–22 页，第二章跨第 23–70 页，第 71 页进入第三章。章节页码重叠处表示同一页同时含上下两节。</p>
+<p>两章的实验顺序是界定被测量，估计各因素的影响，选择可行的测量方法，保留有单位的原始数据，建立测量模型，计算参数和不确定度，最后按恰当位数报告。以下用 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>s</mi>
+</math> 表示样本标准差、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+</math> 表示标准不确定度、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>c</mi>
+  </msub>
+</math> 表示合成标准不确定度、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>U</mi>
+</math> 表示扩展不确定度。</p>
+<div class="study-table-wrap" role="region" aria-label="教材表格 1" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">章节</th>
+<th scope="col" align="right">PDF 页码</th>
+<th scope="col">所回答的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#section-1-1">1.1 物理实验思想和方法的形成</a></td>
+<td align="right">10</td>
+<td>如何在观测、假说和检验之间往返</td>
+</tr>
+<tr>
+<td><a href="#section-1-2">1.2 物理实验分析方法</a></td>
+<td align="right">10–14</td>
+<td>如何估计重要程度，利用量纲推测模型</td>
+</tr>
+<tr>
+<td><a href="#section-1-3">1.3 物理实验的基本测量方法</a></td>
+<td align="right">14–22</td>
+<td>怎样把难测的量变成可辨识、可校准的读数</td>
+</tr>
+<tr>
+<td><a href="#section-2-1">2.1 测量的不确定度</a></td>
+<td align="right">24–43</td>
+<td>一个结果有多可靠，哪些输入限制了它</td>
+</tr>
+<tr>
+<td><a href="#section-2-2">2.2 常用的数据处理方法</a></td>
+<td align="right">43–55</td>
+<td>如何列表、作图、拟合并用拟合结果反推物理量</td>
+</tr>
+<tr>
+<td><a href="#section-2-3">2.3 常用数据处理软件简介</a></td>
+<td align="right">55–62</td>
+<td>怎样把计算、绘图与拟合写成可复算的流程</td>
+</tr>
+<tr>
+<td><a href="#section-2-4">2.4 重力加速度的测量</a></td>
+<td align="right">62–70</td>
+<td>怎样将上述方法用于真实实验与仪器选型</td>
+</tr>
+</tbody></table></div>
+<h3 id="chapter-1">第一章　物理实验的基本方法</h3>
+<h4 id="section-1-1">1.1 物理实验思想和方法的形成（第 10 页）</h4>
+<p>教材以伽利略说明实验研究的双向过程。观察提出问题，理想化实验压缩影响因素，数学模型给出可检验的数量关系，真实实验再检验关系何时成立。测量出现偏离时，要分别检查被测量定义、装置与读数、模型近似，而后重新设计实验。单摆模型先忽略线和球的细节得到近似周期。精度要求提高后，再逐项估计球径、线质量和摆角的影响。</p>
+<p>近代实验物理学把观察和实验定量化。教材把实验设计、装置制作、测量技巧和对数据的判断连成同一件事。即使程序准确算出了一个斜率，也要从实验设计上判断斜率是否对应预想的物理量、数据覆盖范围是否足够、模型在该范围内是否成立。</p>
+<h4 id="section-1-2">1.2 物理实验分析方法（第 10–14 页）</h4>
+<p><strong>数量级排序和基本误差。</strong> 先把不同来源换算成对同一输出的绝对影响或相对影响，再按绝对值比较大小。第 11 页把“比主要影响至少小一个数量级”作为初筛准则。几项很小的影响可能方向一致。带符号的和估计合计修正，逐项绝对值之和给出保守界限，可用来检查遗漏项是否落在允许范围内。基本误差指给定仪器、操作和条件下实际能达到的误差底限，其来源可能是分辨率、计时反应、随机波动或环境约束。许多独立随机波动可用重复测量压低，稳定偏差可校准修正，杂散电容可通过屏蔽抑制，温度扰动可通过改变测量环境压低。一旦最主要的来源受到抑制，就重新排序。教材比较石英计时在普通、恒温和精密配置中的不同误差尺度，也用查德威克的历史例子说明，理论预测与观测相差若干数量级时应重新审查假说。</p>
+<p><strong>单摆修正例（图 1-2-1、式 1-2-1）。</strong> 用 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>l</mi>
+</math> 表示悬点到球心距离，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>d</mi>
+</math> 为球径，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>m</mi>
+    <mn>0</mn>
+  </msub>
+  <mo>,</mo>
+  <mi>m</mi>
+</math> 分别为摆线与摆球质量，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>&#x3C1;</mi>
+    <mn>0</mn>
+  </msub>
+  <mo>,</mo>
+  <mi>&#x3C1;</mi>
+</math> 为气体与摆球密度，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3B8;</mi>
+</math> 为以弧度表示的最大摆角。原式以无量纲因子 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>F</mi>
+</math> 修正周期。</p>
+<div class="study-equation" tabindex="0"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>F</mi>
+  <mo>=</mo>
+  <mn>1</mn>
+  <mo>+</mo>
+  <mfrac>
+    <msup>
+      <mi>d</mi>
+      <mn>2</mn>
+    </msup>
+    <mrow>
+      <mn>20</mn>
+      <msup>
+        <mi>l</mi>
+        <mn>2</mn>
+      </msup>
+    </mrow>
+  </mfrac>
+  <mo>&#x2212;</mo>
+  <mfrac>
+    <msub>
+      <mi>m</mi>
+      <mn>0</mn>
+    </msub>
+    <mrow>
+      <mn>12</mn>
+      <mi>m</mi>
+    </mrow>
+  </mfrac>
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN">(</mo>
+    <mn>1</mn>
+    <mo>+</mo>
+    <mfrac>
+      <mi>d</mi>
+      <mrow>
+        <mn>2</mn>
+        <mi>l</mi>
+      </mrow>
+    </mfrac>
+    <mo>+</mo>
+    <mfrac>
+      <msub>
+        <mi>m</mi>
+        <mn>0</mn>
+      </msub>
+      <mi>m</mi>
+    </mfrac>
+    <mo data-mjx-texclass="CLOSE">)</mo>
+  </mrow>
+  <mo>+</mo>
+  <mfrac>
+    <msub>
+      <mi>&#x3C1;</mi>
+      <mn>0</mn>
+    </msub>
+    <mrow>
+      <mn>2</mn>
+      <mi>&#x3C1;</mi>
+    </mrow>
+  </mfrac>
+  <mo>+</mo>
+  <mfrac>
+    <msup>
+      <mi>&#x3B8;</mi>
+      <mn>2</mn>
+    </msup>
+    <mn>16</mn>
+  </mfrac>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <mi>T</mi>
+  <mo>=</mo>
+  <mn>2</mn>
+  <mi>&#x3C0;</mi>
+  <msqrt>
+    <mfrac>
+      <mi>l</mi>
+      <mi>g</mi>
+    </mfrac>
+    <mi>F</mi>
+  </msqrt>
+  <mo>.</mo>
+</math></div>
+<p>代入 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>l</mi>
+  <mo>=</mo>
+  <mn>80.0</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">cm</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>d</mi>
+  <mo>=</mo>
+  <mn>2.00</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">cm</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>m</mi>
+    <mn>0</mn>
+  </msub>
+  <mo>=</mo>
+  <mn>0.1</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">g</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>=</mo>
+  <mn>33.0</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">g</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>&#x3C1;</mi>
+    <mn>0</mn>
+  </msub>
+  <mo>=</mo>
+  <mn>0.0013</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">g</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <msup>
+      <mi data-mjx-auto-op="false">cm</mi>
+      <mn>3</mn>
+    </msup>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3C1;</mi>
+  <mo>=</mo>
+  <mn>7.8</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">g</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <msup>
+      <mi data-mjx-auto-op="false">cm</mi>
+      <mn>3</mn>
+    </msup>
+  </mrow>
+</math>，根号内各项约为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>+</mo>
+  <mn>3.13</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>5</mn>
+    </mrow>
+  </msup>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>&#x2212;</mo>
+  <mn>2.56</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>4</mn>
+    </mrow>
+  </msup>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>+</mo>
+  <mn>8.33</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>5</mn>
+    </mrow>
+  </msup>
+</math> 和 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>+</mo>
+  <mn>4.76</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>4</mn>
+    </mrow>
+  </msup>
+</math>（<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>5</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+</math>）。改为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>3</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+</math> 时，末项约为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>+</mo>
+  <mn>1.71</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>4</mn>
+    </mrow>
+  </msup>
+</math>。对周期本身的合计相对修正为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msqrt>
+    <mi>F</mi>
+  </msqrt>
+  <mo>&#x2212;</mo>
+  <mn>1</mn>
+</math>，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>5</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+</math> 时约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1.67</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>4</mn>
+    </mrow>
+  </msup>
+</math>。若由周期反算重力加速度，修正因子为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>F</mi>
+</math>。这能区分原书逐项估计的对象与最终输出。</p>
+<p><strong>量纲分析。</strong> 指定候选物理量，写出它们在质量 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>M</mi>
+</math>、长度 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>L</mi>
+</math>、时间 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>T</mi>
+</math> 等基本量纲下的指数，把未知指数写成线性方程。矩阵每一列是一个因素的量纲，同一行对应同一类基本量纲。若方程欠定，可由齐次方程的自由变量构造无量纲组合。若无解，应重新检查候选量或单位维度。无量纲常数或未知的无量纲函数需要其他物理条件或测量来确定。对中心天体质量 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>M</mi>
+    <mn>0</mn>
+  </msub>
+</math> 远大于绕行物体质量、且近似圆轨道的例题，试设 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>P</mi>
+  <mo>&#x221D;</mo>
+  <msubsup>
+    <mi>M</mi>
+    <mn>0</mn>
+    <mi>a</mi>
+  </msubsup>
+  <msup>
+    <mi>r</mi>
+    <mi>b</mi>
+  </msup>
+  <msup>
+    <mi>G</mi>
+    <mi>c</mi>
+  </msup>
+</math>。由 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+  <mo>&#x2212;</mo>
+  <mi>c</mi>
+  <mo>=</mo>
+  <mn>0</mn>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <mi>b</mi>
+  <mo>+</mo>
+  <mn>3</mn>
+  <mi>c</mi>
+  <mo>=</mo>
+  <mn>0</mn>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <mo>&#x2212;</mo>
+  <mn>2</mn>
+  <mi>c</mi>
+  <mo>=</mo>
+  <mn>1</mn>
+</math> 得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>P</mi>
+  <mo>&#x221D;</mo>
+  <msqrt>
+    <msup>
+      <mi>r</mi>
+      <mn>3</mn>
+    </msup>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <mo stretchy="false">(</mo>
+    <mi>G</mi>
+    <msub>
+      <mi>M</mi>
+      <mn>0</mn>
+    </msub>
+    <mo stretchy="false">)</mo>
+  </msqrt>
+</math>，于是 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>P</mi>
+    <mn>2</mn>
+  </msup>
+  <mo>&#x221D;</mo>
+  <msup>
+    <mi>r</mi>
+    <mn>3</mn>
+  </msup>
+</math>。<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2</mn>
+  <mi>&#x3C0;</mi>
+</math> 需要结合圆周运动关系确定。教材另一历史例把膨胀前沿的尺度和时间画在双对数图上，斜率约为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.4</mn>
+</math>，接着用量纲齐次检验候选变量是否与观测相容。对任意正值数据，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>y</mi>
+  <mo>=</mo>
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>A</mi>
+  <mo>+</mo>
+  <mi>b</mi>
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>x</mi>
+</math> 的斜率就是 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>b</mi>
+</math>。</p>
+<h4 id="section-1-3">1.3 物理实验的基本测量方法（第 14–22 页）</h4>
+<p>测量是借助共同的基准确定量值。教材用日、月等天然周期、机械钟、石英钟和原子频标说明计时原理如何随精度升级，又从微观显微术到宇宙尺度说明相同物理量需要不同测量手段。书中光钟数值展现的是成书时的研究背景。选方法时先确定量程和目标不确定度，然后评估分辨率、最大允差、环境与操作者。</p>
+<div class="study-table-wrap" role="region" aria-label="教材表格 2" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">方法</th>
+<th scope="col">物理过程与教材实例</th>
+<th scope="col">可复算关系或读数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>直接比较</td>
+<td>将被测量与同类基准直接比较，如米尺读长度</td>
+<td>两刻度相减，零偏按带符号的零读数扣除</td>
+</tr>
+<tr>
+<td>间接比较</td>
+<td>标准读数通过函数与被测量建立联系，如先测几何尺寸再求体积</td>
+<td>建立 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>Y</mi>
+  <mo>=</mo>
+  <mi>f</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>X</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msub>
+    <mi>X</mi>
+    <mi>n</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+</math> 并传播输入不确定度</td>
+</tr>
+<tr>
+<td>补偿法</td>
+<td>调整标准量抵消被测量的效应，检流计示零。图 1-3-1 先用标准电池平衡，再在同一电流下用待测电池平衡</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>E</mi>
+    <mi>x</mi>
+  </msub>
+  <mo>=</mo>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>R</mi>
+    <mi>x</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msub>
+    <mi>R</mi>
+    <mi>s</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <msub>
+    <mi>E</mi>
+    <mi>s</mi>
+  </msub>
+</math>，前提是两次的工作电流相同</td>
+</tr>
+<tr>
+<td>平衡法</td>
+<td>利用力矩、电势等平衡条件，涵盖天平、电桥与厄特沃什扭摆（图 1-3-2）</td>
+<td>天平左右力矩相等，电桥示零时对应桥臂比相等。厄特沃什由不同材料未造成可测镜面偏转检验惯性质量与引力质量的等效</td>
+</tr>
+<tr>
+<td>累积放大</td>
+<td>计 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>N</mi>
+</math> 个摆动周期，或使信号在重复扫描中累积。教材也以光在激光器谐振腔中反复通过工作物质说明累积</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>T</mi>
+  <mo>=</mo>
+  <msub>
+    <mi>t</mi>
+    <mi>N</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>N</mi>
+</math>，端点计时贡献 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <mi>T</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>t</mi>
+    <mi>N</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>N</mi>
+</math>。<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>T</mi>
+  <mo>=</mo>
+  <mn>1.50</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">s</mi>
+  </mrow>
+</math>、端点影响 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.20</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">s</mi>
+  </mrow>
+</math> 时，单周期约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>13.3</mn>
+  <mi mathvariant="normal">%</mi>
+</math>，50 周期约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.27</mn>
+  <mi mathvariant="normal">%</mi>
+</math></td>
+</tr>
+<tr>
+<td>机械放大</td>
+<td>游标细分、测微螺旋、杠杆和齿轮等把小量转换成较易辨识的位移</td>
+<td>普通直游标分度值 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>n</mi>
+</math>，螺旋套筒几何放大倍数 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3C0;</mi>
+  <mi>D</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>p</mi>
+</math>，其中 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>p</mi>
+</math> 为螺距</td>
+</tr>
+<tr>
+<td>电学放大</td>
+<td>晶体管、运放将电压、电流或功率放大。可以先把非电量转换成电量</td>
+<td>输出除以已标定的增益可回算输入。信号与已有噪声同时放大时，信噪比取决于前端噪声和后续处理</td>
+</tr>
+<tr>
+<td>光学放大</td>
+<td>放大镜、显微镜、望远镜放大视角，光杠杆可将长度变化变成标尺位移</td>
+<td>光杠杆小角近似 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>b</mi>
+  <mo>=</mo>
+  <mn>2</mn>
+  <mi>D</mi>
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>L</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>l</mi>
+</math>，反算 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>L</mi>
+  <mo>=</mo>
+  <mi>b</mi>
+  <mi>l</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mo stretchy="false">(</mo>
+  <mn>2</mn>
+  <mi>D</mi>
+  <mo stretchy="false">)</mo>
+</math>，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>D</mi>
+</math> 为镜尺距离、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>l</mi>
+</math> 为杠杆臂</td>
+</tr>
+<tr>
+<td>参量转换</td>
+<td>将难观察的时间、尺度或变化转成可测量的统计量或其他参量。教材举粒子寿命的集合统计、双星周期变化以及静力称重</td>
+<td>稀有事件在观测时间远小于平均寿命时，期望计数约为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>N</mi>
+  <mi>t</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>&#x3C4;</mi>
+</math>。静力称重中 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3C1;</mi>
+  <mo>=</mo>
+  <msub>
+    <mi>&#x3C1;</mi>
+    <mn>0</mn>
+  </msub>
+  <mi>m</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mo stretchy="false">(</mo>
+  <mi>m</mi>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>m</mi>
+    <mn>1</mn>
+  </msub>
+  <mo stretchy="false">)</mo>
+</math></td>
+</tr>
+<tr>
+<td>能量转换</td>
+<td>光电、磁电、热电、压电传感将待测量变成可测电量，也可用力的变化指示磁性材料变化</td>
+<td>将读数送入已知标定函数。可用标定点拟合或区间内插值，输出取决于器件和工作条件</td>
+</tr>
+<tr>
+<td>模拟法</td>
+<td>几何模型按比例缩放，动力相似模型要匹配关键无量纲量，替代或类比模拟可用电流场模拟静电场，计算机模拟基于方程近似</td>
+<td>用长度比例换算几何量，用无量纲参数检验动力相似，依据映射回算原型</td>
+</tr>
+<tr>
+<td>光的干涉、衍射</td>
+<td>干涉条纹将小光程差变为可计数的条纹。牛顿环、劈尖测曲率、厚度和形变，衍射可由角度或条纹尺度反推微小结构</td>
+<td>跨 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>N</mi>
+</math> 级条纹，光程差通常改变 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>N</mi>
+  <mi>&#x3BB;</mi>
+</math>。双程反射中镜位移为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>N</mi>
+  <mi>&#x3BB;</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>2</mn>
+</math>，应按装置的光程关系换算。简单单缝暗纹满足 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+  <mi>sin</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>&#x3B8;</mi>
+  <mo>=</mo>
+  <mi>m</mi>
+  <mi>&#x3BB;</mi>
+</math></td>
+</tr>
+<tr>
+<td>其他近代方法</td>
+<td>磁共振、低温与真空、核物理测量、扫描隧道显微、薄膜制备与物性、量子精密测量，以及仿真和人工智能辅助教学</td>
+<td>这些技术各自需要测量模型。教材在本节介绍用途，在后续实验再讨论具体操作</td>
+</tr>
+</tbody></table></div>
+<p>相干平均可降低各次独立的随机噪声。将扫描叠加之前应对齐时间或波长坐标。对干涉，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3BB;</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>2</mn>
+</math> 是一个常见双程位移条纹间隔，条纹内的相位或强度分析也可提供亚条纹分辨。光杠杆的倍数始终由本机 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2</mn>
+  <mi>D</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>l</mi>
+</math> 计算。第 18 页列出的长度范围若独立取端点，算得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>50</mn>
+</math>–<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>200</mn>
+</math> 倍，原文所列 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>25</mn>
+</math>–<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>100</mn>
+</math> 倍与这两个范围不一致。</p>
+<h3 id="chapter-2">第二章　测量的不确定度和数据处理</h3>
+<h4 id="section-2-1">2.1 测量的不确定度（第 24–43 页）</h4>
+<h5>基本概念、仪器与记录（第 24–29 页）</h5>
+<p>被测量的定义取决于所要求的准确程度。例 1 中，名义长 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.5</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">m</mi>
+  </mrow>
+</math> 的铜管若测至微米量级，定义可明确 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>20.00</mn>
+  <msup>
+    <mstyle scriptlevel="0">
+      <mspace width="0.167em"></mspace>
+    </mstyle>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>101325</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">Pa</mi>
+  </mrow>
+</math> 和支撑方式。若只测到毫米量级，影响远低于目标时可以简化定义。取样代表性、环境、示值偏倚、分辨力、标准物质、外部常量、近似模型和重复观测的涨落，都可能进入结果。</p>
+<p>测量误差描述结果与参考量值之差。若讨论真值，真值未知就不能确知这个差。测量不确定度以非负数表示可以合理赋予被测量的量值有多分散。重复测量有助于压低均值的随机影响，校准可修正已知系统影响。例 2 中，有限内阻的电压表对高阻对象有负载效应。可以按两者阻值进行修正，阻值估计本身的不确定度随修正进入输出。A 类依赖对观测序列做统计分析，B 类根据证书、规格、既有资料或可辩护的分布假设评定。两类结果均以标准差的尺度进入合成。</p>
+<div class="study-table-wrap" role="region" aria-label="教材表格 3" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">仪器规格类型</th>
+<th scope="col">最大允差或分辨贡献</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>指针表等级 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi mathvariant="normal">&#x394;</mi>
+  <mo>=</mo>
+  <mo stretchy="false">(</mo>
+  <mi>k</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>100</mn>
+  <mo stretchy="false">)</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mtext>&#x91CF;&#x7A0B;</mtext>
+</math></td>
+</tr>
+<tr>
+<td>电阻箱分挡等级 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>k</mi>
+    <mi>i</mi>
+  </msub>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi mathvariant="normal">&#x394;</mi>
+    <mi>R</mi>
+  </msub>
+  <mo>=</mo>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>i</mi>
+  </munder>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>k</mi>
+    <mi>i</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>100</mn>
+  <mo stretchy="false">)</mo>
+  <mo data-mjx-texclass="OPEN" fence="false" stretchy="false">|</mo>
+  <msub>
+    <mi>R</mi>
+    <mi>i</mi>
+  </msub>
+  <mo data-mjx-texclass="CLOSE" fence="false" stretchy="false">|</mo>
+</math>。484.2 Ω 的例子给 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.4</mn>
+  <mo>+</mo>
+  <mn>0.16</mn>
+  <mo>+</mo>
+  <mn>0.021</mn>
+  <mo>=</mo>
+  <mn>0.581</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi mathvariant="normal">&#x3A9;</mi>
+</math></td>
+</tr>
+<tr>
+<td>数显表百分比与末位计数</td>
+<td>按规格取读数项、量程项和末位单位的倍数。在 1 V 量程测 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.928571</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">V</mi>
+  </mrow>
+</math> 时，例 10 的 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>14</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">ppm</mi>
+  </mrow>
+  <mo>&#xD7;</mo>
+</math>读数 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>+</mo>
+  <mn>2</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">ppm</mi>
+  </mrow>
+  <mo>&#xD7;</mo>
+</math>量程约为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>15</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>&#x3BC;</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">V</mi>
+  </mrow>
+</math></td>
+</tr>
+<tr>
+<td>独立的数字分辨力 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>q</mi>
+</math></td>
+<td>同一示值对应输入区间半宽 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>q</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>2</mn>
+</math>，均匀分布给 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>q</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mn>12</mn>
+  </msqrt>
+</math>。规格已涵盖同一效应时避免重复计入</td>
+</tr>
+<tr>
+<td>教材表 2-1-1</td>
+<td>150、500、1000 mm 钢板尺允差分别 0.10、0.15、0.20 mm。1、2 m 钢卷尺允差分别 0.8、1.2 mm。125、300 mm 卡尺例对应 0.02、0.05 mm。0–25 mm 千分尺例为 0.004 mm。普通、精密 0–100°C 温度计例分别为 1、0.2°C。七级 500 g 物理天平分度 0.05 g，在满程、半程附近和三分之一量程以下的允差分别约 0.08、0.06、0.04 g，三级 200 g 分析天平分度 0.1 mg，对应允差约 1.3、1.0、0.7 mg</td>
+</tr>
+</tbody></table></div>
+<p>刻度清晰时可按量具读数规则估读。数显仪器保留稳定显示的尾零。末位抖动可记录独立读数求统计量，持续多位抖动还需检查量程、干扰或仪器适配。分辨力说明能辨识的最小变化，最大允差由规格限定，实际不确定度同时取决于校准、环境和操作。</p>
+<p>计算全程保留额外数字，报告时通常将不确定度保留至多两位有效数字，将测量值修约到其末位所在的小数位。十进制恰好在中点时采用五凑偶，例如 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1.2350</mn>
+</math> 按 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.01</mn>
+</math> 修约为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1.24</mn>
+</math>，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1.2450</mn>
+</math> 修约为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1.24</mn>
+</math>。若首个舍弃数字为 5 且后有非零数字，则超过中点，向较远的绝对值方向修约。第 41 页还单独说明扩展不确定度可按末位直接进位。原始量值只到不确定度首位时，可只报不确定度一位有效数字。末位相差多个数量级时检查遗漏项。角度例 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+  <mo>=</mo>
+  <mi>sin</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mn>30</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <msup>
+    <mn>24</mn>
+    <mo data-mjx-alternate="1">&#x2032;</mo>
+  </msup>
+  <mo stretchy="false">)</mo>
+</math> 在示值允差 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>1</mn>
+    <mo data-mjx-alternate="1">&#x2032;</mo>
+  </msup>
+</math>、矩形分布下有 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <mi>&#x3B8;</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mi>&#x3C0;</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mo stretchy="false">(</mo>
+  <mn>180</mn>
+  <mo>&#xD7;</mo>
+  <mn>60</mn>
+  <msqrt>
+    <mn>3</mn>
+  </msqrt>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2248;</mo>
+  <mn>1.68</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>4</mn>
+    </mrow>
+  </msup>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">rad</mi>
+  </mrow>
+</math>，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <mi>y</mi>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2248;</mo>
+  <mn>1.45</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>4</mn>
+    </mrow>
+  </msup>
+</math>，给出约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.50603</mn>
+</math> 的估计值。一般先传播分辨影响，再决定函数值位数。</p>
+<h5>A 类、B 类和常见分布（第 29–34 页）</h5>
+<p>取独立、近似同条件的 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>n</mi>
+</math> 个读数 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>q</mi>
+    <mi>i</mi>
+  </msub>
+</math>，按下式计算均值与标准不确定度。</p>
+<div class="study-equation" tabindex="0"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>q</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <mo>=</mo>
+  <mfrac>
+    <mn>1</mn>
+    <mi>n</mi>
+  </mfrac>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>i</mi>
+  </munder>
+  <msub>
+    <mi>q</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <msup>
+    <mi>s</mi>
+    <mn>2</mn>
+  </msup>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <munder>
+        <mo data-mjx-texclass="OP">&#x2211;</mo>
+        <mi>i</mi>
+      </munder>
+      <mo stretchy="false">(</mo>
+      <msub>
+        <mi>q</mi>
+        <mi>i</mi>
+      </msub>
+      <mo>&#x2212;</mo>
+      <mrow data-mjx-texclass="ORD">
+        <mover>
+          <mi>q</mi>
+          <mo stretchy="false">&#xAF;</mo>
+        </mover>
+      </mrow>
+      <msup>
+        <mo stretchy="false">)</mo>
+        <mn>2</mn>
+      </msup>
+    </mrow>
+    <mrow>
+      <mi>n</mi>
+      <mo>&#x2212;</mo>
+      <mn>1</mn>
+    </mrow>
+  </mfrac>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <msub>
+    <mi>u</mi>
+    <mi>A</mi>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>q</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mfrac>
+    <mi>s</mi>
+    <msqrt>
+      <mi>n</mi>
+    </msqrt>
+  </mfrac>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <mi>&#x3BD;</mi>
+  <mo>=</mo>
+  <mi>n</mi>
+  <mo>&#x2212;</mo>
+  <mn>1.</mn>
+</math></div>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>s</mi>
+</math> 表示单次观测的散布，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>s</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mi>n</mi>
+  </msqrt>
+</math> 表示均值的散布。用一个均值消耗了一个自由度。若常规程序已用预先的多组独立测量验证稳定性，可把组内方差按 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>&#x3BD;</mi>
+    <mi>j</mi>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>n</mi>
+    <mi>j</mi>
+  </msub>
+  <mo>&#x2212;</mo>
+  <mn>1</mn>
+</math> 加权合并，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msubsup>
+    <mi>s</mi>
+    <mi>p</mi>
+    <mn>2</mn>
+  </msubsup>
+  <mo>=</mo>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>j</mi>
+  </munder>
+  <msub>
+    <mi>&#x3BD;</mi>
+    <mi>j</mi>
+  </msub>
+  <msubsup>
+    <mi>s</mi>
+    <mi>j</mi>
+    <mn>2</mn>
+  </msubsup>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>j</mi>
+  </munder>
+  <msub>
+    <mi>&#x3BD;</mi>
+    <mi>j</mi>
+  </msub>
+</math>。新测量 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+</math> 次的均值使用 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>s</mi>
+    <mi>p</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mi>m</mi>
+  </msqrt>
+</math>，单次使用 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>s</mi>
+    <mi>p</mi>
+  </msub>
+</math>。用本次 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+</math> 个值独立估计时，自由度为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>&#x2212;</mo>
+  <mn>1</mn>
+</math>，使用外部合并标准差时采用该标准差的自由度。第 30 页把 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>&#x2212;</mo>
+  <mn>1</mn>
+</math> 写进了预评定流程，而第 51 页量块实例把此前 25 次评定的自由度 24 用于后续 5 次的均值。不具备事前资料又只有一次测量时，无法从这一个值估计重复性。</p>
+<div class="study-table-wrap" role="region" aria-label="教材表格 4" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">信息或分布假设</th>
+<th scope="col">如何得到 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>B</mi>
+  </msub>
+</math></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>证书给覆盖因子 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+</math> 和扩展值 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>U</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>B</mi>
+  </msub>
+  <mo>=</mo>
+  <mi>U</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>k</mi>
+</math></td>
+</tr>
+<tr>
+<td>正态中心概率 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>p</mi>
+</math> 和半宽 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>B</mi>
+  </msub>
+  <mo>=</mo>
+  <mi>a</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msup>
+    <mi mathvariant="normal">&#x3A6;</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>1</mn>
+    </mrow>
+  </msup>
+  <mo stretchy="false">(</mo>
+  <mo stretchy="false">(</mo>
+  <mn>1</mn>
+  <mo>+</mo>
+  <mi>p</mi>
+  <mo stretchy="false">)</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>2</mn>
+  <mo stretchy="false">)</mo>
+</math>。教材用 90%、95%、99% 的近似因子 1.64、1.96、2.58</td>
+</tr>
+<tr>
+<td>矩形，区间 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo stretchy="false">[</mo>
+  <msub>
+    <mi>a</mi>
+    <mo>&#x2212;</mo>
+  </msub>
+  <mo>,</mo>
+  <msub>
+    <mi>a</mi>
+    <mo>+</mo>
+  </msub>
+  <mo stretchy="false">]</mo>
+</math></td>
+<td>中点为估计值，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>B</mi>
+  </msub>
+  <mo>=</mo>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>a</mi>
+    <mo>+</mo>
+  </msub>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>a</mi>
+    <mo>&#x2212;</mo>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mn>12</mn>
+  </msqrt>
+</math>。半宽记 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+</math> 时等于 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mn>3</mn>
+  </msqrt>
+</math></td>
+</tr>
+<tr>
+<td>对称梯形，底半宽 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+</math>，顶半宽 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+  <mi>&#x3B2;</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>B</mi>
+  </msub>
+  <mo>=</mo>
+  <mi>a</mi>
+  <msqrt>
+    <mo stretchy="false">(</mo>
+    <mn>1</mn>
+    <mo>+</mo>
+    <msup>
+      <mi>&#x3B2;</mi>
+      <mn>2</mn>
+    </msup>
+    <mo stretchy="false">)</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <mn>6</mn>
+  </msqrt>
+</math>，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0</mn>
+  <mo>&#x2264;</mo>
+  <mi>&#x3B2;</mi>
+  <mo>&#x2264;</mo>
+  <mn>1</mn>
+</math>。<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3B2;</mi>
+  <mo>=</mo>
+  <mn>0</mn>
+</math> 为三角，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3B2;</mi>
+  <mo>=</mo>
+  <mn>1</mn>
+</math> 为矩形。第 33 页底宽应为上下界之差</td>
+</tr>
+<tr>
+<td>对称三角，半宽 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>B</mi>
+  </msub>
+  <mo>=</mo>
+  <mi>a</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mn>6</mn>
+  </msqrt>
+</math>。第 34 页所列 0.408 是半宽比 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>B</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>a</mi>
+</math>，由密度积分得到中心 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>&#xB1;</mo>
+  <msub>
+    <mi>u</mi>
+    <mi>B</mi>
+  </msub>
+</math> 的概率为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mn>6</mn>
+  </msqrt>
+  <mo>&#x2212;</mo>
+  <mn>1</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>6</mn>
+  <mo>&#x2248;</mo>
+  <mn>0.650</mn>
+</math></td>
+</tr>
+<tr>
+<td>反正弦，半宽 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+</math></td>
+<td>周期量在均匀相位下抽样有 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>B</mi>
+  </msub>
+  <mo>=</mo>
+  <mi>a</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mn>2</mn>
+  </msqrt>
+</math>。第 51 页用来表达环境温度周期变动</td>
+</tr>
+</tbody></table></div>
+<p>正态分布的中心 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>&#xB1;</mo>
+  <mi>&#x3C3;</mi>
+  <mo>,</mo>
+  <mo>&#xB1;</mo>
+  <mn>2</mn>
+  <mi>&#x3C3;</mi>
+  <mo>,</mo>
+  <mo>&#xB1;</mo>
+  <mn>3</mn>
+  <mi>&#x3C3;</mi>
+</math> 概率约为 68.27%、95.45%、99.73%，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>&#xB1;</mo>
+  <mn>5</mn>
+  <mi>&#x3C3;</mi>
+</math> 的中心概率约为 99.99994%。传统 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>3</mn>
+  <mi>&#x3C3;</mi>
+</math> 筛查可用于定位数据中的可疑点。小样本、有漂移或偏离正态时，先查看测量和录入记录。教材也提到粒子物理常见的 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>5</mn>
+  <mi>&#x3C3;</mi>
+</math> 标准和瑞利分布，未在本节给出瑞利参数实测案例。</p>
+<div class="study-table-wrap" role="region" aria-label="教材表格 5" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">教材例</th>
+<th scope="col">数据如何变成标准不确定度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>例 3，1 kg 不锈钢砝码</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>240</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>&#x3BC;</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">g</mi>
+  </mrow>
+</math> 对应三倍标准差，得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>80</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>&#x3BC;</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">g</mi>
+  </mrow>
+</math>，相对约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>8.0</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>8</mn>
+    </mrow>
+  </msup>
+</math></td>
+</tr>
+<tr>
+<td>例 4，10 Ω 参考电阻</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>23</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math> 时 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>10.000742</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi mathvariant="normal">&#x3A9;</mi>
+</math>，99% 区间半宽 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>129</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>&#x3BC;</mi>
+  <mi mathvariant="normal">&#x3A9;</mi>
+</math>，得约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>50</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>&#x3BC;</mi>
+  <mi mathvariant="normal">&#x3A9;</mi>
+</math>，相对约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>5.0</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>6</mn>
+    </mrow>
+  </msup>
+</math></td>
+</tr>
+<tr>
+<td>例 5，机械零件长度</td>
+<td>50% 正态区间 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>10.07</mn>
+</math>–<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>10.15</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>，估计值 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>10.11</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo>&#x2248;</mo>
+  <mn>1.48</mn>
+  <mo>&#xD7;</mo>
+  <mn>0.04</mn>
+  <mo>=</mo>
+  <mn>0.059</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>。若概率为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>3</mn>
+</math>，精细换算为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo>=</mo>
+  <mi>a</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>0.96742</mn>
+</math></td>
+</tr>
+<tr>
+<td>例 6，铜的线膨胀系数</td>
+<td>在 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>20</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math> 时通常以 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>16.52</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>6</mn>
+    </mrow>
+  </msup>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <msup>
+      <mi></mi>
+      <mo>&#x2218;</mo>
+    </msup>
+    <msup>
+      <mi mathvariant="normal">C</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mo>&#x2212;</mo>
+        <mn>1</mn>
+      </mrow>
+    </msup>
+  </mrow>
+</math> 为估计值，矩形半宽 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.40</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>6</mn>
+    </mrow>
+  </msup>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <msup>
+      <mi></mi>
+      <mo>&#x2218;</mo>
+    </msup>
+    <msup>
+      <mi mathvariant="normal">C</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mo>&#x2212;</mo>
+        <mn>1</mn>
+      </mrow>
+    </msup>
+  </mrow>
+</math>，得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.23</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>6</mn>
+    </mrow>
+  </msup>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <msup>
+      <mi></mi>
+      <mo>&#x2218;</mo>
+    </msup>
+    <msup>
+      <mi mathvariant="normal">C</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mo>&#x2212;</mo>
+        <mn>1</mn>
+      </mrow>
+    </msup>
+  </mrow>
+</math></td>
+</tr>
+<tr>
+<td>例 7，1 g 分辨力电子秤</td>
+<td>即使重复显示一样，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mn>12</mn>
+  </msqrt>
+  <mo>&#x2248;</mo>
+  <mn>0.29</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">g</mi>
+  </mrow>
+</math>，显示一致不消除量化贡献</td>
+</tr>
+</tbody></table></div>
+<h5>测量模型、传播与相关性（第 34–37 页）</h5>
+<p>从 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>Y</mi>
+  <mo>=</mo>
+  <mi>f</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>X</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msub>
+    <mi>X</mi>
+    <mi>N</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+</math> 得估计值 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+  <mo>=</mo>
+  <mi>f</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>x</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>,</mo>
+  <mo>&#x2026;</mo>
+  <mo>,</mo>
+  <msub>
+    <mi>x</mi>
+    <mi>N</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+</math>。输入量包括已知偏差的加性修正、校准因子，以及足以影响目标精度的环境与仪器量。例 8 中，电阻在温度 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>t</mi>
+</math> 下的功率模型是 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>P</mi>
+  <mo>=</mo>
+  <msup>
+    <mi>V</mi>
+    <mn>2</mn>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mo fence="false" stretchy="false">{</mo>
+  <msub>
+    <mi>R</mi>
+    <mn>0</mn>
+  </msub>
+  <mo stretchy="false">[</mo>
+  <mn>1</mn>
+  <mo>+</mo>
+  <mi>&#x3B1;</mi>
+  <mo stretchy="false">(</mo>
+  <mi>t</mi>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>t</mi>
+    <mn>0</mn>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mo stretchy="false">]</mo>
+  <mo fence="false" stretchy="false">}</mo>
+</math>。若发现非线性温度系数、温场不均匀等也显著，就补充模型。</p>
+<p>对一阶传播令 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>c</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>=</mo>
+  <mo stretchy="false">(</mo>
+  <mi>&#x2202;</mi>
+  <mi>f</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>&#x2202;</mi>
+  <msub>
+    <mi>X</mi>
+    <mi>i</mi>
+  </msub>
+  <msub>
+    <mo stretchy="false">)</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>X</mi>
+      <mo>=</mo>
+      <mi>x</mi>
+    </mrow>
+  </msub>
+</math>。独立量用平方和，有相关性时加协方差项。</p>
+<div class="study-equation" tabindex="0"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msubsup>
+    <mi>u</mi>
+    <mi>c</mi>
+    <mn>2</mn>
+  </msubsup>
+  <mo stretchy="false">(</mo>
+  <mi>y</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>i</mi>
+  </munder>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>c</mi>
+    <mi>i</mi>
+  </msub>
+  <msub>
+    <mi>u</mi>
+    <mi>i</mi>
+  </msub>
+  <msup>
+    <mo stretchy="false">)</mo>
+    <mn>2</mn>
+  </msup>
+  <mo>+</mo>
+  <mn>2</mn>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>&lt;</mo>
+      <mi>j</mi>
+    </mrow>
+  </munder>
+  <msub>
+    <mi>c</mi>
+    <mi>i</mi>
+  </msub>
+  <msub>
+    <mi>c</mi>
+    <mi>j</mi>
+  </msub>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>cov</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>X</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>,</mo>
+  <msub>
+    <mi>X</mi>
+    <mi>j</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <mi>cov</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>X</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>,</mo>
+  <msub>
+    <mi>X</mi>
+    <mi>j</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <msub>
+    <mi>r</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>j</mi>
+    </mrow>
+  </msub>
+  <msub>
+    <mi>u</mi>
+    <mi>i</mi>
+  </msub>
+  <msub>
+    <mi>u</mi>
+    <mi>j</mi>
+  </msub>
+  <mo>.</mo>
+</math></div>
+<p>配对重复观测的样本协方差为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>k</mi>
+  </munder>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>x</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mi>k</mi>
+    </mrow>
+  </msub>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mrow data-mjx-texclass="ORD">
+      <mover>
+        <mi>x</mi>
+        <mo stretchy="false">&#xAF;</mo>
+      </mover>
+    </mrow>
+    <mi>i</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>x</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>j</mi>
+      <mi>k</mi>
+    </mrow>
+  </msub>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mrow data-mjx-texclass="ORD">
+      <mover>
+        <mi>x</mi>
+        <mo stretchy="false">&#xAF;</mo>
+      </mover>
+    </mrow>
+    <mi>j</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mo stretchy="false">(</mo>
+  <mi>n</mi>
+  <mo>&#x2212;</mo>
+  <mn>1</mn>
+  <mo stretchy="false">)</mo>
+</math>，配对样本均值的协方差再除以 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>n</mi>
+</math>。完全正相关时 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>c</mi>
+  </msub>
+  <mo>=</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>i</mi>
+  </munder>
+  <msub>
+    <mi>c</mi>
+    <mi>i</mi>
+  </msub>
+  <msub>
+    <mi>u</mi>
+    <mi>i</mi>
+  </msub>
+  <mo stretchy="false">|</mo>
+</math>。同一标准校准的 10 个 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">k</mi>
+  </mrow>
+  <mi mathvariant="normal">&#x3A9;</mi>
+</math> 电阻串联是例 9。采用同一个 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>100</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">m</mi>
+  </mrow>
+  <mi mathvariant="normal">&#x3A9;</mi>
+</math> 参考来源，全相关使总贡献成为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1.0</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi mathvariant="normal">&#x3A9;</mi>
+</math>。</p>
+<p>表 2-1-3 的例子可直接从偏导得到。独立加减用 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msqrt>
+    <msubsup>
+      <mi>u</mi>
+      <mi>x</mi>
+      <mn>2</mn>
+    </msubsup>
+    <mo>+</mo>
+    <msubsup>
+      <mi>u</mi>
+      <mi>y</mi>
+      <mn>2</mn>
+    </msubsup>
+  </msqrt>
+</math>，乘除法在分母、输出和各输入非零时用相对量平方合成。幂积 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>W</mi>
+  <mo>=</mo>
+  <msup>
+    <mi>x</mi>
+    <mi>k</mi>
+  </msup>
+  <msup>
+    <mi>y</mi>
+    <mi>n</mi>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msup>
+    <mi>z</mi>
+    <mi>m</mi>
+  </msup>
+</math> 的相对灵敏贡献分别是 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+  <msub>
+    <mi>u</mi>
+    <mi>x</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>x</mi>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <mi>n</mi>
+  <msub>
+    <mi>u</mi>
+    <mi>y</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>y</mi>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <mi>m</mi>
+  <msub>
+    <mi>u</mi>
+    <mi>z</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>z</mi>
+</math>。线性倍乘 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <mi>k</mi>
+  <mi>x</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <mi>k</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <msub>
+    <mi>u</mi>
+    <mi>x</mi>
+  </msub>
+</math>，开平方 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <mi>k</mi>
+  <msqrt>
+    <mi>x</mi>
+  </msqrt>
+  <mo stretchy="false">)</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <mi>k</mi>
+  <msqrt>
+    <mi>x</mi>
+  </msqrt>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <mo>=</mo>
+  <msub>
+    <mi>u</mi>
+    <mi>x</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mo stretchy="false">(</mo>
+  <mn>2</mn>
+  <mi>x</mi>
+  <mo stretchy="false">)</mo>
+</math>，正弦 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <mi>sin</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>x</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <mi>cos</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>x</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <msub>
+    <mi>u</mi>
+    <mi>x</mi>
+  </msub>
+</math>，自然对数 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>x</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <msub>
+    <mi>u</mi>
+    <mi>x</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>x</mi>
+</math>。相对式遇到零值时改用绝对偏导，三角函数输入统一用弧度。模型高度非线性或在估计点的一阶系数为零时，先判断高阶效应是否达到目标阈值。</p>
+<p>例 10 将数字电压表写为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+  <mo>=</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>U</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <mo>+</mo>
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>U</mi>
+</math>。重复性给 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>A</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>12</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>&#x3BC;</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">V</mi>
+  </mrow>
+</math>，最大允差约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>15</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>&#x3BC;</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">V</mi>
+  </mrow>
+</math>，假设矩形得到 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>B</mi>
+  </msub>
+  <mo>&#x2248;</mo>
+  <mn>8.66</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>&#x3BC;</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">V</mi>
+  </mrow>
+</math>。修正估计为零、两分量不相关，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>c</mi>
+  </msub>
+  <mo>&#x2248;</mo>
+  <mn>14.8</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>&#x3BC;</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">V</mi>
+  </mrow>
+</math>，相对约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>16</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>6</mn>
+    </mrow>
+  </msup>
+</math>。</p>
+<h5>自由度、扩展与报告（第 38–43 页）</h5>
+<p>用 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>n</mi>
+</math> 个观测估计一个均值的自由度为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>n</mi>
+  <mo>&#x2212;</mo>
+  <mn>1</mn>
+</math>，线性回归估计截距和斜率为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>n</mi>
+  <mo>&#x2212;</mo>
+  <mn>2</mn>
+</math>，一般以 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>n</mi>
+  <mo>&#x2212;</mo>
+  <mi>p</mi>
+</math> 反映估计 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>p</mi>
+</math> 个独立参数的消耗。B 类来源所给标准差可看作准确已知时，常以 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi mathvariant="normal">&#x221E;</mi>
+</math> 处理其自由度。各方差分量独立且输出近似正态或 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>t</mi>
+</math> 时，可估计 Welch–Satterthwaite 有效自由度。</p>
+<div class="study-equation" tabindex="0"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msub>
+    <mi>&#x3BD;</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi data-mjx-auto-op="false">eff</mi>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <mfrac>
+    <msubsup>
+      <mi>u</mi>
+      <mi>c</mi>
+      <mn>4</mn>
+    </msubsup>
+    <mrow>
+      <munder>
+        <mo data-mjx-texclass="OP">&#x2211;</mo>
+        <mi>i</mi>
+      </munder>
+      <mo stretchy="false">(</mo>
+      <msub>
+        <mi>c</mi>
+        <mi>i</mi>
+      </msub>
+      <msub>
+        <mi>u</mi>
+        <mi>i</mi>
+      </msub>
+      <msup>
+        <mo stretchy="false">)</mo>
+        <mn>4</mn>
+      </msup>
+      <mrow data-mjx-texclass="ORD">
+        <mo>/</mo>
+      </mrow>
+      <msub>
+        <mi>&#x3BD;</mi>
+        <mi>i</mi>
+      </msub>
+    </mrow>
+  </mfrac>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <msub>
+    <mi>U</mi>
+    <mi>p</mi>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>t</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo stretchy="false">(</mo>
+      <mn>1</mn>
+      <mo>+</mo>
+      <mi>p</mi>
+      <mo stretchy="false">)</mo>
+      <mrow data-mjx-texclass="ORD">
+        <mo>/</mo>
+      </mrow>
+      <mn>2</mn>
+      <mo>,</mo>
+      <msub>
+        <mi>&#x3BD;</mi>
+        <mrow data-mjx-texclass="ORD">
+          <mi data-mjx-auto-op="false">eff</mi>
+        </mrow>
+      </msub>
+    </mrow>
+  </msub>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <msub>
+    <mi>u</mi>
+    <mi>c</mi>
+  </msub>
+  <mo>.</mo>
+</math></div>
+<p>查纸质表时按表 2-1-4 取整或内插。第 40 页的正文误指表 2-1-3，后者实际是传递公式表。自由度大时 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>t</mi>
+</math> 逼近正态。接近正态时可用 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+  <mo>=</mo>
+  <mn>2</mn>
+</math> 给出约 95% 扩展区间。<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+  <mo>=</mo>
+  <mn>3</mn>
+</math> 的中心概率约为 99.73%，和 99% 采用的约 2.576 有别。输出明显偏态或相关结构不适合该近似时，应以分布模型重新评估覆盖区间。</p>
+<p>第 39–40 页的九次长度测量给 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>q</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <mo>=</mo>
+  <mn>42.3689</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>s</mi>
+  <mo>&#x2248;</mo>
+  <mn>0.064</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>A</mi>
+  </msub>
+  <mo>&#x2248;</mo>
+  <mn>0.021</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>，自由度 8。教材以查表近似分别给 68%、95%、99% 的因子 1.07、2.31、3.36。其所列 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.022</mn>
+  <mo>,</mo>
+  <mn>0.048</mn>
+  <mo>,</mo>
+  <mn>0.070</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math> 用中间舍入值计算，全精度重算可在末位不同。</p>
+<p>报告应说明被测量及条件、估计值、单位、标准不确定度或扩展不确定度。标准不确定度可以分开写，也可写成 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>100.02147</mn>
+  <mo stretchy="false">(</mo>
+  <mn>35</mn>
+  <mo stretchy="false">)</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">g</mi>
+  </mrow>
+</math>，其中 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>35</mn>
+</math> 表示末两位上的 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.00035</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">g</mi>
+  </mrow>
+</math>。<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+  <mo>&#xB1;</mo>
+  <mi>U</mi>
+</math> 的扩展表示同时给包含因子 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+</math>、近似覆盖概率和必要的计算依据。详细报告应使读者可重建模型，包括各输入量及其来源、自由度、协方差和修正量。相对 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>c</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <mi>y</mi>
+  <mo stretchy="false">|</mo>
+</math> 只在 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+  <mo>&#x2260;</mo>
+  <mn>0</mn>
+</math> 时给出。</p>
+<p>同一钢球从不同方位测量可观察其形状变化，抽取多只球才有助于考察整批均匀度。改进单摆测 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>g</mi>
+</math> 时，先分清计时和摆长哪个贡献更大。若目标提高到需考虑有限摆角和空气、悬线等影响的程度，就改进模型、仪器或考虑物理摆。完整程序概括为定义模型、求各输入估计、做 A/B 评定、计算输出、传播合成、按需要扩展、按位数报告。实验前也可反用该程序，根据目标不确定度求输入允许上限。</p>
+<h4 id="section-2-2">2.2 常用的数据处理方法（第 43–55 页）</h4>
+<h5>列表、作图与误差杆（第 43–46 页）</h5>
+<p>列表保留原始数据、物理量、单位、重复测量序号和表名。对于一个自变量对应多次读数，可让每个设置占一行，将各次读数与均值、样本标准差、A 类标准不确定度分列。用新列计算单位换算或变换值。例 12 的半导体热敏电阻关系 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>R</mi>
+  <mo>=</mo>
+  <msub>
+    <mi>R</mi>
+    <mn>0</mn>
+  </msub>
+  <msup>
+    <mi>e</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>B</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mo>/</mo>
+      </mrow>
+      <mi>T</mi>
+    </mrow>
+  </msup>
+</math> 可列出摄氏温度 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>t</mi>
+</math>、电阻 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>R</mi>
+</math>，再加 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>T</mi>
+  <mo>=</mo>
+  <mi>t</mi>
+  <mo>+</mo>
+  <mn>273.15</mn>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>T</mi>
+</math> 与 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mo stretchy="false">(</mo>
+  <mi>R</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi mathvariant="normal">&#x3A9;</mi>
+  <mo stretchy="false">)</mo>
+</math>。以 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>T</mi>
+</math> 为横轴拟合，斜率 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>B</mi>
+  <mo>&#x2248;</mo>
+  <mn>3481</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">K</mi>
+  </mrow>
+</math>，截距 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>R</mi>
+    <mn>0</mn>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi mathvariant="normal">&#x3A9;</mi>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2248;</mo>
+  <mo>&#x2212;</mo>
+  <mn>4.161</mn>
+</math>。若横轴以 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>3</mn>
+    </mrow>
+  </msup>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <msup>
+      <mi mathvariant="normal">K</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mo>&#x2212;</mo>
+        <mn>1</mn>
+      </mrow>
+    </msup>
+  </mrow>
+</math> 为单位，所显示的数值斜率比用 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow data-mjx-texclass="ORD">
+    <msup>
+      <mi mathvariant="normal">K</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mo>&#x2212;</mo>
+        <mn>1</mn>
+      </mrow>
+    </msup>
+  </mrow>
+</math> 时缩小一千倍。</p>
+<p>作图根据问题选择直角、半对数、双对数或极坐标，坐标轴标明物理量、单位和可读刻度，便于将趋势和物理模型联系起来。仪器校准可以按被校表读数 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>x</mi>
+</math> 为横轴，以标准表读数减 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>x</mi>
+</math> 为纵轴，将相邻标定点连成折线，在校准区间内插值修正。研究连续物理关系时绘散点与拟合曲线。纵向误差杆的中心是 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>y</mi>
+    <mi>i</mi>
+  </msub>
+</math>，半长为所选区间半宽 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi mathvariant="normal">&#x394;</mi>
+  <msub>
+    <mi>y</mi>
+    <mi>i</mi>
+  </msub>
+</math>，全长为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2</mn>
+  <mi mathvariant="normal">&#x394;</mi>
+  <msub>
+    <mi>y</mi>
+    <mi>i</mi>
+  </msub>
+</math>。两个方向皆有变化时可画误差矩形。图注应给出误差杆对应的是标准不确定度、扩展区间或仪器允差。</p>
+<p>电压随厚度衰减的例题取 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>V</mi>
+  <mo>=</mo>
+  <msub>
+    <mi>V</mi>
+    <mn>0</mn>
+  </msub>
+  <msup>
+    <mi>e</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mi>&#x3B1;</mi>
+      <mi>d</mi>
+    </mrow>
+  </msup>
+</math>。变为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>V</mi>
+</math> 后，误差杆的一阶半宽约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>V</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>V</mi>
+</math>，全长约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2</mn>
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>V</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>V</mi>
+</math>。以表 2-2-2 七组原始值求得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3B1;</mi>
+  <mo>&#x2248;</mo>
+  <mn>0.00727</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi>&#x3BC;</mi>
+    <msup>
+      <mi mathvariant="normal">m</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mo>&#x2212;</mo>
+        <mn>1</mn>
+      </mrow>
+    </msup>
+  </mrow>
+</math>。教材把 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>75</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi>&#x3BC;</mi>
+    <mi mathvariant="normal">m</mi>
+  </mrow>
+</math> 处 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>31.19</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">V</mi>
+  </mrow>
+</math> 假录为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>37.19</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">V</mi>
+  </mrow>
+</math> 来展示作图如何发现异常。它提出用其他点拟合，若候选点的纵向差大于其误差半宽三倍就进一步核查。此处为课堂筛查规则，仪器允差、样本标准差和回归残差标准差各有不同含义。应保留原始点，注明排除理由，并记录是否复测。三四个点时尤其要谨慎。</p>
+<p>作图求参量时，先画反映整体趋势的直线，再在这条线上选相距较远的两点，读取 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>=</mo>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>y</mi>
+    <mn>2</mn>
+  </msub>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>y</mi>
+    <mn>1</mn>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>x</mi>
+    <mn>2</mn>
+  </msub>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>x</mi>
+    <mn>1</mn>
+  </msub>
+  <mo stretchy="false">)</mo>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>b</mi>
+  <mo>=</mo>
+  <msub>
+    <mi>y</mi>
+    <mn>2</mn>
+  </msub>
+  <mo>&#x2212;</mo>
+  <mi>m</mi>
+  <msub>
+    <mi>x</mi>
+    <mn>2</mn>
+  </msub>
+</math>。表 2-2-3 的金属电阻示例，在图线上读 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo stretchy="false">(</mo>
+  <mn>20.0</mn>
+  <mo>,</mo>
+  <mn>32.67</mn>
+  <mo stretchy="false">)</mo>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo stretchy="false">(</mo>
+  <mn>60.0</mn>
+  <mo>,</mo>
+  <mn>38.55</mn>
+  <mo stretchy="false">)</mo>
+</math>，得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>=</mo>
+  <mn>0.147</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">&#x3A9;</mi>
+    <msup>
+      <mrow data-mjx-texclass="ORD">
+        <mo>/</mo>
+      </mrow>
+      <mo>&#x2218;</mo>
+    </msup>
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>b</mi>
+  <mo>=</mo>
+  <mn>29.73</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi mathvariant="normal">&#x3A9;</mi>
+</math>。以图线或教材指定的端点跨度 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>X</mi>
+  <mo>,</mo>
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>Y</mi>
+</math>，以及各点仪器半宽平方均值 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mover>
+    <msubsup>
+      <mi>u</mi>
+      <mi>X</mi>
+      <mn>2</mn>
+    </msubsup>
+    <mo accent="true">&#x2015;</mo>
+  </mover>
+  <mo>,</mo>
+  <mover>
+    <msubsup>
+      <mi>u</mi>
+      <mi>Y</mi>
+      <mn>2</mn>
+    </msubsup>
+    <mo accent="true">&#x2015;</mo>
+  </mover>
+</math>，教材给出以下估算式。</p>
+<div class="study-equation" tabindex="0"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mfrac>
+    <msub>
+      <mi>u</mi>
+      <mi>m</mi>
+    </msub>
+    <mrow>
+      <mo stretchy="false">|</mo>
+      <mi>m</mi>
+      <mo stretchy="false">|</mo>
+    </mrow>
+  </mfrac>
+  <mo>&#x2248;</mo>
+  <msqrt>
+    <mfrac>
+      <mrow>
+        <mn>2</mn>
+        <mstyle scriptlevel="0">
+          <mspace width="0.167em"></mspace>
+        </mstyle>
+        <mover>
+          <msubsup>
+            <mi>u</mi>
+            <mi>X</mi>
+            <mn>2</mn>
+          </msubsup>
+          <mo accent="true">&#x2015;</mo>
+        </mover>
+      </mrow>
+      <mrow>
+        <mo stretchy="false">(</mo>
+        <mi mathvariant="normal">&#x394;</mi>
+        <mi>X</mi>
+        <msup>
+          <mo stretchy="false">)</mo>
+          <mn>2</mn>
+        </msup>
+      </mrow>
+    </mfrac>
+    <mo>+</mo>
+    <mfrac>
+      <mrow>
+        <mn>2</mn>
+        <mstyle scriptlevel="0">
+          <mspace width="0.167em"></mspace>
+        </mstyle>
+        <mover>
+          <msubsup>
+            <mi>u</mi>
+            <mi>Y</mi>
+            <mn>2</mn>
+          </msubsup>
+          <mo accent="true">&#x2015;</mo>
+        </mover>
+      </mrow>
+      <mrow>
+        <mo stretchy="false">(</mo>
+        <mi mathvariant="normal">&#x394;</mi>
+        <mi>Y</mi>
+        <msup>
+          <mo stretchy="false">)</mo>
+          <mn>2</mn>
+        </msup>
+      </mrow>
+    </mfrac>
+  </msqrt>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="2em"></mspace>
+  </mstyle>
+  <msub>
+    <mi>u</mi>
+    <mi>b</mi>
+  </msub>
+  <mo>&#x2248;</mo>
+  <msub>
+    <mi>u</mi>
+    <mi>m</mi>
+  </msub>
+  <msqrt>
+    <mfrac>
+      <mrow>
+        <msubsup>
+          <mi>X</mi>
+          <mn>1</mn>
+          <mn>2</mn>
+        </msubsup>
+        <mo>+</mo>
+        <msubsup>
+          <mi>X</mi>
+          <mi>n</mi>
+          <mn>2</mn>
+        </msubsup>
+      </mrow>
+      <mn>2</mn>
+    </mfrac>
+  </msqrt>
+  <mo>.</mo>
+</math></div>
+<p>该式忽略描点和读图的误差。代入表中实测端点跨度，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>m</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <mi>m</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <mo>&#x2248;</mo>
+  <mn>0.024</mn>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>m</mi>
+  </msub>
+  <mo>&#x2248;</mo>
+  <mn>0.0035</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">&#x3A9;</mi>
+    <msup>
+      <mrow data-mjx-texclass="ORD">
+        <mo>/</mo>
+      </mrow>
+      <mo>&#x2218;</mo>
+    </msup>
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math>。同一组端点代入书上截距公式给 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>b</mi>
+  </msub>
+  <mo>&#x2248;</mo>
+  <mn>0.16</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi mathvariant="normal">&#x3A9;</mi>
+</math>，教材列 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.18</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi mathvariant="normal">&#x3A9;</mi>
+</math>。两点本身的不确定度也可直接对 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>,</mo>
+  <mi>b</mi>
+</math> 的解析式传播，尤其是斜率接近零或坐标相关时。</p>
+<div class="study-table-wrap" role="region" aria-label="教材表格 6" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">改直对象</th>
+<th scope="col">新横轴</th>
+<th scope="col">新纵轴</th>
+<th scope="col">直线参数换算</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>幂函数 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+  <mo>=</mo>
+  <mi>a</mi>
+  <msup>
+    <mi>x</mi>
+    <mi>b</mi>
+  </msup>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>x</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>y</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>=</mo>
+  <mi>b</mi>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <mi>a</mi>
+  <mo>=</mo>
+  <msup>
+    <mi>e</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mtext>&#x622A;&#x8DDD;</mtext>
+    </mrow>
+  </msup>
+</math></td>
+</tr>
+<tr>
+<td>指数 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+  <mo>=</mo>
+  <mi>a</mi>
+  <msup>
+    <mi>e</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>b</mi>
+      <mi>x</mi>
+    </mrow>
+  </msup>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>x</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>y</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>=</mo>
+  <mi>b</mi>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <mi>a</mi>
+  <mo>=</mo>
+  <msup>
+    <mi>e</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mtext>&#x622A;&#x8DDD;</mtext>
+    </mrow>
+  </msup>
+</math>。换 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>log</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mn>10</mn>
+    </mrow>
+  </msub>
+</math> 时 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>=</mo>
+  <mi>b</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mn>10</mn>
+</math></td>
+</tr>
+<tr>
+<td>对数 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+  <mo>=</mo>
+  <mi>a</mi>
+  <mo>+</mo>
+  <mi>b</mi>
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>x</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>x</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+</math></td>
+<td>截距和斜率分别为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+  <mo>,</mo>
+  <mi>b</mi>
+</math></td>
+</tr>
+<tr>
+<td>双曲线 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>I</mi>
+  <mi>&#x3C9;</mi>
+  <mo>=</mo>
+  <mi>a</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>&#x3C9;</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>I</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>=</mo>
+  <mi>a</mi>
+</math>。若物理条件确定可约束截距为零</td>
+</tr>
+<tr>
+<td>匀加速位移 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>s</mi>
+  <mo>=</mo>
+  <msub>
+    <mi>v</mi>
+    <mn>0</mn>
+  </msub>
+  <mi>t</mi>
+  <mo>+</mo>
+  <mi>a</mi>
+  <msup>
+    <mi>t</mi>
+    <mn>2</mn>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>2</mn>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>t</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>s</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>t</mi>
+</math></td>
+<td>截距为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>v</mi>
+    <mn>0</mn>
+  </msub>
+</math>，斜率的两倍为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+</math></td>
+</tr>
+<tr>
+<td>热敏电阻 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>R</mi>
+  <mo>=</mo>
+  <msub>
+    <mi>R</mi>
+    <mn>0</mn>
+  </msub>
+  <msup>
+    <mi>e</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>B</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mo>/</mo>
+      </mrow>
+      <mi>T</mi>
+    </mrow>
+  </msup>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>T</mi>
+</math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>ln</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mo stretchy="false">(</mo>
+  <mi>R</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi mathvariant="normal">&#x3A9;</mi>
+  <mo stretchy="false">)</mo>
+</math></td>
+<td>斜率为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>B</mi>
+</math>，零点和横轴单位要统一</td>
+</tr>
+</tbody></table></div>
+<p>取对数要求正值，时间或频率作分母时必须非零。变换会改变残差和误差杆的尺度。对 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+</math> 取对数后等权拟合，优化的是对数尺度上的残差，和在原始刻度直接做非线性拟合可能得到不同结果。原始变量与变换后的变量宜一起留存。</p>
+<h5>最小二乘回归、逐差和视频轨迹（第 46–49 页）</h5>
+<p>对 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+  <mo>=</mo>
+  <mi>m</mi>
+  <mi>x</mi>
+  <mo>+</mo>
+  <mi>b</mi>
+</math>，普通等权最小二乘法在 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>x</mi>
+</math> 误差可忽略的假设下最小化 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">SSE</mi>
+  </mrow>
+  <mo>=</mo>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>i</mi>
+  </munder>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>y</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>&#x2212;</mo>
+  <mi>m</mi>
+  <msub>
+    <mi>x</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>&#x2212;</mo>
+  <mi>b</mi>
+  <msup>
+    <mo stretchy="false">)</mo>
+    <mn>2</mn>
+  </msup>
+</math>。对 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>,</mo>
+  <mi>b</mi>
+</math> 的两个偏导置零。令 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>S</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>x</mi>
+      <mi>x</mi>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>i</mi>
+  </munder>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>x</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>&#x2212;</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>x</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <msup>
+    <mo stretchy="false">)</mo>
+    <mn>2</mn>
+  </msup>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>S</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>x</mi>
+      <mi>y</mi>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>i</mi>
+  </munder>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>x</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>&#x2212;</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>x</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <mo stretchy="false">)</mo>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>y</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>&#x2212;</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>y</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <mo stretchy="false">)</mo>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>S</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>y</mi>
+      <mi>y</mi>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <munder>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mi>i</mi>
+  </munder>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>y</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>&#x2212;</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>y</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <msup>
+    <mo stretchy="false">)</mo>
+    <mn>2</mn>
+  </msup>
+</math>，各统计量如下。</p>
+<div class="study-equation" tabindex="0"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>m</mi>
+  <mo>=</mo>
+  <mfrac>
+    <msub>
+      <mi>S</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mi>x</mi>
+        <mi>y</mi>
+      </mrow>
+    </msub>
+    <msub>
+      <mi>S</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mi>x</mi>
+        <mi>x</mi>
+      </mrow>
+    </msub>
+  </mfrac>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="1em"></mspace>
+  </mstyle>
+  <mi>b</mi>
+  <mo>=</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>y</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <mo>&#x2212;</mo>
+  <mi>m</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>x</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="1em"></mspace>
+  </mstyle>
+  <mi>r</mi>
+  <mo>=</mo>
+  <mfrac>
+    <msub>
+      <mi>S</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mi>x</mi>
+        <mi>y</mi>
+      </mrow>
+    </msub>
+    <msqrt>
+      <msub>
+        <mi>S</mi>
+        <mrow data-mjx-texclass="ORD">
+          <mi>x</mi>
+          <mi>x</mi>
+        </mrow>
+      </msub>
+      <msub>
+        <mi>S</mi>
+        <mrow data-mjx-texclass="ORD">
+          <mi>y</mi>
+          <mi>y</mi>
+        </mrow>
+      </msub>
+    </msqrt>
+  </mfrac>
+  <mo>,</mo>
+  <mstyle scriptlevel="0">
+    <mspace width="1em"></mspace>
+  </mstyle>
+  <msub>
+    <mi>s</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mrow data-mjx-texclass="ORD">
+        <mi data-mjx-auto-op="false">res</mi>
+      </mrow>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <msqrt>
+    <mfrac>
+      <mrow data-mjx-texclass="ORD">
+        <mi data-mjx-auto-op="false">SSE</mi>
+      </mrow>
+      <mrow>
+        <mi>n</mi>
+        <mo>&#x2212;</mo>
+        <mn>2</mn>
+      </mrow>
+    </mfrac>
+  </msqrt>
+  <mo>.</mo>
+</math></div>
+<p>在线性、独立、等方差模型下，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>s</mi>
+    <mi>m</mi>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>s</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mrow data-mjx-texclass="ORD">
+        <mi data-mjx-auto-op="false">res</mi>
+      </mrow>
+    </mrow>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <msub>
+      <mi>S</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mi>x</mi>
+        <mi>x</mi>
+      </mrow>
+    </msub>
+  </msqrt>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>s</mi>
+    <mi>b</mi>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>s</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mrow data-mjx-texclass="ORD">
+        <mi data-mjx-auto-op="false">res</mi>
+      </mrow>
+    </mrow>
+  </msub>
+  <msqrt>
+    <mn>1</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <mi>n</mi>
+    <mo>+</mo>
+    <msup>
+      <mrow data-mjx-texclass="ORD">
+        <mover>
+          <mi>x</mi>
+          <mo stretchy="false">&#xAF;</mo>
+        </mover>
+      </mrow>
+      <mn>2</mn>
+    </msup>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <msub>
+      <mi>S</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mi>x</mi>
+        <mi>x</mi>
+      </mrow>
+    </msub>
+  </msqrt>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>cov</mi>
+  <mo stretchy="false">(</mo>
+  <mi>m</mi>
+  <mo>,</mo>
+  <mi>b</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mo>&#x2212;</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>x</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <msubsup>
+    <mi>s</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mrow data-mjx-texclass="ORD">
+        <mi data-mjx-auto-op="false">res</mi>
+      </mrow>
+    </mrow>
+    <mn>2</mn>
+  </msubsup>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msub>
+    <mi>S</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>x</mi>
+      <mi>x</mi>
+    </mrow>
+  </msub>
+</math>。带截距且 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+</math> 有变异时 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>R</mi>
+    <mn>2</mn>
+  </msup>
+  <mo>=</mo>
+  <msup>
+    <mi>r</mi>
+    <mn>2</mn>
+  </msup>
+</math>。正负相关靠 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>r</mi>
+</math> 的符号区分，线性相关强度看 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo stretchy="false">|</mo>
+  <mi>r</mi>
+  <mo stretchy="false">|</mo>
+</math>。使用残差公式能在 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>=</mo>
+  <mn>0</mn>
+</math> 或 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>r</mi>
+  <mo>=</mo>
+  <mn>0</mn>
+</math> 时继续计算标准误。<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>x</mi>
+</math> 必须有变化，估计残差方差还要求 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>n</mi>
+  <mo>&gt;</mo>
+  <mn>2</mn>
+</math>。<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>y</mi>
+</math> 恒定时，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>r</mi>
+</math> 无定义。<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>R</mi>
+    <mn>2</mn>
+  </msup>
+</math> 很高时仍应查残差图，确认曲率、漂移和异常点没有被掩盖。</p>
+<p>原表 2-2-3 复算 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>=</mo>
+  <mn>0.142805</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">&#x3A9;</mi>
+    <msup>
+      <mrow data-mjx-texclass="ORD">
+        <mo>/</mo>
+      </mrow>
+      <mo>&#x2218;</mo>
+    </msup>
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>b</mi>
+  <mo>=</mo>
+  <mn>29.914951</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi mathvariant="normal">&#x3A9;</mi>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>r</mi>
+  <mo>&#x2248;</mo>
+  <mn>0.997278</mn>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>s</mi>
+    <mi>m</mi>
+  </msub>
+  <mo>&#x2248;</mo>
+  <mn>0.00610</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">&#x3A9;</mi>
+    <msup>
+      <mrow data-mjx-texclass="ORD">
+        <mo>/</mo>
+      </mrow>
+      <mo>&#x2218;</mo>
+    </msup>
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>s</mi>
+    <mi>b</mi>
+  </msub>
+  <mo>&#x2248;</mo>
+  <mn>0.259</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi mathvariant="normal">&#x3A9;</mi>
+</math>。教材 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>r</mi>
+</math> 报为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.997302426</mn>
+</math>，与表中给出的数值略有差异。图解端点法反映读图和仪器条件，等权回归标准误则反映所采用模型内的残差散布。若同一模型里同时需要额外的仪器不确定度，应明确来源和相关性后另行传播。</p>
+<p>逐差法适用于 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>x</mi>
+</math> 等距、关系近似线性的测量列。若有 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2</mn>
+  <mi>q</mi>
+</math> 个点，分成前后两半，用 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>y</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>i</mi>
+      <mo>+</mo>
+      <mi>q</mi>
+    </mrow>
+  </msub>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>y</mi>
+    <mi>i</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mo stretchy="false">(</mo>
+  <mi>q</mi>
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>x</mi>
+  <mo stretchy="false">)</mo>
+</math> 得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>q</mi>
+</math> 个跨距斜率，再取均值。扩大相减的间距可以减小同等读数差带来的相对噪声。若相邻一阶差值全部再取均值，内部项会望远镜式抵消，只剩首尾两点。教材提到逐差的适用条件，全面回归可以进一步利用点和残差的结构。</p>
+<p>视频追踪的数值处理以逐帧位置作为程序输入。用视频时间戳或帧率确定 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>t</mi>
+    <mi>i</mi>
+  </msub>
+</math>，画面中长度基准确定空间比例，像素位置换成物理单位后做差分或拟合。以位置差除以时间差得到区间平均速度，标在区间中点。平滑模型的导数可给瞬时速度，等时间间隔内点也可用中心差分作近似。应关注帧率、失帧、镜头透视和差分对位置噪声的放大。</p>
+<h5>第 48–49 页的四道思考题</h5>
+<ol>
+<li>铜管九次长度
+用 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>l</mi>
+  <mo>=</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>l</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <mo>+</mo>
+  <mi>&#x3B4;</mi>
+  <mi>l</mi>
+</math>，修正估计值为零。表中数据给 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow data-mjx-texclass="ORD">
+    <mover>
+      <mi>l</mi>
+      <mo stretchy="false">&#xAF;</mo>
+    </mover>
+  </mrow>
+  <mo>=</mo>
+  <mn>31.56556</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>s</mi>
+  <mo>=</mo>
+  <mn>0.01509</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>A</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>0.00503</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>。允差 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.8</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math> 对应三倍标准差时 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>B</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>0.26667</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>，两项独立得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>c</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>0.26671</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>。若 B 类自由度取无穷且合成分布近似正态，有效自由度约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>6.3</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mn>7</mn>
+  </msup>
+</math>，95%、99% 的 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>U</mi>
+</math> 约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.523</mn>
+  <mo>,</mo>
+  <mn>0.687</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>。</li>
+<li>位移法测凸透镜焦距
+由 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>f</mi>
+  <mo>=</mo>
+  <mo stretchy="false">(</mo>
+  <msup>
+    <mi>L</mi>
+    <mn>2</mn>
+  </msup>
+  <mo>&#x2212;</mo>
+  <msup>
+    <mi>l</mi>
+    <mn>2</mn>
+  </msup>
+  <mo stretchy="false">)</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mo stretchy="false">(</mo>
+  <mn>4</mn>
+  <mi>L</mi>
+  <mo stretchy="false">)</mo>
+</math> 得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>c</mi>
+    <mi>L</mi>
+  </msub>
+  <mo>=</mo>
+  <mo stretchy="false">(</mo>
+  <mn>1</mn>
+  <mo>+</mo>
+  <msup>
+    <mi>l</mi>
+    <mn>2</mn>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msup>
+    <mi>L</mi>
+    <mn>2</mn>
+  </msup>
+  <mo stretchy="false">)</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>4</mn>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>c</mi>
+    <mi>l</mi>
+  </msub>
+  <mo>=</mo>
+  <mo>&#x2212;</mo>
+  <mi>l</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mo stretchy="false">(</mo>
+  <mn>2</mn>
+  <mi>L</mi>
+  <mo stretchy="false">)</mo>
+</math>。两输入独立时 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>f</mi>
+  </msub>
+  <mo>=</mo>
+  <msqrt>
+    <msubsup>
+      <mi>c</mi>
+      <mi>L</mi>
+      <mn>2</mn>
+    </msubsup>
+    <msubsup>
+      <mi>u</mi>
+      <mi>L</mi>
+      <mn>2</mn>
+    </msubsup>
+    <mo>+</mo>
+    <msubsup>
+      <mi>c</mi>
+      <mi>l</mi>
+      <mn>2</mn>
+    </msubsup>
+    <msubsup>
+      <mi>u</mi>
+      <mi>l</mi>
+      <mn>2</mn>
+    </msubsup>
+  </msqrt>
+</math>。若指各输入硬边界的一阶最坏情况，应给 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi mathvariant="normal">&#x394;</mi>
+  <msub>
+    <mi>f</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo data-mjx-texclass="OP" movablelimits="true">max</mo>
+    </mrow>
+  </msub>
+  <mo>&#x2248;</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <msub>
+    <mi>c</mi>
+    <mi>L</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>L</mi>
+  <mo>+</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <msub>
+    <mi>c</mi>
+    <mi>l</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo stretchy="false">|</mo>
+  </mrow>
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>l</mi>
+</math>。若题目要求特定覆盖概率的区间，使用 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>U</mi>
+    <mi>f</mi>
+  </msub>
+  <mo>=</mo>
+  <mi>k</mi>
+  <msub>
+    <mi>u</mi>
+    <mi>f</mi>
+  </msub>
+</math> 并给定 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+</math>。两种半宽代表不同含义。</li>
+<li>金属丝线膨胀
+由 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>L</mi>
+  <mo>=</mo>
+  <msub>
+    <mi>L</mi>
+    <mn>0</mn>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mn>1</mn>
+  <mo>+</mo>
+  <mi>&#x3B1;</mi>
+  <mi>t</mi>
+  <mo stretchy="false">)</mo>
+</math> 得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>=</mo>
+  <msub>
+    <mi>L</mi>
+    <mn>0</mn>
+  </msub>
+  <mi>&#x3B1;</mi>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <mi>b</mi>
+  <mo>=</mo>
+  <msub>
+    <mi>L</mi>
+    <mn>0</mn>
+  </msub>
+</math>，故 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3B1;</mi>
+  <mo>=</mo>
+  <mi>m</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>b</mi>
+</math>。用图上跨度作粗估，以端点量级得到约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>5.2</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>4</mn>
+    </mrow>
+  </msup>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <msup>
+      <mi></mi>
+      <mo>&#x2218;</mo>
+    </msup>
+    <msup>
+      <mi mathvariant="normal">C</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mo>&#x2212;</mo>
+        <mn>1</mn>
+      </mrow>
+    </msup>
+  </mrow>
+</math>。表 2-2-4 八点回归给 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>=</mo>
+  <mn>0.52143</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+    <msup>
+      <mrow data-mjx-texclass="ORD">
+        <mo>/</mo>
+      </mrow>
+      <mo>&#x2218;</mo>
+    </msup>
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>b</mi>
+  <mo>=</mo>
+  <mn>997.53571</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3B1;</mi>
+  <mo>&#x2248;</mo>
+  <mn>5.2272</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>4</mn>
+    </mrow>
+  </msup>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <msup>
+      <mi></mi>
+      <mo>&#x2218;</mo>
+    </msup>
+    <msup>
+      <mi mathvariant="normal">C</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mo>&#x2212;</mo>
+        <mn>1</mn>
+      </mrow>
+    </msup>
+  </mrow>
+</math>。传播时同时考虑 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>m</mi>
+  <mo>,</mo>
+  <mi>b</mi>
+</math> 的协方差，按回归模型得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <mi>&#x3B1;</mi>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2248;</mo>
+  <mn>1.51</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>5</mn>
+    </mrow>
+  </msup>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <msup>
+      <mi></mi>
+      <mo>&#x2218;</mo>
+    </msup>
+    <msup>
+      <mi mathvariant="normal">C</mi>
+      <mrow data-mjx-texclass="ORD">
+        <mo>&#x2212;</mo>
+        <mn>1</mn>
+      </mrow>
+    </msup>
+  </mrow>
+</math>。</li>
+<li>套管与可移动金属杆的物理摆
+计算 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>Y</mi>
+  <mo>=</mo>
+  <mi>k</mi>
+  <msup>
+    <mi>T</mi>
+    <mn>2</mn>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mo stretchy="false">(</mo>
+  <mn>4</mn>
+  <msup>
+    <mi>&#x3C0;</mi>
+    <mn>2</mn>
+  </msup>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>m</mi>
+    <mn>2</mn>
+  </msub>
+  <msup>
+    <mi>x</mi>
+    <mn>2</mn>
+  </msup>
+</math>，拟合 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>Y</mi>
+  <mo>=</mo>
+  <mi>A</mi>
+  <mi>x</mi>
+  <mo>+</mo>
+  <mi>B</mi>
+</math>。原式给 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>A</mi>
+  <mo>=</mo>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>m</mi>
+    <mn>2</mn>
+  </msub>
+  <mi>l</mi>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <mi>B</mi>
+  <mo>=</mo>
+  <msub>
+    <mi>I</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>+</mo>
+  <msub>
+    <mi>m</mi>
+    <mn>2</mn>
+  </msub>
+  <msup>
+    <mi>l</mi>
+    <mn>2</mn>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>3</mn>
+</math>，所以 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>l</mi>
+  <mo>=</mo>
+  <mo>&#x2212;</mo>
+  <mi>A</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msub>
+    <mi>m</mi>
+    <mn>2</mn>
+  </msub>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <msub>
+    <mi>I</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>=</mo>
+  <mi>B</mi>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>m</mi>
+    <mn>2</mn>
+  </msub>
+  <msup>
+    <mi>l</mi>
+    <mn>2</mn>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>3</mn>
+</math>。用于传播时保留 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>A</mi>
+  <mo>,</mo>
+  <mi>B</mi>
+</math> 的协方差。</li>
+</ol>
+<h5>端度量块与温度计校准（第 49–55 页）</h5>
+<p><strong>端度量块。</strong> 将标称同为 50 mm 的被校量块和标准量块比较，直接读长度差 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>d</mi>
+</math>。把 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3B8;</mi>
+  <mo>,</mo>
+  <msub>
+    <mi>&#x3B8;</mi>
+    <mi>s</mi>
+  </msub>
+</math> 定义为相对 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>20</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math> 的温度偏差，将 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&#x3B4;</mi>
+  <mi>&#x3B8;</mi>
+  <mo>=</mo>
+  <mi>&#x3B8;</mi>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>&#x3B8;</mi>
+    <mi>s</mi>
+  </msub>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <mi>&#x3B4;</mi>
+  <mi>&#x3B1;</mi>
+  <mo>=</mo>
+  <mi>&#x3B1;</mi>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>&#x3B1;</mi>
+    <mi>s</mi>
+  </msub>
+</math> 写成模型输入。由 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>d</mi>
+  <mo>=</mo>
+  <mi>l</mi>
+  <mo stretchy="false">(</mo>
+  <mn>1</mn>
+  <mo>+</mo>
+  <mi>&#x3B1;</mi>
+  <mi>&#x3B8;</mi>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>l</mi>
+    <mi>s</mi>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mn>1</mn>
+  <mo>+</mo>
+  <msub>
+    <mi>&#x3B1;</mi>
+    <mi>s</mi>
+  </msub>
+  <msub>
+    <mi>&#x3B8;</mi>
+    <mi>s</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+</math> 得如下的一阶式。</p>
+<div class="study-equation" tabindex="0"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>l</mi>
+  <mo>&#x2248;</mo>
+  <msub>
+    <mi>l</mi>
+    <mi>s</mi>
+  </msub>
+  <mo>+</mo>
+  <mi>d</mi>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>l</mi>
+    <mi>s</mi>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>&#x3B4;</mi>
+  <mi>&#x3B1;</mi>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>&#x3B8;</mi>
+  <mo>+</mo>
+  <msub>
+    <mi>&#x3B1;</mi>
+    <mi>s</mi>
+  </msub>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>&#x3B4;</mi>
+  <mi>&#x3B8;</mi>
+  <mo stretchy="false">)</mo>
+  <mo>.</mo>
+</math></div>
+<p>在差值估计为零处，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>c</mi>
+    <mrow data-mjx-texclass="ORD">
+      <msub>
+        <mi>l</mi>
+        <mi>s</mi>
+      </msub>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>c</mi>
+    <mi>d</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>1</mn>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <msub>
+    <mi>c</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>&#x3B4;</mi>
+      <mi>&#x3B1;</mi>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>l</mi>
+    <mi>s</mi>
+  </msub>
+  <mi>&#x3B8;</mi>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <msub>
+    <mi>c</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi>&#x3B4;</mi>
+      <mi>&#x3B8;</mi>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>l</mi>
+    <mi>s</mi>
+  </msub>
+  <msub>
+    <mi>&#x3B1;</mi>
+    <mi>s</mi>
+  </msub>
+</math>，其余两个灵敏系数为零。标准量块证书 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>U</mi>
+  <mo>=</mo>
+  <mn>75</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">nm</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+  <mo>=</mo>
+  <mn>3</mn>
+</math>，得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>l</mi>
+    <mi>s</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <mn>25</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">nm</mi>
+  </mrow>
+</math>。长度差包含以前 25 次评定并用于本次 5 次均值的 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>13</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mn>5</mn>
+  </msqrt>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">nm</mi>
+  </mrow>
+</math>、比较仪的 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>10</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msub>
+    <mi>t</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mn>0.975</mn>
+      <mo>,</mo>
+      <mn>5</mn>
+    </mrow>
+  </msub>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">nm</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>20</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>3</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">nm</mi>
+  </mrow>
+</math>，平方合成为约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>9.7</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">nm</mi>
+  </mrow>
+</math>。测试台平均温度偏差 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>&#x2212;</mo>
+  <msup>
+    <mn>0.1</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math>，周期变动 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>0.5</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math> 的反正弦贡献为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.5</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mn>2</mn>
+  </msqrt>
+  <msup>
+    <mstyle scriptlevel="0">
+      <mspace width="0.167em"></mspace>
+    </mstyle>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math>，再与平均温度自身的 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>0.2</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math> 合成。该温度和 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>&#x3B1;</mi>
+    <mi>s</mi>
+  </msub>
+</math> 在这一估计点的一阶贡献为零，两项各自仍有不确定度。膨胀系数差和温度差分别贡献约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2.9</mn>
+  <mo>,</mo>
+  <mn>16.6</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">nm</mi>
+  </mrow>
+</math>。</p>
+<p>将 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>l</mi>
+    <mi>s</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>50.000623</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math> 与 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>d</mi>
+  <mo>=</mo>
+  <mn>215</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">nm</mi>
+  </mrow>
+</math> 相加得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>l</mi>
+  <mo>=</mo>
+  <mn>50.000838</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>c</mi>
+  </msub>
+  <mo>&#x2248;</mo>
+  <mn>31.7</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">nm</mi>
+  </mrow>
+</math>，报告约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>32</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">nm</mi>
+  </mrow>
+</math>，相对 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>6.4</mn>
+  <mo>&#xD7;</mo>
+  <msup>
+    <mn>10</mn>
+    <mrow data-mjx-texclass="ORD">
+      <mo>&#x2212;</mo>
+      <mn>7</mn>
+    </mrow>
+  </msup>
+</math>。第 51 页预算表和第 52 页展开式分别列 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1002</mn>
+  <mo>,</mo>
+  <mn>1006</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <msup>
+      <mi data-mjx-auto-op="false">nm</mi>
+      <mn>2</mn>
+    </msup>
+  </mrow>
+</math>，最终修约一致。四项主贡献的表给有效自由度约 16。保留完整中间值可避免用四舍五入后的数反复计算。</p>
+<p><strong>温度计。</strong> 用标准温度减去待校仪器读数得到每一点的修正 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>b</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>t</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mrow data-mjx-texclass="ORD">
+        <mi data-mjx-auto-op="false">ref</mi>
+      </mrow>
+      <mo>,</mo>
+      <mi>i</mi>
+    </mrow>
+  </msub>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>t</mi>
+    <mi>i</mi>
+  </msub>
+</math>。固定 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>t</mi>
+    <mn>0</mn>
+  </msub>
+  <mo>=</mo>
+  <msup>
+    <mn>20</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math>，拟合 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>b</mi>
+  <mo stretchy="false">(</mo>
+  <mi>t</mi>
+  <mo stretchy="false">)</mo>
+  <mo>=</mo>
+  <msub>
+    <mi>y</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>+</mo>
+  <msub>
+    <mi>y</mi>
+    <mn>2</mn>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>t</mi>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>t</mi>
+    <mn>0</mn>
+  </msub>
+  <mo stretchy="false">)</mo>
+</math>。表 2-2-6 的 11 个点给 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>y</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>&#x2248;</mo>
+  <mo>&#x2212;</mo>
+  <msup>
+    <mn>0.1712</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <msub>
+    <mi>y</mi>
+    <mn>2</mn>
+  </msub>
+  <mo>&#x2248;</mo>
+  <mn>0.00218</mn>
+</math>，标准误约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>0.0029</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+  <mo>,</mo>
+  <mtext>&#xA0;</mtext>
+  <mn>0.00067</mn>
+</math>，相关系数约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>&#x2212;</mo>
+  <mn>0.930</mn>
+</math>，自由度 9。对 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>t</mi>
+  <mo>=</mo>
+  <mi>t</mi>
+  <mo>&#x2212;</mo>
+  <msub>
+    <mi>t</mi>
+    <mn>0</mn>
+  </msub>
+</math>，修正曲线均值的不确定度可按下式计算。</p>
+<div class="study-equation" tabindex="0"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msup>
+    <mi>u</mi>
+    <mn>2</mn>
+  </msup>
+  <mo fence="false" stretchy="false">{</mo>
+  <mi>b</mi>
+  <mo stretchy="false">(</mo>
+  <mi>t</mi>
+  <mo stretchy="false">)</mo>
+  <mo fence="false" stretchy="false">}</mo>
+  <mo>=</mo>
+  <msubsup>
+    <mi>u</mi>
+    <mn>1</mn>
+    <mn>2</mn>
+  </msubsup>
+  <mo>+</mo>
+  <mi mathvariant="normal">&#x394;</mi>
+  <msup>
+    <mi>t</mi>
+    <mn>2</mn>
+  </msup>
+  <msubsup>
+    <mi>u</mi>
+    <mn>2</mn>
+    <mn>2</mn>
+  </msubsup>
+  <mo>+</mo>
+  <mn>2</mn>
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>t</mi>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>cov</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>y</mi>
+    <mn>1</mn>
+  </msub>
+  <mo>,</mo>
+  <msub>
+    <mi>y</mi>
+    <mn>2</mn>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mo>.</mo>
+</math></div>
+<p>它在样本温度均值 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>24.00845</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math> 附近最小，因为截距与斜率负相关。原书第 53 页式（2-2-28）的分子少了负号，教材后续的数值和公式使用了正确的负相关。<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>30</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math> 的模型修正约为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo>&#x2212;</mo>
+  <msup>
+    <mn>0.1494</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math>，其曲线估计标准不确定度约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mn>0.0041</mn>
+    <mo>&#x2218;</mo>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">C</mi>
+  </mrow>
+</math>。该点属于校准范围外的外推，模型自身在范围外的额外偏离尚需独立验证。预测单次新读数时还应根据问题加入残差、仪器或温度输入的贡献。</p>
+<h4 id="section-2-3">2.3 常用数据处理软件简介（第 55–62 页）</h4>
+<p>教材用 Excel 和 Origin 演示同一套流程。Excel 以单元格、公式和图表组织数据，可用 AVERAGE 求均值、STDEV（样本标准差也可写 STDEV.S）求 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>s</mi>
+</math>，再用 SQRT、SUMSQ 组合不确定度。原始量值留在数据列，尾零由数值显示格式保留，最终报告单独修约。Origin 以列为单位管理物理量、单位和类型，先用描述性统计得到样本数、均值和样本标准差，再用列公式产生派生列，将选定列设为 X、Y 并画散点图。线性或非线性拟合报告包含参数、标准误、残差平方和及拟合指标等。</p>
+<p><strong>圆柱体直径（表 2-3-1，图 2-3-1、2-3-4、2-3-5）。</strong> 六次读数为 10.502、10.488、10.516、10.480、10.495、10.470 mm。均值 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>10.491833</mn>
+</math> mm，样本标准差 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.0163024</mn>
+</math> mm。千分尺的 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.004</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math> 允差按三倍正态标准差折算，得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>B</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>0.001333</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>。教材第 56 页的软件示范沿用了旧式 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>t</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mn>0.68</mn>
+      <mo>,</mo>
+      <mn>5</mn>
+    </mrow>
+  </msub>
+  <mi>s</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mn>6</mn>
+  </msqrt>
+</math>，用表中 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>t</mi>
+  <mo>&#x2248;</mo>
+  <mn>1.11</mn>
+</math> 得约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.007388</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>，与 B 类平方合成为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.007507</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>，教材舍至 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.008</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>。按第 2.1 节的标准不确定度流程，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>A</mi>
+  </msub>
+  <mo>=</mo>
+  <mi>s</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mn>6</mn>
+  </msqrt>
+  <mo>=</mo>
+  <mn>0.006655</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mi>c</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>0.00679</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>。若要指定覆盖概率，在合成以后选 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+</math> 并计算 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>U</mi>
+  <mo>=</mo>
+  <mi>k</mi>
+  <msub>
+    <mi>u</mi>
+    <mi>c</mi>
+  </msub>
+</math>。这两组数对应不同流程。</p>
+<p><strong>气垫导轨（表 2-3-2，图 2-3-2、2-3-3、2-3-6 至 2-3-8）。</strong> 将静止滑块从多个位置释放，挡光片间距为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>10.00</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>，每个位置测三次通过时间。先对 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>t</mi>
+</math> 求均值，再用 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>v</mi>
+  <mo>=</mo>
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>s</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mover>
+    <mrow>
+      <mi mathvariant="normal">&#x394;</mi>
+      <mi>t</mi>
+    </mrow>
+    <mo accent="true">&#x2015;</mo>
+  </mover>
+</math> 取速度。接着建立 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2</mn>
+  <mi>s</mi>
+</math> 和 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>v</mi>
+    <mn>2</mn>
+  </msup>
+</math> 两列，在 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>v</mi>
+    <mn>2</mn>
+  </msup>
+</math> 对 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2</mn>
+  <mi>s</mi>
+</math> 图上做带截距的等权线性拟合，得到 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+  <mo>&#x2248;</mo>
+  <mn>0.1682</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">m</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <msup>
+      <mi mathvariant="normal">s</mi>
+      <mn>2</mn>
+    </msup>
+  </mrow>
+</math>，斜率标准误约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.00113</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">m</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <msup>
+      <mi mathvariant="normal">s</mi>
+      <mn>2</mn>
+    </msup>
+  </mrow>
+</math>，截距约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.00183</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <msup>
+      <mi mathvariant="normal">m</mi>
+      <mn>2</mn>
+    </msup>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <msup>
+      <mi mathvariant="normal">s</mi>
+      <mn>2</mn>
+    </msup>
+  </mrow>
+</math>，调整 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>R</mi>
+    <mn>2</mn>
+  </msup>
+</math> 约 0.99982。教材图表用散点、曲线、轴单位和统计摘要展示结果。替代拟合把 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>v</mi>
+</math> 设为横轴、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>s</mi>
+</math> 为纵轴，选择 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>s</mi>
+  <mo>=</mo>
+  <mi>A</mi>
+  <mo>+</mo>
+  <mi>B</mi>
+  <mi>v</mi>
+  <mo>+</mo>
+  <mi>C</mi>
+  <msup>
+    <mi>v</mi>
+    <mn>2</mn>
+  </msup>
+</math>，固定 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>A</mi>
+  <mo>=</mo>
+  <mi>B</mi>
+  <mo>=</mo>
+  <mn>0</mn>
+</math>。此时 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>C</mi>
+  <mo>&#x2248;</mo>
+  <mn>2.9370</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <msup>
+      <mi mathvariant="normal">s</mi>
+      <mn>2</mn>
+    </msup>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <mi mathvariant="normal">m</mi>
+  </mrow>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>s</mi>
+    <mi>C</mi>
+  </msub>
+  <mo>&#x2248;</mo>
+  <mn>0.0084</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <msup>
+      <mi mathvariant="normal">s</mi>
+      <mn>2</mn>
+    </msup>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <mi mathvariant="normal">m</mi>
+  </mrow>
+</math>，对应 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>a</mi>
+  <mo>=</mo>
+  <mn>1</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mo stretchy="false">(</mo>
+  <mn>2</mn>
+  <mi>C</mi>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2248;</mo>
+  <mn>0.17024</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">m</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <msup>
+      <mi mathvariant="normal">s</mi>
+      <mn>2</mn>
+    </msup>
+  </mrow>
+</math>。这两种处理约束与残差所在坐标不同，结果会略异。拟合前应统一毫秒和秒、毫米和米，拟合后应核对截距是否符合实验起点。</p>
+<p><strong>MATLAB。</strong> 教材介绍以数组、矩阵和脚本自动完成统计、数值计算、线性与非线性拟合、图形和仿真，涉及线性、对数、半对数和极坐标。以本节导轨为例，可编写脚本按行求时间均值，再作 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>v</mi>
+    <mn>2</mn>
+  </msup>
+</math> 对 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2</mn>
+  <mi>s</mi>
+</math> 的散点和拟合线。脚本变量配合单位、列变换和参数输出即可重跑完整流程。</p>
+<h4 id="section-2-4">2.4 重力加速度的测量（第 62–70 页）</h4>
+<p>地面实验得到的是当地 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>g</mi>
+</math>。教材用地球自转解释纬度的影响，向心加速度大小 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>a</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mi data-mjx-auto-op="false">rot</mi>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <msup>
+    <mi>&#x3C9;</mi>
+    <mn>2</mn>
+  </msup>
+  <mo stretchy="false">(</mo>
+  <mi>R</mi>
+  <mo>+</mo>
+  <mi>h</mi>
+  <mo stretchy="false">)</mo>
+  <mi>cos</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>&#x3C6;</mi>
+</math>，这里 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>R</mi>
+  <mo>,</mo>
+  <mi>h</mi>
+  <mo>,</mo>
+  <mi>&#x3C6;</mi>
+</math> 为地球半径、海拔与纬度。若把地球当作球体并暂略自转，万有引力加速度为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>G</mi>
+  <mi>M</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mo stretchy="false">(</mo>
+  <mi>R</mi>
+  <mo>+</mo>
+  <mi>h</mi>
+  <msup>
+    <mo stretchy="false">)</mo>
+    <mn>2</mn>
+  </msup>
+</math>。比较地点还要考虑地球形状与局部质量分布。表 2-4-1 的新加坡、上海、北京和北极示例分别为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>9.781</mn>
+  <mo>,</mo>
+  <mn>9.794</mn>
+  <mo>,</mo>
+  <mn>9.801</mn>
+  <mo>,</mo>
+  <mn>9.832</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">m</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <msup>
+      <mi mathvariant="normal">s</mi>
+      <mn>2</mn>
+    </msup>
+  </mrow>
+</math>，用来说明地理差异。</p>
+<h5>A　单摆法（第 62–65 页）</h5>
+<p>目的包括检验单摆周期式的适用前提、用累积计时减小影响，以及根据目标精度设计方案。图 2-4-1 由立柱、摆线、平面镜、标尺、球和调节螺栓组成。调好立柱与标尺，用钢卷尺确定摆长，卡尺或千分尺可用于测球径及确定球心位置，秒表可计连续多个周期。教材示例给卷尺对齐影响约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.2</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">cm</mi>
+  </mrow>
+</math>、手动端点时间影响约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.2</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">s</mi>
+  </mrow>
+</math>、秒表示值允差约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.01</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">s</mi>
+  </mrow>
+</math>。每个数字是实验条件与仪器实例，应先说明属于标准量、硬边界还是扩展量，再换成同一尺度。</p>
+<p>释放时保持小角度、同一竖直平面和可辨识的过零参考位置，记录 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>N</mi>
+</math> 和总时间 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>t</mi>
+    <mi>N</mi>
+  </msub>
+</math>。同方向经过同一个参考位置才算一个完整周期。理想模型给 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>g</mi>
+  <mo>=</mo>
+  <mn>4</mn>
+  <msup>
+    <mi>&#x3C0;</mi>
+    <mn>2</mn>
+  </msup>
+  <mi>l</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msup>
+    <mi>T</mi>
+    <mn>2</mn>
+  </msup>
+</math>，采用第 1.2 节书中修正时给 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>g</mi>
+  <mo>=</mo>
+  <mn>4</mn>
+  <msup>
+    <mi>&#x3C0;</mi>
+    <mn>2</mn>
+  </msup>
+  <mi>l</mi>
+  <mi>F</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msup>
+    <mi>T</mi>
+    <mn>2</mn>
+  </msup>
+</math>，其中 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>T</mi>
+  <mo>=</mo>
+  <msub>
+    <mi>t</mi>
+    <mi>N</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>N</mi>
+</math>。分别重复记录摆长与时间，求各量的 A/B 分量。小角理想模型下，若 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>l</mi>
+  <mo>,</mo>
+  <mi>T</mi>
+</math> 独立，</p>
+<div class="study-equation" tabindex="0"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mfrac>
+    <mrow>
+      <mi>u</mi>
+      <mo stretchy="false">(</mo>
+      <mi>g</mi>
+      <mo stretchy="false">)</mo>
+    </mrow>
+    <mi>g</mi>
+  </mfrac>
+  <mo>=</mo>
+  <msqrt>
+    <msup>
+      <mrow data-mjx-texclass="INNER">
+        <mo data-mjx-texclass="OPEN">(</mo>
+        <mfrac>
+          <mrow>
+            <mi>u</mi>
+            <mo stretchy="false">(</mo>
+            <mi>l</mi>
+            <mo stretchy="false">)</mo>
+          </mrow>
+          <mi>l</mi>
+        </mfrac>
+        <mo data-mjx-texclass="CLOSE">)</mo>
+      </mrow>
+      <mn>2</mn>
+    </msup>
+    <mo>+</mo>
+    <msup>
+      <mrow data-mjx-texclass="INNER">
+        <mo data-mjx-texclass="OPEN">(</mo>
+        <mn>2</mn>
+        <mfrac>
+          <mrow>
+            <mi>u</mi>
+            <mo stretchy="false">(</mo>
+            <mi>T</mi>
+            <mo stretchy="false">)</mo>
+          </mrow>
+          <mi>T</mi>
+        </mfrac>
+        <mo data-mjx-texclass="CLOSE">)</mo>
+      </mrow>
+      <mn>2</mn>
+    </msup>
+  </msqrt>
+  <mo>.</mo>
+</math></div>
+<p>主要贡献来自计时时，可增加 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>N</mi>
+</math> 或用光电门，同时留心阻尼与计数错误。摆长可能由线长和半个球径合成，基准要选悬点到球心。在进阶设计中按同一覆盖尺度比较 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi mathvariant="normal">&#x394;</mi>
+  <mi>g</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>g</mi>
+  <mo>&lt;</mo>
+  <mn>1</mn>
+  <mi mathvariant="normal">%</mi>
+</math> 的预算。给定总计时标准不确定度 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>t</mi>
+    <mi>N</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+</math> 并求出可用单周期标准不确定度上限 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>u</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo data-mjx-texclass="OP" movablelimits="true">max</mo>
+    </mrow>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>T</mi>
+  <mo stretchy="false">)</mo>
+</math> 后，最少累计周期数为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>t</mi>
+    <mi>N</mi>
+  </msub>
+  <mo stretchy="false">)</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msub>
+    <mi>u</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo data-mjx-texclass="OP" movablelimits="true">max</mo>
+    </mrow>
+  </msub>
+  <mo stretchy="false">(</mo>
+  <mi>T</mi>
+  <mo stretchy="false">)</mo>
+</math> 向上取整且至少为 1。若摆长项已用尽预算，应先改进摆长测量。采用修正模型时，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>F</mi>
+</math> 也随 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>l</mi>
+</math> 变化。前面的相对式是小角理想模型使用的式子，同步考虑几何、质量、密度或摆角的波动时，应把相应输入纳入通用传播。</p>
+<p>对于大摆角或圆锥摆，教材建议以逐帧轨迹比较模型。大摆角可由连续同向过平衡位置的两个时刻提取周期，用该区间峰值估计振幅 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>&#x3B8;</mi>
+    <mn>0</mn>
+  </msub>
+</math>。理想的无阻尼固定平面单摆满足 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>T</mi>
+  <mo>=</mo>
+  <mn>4</mn>
+  <msqrt>
+    <mi>l</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <mi>g</mi>
+  </msqrt>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>K</mi>
+  <mo stretchy="false">(</mo>
+  <mi>sin</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>&#x3B8;</mi>
+    <mn>0</mn>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>2</mn>
+  <mo stretchy="false">)</mo>
+  <mo stretchy="false">)</mo>
+</math>，其中 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>K</mi>
+</math> 是第一类完全椭圆积分。把 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>4</mn>
+  <msqrt>
+    <mi>l</mi>
+  </msqrt>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi>K</mi>
+  <mo stretchy="false">(</mo>
+  <mi>sin</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mo stretchy="false">(</mo>
+  <msub>
+    <mi>&#x3B8;</mi>
+    <mn>0</mn>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>2</mn>
+  <mo stretchy="false">)</mo>
+  <mo stretchy="false">)</mo>
+</math> 作为横轴，测得周期作为纵轴，过原点的回归斜率是 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <mi>g</mi>
+  </msqrt>
+</math>。这与小角近似中的节拍比较相容，也便于检查振幅对周期的影响。圆锥摆稳态可用俯视轨迹估计半径 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>r</mi>
+</math> 和周期 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>T</mi>
+</math>，以 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>tan</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>&#x3B8;</mi>
+  <mo>=</mo>
+  <mi>r</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msqrt>
+    <msup>
+      <mi>l</mi>
+      <mn>2</mn>
+    </msup>
+    <mo>&#x2212;</mo>
+    <msup>
+      <mi>r</mi>
+      <mn>2</mn>
+    </msup>
+  </msqrt>
+</math> 连接几何，并检验 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msup>
+    <mi>T</mi>
+    <mn>2</mn>
+  </msup>
+  <mo>=</mo>
+  <mn>4</mn>
+  <msup>
+    <mi>&#x3C0;</mi>
+    <mn>2</mn>
+  </msup>
+  <mi>l</mi>
+  <mi>cos</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi>&#x3B8;</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>g</mi>
+</math>。</p>
+<h5>B　自由落体法（第 65–66 页）</h5>
+<p>从静止开始的模型为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>h</mi>
+  <mo>=</mo>
+  <mi>g</mi>
+  <msup>
+    <mi>t</mi>
+    <mn>2</mn>
+  </msup>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>2</mn>
+</math>。图 2-4-2 用电磁铁释放小球，竖直立柱上设光电门、卷尺和数字毫秒计，底部用纸杯接球。断电到脱离有剩磁延迟，教材估计可到 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>20</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">ms</mi>
+  </mrow>
+</math>。实验测两个光电门之间的间隔，避免以电磁铁断电瞬间作为运动的时间零点。</p>
+<p>将第一门固定，保持球经过它时的速度 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>v</mi>
+    <mn>0</mn>
+  </msub>
+</math> 尽可能一致。把第二门移至 6–8 个位置，记录每组门间距 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>h</mi>
+    <mi>i</mi>
+  </msub>
+</math> 和门间时间 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>t</mi>
+    <mi>i</mi>
+  </msub>
+</math>。由 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>h</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>v</mi>
+    <mn>0</mn>
+  </msub>
+  <msub>
+    <mi>t</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>+</mo>
+  <mi>g</mi>
+  <msubsup>
+    <mi>t</mi>
+    <mi>i</mi>
+    <mn>2</mn>
+  </msubsup>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>2</mn>
+</math>，以 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>x</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>t</mi>
+    <mi>i</mi>
+  </msub>
+</math>、<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>y</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>h</mi>
+    <mi>i</mi>
+  </msub>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <msub>
+    <mi>t</mi>
+    <mi>i</mi>
+  </msub>
+</math> 回归，截距为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>v</mi>
+    <mn>0</mn>
+  </msub>
+</math>，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>g</mi>
+  <mo>=</mo>
+  <mn>2</mn>
+  <mi>m</mi>
+</math>，拟合标准误 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>s</mi>
+    <mi>g</mi>
+  </msub>
+  <mo>=</mo>
+  <mn>2</mn>
+  <msub>
+    <mi>s</mi>
+    <mi>m</mi>
+  </msub>
+</math>。作图查异常，再说明高度、闸门时间零点和空气阻力。时间 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msub>
+    <mi>t</mi>
+    <mi>i</mi>
+  </msub>
+</math> 同时参与两轴，若其误差不可忽略，要说明普通最小二乘法忽略横轴误差的近似。</p>
+<p>思考题的要点是单段短时间会把计时影响按约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>2</mn>
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <mi>t</mi>
+  <mo stretchy="false">)</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>t</mi>
+</math> 传到 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>g</mi>
+</math>，断电滞后还会引入系统影响。第一门位置应固定并处于重复落体轨迹上，第二门的多个位置应给出足够时间跨度，同时避免门间距太小或球未正穿门。替代方案可用通过光电门时的已知遮光宽度估计瞬时速度，以 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <msubsup>
+    <mi>v</mi>
+    <mn>2</mn>
+    <mn>2</mn>
+  </msubsup>
+  <mo>&#x2212;</mo>
+  <msubsup>
+    <mi>v</mi>
+    <mn>1</mn>
+    <mn>2</mn>
+  </msubsup>
+  <mo>=</mo>
+  <mn>2</mn>
+  <mi>g</mi>
+  <mi>h</mi>
+</math> 进行独立比较。所有高度与时间先换算到同一单位制。</p>
+<h5>用不确定度预算选择仪器（第 66–67 页）</h5>
+<p>对于直径 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>D</mi>
+</math> 和高度 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>h</mi>
+</math> 独立的圆柱体，<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>V</mi>
+  <mo>=</mo>
+  <mi>&#x3C0;</mi>
+  <msup>
+    <mi>D</mi>
+    <mn>2</mn>
+  </msup>
+  <mi>h</mi>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>4</mn>
+</math>，所以相对标准预算是</p>
+<div class="study-equation" tabindex="0"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mfrac>
+    <mrow>
+      <mi>u</mi>
+      <mo stretchy="false">(</mo>
+      <mi>V</mi>
+      <mo stretchy="false">)</mo>
+    </mrow>
+    <mi>V</mi>
+  </mfrac>
+  <mo>=</mo>
+  <msqrt>
+    <mn>4</mn>
+    <msup>
+      <mrow data-mjx-texclass="INNER">
+        <mo data-mjx-texclass="OPEN">(</mo>
+        <mfrac>
+          <mrow>
+            <mi>u</mi>
+            <mo stretchy="false">(</mo>
+            <mi>D</mi>
+            <mo stretchy="false">)</mo>
+          </mrow>
+          <mi>D</mi>
+        </mfrac>
+        <mo data-mjx-texclass="CLOSE">)</mo>
+      </mrow>
+      <mn>2</mn>
+    </msup>
+    <mo>+</mo>
+    <msup>
+      <mrow data-mjx-texclass="INNER">
+        <mo data-mjx-texclass="OPEN">(</mo>
+        <mfrac>
+          <mrow>
+            <mi>u</mi>
+            <mo stretchy="false">(</mo>
+            <mi>h</mi>
+            <mo stretchy="false">)</mo>
+          </mrow>
+          <mi>h</mi>
+        </mfrac>
+        <mo data-mjx-texclass="CLOSE">)</mo>
+      </mrow>
+      <mn>2</mn>
+    </msup>
+  </msqrt>
+  <mo>.</mo>
+</math></div>
+<p>教材例中 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>D</mi>
+  <mo>&#x2248;</mo>
+  <mn>8.0</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+  <mo>,</mo>
+  <mi>h</mi>
+  <mo>&#x2248;</mo>
+  <mn>32.0</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>，目标为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>U</mi>
+  <mo stretchy="false">(</mo>
+  <mi>V</mi>
+  <mo stretchy="false">)</mo>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mi>V</mi>
+  <mo>&#x2264;</mo>
+  <mn>0.5</mn>
+  <mi mathvariant="normal">%</mi>
+</math>，近似 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>k</mi>
+  <mo>=</mo>
+  <mn>3</mn>
+</math>。千分尺测 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>D</mi>
+</math>，以 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.004</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>3</mn>
+</math> 作标准贡献，逆算得 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>u</mi>
+  <mo stretchy="false">(</mo>
+  <mi>h</mi>
+  <mo stretchy="false">)</mo>
+  <mo>&#x2272;</mo>
+  <mn>0.0523</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>，高度可选课本实例中的游标卡尺。若反用允差 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.02</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math> 且假设矩形的卡尺测直径，仅直径贡献扩展后就约 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.866</mn>
+  <mi mathvariant="normal">%</mi>
+</math>，已经超标。所需的仪器精度由 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mo data-mjx-texclass="OPEN" fence="false" stretchy="false">|</mo>
+  <msub>
+    <mi>c</mi>
+    <mi>i</mi>
+  </msub>
+  <mo data-mjx-texclass="CLOSE" fence="false" stretchy="false">|</mo>
+  <msub>
+    <mi>u</mi>
+    <mi>i</mi>
+  </msub>
+</math> 的贡献决定。均分可作初始预算，最终应检查真实的分项预算能否达标。</p>
+<h5>长度量具与时间量具（第 67–70 页）</h5>
+<ul>
+<li><strong>长度基准与尺度。</strong> 米与真空光速相联，等价说法是一米为光在 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+  <mrow data-mjx-texclass="ORD">
+    <mo>/</mo>
+  </mrow>
+  <mn>299792458</mn>
+</math> 秒内在真空走过的距离。不同长度尺度使用不同工具，教材落到三种实验室量具。</li>
+<li><strong>游标卡尺（图 2-4-3）。</strong> 可测外径、内径、厚度和深度等。主尺最小分格 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>，10、20、50 格普通游标给 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.1</mn>
+  <mo>,</mo>
+  <mn>0.05</mn>
+  <mo>,</mo>
+  <mn>0.02</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math> 的细分。先读位于游标零线左侧的主尺刻度，再加对齐刻线序号乘游标分度，最后扣除带符号的闭合零读数。教材实例按对齐刻线确定小数位。</li>
+<li><strong>螺旋测微器（图 2-4-4）。</strong> 常见螺距 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.5</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>、旋筒 50 格，分度为 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.01</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>。读固定套筒整毫米与露出的半毫米，再加微分筒读数乘分度值，可按教材估读到 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.001</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>。减去闭合零读数，并用棘轮获得较可控的测量力。</li>
+<li><strong>读数显微镜（图 2-4-5）。</strong> 示例螺距 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>1</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">mm</mi>
+  </mrow>
+</math>、鼓轮 100 格，整毫米数加鼓轮分度所得小数。调光、对焦，用同方向转动的十字线分别对准两个参考点，取读数差的绝对值。若越过参考点，重新沿同方向接近以限制回程差。</li>
+<li><strong>时间基准与仪表。</strong> 秒可由铯-133 原子基态超精细跃迁频率 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>9</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mn>192</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mn>631</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mn>770</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">Hz</mi>
+  </mrow>
+</math> 表述。电子秒表以石英时基累计显示，教材示例分辨力 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.01</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi mathvariant="normal">s</mi>
+  </mrow>
+</math>，还需考虑人的启停。数字毫秒计以电子时基配合光电门，教材设备例分辨力 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.1</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">ms</mi>
+  </mrow>
+</math>、计时误差小于 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mn>0.5</mn>
+  <mstyle scriptlevel="0">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mrow data-mjx-texclass="ORD">
+    <mi data-mjx-auto-op="false">ms</mi>
+  </mrow>
+</math>。两者共同的计算步骤是明确时间端点、统一单位、区分显示分辨力和触发或同步误差。</li>
+</ul>
+<h3 id="method-index">数据处理方法索引</h3>
+<div class="study-table-wrap" role="region" aria-label="教材表格 7" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">输入情况</th>
+<th scope="col">处理方法</th>
+<th scope="col">关心的输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>尚在设计，多个效应差别很大</td>
+<td>数量级比较、量纲齐次、目标不确定度反算</td>
+<td>主导因素、近似范围、物理模型指数、所需仪器</td>
+</tr>
+<tr>
+<td>输入来自重复观测</td>
+<td>均值、样本方差、样本标准差、A 类、预评定合并标准差</td>
+<td>估计值、单次或均值的标准差、自由度</td>
+</tr>
+<tr>
+<td>输入来自规格、证书或分辨力</td>
+<td>仪器允差、分布换算、B 类</td>
+<td>统一到标准差尺度的分量</td>
+</tr>
+<tr>
+<td>输出由多个输入计算</td>
+<td>灵敏系数、独立或含协方差合成、有效自由度、扩展</td>
+<td>不确定度及贡献、置信区间、有效数字</td>
+</tr>
+<tr>
+<td>配对数据或标定数据</td>
+<td>原始数据表、散点、曲线与误差杆、折线内插、可疑点核查</td>
+<td>可复查的原始列、校正值、图与残差</td>
+</tr>
+<tr>
+<td>关系近似直线，或能够改直</td>
+<td>两点作图法、最小二乘、逐差、幂/指数/对数/倒数/运动变换</td>
+<td>参数、相关系数、标准误与协方差</td>
+</tr>
+<tr>
+<td>原始坐标中存在指定非线性模型</td>
+<td>直接拟合原始尺度，按物理条件约束参数</td>
+<td>曲线、残差、参数不确定度</td>
+</tr>
+<tr>
+<td>量块、温度计或测重力实验</td>
+<td>长度差校准、线性修正、累积计时、两门回归</td>
+<td>校准值或 <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>g</mi>
+</math>、不确定度和预算</td>
+</tr>
+<tr>
+<td>物体运动的逐帧坐标</td>
+<td>时间和距离标定、差分与轨迹拟合</td>
+<td>轨迹、区间速度、运动参数</td>
+</tr>
+</tbody></table></div>
+</article>

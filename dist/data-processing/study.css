@@ -1,0 +1,98 @@
+.study-article {
+  container-type: inline-size;
+  font-size: 1rem;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.study-article h2,
+.study-article h3,
+.study-article h4,
+.study-article h5 {
+  color: inherit;
+  line-height: 1.35;
+  scroll-margin-block-start: 5rem;
+}
+
+.study-article h2 {
+  margin-block: 0 1.1rem;
+  font-size: clamp(1.375rem, 4cqi, 2rem);
+}
+
+.study-article h3 {
+  margin-block: 2.2rem 0.75rem;
+  font-size: clamp(1.25rem, 3.5cqi, 1.55rem);
+}
+
+.study-article h4 {
+  margin-block: 1.4rem 0.7rem;
+  font-size: 1.125rem;
+}
+
+.study-article h5 {
+  margin-block: 1.2rem 0.55rem;
+  font-size: 1rem;
+}
+
+.study-article :where(p, ul, ol) {
+  margin-block: 0.75rem;
+}
+
+.study-article :where(ul, ol) {
+  padding-inline-start: 1.45rem;
+}
+
+.study-article li {
+  margin-block: 0.3rem;
+}
+
+.study-article a {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.study-table-wrap,
+.study-equation {
+  max-inline-size: 100%;
+  overflow-x: auto;
+  margin-block: 1.2rem;
+}
+
+.study-table-wrap:focus-visible,
+.study-equation:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.study-table-wrap table {
+  inline-size: 100%;
+  min-inline-size: 28rem;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.study-table-wrap :where(th, td) {
+  border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  padding: 0.6rem 0.8rem;
+  text-align: start;
+  vertical-align: top;
+}
+
+.study-table-wrap th {
+  font-weight: 700;
+}
+
+.study-equation {
+  padding-block: 0.4rem;
+  text-align: center;
+}
+
+.study-article math {
+  font-size: 1.05em;
+}
+
+.study-equation math {
+  display: inline math;
+  min-inline-size: max-content;
+}

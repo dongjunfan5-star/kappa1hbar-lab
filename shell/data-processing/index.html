@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="处理大学物理实验读数，计算不确定度、作图、拟合与校准。">
+  <title>数据处理 · 物理实验交互站</title>
+  <link rel="stylesheet" href="../assets/shell.css">
+  <link rel="stylesheet" href="./workbench.css">
+  <link rel="stylesheet" href="./study.css">
+</head>
+<body class="data-page">
+  <header class="topbar data-topbar">
+    <a class="btn btn-ghost" id="back-link" href="../">全部实验</a>
+    <a class="brand data-brand" href="../">物理实验交互站</a>
+    <nav class="data-tabs" aria-label="数据处理页面">
+      <a id="calculator-tab" href="#calculator" aria-current="page">计算工具</a>
+      <a id="study-tab" href="#textbook">教材详解</a>
+    </nav>
+  </header>
+  <main class="data-main">
+    <header class="data-heading">
+      <h1>数据处理</h1>
+      <p>录入实验读数，计算不确定度、拟合参数与校准结果。</p>
+    </header>
+    <div id="calculator" class="calculator" data-ui>
+      <aside class="tool-rail" aria-label="计算方法">
+        <nav id="method-list" class="methods" aria-label="方法目录"></nav>
+        <label class="mobile-method" for="method-select">计算方法
+          <select id="method-select"></select>
+        </label>
+      </aside>
+      <div class="tool-sheet">
+        <header class="tool-heading">
+          <div>
+            <h2 id="tool-title">直接测量与不确定度</h2>
+            <p id="tool-description"></p>
+          </div>
+          <a id="tool-source" class="tool-source" href="#textbook" hidden></a>
+        </header>
+        <div class="tool-grid">
+          <section class="input-panel" aria-labelledby="input-title">
+            <h3 id="input-title">实验读数</h3>
+            <form id="measurement-form">
+              <div id="tool-fields" class="fields"></div>
+              <div class="input-actions">
+                <button class="btn calculate" type="submit">计算</button>
+                <button class="btn btn-ghost" id="example" type="button">载入示例</button>
+              </div>
+              <p class="message error" id="form-error" role="alert" hidden></p>
+            </form>
+          </section>
+          <section class="result-panel" aria-labelledby="result-title">
+            <div class="results-heading">
+              <h3 id="result-title" tabindex="-1">计算结果</h3>
+              <button class="btn btn-ghost" type="button" id="copy-result" hidden>复制结果</button>
+            </div>
+            <div id="result-summary" class="result-summary" aria-live="polite"></div>
+            <div id="chart" class="chart" hidden></div>
+            <div id="result-detail" class="result-detail"></div>
+            <p class="message" id="copy-status" role="status" hidden></p>
+          </section>
+        </div>
+      </div>
+    </div>
+    <div id="textbook" class="study-panel" hidden aria-busy="false">
+      <p id="study-status" class="message" role="status"></p>
+      <button id="study-retry" class="btn" type="button" hidden>重新加载</button>
+      <div id="study-content"></div>
+    </div>
+    <noscript><p class="message">请启用 JavaScript 使用计算工具。<a href="./study.html">打开教材详解</a></p></noscript>
+  </main>
+  <script type="module" src="./app/app.mjs"></script>
+</body>
+</html>
