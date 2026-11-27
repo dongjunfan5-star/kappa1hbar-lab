@@ -215,6 +215,8 @@
 
     const src = `./${item.entryUrl}`;
     $('#open').href = src;
+    const dataProcessingLink = $('#data-processing');
+    if (dataProcessingLink) dataProcessingLink.href = `./data-processing/index.html?from=${encodeURIComponent(item.slug)}`;
     frame.addEventListener('load', () => {
       loading.hidden = true;
       try {

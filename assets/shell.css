@@ -173,6 +173,8 @@ h1, h2, h3, p { margin: 0; }
 .unit-head { min-width: 0; line-height: 1.4; }
 .unit-title { overflow: hidden; font-size: 16px; font-weight: 600; white-space: nowrap; text-overflow: ellipsis; }
 .unit-meta { color: var(--muted); font-size: 13px; }
+.btn-data-processing { flex-shrink: 0; color: var(--accent); }
+.topbar-unit .topbar-tools { flex-shrink: 0; }
 .layout-unit { height: calc(100dvh - var(--bar-h)); }
 .main-unit { min-width: 0; min-height: 0; overflow: hidden; }
 .stage { position: relative; height: 100%; background: var(--bg); }
@@ -278,6 +280,7 @@ h1, h2, h3, p { margin: 0; }
   .search { width: min(54vw, 250px); min-height: 44px; font-size: 16px; }
   .btn { min-width: 44px; min-height: 44px; padding: 0; }
   .unit-title { font-size: 14px; }
+  .btn-data-processing { padding-inline: 8px; font-size: 13px; }
   .unit-meta { font-size: 12px; }
   .hero { margin-block-end: 16px; }
   .hero-sub { font-size: 15px; }
