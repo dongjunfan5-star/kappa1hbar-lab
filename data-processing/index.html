@@ -56,8 +56,12 @@
           <section class="result-panel" aria-labelledby="result-title">
             <div class="results-heading">
               <h3 id="result-title" tabindex="-1">计算结果</h3>
-              <button class="btn btn-ghost" type="button" id="copy-result" hidden>复制结果</button>
+              <div class="result-actions">
+                <button class="btn btn-ghost" type="button" id="copy-result" hidden>复制结果</button>
+                <button class="btn" type="button" id="export-report" title="下载可编辑的 Word 文件" hidden>导出报告</button>
+              </div>
             </div>
+            <p class="message" id="export-status" role="status" hidden></p>
             <div id="result-summary" class="result-summary" aria-live="polite"></div>
             <div id="chart" class="chart" hidden></div>
             <div id="result-detail" class="result-detail"></div>
