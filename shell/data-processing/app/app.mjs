@@ -1,6 +1,7 @@
 import { tools, defaultToolId, advancedMethods, runAdvancedTool } from './tools.mjs';
 import { mountExperimentImport } from './import-view.mjs';
 import { createReportFile, downloadReport } from './report-download.mjs';
+import { validExperimentSlug } from './experiment-readings.mjs';
 
 const byId = id => document.getElementById(id);
 const methods = new Map(tools.map(tool => [tool.id, tool]));
@@ -76,9 +77,10 @@ methodSelect.addEventListener('change', () => choose(methodSelect.value));
 
 const back = byId('back-link');
 const from = new URLSearchParams(location.search).get('from');
-if (from && /^[a-z0-9-]{1,100}$/.test(from)) {
+const experimentSlug = validExperimentSlug(from) ? from : null;
+if (experimentSlug) {
   const destination = new URL('../unit.html', location.href);
-  destination.searchParams.set('u', from);
+  destination.searchParams.set('u', experimentSlug);
   back.href = destination.href;
   back.textContent = '返回实验';
 }
@@ -236,7 +238,7 @@ function prepareReport(result, values) {
     : undefined;
   return {
     content: {
-      title: '实验数据处理报告', experiment: selectedRecords?.experiment,
+      experiment: selectedRecords?.experiment,
       method: advancedTitle ?? selected.title, source: dataSource.label,
       columns: selectedRecords?.columns ?? [], rows: selectedRecords?.rows ?? [], inputs,
       primary, tables, notes: result.notes ?? [], calculationDetails, createdAt: new Date()
@@ -354,9 +356,9 @@ exportButton.addEventListener('click', async () => {
   exportButton.disabled = true;
   reportMessage('正在生成 Word 报告…');
   try {
-    const file = await createReportFile(requested.content, requested.svg);
+    const { file, name } = await createReportFile(requested.content, requested.svg, experimentSlug);
     if (reportSnapshot !== requested) return;
-    downloadReport(file, requested.content.experiment || requested.content.method);
+    downloadReport(file, name);
     reportMessage('Word 报告已生成。');
   } catch (failure) {
     if (reportSnapshot === requested) reportMessage(failure.message || '生成报告失败，请重试。', true);
@@ -378,7 +380,7 @@ const textbook = byId('textbook');
 const studyStatus = byId('study-status');
 const studyRetry = byId('study-retry');
 const importPanel = byId('experiment-import');
-const hasExperiment = mountExperimentImport(importPanel, from, (methodId, values, dataLabel, total, selection) => {
+const hasExperiment = mountExperimentImport(importPanel, experimentSlug, (methodId, values, dataLabel, total, selection) => {
   if (!methods.has(methodId)) throw new Error('此方法暂时无法接收实验数据。');
   importSelectionPending = false;
   choose(methodId, { values, source: { kind: 'imported', label: dataLabel + ' · 已导入 ' + total + ' 组', selection, importValues: values } });

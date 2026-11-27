@@ -22,12 +22,23 @@ function escapeXml(value) {
     .replace(/[&<>"']/g, char => entities[char]);
 }
 
-function paragraph(value, style = 'Normal', { align, bold = false } = {}) {
+function paragraph(value, style = 'Normal', { align, bold = false, keepNext = false } = {}) {
   const run = textValue(value).split(/\r\n|\r|\n/).map(line =>
     '<w:t xml:space="preserve">' + escapeXml(line) + '</w:t>').join('<w:br/>');
   return '<w:p><w:pPr><w:pStyle w:val="' + style + '"/>' +
+    (keepNext ? '<w:keepNext/>' : '') +
     (align ? '<w:jc w:val="' + align + '"/>' : '') +
     '</w:pPr><w:r>' + (bold ? '<w:rPr><w:b/></w:rPr>' : '') + run + '</w:r></w:p>';
+}
+
+function guideSection(title, blocks = []) {
+  const content = blocks.map(({ type, text, prefix }) => {
+    if (type === 'item') return paragraph((prefix || '•') + ' ' + text, 'GuideItem');
+    if (type === 'formula') return paragraph(text, 'GuideFormula');
+    if (type === 'subheading') return paragraph(text, 'Heading2');
+    return paragraph(text);
+  }).join('');
+  return paragraph(title, 'Heading1') + (content || paragraph(''));
 }
 
 function tableMarkup(headers, rows, width, fractions) {
@@ -91,7 +102,7 @@ function pngSize(bytes) {
 
 function chartMarkup(png, pageWidth) {
   const { width, height } = pngSize(png);
-  const scale = Math.min(pageWidth * 635 / width, 4160000 / height);
+  const scale = Math.min(pageWidth * 635 / width, 3550000 / height);
   const cx = Math.max(1, Math.floor(width * scale));
   const cy = Math.max(1, Math.floor(height * scale));
   return '<w:p><w:pPr><w:pStyle w:val="Chart"/><w:jc w:val="center"/></w:pPr><w:r><w:drawing>' +
@@ -107,18 +118,23 @@ function chartMarkup(png, pageWidth) {
 }
 
 const styles = declaration + '<w:styles xmlns:w="' + wordNamespace + '">' + [
-  '<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:eastAsia="Microsoft YaHei" w:cs="Calibri"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="zh-CN" w:eastAsia="zh-CN"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="100" w:line="300" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>',
+  '<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:eastAsia="Microsoft YaHei" w:cs="Calibri"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="zh-CN" w:eastAsia="zh-CN"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="85" w:line="285" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>',
   '<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style>',
   '<w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:next w:val="ReportMetadata"/><w:qFormat/><w:pPr><w:keepNext/><w:spacing w:after="220"/></w:pPr><w:rPr><w:b/><w:color w:val="000000"/><w:sz w:val="40"/></w:rPr></w:style>',
-  '<w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:pPr><w:keepNext/><w:keepLines/><w:spacing w:before="260" w:after="120"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:color w:val="000000"/><w:sz w:val="26"/></w:rPr></w:style>',
+  '<w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:pPr><w:keepNext/><w:keepLines/><w:spacing w:before="190" w:after="90"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:color w:val="000000"/><w:sz w:val="26"/></w:rPr></w:style>',
+  '<w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:pPr><w:keepNext/><w:keepLines/><w:spacing w:before="120" w:after="60"/><w:outlineLvl w:val="1"/></w:pPr><w:rPr><w:b/><w:sz w:val="22"/></w:rPr></w:style>',
+  '<w:style w:type="paragraph" w:styleId="GuideItem"><w:name w:val="实验提纲条目"/><w:basedOn w:val="Normal"/><w:pPr><w:ind w:left="360" w:hanging="240"/></w:pPr></w:style>',
+  '<w:style w:type="paragraph" w:styleId="GuideFormula"><w:name w:val="实验原理公式"/><w:basedOn w:val="Normal"/><w:pPr><w:keepLines/><w:jc w:val="center"/></w:pPr><w:rPr><w:rFonts w:ascii="Cambria Math" w:hAnsi="Cambria Math"/></w:rPr></w:style>',
+  '<w:style w:type="paragraph" w:styleId="ReportWriting"><w:name w:val="实验结论正文"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="0" w:line="260" w:lineRule="auto"/></w:pPr></w:style>',
   '<w:style w:type="paragraph" w:styleId="ReportMetadata"><w:name w:val="报告信息"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="58"/></w:pPr><w:rPr><w:color w:val="415563"/><w:sz w:val="21"/></w:rPr></w:style>',
-  '<w:style w:type="paragraph" w:styleId="TableText"><w:name w:val="报告表格"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="0" w:line="275" w:lineRule="auto"/></w:pPr><w:rPr><w:sz w:val="20"/></w:rPr></w:style>',
+  '<w:style w:type="paragraph" w:styleId="TableText"><w:name w:val="报告表格"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="0" w:line="250" w:lineRule="auto"/></w:pPr><w:rPr><w:sz w:val="20"/></w:rPr></w:style>',
   '<w:style w:type="paragraph" w:styleId="Chart"><w:name w:val="报告图表"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="140" w:line="240" w:lineRule="auto"/></w:pPr></w:style>',
   '<w:style w:type="paragraph" w:styleId="CalculationDetails"><w:name w:val="详细计算数据"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="0" w:line="260" w:lineRule="auto"/></w:pPr><w:rPr><w:rFonts w:ascii="Consolas" w:hAnsi="Consolas"/><w:sz w:val="20"/></w:rPr></w:style>',
   '</w:styles>'
 ].join('\n');
 
 function reportDocument(report, png) {
+  const guide = report.experimentGuide ?? {};
   const rows = report.rows ?? [];
   const columns = report.columns ?? [];
   const tables = report.tables ?? [];
@@ -127,8 +143,8 @@ function reportDocument(report, png) {
   const pageHeight = landscape ? 12240 : 15840;
   const margin = 1134;
   const width = pageWidth - 2 * margin;
-  const meta = [];
-  if (report.experiment) meta.push('实验　' + report.experiment);
+  const experiment = guide.title || report.experiment;
+  const meta = ['实验名称　' + (experiment || '____________________________')];
   if (report.method) meta.push('数据处理方法　' + report.method);
   if (report.source) meta.push('读数来源　' + report.source);
   if (report.createdAt) {
@@ -141,8 +157,11 @@ function reportDocument(report, png) {
   const inputs = (report.inputs ?? []).filter(input => input.value !== '' && input.value != null);
   const primary = (report.primary ?? []).map(({ label, value, unit }) => [label, value, unit || '—']);
   const notes = report.notes ?? [];
-  const body = paragraph(report.title || '实验数据处理报告', 'Title') +
+  const body = paragraph('实验报告', 'Title') +
     meta.map(line => paragraph(line, 'ReportMetadata')).join('') +
+    guideSection('实验目的', guide.purpose) +
+    guideSection('实验原理', guide.principle) +
+    guideSection('实验步骤', guide.steps) +
     (columns.length && rows.length ? tablesFor('实验数据', columns, rows, width) : '') +
     (inputs.length ? tablesFor('计算参数', ['参数', '设置值'], inputs.map(({ label, value }) => [label, value]), width, [1, 2.6]) : '') +
     (primary.length ? tablesFor('计算结果', ['项目', '结果', '单位'], primary, width, [1.4, 1.5, .6]) : '') +
@@ -150,19 +169,18 @@ function reportDocument(report, png) {
     tables.map(({ title, headers, rows }) => tablesFor(title, headers, rows, width)).join('') +
     (notes.length ? paragraph('计算说明', 'Heading1') + notes.map(note => paragraph(note)).join('') : '') +
     (report.calculationDetails ? paragraph('详细计算数据', 'Heading1') +
-      report.calculationDetails.split(/\r\n|\r|\n/).map(line => paragraph(line, 'CalculationDetails')).join('') : '');
+      report.calculationDetails.split(/\r\n|\r|\n/).map(line => paragraph(line, 'CalculationDetails')).join('') : '') +
+    paragraph('实验结论', 'Heading1') +
+    paragraph('', 'ReportWriting', { keepNext: true }) +
+    paragraph('', 'ReportWriting', { keepNext: true }) +
+    paragraph('', 'ReportWriting');
   const page = '<w:sectPr><w:pgSz w:w="' + pageWidth + '" w:h="' + pageHeight + '"' +
     (landscape ? ' w:orient="landscape"' : '') +
     '/><w:pgMar w:top="' + margin + '" w:right="' + margin + '" w:bottom="' + margin +
     '" w:left="' + margin + '" w:header="0" w:footer="0" w:gutter="0"/></w:sectPr>';
-  // Word needs a paragraph mark after a trailing table. An implicit body-sized
-  // mark can occupy a new blank page when the last row reaches the margin.
-  const tableEnd = body.endsWith('</w:tbl>')
-    ? '<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact"/><w:rPr><w:sz w:val="2"/><w:szCs w:val="2"/></w:rPr></w:pPr></w:p>'
-    : '';
   return declaration + '<w:document xmlns:w="' + wordNamespace + '" xmlns:r="' + officeRelationships +
     '" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="' + drawingNamespace +
-    '" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body>' + body + tableEnd + page + '</w:body></w:document>';
+    '" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body>' + body + page + '</w:body></w:document>';
 }
 
 function packageFiles(report, png) {

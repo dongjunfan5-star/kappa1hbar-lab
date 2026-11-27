@@ -27,21 +27,30 @@ async function rasterizeChart(svg) {
   }
 }
 
-export async function createReportFile(report, svg) {
-  const [{ buildReportDocx }, png] = await Promise.all([
+async function loadGuide(slug) {
+  const { loadExperimentReportGuide } = await import('./report-guide.mjs');
+  return loadExperimentReportGuide(slug);
+}
+
+export async function createReportFile(report, svg, experimentSlug) {
+  const [{ buildReportDocx }, png, experimentGuide] = await Promise.all([
     import('./report-docx.mjs'),
-    svg ? rasterizeChart(svg) : null
+    svg ? rasterizeChart(svg) : null,
+    experimentSlug ? loadGuide(experimentSlug) : null
   ]);
-  const bytes = buildReportDocx(report, png ?? undefined);
-  return new Blob([bytes], { type: mime });
+  const bytes = buildReportDocx({ ...report, experimentGuide }, png ?? undefined);
+  return {
+    file: new Blob([bytes], { type: mime }),
+    name: experimentGuide?.title || report.experiment || report.method
+  };
 }
 
 export function downloadReport(file, title) {
-  const name = title.replace(/[<>:"/\\|?*\u0000-\u001f]+/g, ' ').trim().slice(0, 80) || '实验数据处理';
+  const name = title?.replace(/[<>:"/\\|?*\u0000-\u001f]+/g, ' ').trim().slice(0, 80);
   const link = document.createElement('a');
   const fileUrl = URL.createObjectURL(file);
   link.href = fileUrl;
-  link.download = name + ' 实验数据处理.docx';
+  link.download = name ? `${name} 实验报告.docx` : '实验报告.docx';
   document.body.append(link);
   link.click();
   link.remove();
