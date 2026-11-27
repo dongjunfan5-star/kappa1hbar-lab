@@ -1,0 +1,49 @@
+.experiment-import {
+  margin-block: 0 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--data-line, var(--line));
+  border-radius: 8px;
+  background: var(--data-paper, var(--panel));
+}
+.experiment-import summary { cursor: pointer; font-weight: 650; }
+.reading-count { margin-inline-start: 10px; color: var(--data-muted, var(--muted)); font-size: .88rem; font-weight: 400; }
+.import-body { display: grid; gap: 9px; margin-block-start: 12px; }
+.import-body > label { max-width: 45ch; }
+.import-row-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; }
+.import-row-actions .btn { min-height: 34px; }
+.import-row-actions span { color: var(--data-muted, var(--muted)); font-size: .88rem; }
+.import-options { display: grid; justify-items: start; align-items: start; gap: 8px; }
+.import-options > label { width: min(100%, 45ch); }
+.import-mapping, .reading-field-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 10px; width: 100%; }
+.import-mapping:empty { display: none; }
+.import-body label, .reading-dialog label { display: grid; gap: 4px; min-width: 0; color: var(--data-text, var(--text)); font-size: .92rem; }
+.import-body select, .reading-dialog input {
+  width: 100%; min-width: 0; min-height: 40px; padding: 6px 8px;
+  border: 1px solid var(--data-line, var(--line)); border-radius: 6px;
+  background: var(--data-well, var(--stage)); color: var(--data-text, var(--text)); font: inherit;
+}
+.import-options p:empty, .reading-hint:empty { display: none; }
+.import-options .btn:disabled { opacity: .55; cursor: default; }
+.reading-hint { color: var(--data-muted, var(--muted)); font-size: .88rem; }
+.input-panel #data-origin { margin: -4px 0 10px; }
+.reading-table-scroll { max-height: 280px; overflow: auto; }
+.reading-table-scroll table { width: 100%; border-collapse: collapse; font-size: .91rem; font-variant-numeric: tabular-nums; }
+.reading-table-scroll th, .reading-table-scroll td { min-width: 48px; padding: 6px 8px; border-bottom: 1px solid var(--data-line, var(--line)); text-align: end; }
+.reading-table-scroll th { position: sticky; top: 0; background: var(--data-paper, var(--panel)); font-weight: 600; }
+.reading-table-scroll th:first-child, .reading-table-scroll td:first-child { text-align: center; }
+.reading-table-scroll input { accent-color: var(--data-accent, var(--accent)); }
+.reading-dialog {
+  width: min(700px, calc(100% - 24px)); max-height: calc(100% - 24px); padding: 18px;
+  color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+}
+.reading-dialog::backdrop { background: rgb(17 24 32 / .72); }
+.reading-dialog-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.reading-dialog-heading h2 { font-size: 1.16rem; }
+.reading-dialog form { display: grid; justify-items: start; gap: 10px; margin-block: 14px 8px; }
+.reading-dialog .reading-action { border-color: var(--accent); }
+.reading-dialog .reading-remove { min-height: 31px; }
+@media (max-width: 600px) {
+  .topbar-unit .reading-trigger { min-width: 0; padding-inline: 5px; font-size: 12px; }
+  .reading-count { display: inline-block; }
+  .experiment-import { padding-inline: 10px; }
+}
