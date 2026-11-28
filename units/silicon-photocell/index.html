@@ -2441,6 +2441,7 @@ function mountBench(chapter, bench) {
   }
 }
 </script>
+<script src="../../assets/measurement-noise.js"></script>
 <script>(() => {
   const section = (title, pages, html) => ({title, pages, html});
   const answer = (question, text) => `<details><summary>${question}</summary><p>${text}</p></details>`;
@@ -2677,7 +2678,7 @@ function mountBench(chapter, bench) {
         hit(svgHit,'pv-bias','电源：切换正偏暗伏安与反偏',[ -113,32,23],19),
       ]});
       host.innerHTML=`<div class="rig-scene">${art}</div>
-        <p class="rig-readout">端电压 <strong data-pv-u>—</strong> V　<span data-pv-sign>输出</span>电流 <strong data-pv-i>—</strong> mA　负载功率 <strong data-pv-power>—</strong> <span>mW</span></p>
+        <p class="rig-readout">端电压 <strong data-pv-u>—</strong> V　<span data-pv-sign>输出</span>电流 <strong data-pv-i>—</strong> mA　负载功率 <strong data-pv-power>—</strong> <span>mW</span>　照度示值 <strong data-pv-measured-lux>—</strong> lx</p>
         <div class="rig-tools">
         <label>电路接法 <select data-pv-mode>${options(pvModes.map(m=>m[0]),mode,key=>pvModes.find(m=>m[0]===key)[1])}</select></label>
         <label data-pv-illumination>照度 <select data-pv-lux>${options([10,20,30,40,50,60,70,80,90,100],lux,x=>`${x} lx`)}</select></label>
@@ -2689,14 +2690,23 @@ function mountBench(chapter, bench) {
       const q=query=>host.querySelector(query);
       const modeLabel=key=>pvModes.find(entry=>entry[0]===key)[1];
       const luxList=[10,20,30,40,50,60,70,80,90,100];
-      const currentReading=()=>({...pvModel(mode,lux,resistance,current),mode, lux:mode==='dark'?0:lux, resistance:mode==='load'?resistance:mode==='short'?0:null, current});
+      const meters=PhysLabNoise.createSampler();
+      let lastRecordedSetting;
+      function currentReading() {
+        const ideal=pvModel(mode,lux,resistance,current);
+        const v=mode==='short'?0:meters.read(`${mode}-voltage`,ideal.v,.0014,mode==='reverse'?{max:0}:{min:0});
+        const i=mode==='open'?0:meters.read(`${mode}-current`,ideal.i,.0000014,{min:0});
+        const light=mode==='dark'?0:meters.read('illuminance',lux,.25,{min:0});
+        return {...ideal,v,i,p:ideal.p===null?null:v*i,mode,lux:light,setting:lux,
+          resistance:mode==='load'?resistance:mode==='short'?0:null,current};
+      }
       function updateGraph() {
         let rows,x,y,X,Y;
         if (plot==='pr') {
-          rows=records.filter(r=>r.mode==='load'&&r.lux===lux);
+          rows=records.filter(r=>r.mode==='load'&&r.setting===lux);
           x=r=>r.resistance;y=r=>r.p*1000;X='负载 R / Ω';Y='输出 P / mW';
         } else if (plot==='iv') {
-          rows=mode==='dark'?records.filter(r=>r.mode==='dark'):records.filter(r=>r.lux===lux&&['load','open','short'].includes(r.mode));
+          rows=mode==='dark'?records.filter(r=>r.mode==='dark'):records.filter(r=>r.setting===lux&&['load','open','short'].includes(r.mode));
           x=r=>r.v;y=r=>r.i*1000;X='端电压 U / V';Y='电流 I / mA';
         } else if (plot==='voc'||plot==='isc') {
           rows=records.filter(r=>r.mode===(plot==='voc'?'open':'short'));
@@ -2708,7 +2718,7 @@ function mountBench(chapter, bench) {
         q('[data-pv-plot]').innerHTML=graph(rows.map(r=>[x(r),y(r)]),X,Y);
       }
       function getResult() {
-        const group=records.filter(r=>r.lux===lux);
+        const group=records.filter(r=>r.setting===lux);
         const loads=group.filter(r=>r.mode==='load');
         const max=loads.reduce((best,r)=>!best||r.p>best.p?r:best,null);
         if (!max) return '先记录一个负载工作点。改变负载，找到测得的最大功率。';
@@ -2717,10 +2727,11 @@ function mountBench(chapter, bench) {
         return `${lux} lx，${loads.length}组负载中：${(max.p*1000).toFixed(3)} mW 最大，对应 ${max.resistance} Ω。`+(loads.length<3?'　再取更多负载，确认峰位置。':'')+tail;
       }
       function render() {
-        const {v,i,p,sign}=currentReading();
+        const {v,i,p,sign,lux:light}=currentReading();
         q('[data-pv-u]').textContent=v.toFixed(3);
         q('[data-pv-i]').textContent=(i*1000).toFixed(3);
         q('[data-pv-power]').textContent=p===null?'—':(p*1000).toFixed(3);
+        q('[data-pv-measured-lux]').textContent=light.toFixed(1);
         q('[data-pv-sign]').textContent=sign;
         q('[data-pv-meter-u]').textContent=v.toFixed(3);
         q('[data-pv-meter-i]').textContent=(i*1000).toFixed(2);
@@ -2755,17 +2766,15 @@ function mountBench(chapter, bench) {
       q('[data-pv-current]').addEventListener('change',event=>{current=Number(event.target.value);render();});
       q('[data-pv-graph]').addEventListener('change',event=>{plot=event.target.value;render();});
       function showRows() {
-        q('[data-pv-rows]').innerHTML=records.map(r=>`<tr><td>${modeLabel(r.mode)}</td><td>${r.lux}</td><td>${r.resistance??'—'}</td><td>${r.v.toFixed(3)}</td><td>${(r.i*1000).toFixed(3)}</td><td>${r.p===null?'—':(r.p*1000).toFixed(3)}</td></tr>`).join('');
+        q('[data-pv-rows]').innerHTML=records.map(r=>`<tr><td>${modeLabel(r.mode)}</td><td>${r.lux.toFixed(1)}</td><td>${r.resistance??'—'}</td><td>${r.v.toFixed(3)}</td><td>${(r.i*1000).toFixed(3)}</td><td>${r.p===null?'—':(r.p*1000).toFixed(3)}</td></tr>`).join('');
         q('[data-pv-count]').textContent=records.length;
         render();
       }
       q('[data-pv-record]').addEventListener('click',()=>{
-        const reading=currentReading();
-        if (records.some(r=>r.mode===reading.mode&&r.lux===reading.lux&&r.resistance===reading.resistance&&r.v===reading.v&&r.i===reading.i)) {
-          q('[data-pv-result]').textContent='这个工作点已经记录。请改变一个自变量，再记录下一点。';
-          return;
-        }
-        records.push(reading);showRows();
+        const setting=`${mode}:${lux}:${resistance}:${current}`;
+        if(setting===lastRecordedSetting) meters.reset();
+        lastRecordedSetting=setting;
+        records.push(currentReading());showRows();
       });
       q('[data-pv-clear]').addEventListener('click',()=>{records.length=0;showRows();});
       render();

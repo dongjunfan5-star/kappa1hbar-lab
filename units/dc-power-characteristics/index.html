@@ -2441,6 +2441,7 @@ function mountBench(chapter, bench) {
   }
 }
 </script>
+<script src="../../assets/measurement-noise.js"></script>
 <script>(() => {
   const standard = 1.250;
   const cell = 1.532;
@@ -2589,6 +2590,7 @@ function mountBench(chapter, bench) {
       const balanced={standard:null,unknown:null};
       const rows=[];
       const loadPoints=[];
+      const meter=PhysLabNoise.createSampler();
       let power=false, mode='compensation', target='standard', angle=0, cancel=()=>{};
       const fixed=(value,digits=3)=>value.toFixed(digits);
       const resistance=()=>mode==='compensation'?states.compensation[target]:states[mode];
@@ -2617,6 +2619,19 @@ function mountBench(chapter, bench) {
         const i=sourceVoltage()/(r+meterResistance);
         return {i,u:i/fullScale*2};
       }
+      function observe(ideal) {
+        if (mode==='compensation'||mode==='meter') return {
+          error:meter.read(`${mode}-${target}-null`,ideal.error,.000025),
+          u:meter.read(`${mode}-${target}-comparison`,ideal.u,.00012,{min:0})
+        };
+        const i=power?meter.read(`${mode}-current`,ideal.i,mode==='load'?.000025:.000000025,{min:0}):ideal.i;
+        const u=mode==='load'?(resistance()===0?0:meter.read('load-voltage',ideal.u,.0016,{min:0})):i/fullScale*2;
+        return {i,u};
+      }
+      function zeroResistance(error) {
+        const voltagePerOhm=mode==='compensation'?comparisonCurrent:.000080;
+        return Math.round((resistance()+error/voltagePerOhm)*10)/10;
+      }
       function updateNeedle(next) {
         const drawAt=x=>{
           angle=x;
@@ -2633,8 +2648,8 @@ function mountBench(chapter, bench) {
         by('curve').setAttribute('d',points.map(([x,y],i)=>`${i?'L':'M'}${x} ${y}`).join(' '));
         by('points').innerHTML=points.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3"/>`).join('');
       }
-      function draw() {
-        const result=values(), r=resistance();
+      function draw(result=observe(values())) {
+        const r=resistance();
         const nullMode=mode==='compensation'||mode==='meter';
         const errorMilliVolts=nullMode?1000*result.error:0;
         by('power').setAttribute('aria-pressed',String(power));
@@ -2645,12 +2660,13 @@ function mountBench(chapter, bench) {
         by('svg-switch').setAttribute('opacity',target==='standard'?'1':'.45');
         by('svg-meter').textContent=power?(nullMode?`${fixed(errorMilliVolts,1)} mV`:`${fixed(result.u)} V`):'—';
         updateNeedle(power?(nullMode?Math.max(-1,Math.min(1,errorMilliVolts/60)):Math.min(1,result.i/(mode==='load'?.17:fullScale))):0);
-        by('live').innerHTML=!power?'电源待开启':nullMode?`<strong>${Math.abs(errorMilliVolts)<.051?'检流计指零':`检流计${errorMilliVolts>0?'正':'负'}偏转`}</strong>　电压差 ${fixed(errorMilliVolts,2)} mV　比较电压 ${fixed(result.u,4)} V`:
+        const nearZero=nullMode&&Math.abs(errorMilliVolts)<=.051;
+        by('live').innerHTML=!power?'电源待开启':nullMode?`<strong>${nearZero?'检流计指零':`检流计${errorMilliVolts>0?'正':'负'}偏转`}</strong>　电压差 ${fixed(errorMilliVolts,2)} mV　比较电压 ${fixed(result.u,4)} V${nearZero?`　示零电阻 ${fixed(zeroResistance(result.error),1)} Ω`:''}`:
           mode==='load'?`<strong>U = ${fixed(result.u)} V</strong>　I = ${fixed(1000*result.i,2)} mA　Rₗ = ${r} Ω`:
             `<strong>实际输入 ${fixed(sourceVoltage(),2)} V</strong>　表头 ${fixed(result.i*1e6,2)} μA　换算指示 ${fixed(result.u)} V`;
       }
-      function addRow(name,statement) {
-        const cells=[name,resistance(),statement].map(value=>{const td=document.createElement('td');td.textContent=String(value);return td;});
+      function addRow(name,statement,readingResistance=resistance()) {
+        const cells=[name,readingResistance,statement].map(value=>{const td=document.createElement('td');td.textContent=String(value);return td;});
         const tr=document.createElement('tr');
         tr.append(...cells);
         rows.push(tr);
@@ -2659,30 +2675,36 @@ function mountBench(chapter, bench) {
       }
       function record() {
         if (!power) { by('note').textContent='先把参考电源打开。'; return; }
-        const {i,u,error}=values();
+        const ideal=values();
+        const reading=observe(ideal);
+        const {i,u,error}=reading;
         const r=resistance();
         if ((mode==='compensation'||mode==='meter')&&Math.abs(error)>.000051) {
           by('note').textContent=`还未示零。指针偏${error>0?'正，增加':'负，减小'}电阻箱阻值，再试一次。`;
           return;
         }
         if (mode==='compensation') {
-          balanced[target]=r;
-          addRow(eLabel(),'示零');
+          const measured=zeroResistance(error);
+          balanced[target]=measured;
+          addRow(eLabel(),'示零',fixed(measured,1));
           by('result').textContent=balanced.standard!==null&&balanced.unknown!==null?
-            `Eₓ = ${fixed(standard*balanced.unknown/balanced.standard)} V　（Eₛ × Rₓ / Rₛ）`:`已记 ${eLabel()}的平衡阻值 ${r} Ω，再量另一支路。`;
+            `Eₓ = ${fixed(standard*balanced.unknown/balanced.standard)} V　（Eₛ × Rₓ / Rₛ）`:`已记 ${eLabel()}的平衡阻值 ${fixed(measured,1)} Ω，再量另一支路。`;
         } else if (mode==='meter') {
-          addRow('表头内阻','示零');
-          by('result').textContent=`Rᵍ = ${r} Ω　改装成 2.00 V 档需要串联 ${Math.round(2/fullScale-r)} Ω。`;
+          const measured=zeroResistance(error);
+          addRow('表头内阻','示零',fixed(measured,1));
+          by('result').textContent=`Rᵍ = ${fixed(measured,1)} Ω　改装成 2.00 V 档需要串联 ${Math.round(2/fullScale-measured)} Ω。`;
         } else if (mode==='load') {
           addRow('负载',`${fixed(u)} V；${fixed(i*1000,2)} mA`);
           loadPoints.push({i,u});
           showPlot();
           by('result').textContent=r===0?`等效短路电流 Iₛc = ${fixed(i*1000,2)} mA`:`已记录 Rₗ = ${r} Ω，U = ${fixed(u)} V，I = ${fixed(i*1000,2)} mA。`;
         } else {
-          if(i>fullScale+.00000001) { by('note').textContent='表头超过满偏电流。请增大串联阻值或降低参考输入。'; return; }
+          if(ideal.i>fullScale+.00000001) { by('note').textContent='表头超过满偏电流。请增大串联阻值或降低参考输入。'; return; }
           addRow('校准',`${fixed(sourceVoltage(),2)} V 标准；${fixed(u)} V 指示`);
           by('result').textContent=`指示偏差（指示−标准） = ${fixed(1000*(u-sourceVoltage()),2)} mV。`;
         }
+        draw(reading);
+        meter.reset();
         by('note').textContent='这次读数已写入记录。';
       }
       function switchTarget() {
@@ -2691,7 +2713,7 @@ function mountBench(chapter, bench) {
         by('target').value=target;
         updateMode();
       }
-      function powerSwitch() { power=!power; draw(); }
+      function powerSwitch() { power=!power; meter.reset(); draw(); }
       const increment=direction=>setResistance(resistance()+direction*(mode==='compensation'?10:mode==='load'?20:5));
       by('power').addEventListener('click',powerSwitch);
       by('mode').addEventListener('change',event=>{
@@ -2700,7 +2722,7 @@ function mountBench(chapter, bench) {
         updateMode();
       });
       by('target').addEventListener('change',event=>{ target=event.target.value; updateMode(); });
-      by('reference').addEventListener('change',draw);
+      by('reference').addEventListener('change',()=>draw());
       by('resistance').addEventListener('input',event=>{
         const value=event.target.valueAsNumber;
         if(Number.isFinite(value)&&value>=0&&value<=1e6){

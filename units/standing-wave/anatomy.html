@@ -471,6 +471,7 @@ body { font-family: var(--lab-font); }
 </head>
 <body>
 <main id="course" class="unit-content"><noscript><p>请在浏览器中允许 JavaScript，以操作仿真实验台。</p></noscript></main>
+<script src="../../assets/measurement-noise.js"></script>
 <script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id, lesson);</script>
 <script>const anatomyIso = (() => {
 const AZIMUTH = 45;
@@ -2520,6 +2521,7 @@ function mountBench(chapter, bench) {
       const step = sim.querySelector('[data-step]');
       const canvas = sim.querySelector('canvas');
       const ctx = canvas.getContext('2d');
+      const noise = PhysLabNoise.createSampler();
       const speed = 331.45 * Math.sqrt(1 + 20 / 273.15);
       const wavelength = 1000 * speed / 36000;
       const theme = matchMedia('(prefers-color-scheme: dark)');
@@ -2540,16 +2542,17 @@ function mountBench(chapter, bench) {
         const mode = method.value;
         const pulse = mode === 'pulse';
         const l = Number(length.value);
-        const phase = 2 * Math.PI * l / wavelength;
+        const measuredLength = noise.read('teaching-spacing', l, .05, {min:0});
+        const phase = noise.read('teaching-phase', 2 * Math.PI * l / wavelength, .014);
         const amplitude = x => (0.23 + 0.77 * Math.cos(2 * Math.PI * x / wavelength) ** 2) * Math.exp(-(x - 50) / 100);
         const speedSolid = Number(material.value);
-        const first = Number((12 + 100000 / speedSolid).toFixed(3));
-        const second = Number((12 + 200000 / speedSolid).toFixed(3));
+        const first = Number(noise.read('teaching-100mm-delay', 12 + 100000 / speedSolid, .045).toFixed(3));
+        const second = Number(noise.read('teaching-200mm-delay', 12 + 200000 / speedSolid, .045).toFixed(3));
         distance.hidden = pulse;
         medium.hidden = !pulse;
         step.hidden = pulse;
         step.disabled = l + wavelength / 2 > 105.005;
-        sim.querySelector('[data-length-output]').textContent = `${l.toFixed(2)} mm`;
+        sim.querySelector('[data-length-output]').textContent = `${measuredLength.toFixed(2)} mm`;
         sim.querySelector('[data-model]').textContent = pulse ? '教学模型使用 100 mm 和 200 mm 的试棒，给两次读数加上相同的 12 μs 固定延时。' : '教学模型取干空气 20 °C、激励 36.0 kHz。试着移动接收端，找两次相邻的特征点。';
         ctx.font = '14px system-ui';
         ctx.lineWidth = 1;
@@ -2582,12 +2585,13 @@ function mountBench(chapter, bench) {
           [50,65,80,95,105].forEach(t => label(String(t),x(t),211,'center'));
           label('端面间距 / mm', width-8,235,'right');
           curve(Array.from({length:331},(_,i) => {const t=50+i/6;return [x(t),y(amplitude(t))];}),accent);
-          line(x(l), y(amplitude(l)), x(l), 190, marker);
+          const measuredAmplitude = noise.read('teaching-amplitude', amplitude(l), .008, {min:0});
+          line(x(l), y(measuredAmplitude), x(l), 190, marker);
           ctx.fillStyle = marker;
           ctx.beginPath();
-          ctx.arc(x(l), y(amplitude(l)), 4.5, 0, 2*Math.PI);
+          ctx.arc(x(l), y(measuredAmplitude), 4.5, 0, 2*Math.PI);
           ctx.fill();
-          result = `相对幅度 ${amplitude(l).toFixed(3)} · 半波长约 ${(wavelength/2).toFixed(2)} mm`;
+          result = `相对幅度 ${measuredAmplitude.toFixed(3)} · 半波长约 ${(wavelength/2).toFixed(2)} mm`;
         } else if (mode === 'phase') {
           const cx = width / 2;
           const cy = 121;
@@ -2597,7 +2601,7 @@ function mountBench(chapter, bench) {
           label('X / 发射', width-4,229,'right');
           label('Y / 接收', 3,18);
           curve(Array.from({length:241},(_,i) => {const t=2*Math.PI*i/240;return [cx+radius*Math.cos(t),cy-radius*Math.cos(t-phase)];}),accent);
-          result = `相位差 ${(phase*180/Math.PI%360).toFixed(1)}° · 每前进半波长改变约 180°`;
+          result = `相位差 ${((phase*180/Math.PI%360+360)%360).toFixed(1)}° · 每前进半波长改变约 180°`;
         } else {
           const x = t => 38 + (width-55) * t/100;
           label('时间读数 / μs', width-6,230,'right');
@@ -2619,7 +2623,7 @@ function mountBench(chapter, bench) {
         const reading = sim.querySelector('[data-result]');
         if (reading.textContent !== result) reading.textContent = result;
       }
-      sim.addEventListener('input', draw);
+      sim.addEventListener('input', () => { noise.reset(); draw(); });
       step.addEventListener('click', () => { length.value = (Number(length.value) + wavelength / 2).toFixed(2); draw(); });
       new ResizeObserver(draw).observe(sim);
       theme.addEventListener('change', draw);
@@ -2709,6 +2713,10 @@ function mountBench(chapter, bench) {
       let phase=1;
       let cancel=()=>{};
       const rows=[];
+      const noise=PhysLabNoise.createSampler();
+      let recorded=false;
+      const measuredLength=()=>+noise.read('ruler',length,.16,{min:0}).toFixed(1);
+      const measuredMass=()=>+noise.read('balance',mass,.18,{min:0}).toFixed(1);
       const startX=()=>endX-length*3.92;
       const yz=(x,z,y)=>[x,y,z];
 
@@ -2777,12 +2785,12 @@ function mountBench(chapter, bench) {
           const [x,y]=at([startX()+(endX-startX())*i/m.n,axisY,stringZ]);return `<circle cx="${x}" cy="${y}" r="3.2" fill="var(--paper)" stroke="var(--accent)" stroke-width="1.2"/>`;
         }).join(''):'';
         drawWave(m);
-        q('[data-wave-length]').textContent=`${length.toFixed(1)} cm`;
+        q('[data-wave-length]').textContent=`${measuredLength().toFixed(1)} cm`;
         q('[data-wave-power]').textContent=on?'停止音叉':'开启音叉';
         q('[data-wave-minus]').disabled=mass<=20;
         q('[data-wave-plus]').disabled=mass>=100;
         const status=on?(m.resonant?`接近 ${m.n} 腹共振，可记录`:`偏离共振：最近的 ${m.n} 阶固有频率为 ${m.fn.toFixed(1)} Hz`):'音叉停振';
-        read.textContent=`${status}。弦长 ${length.toFixed(1)} cm · 悬挂总质量 ${mass} g · 驱动 ${f} Hz`;
+        read.textContent=`${status}。弦长 ${measuredLength().toFixed(1)} cm · 悬挂总质量 ${measuredMass().toFixed(1)} g · 驱动 ${f} Hz`;
       }
       function animate() {
         cancel();
@@ -2791,9 +2799,17 @@ function mountBench(chapter, bench) {
         if (!on) return;
         cancel=timeline(2300,p=>{phase=Math.cos(2*tau*p);drawWave(model());});
       }
-      const setLength=value=>{length=+clamp(value,minLength,maxLength).toFixed(1);range.value=length;refresh();};
-      const toggle=()=>{on=!on;animate();};
-      const changeMass=amount=>{mass=clamp(mass+amount,20,100);animate();};
+      const setLength=value=>{
+        const next=+clamp(value,minLength,maxLength).toFixed(1);
+        if(next!==length) recorded=false;
+        length=next;range.value=length;refresh();
+      };
+      const toggle=()=>{on=!on;if(on){noise.reset();recorded=false;}animate();};
+      const changeMass=amount=>{
+        const next=clamp(mass+amount,20,100);
+        if(next!==mass) recorded=false;
+        mass=next;animate();
+      };
       bindHits(host,{power:toggle,carriage:()=>{setLength(length+.4);animate();},mass:()=>changeMass(mass===100?-10:10)});
       range.addEventListener('input',()=>setLength(Number(range.value)));
       range.addEventListener('change',animate);
@@ -2805,13 +2821,18 @@ function mountBench(chapter, bench) {
         const note=q('[data-log-note]');
         if(!on||!m.resonant){note.textContent='先开启音叉、慢慢调节有效长度，直到能清楚数出波腹，再记入表中。';return;}
         if(rows.length>=12){note.textContent='表内已有12行，可清空后重做一轮。';return;}
-        const v=2*(length/100)*f/m.n;
-        const rho=1000*m.tension/(v*v);
-        rows.push([mass,length.toFixed(1),m.n,v.toFixed(2),rho.toFixed(3)]);
+        if(recorded) noise.reset();
+        const observedLength=measuredLength();
+        const observedMass=measuredMass();
+        const v=2*(observedLength/100)*f/m.n;
+        const rho=observedMass*9.81/(v*v);
+        rows.push([observedMass.toFixed(1),observedLength.toFixed(1),m.n,v.toFixed(2),rho.toFixed(3)]);
+        recorded=true;
+        refresh();
         q('[data-log-body]').innerHTML=rows.map(row=>`<tr>${row.map(val=>`<td>${val}</td>`).join('')}</tr>`).join('');
         note.textContent=`已记录。用 v=2Lf/n 求波速，再用 ρ=F/v² 求线密度。下一组可改变总质量，再独立找一次共振。`;
       });
-      q('[data-clear]').addEventListener('click',()=>{rows.length=0;q('[data-log-body]').replaceChildren();q('[data-log-note]').textContent='';});
+      q('[data-clear]').addEventListener('click',()=>{rows.length=0;noise.reset();recorded=false;refresh();q('[data-log-body]').replaceChildren();q('[data-log-note]').textContent='';});
       allowDrag(q('.iso-svg'),'carriage',k.axisVector(P,[1,0,0]),()=>length,value=>setLength(value),-1/3.92);
       refresh();
     }
@@ -2871,6 +2892,12 @@ function mountBench(chapter, bench) {
       const phase=()=>tau*position/wt();
       const amp=()=>gain()*(.16+.84*Math.cos(phase())**2)*Math.exp(-(position-50)/145);
       const tof=()=>12+1000*specimen/material;
+      const noise=PhysLabNoise.createSampler();
+      const measuredPosition=()=>+noise.read('receiver-ruler',position,.055,{min:0}).toFixed(2);
+      const measuredRod=()=>+noise.read('rod-length',specimen,.11,{min:0}).toFixed(2);
+      const measuredAmplitude=()=>+noise.read('scope-amplitude',amp(),.008,{min:0}).toFixed(3);
+      const measuredPhase=()=>noise.read('scope-phase',phase(),.023);
+      const measuredDelay=()=>+noise.read('scope-delay',tof(),.045,{min:0}).toFixed(3);
       const px=(x,z,depth)=>[depth,x,z];
       const yFace=(x,z,y)=>[x,y,z];
       function instrument(x,y,w,d,h,ports) {
@@ -2942,16 +2969,20 @@ function mountBench(chapter, bench) {
       const mid=.5;
       function signals() {
         if(!power) return [[],[]];
-        if(mode==='phase') return [sampled(t=>[mid+.40*Math.cos(t*tau),mid+.42*gain()*Math.cos(t*tau-phase())]),[]];
+        if(mode==='phase') {
+          const shift=measuredPhase();
+          return [sampled(t=>[mid+.40*Math.cos(t*tau),mid+.42*gain()*Math.cos(t*tau-shift)]),[]];
+        }
         if(mode==='pulse') {
           const wave=(begin,base)=>sampled(p=>{const u=p*110-begin;return [p,base+(u>0&&u<16?.17*Math.sin(u*2.8)*Math.exp(-u/7):0)];});
-          return [wave(tof(),.31),wave(0,.71)];
+          return [wave(measuredDelay(),.31),wave(0,.71)];
         }
-        return [sampled(t=>[t,mid+.43*amp()*Math.sin(4*tau*t-phase())]),[]];
+        const amplitude=measuredAmplitude();
+        return [sampled(t=>[t,mid+.43*amplitude*Math.sin(4*tau*t-phase())]),[]];
       }
       function detail() {
-        if(mode==='pulse') return `棒长 ${specimen} mm · ${power?'接收延时 '+tof().toFixed(3)+' μs':'信号源关闭'}`;
-        return `${labels[mode]} · 间距 ${position.toFixed(2)} mm · ${power?(mode==='standing'?`归一化幅度 ${amp().toFixed(3)}`:`相位差 ${(phase()*180/Math.PI%360).toFixed(0)}°`):'信号源关闭'}`;
+        if(mode==='pulse') return `棒长 ${measuredRod().toFixed(2)} mm · ${power?'接收延时 '+measuredDelay().toFixed(3)+' μs':'信号源关闭'}`;
+        return `${labels[mode]} · 间距 ${measuredPosition().toFixed(2)} mm · ${power?(mode==='standing'?`归一化幅度 ${measuredAmplitude().toFixed(3)}`:`相位差 ${((measuredPhase()*180/Math.PI%360+360)%360).toFixed(0)}°`):'信号源关闭'}`;
       }
       function refresh() {
         const isPulse=mode==='pulse';
@@ -2970,7 +3001,7 @@ function mountBench(chapter, bench) {
         update('[data-large-trace]',main,largePoint);
         update('[data-large-ref]',reference,largePoint);
         q('[data-audio-status]').textContent=detail();
-        q('[data-audio-distance]').textContent=`${position.toFixed(2)} mm`;
+        q('[data-audio-distance]').textContent=`${measuredPosition().toFixed(2)} mm`;
         q('[data-audio-air]').hidden=isPulse;
         q('[data-audio-solid]').hidden=!isPulse;
         q('[data-audio-power]').textContent=power?'关闭信号源':'打开信号源';
@@ -2981,8 +3012,8 @@ function mountBench(chapter, bench) {
       const sourceValue=q('.iso-face-text');
       sourceValue.setAttribute('data-source-value','');
       const setPosition=x=>{position=+clamp(x,50,105).toFixed(2);range.value=position;refresh();};
-      const toggle=()=>{power=!power;refresh();};
-      const clear=()=>{entries=[];q('[data-log-body]').replaceChildren();q('[data-log-note]').textContent='';};
+      const toggle=()=>{power=!power;if(power)noise.reset();refresh();};
+      const clear=()=>{entries=[];noise.reset();q('[data-log-body]').replaceChildren();q('[data-log-note]').textContent='';};
       const applyMode=next=>{if(mode!==next){mode=next;select.value=next;clear();refresh();}};
       const changeSpecimen=()=>{specimen=300-specimen;refresh();};
       bindHits(host,{
@@ -3000,7 +3031,7 @@ function mountBench(chapter, bench) {
       select.addEventListener('change',()=>applyMode(select.value));
       rpm.addEventListener('change',()=>{if(rpm.value!=='')freq=clamp(Number(rpm.value),35,38);rpm.value=freq;clear();refresh();});
       q('[data-audio-material]').addEventListener('change',e=>{material=Number(e.target.value);clear();refresh();});
-      q('[data-clear]').addEventListener('click',clear);
+      q('[data-clear]').addEventListener('click',()=>{clear();refresh();});
       q('[data-log]').addEventListener('click',()=>{
         const note=q('[data-log-note]');
         if(!power){note.textContent='先打开信号源。';return;}
@@ -3009,11 +3040,12 @@ function mountBench(chapter, bench) {
         const i=Math.round(feature);
         if(mode!=='pulse'&&Math.abs(feature-i)>.045){note.textContent=mode==='standing'?'此处离峰值还有一段。微移接收座，选取显著最大幅度的位置。':'图样还张开。请微移接收座，把椭圆压成正斜或负斜的近似直线。';return;}
         const key=mode==='pulse'?specimen:i;
-        const distance=mode==='pulse'?specimen:position;
-        const reading=mode==='pulse'?`${tof().toFixed(3)} μs`:mode==='phase'?(i%2?'负斜率':'正斜率'):`相对幅度 ${amp().toFixed(3)}`;
+        const distance=mode==='pulse'?measuredRod():measuredPosition();
+        const time=mode==='pulse'?measuredDelay():undefined;
+        const reading=mode==='pulse'?`${time.toFixed(3)} μs`:mode==='phase'?(i%2?'负斜率':'正斜率'):`相对幅度 ${measuredAmplitude().toFixed(3)}`;
         if(entries.some(row=>row.key===key)){note.textContent='这个位置或棒长已经记录。';return;}
         if(entries.length>=12){note.textContent='一组 12 个读数已齐。';return;}
-        entries.push({key,distance,reading,time:tof()});
+        entries.push({key,distance,reading,time});
         q('[data-log-body]').innerHTML=entries.map((row,j)=>`<tr><td>${j+1} · ${labels[mode]}</td><td>${row.distance.toFixed(2)}</td><td>${row.reading}</td></tr>`).join('');
         if(entries.length<2){note.textContent=mode==='pulse'?'已记录第一根棒。保持材料，换一根不同长度的棒。':'已记录第一个点。微移接收座继续找下一个特征点。';return;}
         const a=entries.reduce((p,r)=>r.key<p.key?r:p);

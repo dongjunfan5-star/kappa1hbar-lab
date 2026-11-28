@@ -472,6 +472,7 @@ body { font-family: var(--lab-font); }
 </head>
 <body>
 <main id="course" class="unit-content"><noscript><p>请允许 JavaScript 以操作仿真实验台。</p></noscript></main>
+<script src="../../assets/measurement-noise.js"></script>
 <script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id,lesson);</script>
 <script>const anatomyIso = (() => {
 const AZIMUTH = 45;
@@ -2454,7 +2455,7 @@ function mountBench(chapter, bench) {
   const boilingPoints = {730:98.88, 740:99.26, 750:99.63, 760:100.00, 770:100.36};
   const beforeTimes = [1, 2, 3, 4, 5];
   const afterTimes = [5.5, 6, 6.5, 7, ...Array.from({length:10}, (_, i) => i + 8)];
-  const measured = value => Number(value.toFixed(1));
+  const observed = (value, halfWidth) => Number(PhysLabNoise.sample(value, halfWidth).toFixed(1));
   const f = (value, digits = 1) => value.toFixed(digits);
   const heatCapacity = mass => mass * waterHeat + (innerMass + stirrerMass) * copperHeat + 2 * (volumeAfter - volumeBefore);
   const estimateWater = (cooling, hot) => {
@@ -2508,13 +2509,13 @@ function mountBench(chapter, bench) {
     return t => intercept + t * slope;
   }
 
-  function correction(before, after) {
+  function correction(before, after, ambient) {
     const ordered = [before.at(-1), ...after.slice(0, 4)];
-    const index = ordered.findIndex((point, i) => i > 0 && ordered[i - 1].temp < room && point.temp >= room);
+    const index = ordered.findIndex((point, i) => i > 0 && ordered[i - 1].temp < ambient && point.temp >= ambient);
     if (index === -1) return null;
     const {t: a, temp: ta} = ordered[index - 1];
     const {t: b, temp: tb} = ordered[index];
-    const t = a + (room - ta) * (b - a) / (tb - ta);
+    const t = a + (ambient - ta) * (b - a) / (tb - ta);
     const initial = fitLine(before);
     const final = fitLine(after.filter(point => point.t >= 8));
     return {t, initial, final, t1:initial(t), t2:final(t)};
@@ -2632,11 +2633,12 @@ function mountBench(chapter, bench) {
       const control = name => q(`[data-t9-${name}]`);
       const readout = control('readout');
       const result = control('result');
-      const state = {water:106, pressure:760, draft:false, weighed:false, ice:false, thaw:1, volume:false, heat:0, heating:false, transferring:false, poured:false, travel:0, corrected:false, before:[], after:[]};
+      const state = {water:106, pressure:760, draft:false, weighed:false, ice:false, thaw:1, volume:false, heat:0, heating:false, transferring:false, poured:false, travel:0, corrected:false, before:[], after:[], ambient:observed(room,.12), weighing:null};
       let stopHeating = () => {};
       let stopTransfer = () => {};
       let stopThaw = () => {};
       const hot = () => boilingPoints[state.pressure];
+      const thermometer=PhysLabNoise.createSampler();
       const coolingRate = () => state.draft ? .044 : .013;
       const tStart = () => state.ice ? room - 3.6 : room;
       const preTemp = t => room + (tStart() - room) * Math.exp(-coolingRate() * t);
@@ -2650,8 +2652,13 @@ function mountBench(chapter, bench) {
         const mix = (1 - Math.exp(-1.95 * (t - 5))) / (1 - Math.exp(-1.95 * 2));
         return preTemp(5) + mix * (cooling - preTemp(5));
       }
-      const getHeat = (t1,t2) => heatCapacity(state.water) * (t2-t1) / (zincMass * (hot()-t2));
-      const getCorrection = () => state.after.length === afterTimes.length ? correction(state.before,state.after) : null;
+      const getHeat = (t1,t2) => {
+        const {zinc,inner,stirrer,water} = state.weighing;
+        const immersionCapacity = 2 * (state.volume.after-state.volume.before);
+        const measuredCapacity = water * waterHeat + (inner+stirrer) * copperHeat + immersionCapacity;
+        return measuredCapacity * (t2-t1) / (zinc * (hot()-t2));
+      };
+      const getCorrection = () => state.ice && state.after.length === afterTimes.length ? correction(state.before,state.after,state.ambient) : null;
       const note = value => { control('note').textContent = value; };
 
       function graph(adjusted) {
@@ -2670,8 +2677,8 @@ function mountBench(chapter, bench) {
           gridLine(x(1),y(adjusted.initial(1)),x(adjusted.t),y(adjusted.t1),'var(--plot-secondary)','stroke-width="1.7" stroke-dasharray="5 3"')+
           gridLine(x(adjusted.t),y(adjusted.t2),x(17),y(adjusted.final(17)),'var(--plot-secondary)','stroke-width="1.7" stroke-dasharray="5 3"')+
           label(x(adjusted.t)-7,y(adjusted.t1)+16,'T₁')+label(x(adjusted.t)-7,y(adjusted.t2)-4,'T₂')+
-          label(x(adjusted.t)-7,y(room)-4,'G') : '';
-        control('chart').innerHTML = ticks+gridLine(left,y(room),right,y(room),'var(--plot-secondary)','stroke-dasharray="3 4" opacity=".66"')+plot+fits+label(right-3,y(room)-5,'室温')+
+          label(x(adjusted.t)-7,y(state.ambient)-4,'G') : '';
+        control('chart').innerHTML = ticks+gridLine(left,y(state.ambient),right,y(state.ambient),'var(--plot-secondary)','stroke-dasharray="3 4" opacity=".66"')+plot+fits+label(right-3,y(state.ambient)-5,'室温')+
           label(left,15,'T / ℃','start')+label(right,215,'t / min');
       }
 
@@ -2699,15 +2706,16 @@ function mountBench(chapter, bench) {
       function draw() {
         const last = state.after.at(-1) ?? state.before.at(-1);
         const t = last?.t ?? 0;
-        const waterTemp = last?.temp ?? tStart();
-        const scalepart = state.weighed ? `锌粒 ${f(zincMass)} g · 内筒 ${f(innerMass)} g · 搅拌器 ${f(stirrerMass)} g · 内筒＋搅拌器＋水 ${f(innerMass+stirrerMass+state.water)} g · 水 ${f(state.water)} g` : '质量待称量';
-        readout.innerHTML = `<strong>t = ${f(t)} min · 水温 ${f(waterTemp)} ℃</strong><br>${scalepart} · 室温 ${f(room)} ℃<br>${state.volume?`V₁ = ${f(volumeBefore)} mL，V₂ = ${f(volumeAfter)} mL，V = ${f(volumeAfter-volumeBefore)} cm³`:'V 待测'} · ${state.heat===1?`沸点 T′ = ${f(hot(),2)} ℃`:state.heating?`沸水保温 ${Math.floor(15*state.heat)} / 15 min`:'锌粒待加热'}`;
+        const waterTemp = last?.temp ?? thermometer.read('initial',tStart(),.12);
+        const weights = state.weighing;
+        const scalepart = state.weighed ? `锌粒 ${f(weights.zinc)} g · 内筒 ${f(weights.inner)} g · 搅拌器 ${f(weights.stirrer)} g · 内筒＋搅拌器＋水 ${f(weights.total)} g · 水 ${f(weights.water)} g` : '质量待称量';
+        readout.innerHTML = `<strong>t = ${f(t)} min · 水温 ${f(waterTemp)} ℃</strong><br>${scalepart} · 室温 ${f(state.ambient)} ℃<br>${state.volume?`V₁ = ${f(state.volume.before)} mL，V₂ = ${f(state.volume.after)} mL，V = ${f(state.volume.after-state.volume.before)} cm³`:'V 待测'} · ${state.heat===1?`沸点 T′ = ${f(hot(),2)} ℃`:state.heating?`沸水保温 ${Math.floor(15*state.heat)} / 15 min`:'锌粒待加热'}`;
         control('plan').textContent = `若水起初低于室温 3.6 ℃，根据教材的热补偿思路估算本组需水约 ${f(estimateWater(3.6,hot()),0)} g。`;
         control('heat').setAttribute('aria-pressed',String(state.heat===1));
         control('heat').textContent = state.heat===1 ? '水浴 15 min 已完成' : state.heating ? '正在水浴加热' : '加热锌粒';
         control('heat').disabled = state.heating || state.poured;
         control('heater-light').style.opacity = state.heat===0 ? '.24' : '1';
-        control('scale-face').textContent = state.weighed ? f(state.water) : '—';
+        control('scale-face').textContent = state.weighed ? f(weights.water) : '—';
         control('pressure-face').textContent = state.pressure;
         control('water-low').style.display = state.volume ? 'none' : '';
         control('water-high').style.display = state.volume ? '' : 'none';
@@ -2730,6 +2738,9 @@ function mountBench(chapter, bench) {
         const mass = input.valueAsNumber;
         if (!Number.isInteger(mass) || mass < 75 || mass > 160) return note('请在 75–160 g 之间填写整数水量后再称。');
         state.water = mass;
+        const zinc=observed(zincMass,.16),inner=observed(innerMass,.16),stirrer=observed(stirrerMass,.16);
+        const total=observed(innerMass+stirrerMass+mass,.16);
+        state.weighing={zinc,inner,stirrer,total,water:total-inner-stirrer};
         state.weighed = true;
         note('质量已记录。加水后总质量减去内筒和搅拌器质量得到水量。');
         draw();
@@ -2749,8 +2760,8 @@ function mountBench(chapter, bench) {
         });
       }
       function measureVolume() {
-        state.volume = true;
-        note('按量热器中的浸没深度放入温度计。量筒升高的 2.8 mL 即浸没体积。');
+        state.volume={before:observed(volumeBefore,.13),after:observed(volumeAfter,.13)};
+        note(`按量热器中的浸没深度放入温度计，量筒两次读数之差 ${f(state.volume.after-state.volume.before)} mL 即浸没体积。`);
         draw();
         updateResults();
       }
@@ -2775,8 +2786,9 @@ function mountBench(chapter, bench) {
         if (!state.poured && state.before.length===beforeTimes.length) return note('混合前五次已记齐。确认水浴完成，再倒入热锌粒。');
         if (state.after.length===afterTimes.length) return note('本组温度已记录齐全。现在可以绘制外推校正。');
         const list = state.poured ? state.after : state.before;
-        const t = (state.poured ? afterTimes : beforeTimes)[list.length];
-        const temp = measured(state.poured ? postTemp(t) : preTemp(t));
+        const scheduled = (state.poured ? afterTimes : beforeTimes)[list.length];
+        const t = observed(scheduled,.085);
+        const temp = observed(state.poured ? postTemp(scheduled) : preTemp(scheduled),.12);
         list.push({t,temp});
         if (!state.poured) note(state.before.length===5 ? '初始漂移段已记录齐。将热锌粒转入量热器。' : `t = ${f(t)} min，T = ${f(temp)} ℃。继续按 1 min 间隔记录。`);
         else if (state.after.length===afterTimes.length) note('降温段已记录齐。用升温跨过室温的时刻作外推。');
@@ -2806,7 +2818,7 @@ function mountBench(chapter, bench) {
         const fit = getCorrection();
         if (!fit) return note('升温段未从室温下方跨过去，找不到教材图中的 G。重新准备一组，将初始水温降至室温以下。');
         state.corrected = !state.corrected;
-        note(state.corrected ? `室温 ${f(room)} ℃ 对应的时刻为 ${f(fit.t,2)} min。外推 T₁ = ${f(fit.t1,2)} ℃，T₂ = ${f(fit.t2,2)} ℃。` : '已隐藏拟合线与校正值。');
+        note(state.corrected ? `室温 ${f(state.ambient)} ℃ 对应的时刻为 ${f(fit.t,2)} min。外推 T₁ = ${f(fit.t1,2)} ℃，T₂ = ${f(fit.t2,2)} ℃。` : '已隐藏拟合线与校正值。');
         draw();
         updateResults();
       }
@@ -2814,7 +2826,8 @@ function mountBench(chapter, bench) {
         stopHeating();
         stopTransfer();
         stopThaw();
-        Object.assign(state,{weighed:false,ice:false,thaw:1,volume:false,heat:0,heating:false,transferring:false,poured:false,travel:0,corrected:false,before:[],after:[]});
+        thermometer.reset();
+        Object.assign(state,{ambient:observed(room,.12),weighing:null,weighed:false,ice:false,thaw:1,volume:false,heat:0,heating:false,transferring:false,poured:false,travel:0,corrected:false,before:[],after:[]});
         note('准备下一组。可调整水量、气压和散热条件。');
         draw();
         updateResults();

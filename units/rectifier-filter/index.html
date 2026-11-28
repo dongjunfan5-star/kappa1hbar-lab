@@ -2441,6 +2441,7 @@ function mountBench(chapter, bench) {
   }
 }
 </script>
+<script src="../../assets/measurement-noise.js"></script>
 <script>(() => {
   const part = (title,pages,html) => ({title,pages,html});
   const question = (prompt,text) => `<details><summary>${prompt}</summary><p>${text}</p></details>`;
@@ -2492,6 +2493,11 @@ function mountBench(chapter, bench) {
     const square=series.reduce((sum,value)=>sum+value*value,0)/series.length;
     const ac=Math.sqrt(Math.max(0,square-average*average));
     return {average,ac,pp:Math.max(...series)-Math.min(...series),ripple:average>0?100*ac/average:0,power:1000*square/load};
+  }
+  function acquireWaveform(values) {
+    const gain=PhysLabNoise.sample(1,.0012);
+    const zero=PhysLabNoise.sample(0,.006);
+    return values.map(value=>PhysLabNoise.sample(value*gain+zero,.003));
   }
 
   registerBench('16',{
@@ -2623,7 +2629,8 @@ function mountBench(chapter, bench) {
       const compareKey=settings=>[settings.mode,settings.frequency,settings.peak,settings.cap,settings.ideal].join('/');
       const records=[];
       const resistances=[330,680,1200];
-      let power=false, signals, stats;
+      const bridgeMeter=PhysLabNoise.createSampler();
+      let power=false, idealSignals, signals, stats, currentCaptureSaved=false;
       function waveform(values,transform){
         if (!values) return '';
         return values.filter((_,i)=>i%7===0).map((value,i)=>{
@@ -2655,12 +2662,19 @@ function mountBench(chapter, bench) {
         const downstream=1000+arm;
         const bridgeLoad=upstream*downstream/(upstream+downstream);
         const supply=characterize(simulate({...config(),mode:'pi',load:bridgeLoad}).output,bridgeLoad).average;
-        const differential=supply*(unknown/(1000+unknown)-arm/(1000+arm));
+        const idealDifference=supply*(unknown/(1000+unknown)-arm/(1000+arm));
+        const differential=bridgeMeter.read('bridge-difference',idealDifference,.00018);
         by('zero').textContent=`桥检流计中点电压差：${f(1000*differential,2)} mV`;
+        return {supply,differential};
       }
-      function draw(recompute=true){
+      function draw(recompute=true,resample=false){
         const settings=config();
-        if(recompute&&power){signals=simulate(settings);stats=characterize(signals.output,settings.load);}
+        if(recompute&&power)idealSignals=simulate(settings);
+        if(power&&(recompute||resample)){
+          signals=Object.fromEntries(Object.entries(idealSignals).map(([channel,values])=>[channel,acquireWaveform(values)]));
+          stats=characterize(signals.output,settings.load);
+          currentCaptureSaved=false;
+        }
         const coupled=power?signals.output.map(value=>value-(by('coupling').value==='ac'?stats.average:0)):null;
         const digital=power?(by('meter').value==='ac'?stats.ac:stats.average):null;
         const graph=(value,x)=>[43+378*x,67-11*value];
@@ -2682,17 +2696,19 @@ function mountBench(chapter, bench) {
         by('power').setAttribute('aria-pressed',String(power));
         by('brief').innerHTML=power?`<strong>DCV ${f(stats.average)} V</strong>　ACV ${f(stats.ac)} V　峰峰纹波 ${f(stats.pp)} V　负载功率 ${f(stats.power,2)} mW`:'先开启信号发生器。';
         const beforeFilter=power&&settings.mode==='pi'?characterize(signals.reservoir,settings.load):null;
-        by('compare-read').textContent=power?`信号源输入 DCV 0.000 V，ACV ${f(settings.peak/Math.sqrt(2))} V。${beforeFilter?`π 型 C₁ 节点 DCV ${f(beforeFilter.average)} V，ACV ${f(beforeFilter.ac)} V。`:''}`:'';
+        const beforeRectifier=power?characterize(signals.input,settings.load):null;
+        by('compare-read').textContent=beforeRectifier?`信号源输入 DCV ${f(beforeRectifier.average)} V，ACV ${f(beforeRectifier.ac)} V。${beforeFilter?`π 型 C₁ 节点 DCV ${f(beforeFilter.average)} V，ACV ${f(beforeFilter.ac)} V。`:''}`:'';
         by('k').textContent=power?f(stats.ripple,2):'—';
         showTrends(settings);
         showResistance();
       }
-      function powerSwitch(){power=!power;draw();}
+      function powerSwitch(){power=!power;bridgeMeter.reset();draw();}
       function nextMode(){const keys=Object.keys(modes);by('mode').value=keys[(keys.indexOf(by('mode').value)+1)%keys.length];draw();}
       function nextLoad(){by('load').selectedIndex=(by('load').selectedIndex+1)%loadSteps.length;draw();}
       function flip(name){const select=by(name);select.selectedIndex=1-select.selectedIndex;draw(false);}
       function record(){
         if(!power){by('note').textContent='先打开信号发生器。';return;}
+        draw(false,currentCaptureSaved);
         const settings=config();
         const values=[`${modes[settings.mode]} · ${settings.frequency} Hz`,settings.load,f(stats.average),f(stats.ac),f(stats.ripple,2),f(stats.power,2)];
         const tr=document.createElement('tr');
@@ -2702,22 +2718,27 @@ function mountBench(chapter, bench) {
         by('rows').replaceChildren(...records.map(row=>row.tr));
         by('note').textContent='已保存一组读数。可调负载记录下一点，或在相同设置下换电路对照。';
         showTrends(settings);
+        currentCaptureSaved=true;
       }
       function measureResistance(){
         const result=by('res-result');
         if(!power){result.textContent='请先开启信号源。';return;}
         if(by('mode').value!=='pi'){result.textContent='先切换到 π 型 RC，给测阻支路提供平滑的电压。';return;}
         const unknown=resistances[Number(by('unknown').value)-1];
-        let supply;
         if(by('test').value==='bridge'){
           const arm=by('arm').valueAsNumber;
           if(!Number.isFinite(arm)||arm<1||arm>10000){result.textContent='输入 1–10000 Ω 内的比较臂阻值。';return;}
           if(Math.abs(arm-unknown)>.5){result.textContent='先调比较臂使检流计归零。';return;}
-          result.textContent=`电桥平衡。Rₓ = ${Math.round(arm)} Ω。`;
+          const {supply,differential}=showResistance();
+          const ratio=arm/(1000+arm)+differential/supply;
+          result.textContent=`电桥平衡。Rₓ ≈ ${f(1000*ratio/(1-ratio),1)} Ω。`;
+          bridgeMeter.reset();
         } else {
           const settings={...config(),load:unknown};
-          supply=characterize(simulate(settings).output,unknown).average;
-          result.textContent=`U = ${f(supply)} V，I = ${f(1000*supply/unknown)} mA，Rₓ ≈ ${unknown} Ω。`;
+          const supply=characterize(simulate(settings).output,unknown).average;
+          const voltage=PhysLabNoise.sample(supply,.006,{min:0});
+          const current=PhysLabNoise.sample(1000*supply/unknown,.004,{min:.0001});
+          result.textContent=`U = ${f(voltage)} V，I = ${f(current)} mA，Rₓ ≈ ${f(1000*voltage/current,1)} Ω。`;
         }
       }
       for(const name of ['mode','load','amplitude','frequency','cap','model']) by(name).addEventListener('change',()=>draw());

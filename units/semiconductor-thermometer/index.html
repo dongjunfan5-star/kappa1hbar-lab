@@ -2441,6 +2441,7 @@ function mountBench(chapter, bench) {
   }
 }
 </script>
+<script src="../../assets/measurement-noise.js"></script>
 <script>(() => {
   const kelvin = temperature => temperature + 273.15;
   const resistance = temperature => 1000 * Math.exp(3600 * (1/kelvin(temperature) - 1/kelvin(25)));
@@ -2553,11 +2554,15 @@ function mountBench(chapter, bench) {
 
       const q=name=>host.querySelector(`[data-t14-${name}]`);
       const s={power:false,mode:'thermo',temperature:35,arm:idealArm,reference:1000,series:750,case:'box',setting:20,zero:false,span:false,calibrated:false,r4:null,alarmSet:false,curve:[],readings:[],alarms:[]};
+      const meters=PhysLabNoise.createSampler();
       const f=(value,digits=1)=>value.toFixed(digits);
       const setNote=message=>{q('note').textContent=message;};
       const actualR=()=>s.case==='probe'?resistance(s.temperature):s.case==='check'&&s.r4!==null?s.r4:resistance(s.setting);
       const working=(sample=actualR())=>workingBridge(s.arm,s.reference,sample,s.series);
-      const measuredUA=sample=> Math.round(working(sample).meterA*1e7)/10;
+      const quantizeUA=value=>Math.round(value*10)/10;
+      const idealUA=sample=>working(sample).meterA*1e6;
+      const measuredUA=()=>quantizeUA(meters.read('meter-current',idealUA(actualR()),.18));
+      const bathReading=()=>meters.read('bath-temperature',s.temperature,.16);
       const powerRequired=()=>s.power || (setNote('先合上电源，再观察微安表。'),false);
 
       function estimate(i) {
@@ -2571,7 +2576,7 @@ function mountBench(chapter, bench) {
       function plot() {
         const ideal=Array.from({length:21},(_,i)=>({t:20+2.5*i,r:resistance(20+2.5*i)}));
         const x=t=>51+323*(t-low)/(high-low),y=i=>153-1.07*i;
-        const chart=ideal.map(({t,r})=>({t,i:measuredUA(r)}));
+        const chart=ideal.map(({t,r})=>({t,i:quantizeUA(idealUA(r))}));
         const graphPath=rows=>rows.map((row,i)=>`${i?'L':'M'}${f(x(row.t),2)} ${f(y(row.i),2)}`).join(' ');
         q('plot').innerHTML=`<defs><clipPath id="t14-graph-area"><rect x="51" y="28" width="324" height="126"/></clipPath></defs><path class="axis" d="M51 28V153H374M51 46H374M51 99H374"/><text x="51" y="18">微安表 / μA</text><text x="41" y="49" text-anchor="end">100</text><text x="41" y="102" text-anchor="end">50</text><text x="41" y="156" text-anchor="end">0</text><text x="51" y="173">20</text><text x="374" y="173" text-anchor="end">70 ℃</text><g clip-path="url(#t14-graph-area)"><path class="guide" d="${graphPath(chart)}"/><path class="curve" d="${graphPath(s.curve)}"/>${s.curve.filter((_,i)=>i%2===0).map(point=>`<circle class="marker" cx="${x(point.t)}" cy="${y(point.i)}" r="2.8"/>`).join('')}<circle data-t14-graph-sample fill="var(--plot-secondary)" r="4" opacity="0"/></g><text x="374" y="18" text-anchor="end">虚线为当前电桥响应</text>`;
         q('curve-rows').innerHTML=s.curve.map(point=>`<tr><td>${f(point.t)}</td><td>${f(point.r)}</td><td>${f(point.i)}</td></tr>`).join('');
@@ -2583,23 +2588,27 @@ function mountBench(chapter, bench) {
         q('power').setAttribute('aria-pressed',String(s.power));
         q('power').textContent=s.power?'断开电源':'合上电源';
         q('bath-label').textContent=`${s.temperature} ℃`;
-        q('device-temp').textContent=`${f(s.temperature)} °C`;
+        const bath=bathReading();
+        q('device-temp').textContent=`${f(bath)} °C`;
         const red=s.power && !thermometer && s.alarmSet && s.temperature>60;
         const blue=s.power && s.mode==='dual' && s.alarmSet && s.temperature>90;
         q('led-red').setAttribute('fill',red?'#ff775f':'#45606d');
         q('led-blue').setAttribute('fill',blue?'#64c5ff':'#45606d');
         q('wires').setAttribute('opacity',s.case==='probe'||!thermometer?'1':'.32');
-        const u=working(), i= s.power&&thermometer?measuredUA(actualR()):0;
+        const u=working(), i=s.power&&thermometer?measuredUA():0;
         const needle=Math.min(1,Math.max(0,i/100));
         q('needle').setAttribute('d',path([[-97,-2,25],[-122+55.4*needle,-21-7*Math.sin(needle*Math.PI*.83),25]]));
         if(!thermometer) {
-          q('readout').innerHTML=`<strong>水浴 ${f(s.temperature)} ℃ · ${s.mode==='single'?'单温':'双温'}报警</strong><br>PTC1 居里点 60 ℃${s.mode==='dual'?' · PTC2 居里点 90 ℃':''}`;
+          q('readout').innerHTML=`<strong>水浴 ${f(bath)} ℃ · ${s.mode==='single'?'单温':'双温'}报警</strong><br>PTC1 居里点 60 ℃${s.mode==='dual'?' · PTC2 居里点 90 ℃':''}`;
           q('alarm-result').textContent=!s.power?'先合上电源。':!s.alarmSet?'把水浴设 60 ℃，先调 R₃。':`红灯 ${red?'亮':'灭'}${s.mode==='dual'?` · 蓝灯 ${blue?'亮':'灭'}`:''}`;
           return;
         }
         const selection=s.case==='probe'?'3 挡 · NTC 探头':s.case==='check'?'2 挡 · 内部 R₄':'3 挡 · 电阻箱';
-        q('readout').innerHTML=`<strong>${selection} · ${s.power?`${f(i)} μA`:'电源断开'}</strong><br>测量臂 ${f(actualR())} Ω · 桥端 ${f(s.power?u.u:0,3)} V · 探头电流 ${f(s.power?u.sensorA*1000:0,2)} mA`;
-        const value=temperatureReading();
+        const arm=s.case==='probe'?meters.read('probe-resistance',actualR(),.16,{min:0}):actualR();
+        const voltage=s.power?meters.read('bridge-voltage',u.u,.0015,{min:0}):0;
+        const current=s.power?meters.read('probe-current',u.sensorA*1000,.014,{min:0}):0;
+        q('readout').innerHTML=`<strong>${selection} · ${s.power?`${f(i)} μA`:'电源断开'}</strong><br>水浴 ${f(bath)} ℃ · 测量臂 ${f(arm)} Ω · 桥端 ${f(voltage,3)} V · 探头电流 ${f(current,2)} mA`;
+        const value=temperatureReading(i);
         const sample=q('graph-sample');
         sample.setAttribute('opacity',value===null?'0':'1');
         if(value!==null) {
@@ -2611,8 +2620,9 @@ function mountBench(chapter, bench) {
         else q('result').textContent=s.calibrated&&s.case==='probe'?'超出 20–70 ℃ 量程。':'依次调零、调满度，再标定表盘。';
       }
 
-      function temperatureReading() {
-        return s.power&&s.calibrated&&s.case==='probe'&&s.temperature>=low&&s.temperature<=high?estimate(measuredUA(actualR())):null;
+      function temperatureReading(i=measuredUA()) {
+        if (!s.power||!s.calibrated||s.case!=='probe'||s.temperature<low||s.temperature>high) return null;
+        return estimate(Math.max(s.curve[0].i,Math.min(s.curve.at(-1).i,i)));
       }
 
       function invalidate() {
@@ -2620,6 +2630,7 @@ function mountBench(chapter, bench) {
       }
       function switchPower() {
         s.power=!s.power;
+        meters.reset();
         setNote(s.power?'电池已经接入。':'电池已与桥路断开。');draw();
       }
       function zero() {
@@ -2644,7 +2655,11 @@ function mountBench(chapter, bench) {
       function calibrate() {
         if(!powerRequired()) return;
         if(!s.span) return setNote('先完成 20 ℃ 调零、70 ℃ 调满度，再逐点标定。');
-        s.curve=Array.from({length:21},(_,index)=>{const t=20+2.5*index, r=resistance(t);return {t,r,i:measuredUA(r)};});
+        s.curve=Array.from({length:21},(_,index)=>{
+          const t=20+2.5*index,r=resistance(t);
+          const i=quantizeUA(PhysLabNoise.sample(idealUA(r),.18,{min:0,max:100}));
+          return {t,r,i};
+        });
         s.calibrated=true;s.case='box';s.setting=high;plot();draw();setNote('电阻箱按每 2.5 ℃ 的等效值扫描了 21 个刻度。换回原探头测量水浴。');
       }
       function connectProbe() {
@@ -2657,8 +2672,10 @@ function mountBench(chapter, bench) {
       function record() {
         const value=temperatureReading();
         if(value===null) return setNote('接入已标定的 NTC，选一个量程内的水浴温度再保存。');
-        s.readings.push({actual:s.temperature,value});
+        s.readings.push({actual:bathReading(),value});
         q('rows').innerHTML=s.readings.map(row=>{const delta=row.value-row.actual;return `<tr><td>${f(row.actual)}</td><td>${f(row.value)}</td><td>${f(delta,2)}</td><td>${f(Math.abs(delta/row.actual)*100,2)}%</td></tr>`;}).join('');
+        draw();
+        meters.reset();
         setNote('已保存一次对照。可再选 35 ℃、55 ℃ 比较。');
       }
       function alarmAdjust() {
@@ -2668,8 +2685,10 @@ function mountBench(chapter, bench) {
       }
       function alarmRecord() {
         if(!s.alarmSet || !powerRequired()) return setNote('先在 60 ℃ 下完成报警阈值校准。');
-        s.alarms.push({t:s.temperature,a:s.temperature>60,b:s.mode==='dual'?s.temperature>90:null});
-        q('alarm-rows').innerHTML=s.alarms.map(({t,a,b})=>`<tr><td>${t}</td><td>${a?'亮':'灭'}</td><td>${b===null?'未接入':b?'亮':'灭'}</td></tr>`).join('');
+        s.alarms.push({t:bathReading(),a:s.temperature>60,b:s.mode==='dual'?s.temperature>90:null});
+        q('alarm-rows').innerHTML=s.alarms.map(({t,a,b})=>`<tr><td>${f(t)}</td><td>${a?'亮':'灭'}</td><td>${b===null?'未接入':b?'亮':'灭'}</td></tr>`).join('');
+        draw();
+        meters.reset();
         setNote('已记下 LED 状态。');
       }
       function setTemperature(value) {

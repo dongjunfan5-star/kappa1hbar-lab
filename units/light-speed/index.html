@@ -472,6 +472,7 @@ body { font-family: var(--lab-font); }
 </head>
 <body>
 <main id="course" class="unit-content"><noscript><p>请允许 JavaScript 以操作仿真实验台。</p></noscript></main>
+<script src="../../assets/measurement-noise.js"></script>
 <script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id,lesson);</script>
 <script>const anatomyIso = (() => {
 const AZIMUTH = 45;
@@ -2555,11 +2556,17 @@ function mountBench(chapter, bench) {
         <p class="reading" data-c-result aria-live="polite"></p><p class="hint" data-c-note>100 MHz 教学模型。初始未接通，须调对准并建立参考。</p>`;
 
       const q=s=>host.querySelector(s);
-      const state={power:false,aligned:false,mode:'wave',medium:'air',x:.300,ref:null,rows:[]};
+      const state={power:false,aligned:false,mode:'wave',medium:'air',x:.300,ref:null,refReading:null,rows:[]};
+      const readingNoise=PhysLabNoise.createSampler();
+      const measuredX=()=>Number(readingNoise.read('position',state.x,.0014).toFixed(3));
       const rFromPhase=phi=>Math.round(1000*gridPeriod*phi/tau)/1000;
       const index=()=>state.medium==='air'?1:solutions[state.medium][1];
       const delta=()=>2*(state.x-(state.ref??.3))+(index()-1)*tubeLength;
       const phase=()=>tau*F*delta()/C;
+      const observed=()=>{
+        const r=Number(readingNoise.read('grid',rFromPhase(phase()),.005).toFixed(3));
+        return {x:measuredX(),r,phase:tau*r/gridPeriod};
+      };
       const qstring=(pts,map)=>k.pathOf(pts.map(([x,y])=>map(x,y)));
       const sample=fn=>Array.from({length:201},(_,i)=>fn(i/200));
       const osc=(x,y)=>xy([13+94*x,-17.62,18+40*y]);
@@ -2573,16 +2580,18 @@ function mountBench(chapter, bench) {
         const returnedY=state.aligned?railY+7:railY+13;
         const rays=[[startX,railY-7,beamZ],[cx,railY-7,beamZ],[cx+8,railY,beamZ],[cx,railY+7,beamZ],[startX,returnedY,beamZ]];
         q('[data-c-beam]').setAttribute('d',state.power?k.pathOf(rays.map(xy)):'');
+        const reading=state.power&&state.aligned?observed():null;
+        const scopePhase=reading?.phase??phase();
         const a=state.power&&state.mode==='wave'?sample(x=>[x,.5+.30*Math.cos(tau*x*2)]):[];
         const gain=state.aligned?.35:.085;
-        const b=!state.power?[]:state.mode==='wave'?sample(x=>[x,.5+gain*Math.cos(tau*x*2-phase())]):sample(x=>[.5+.39*Math.cos(tau*x),.5+gain*Math.cos(tau*x-phase())]);
+        const b=!state.power?[]:state.mode==='wave'?sample(x=>[x,.5+gain*Math.cos(tau*x*2-scopePhase)]):sample(x=>[.5+.39*Math.cos(tau*x),.5+gain*Math.cos(tau*x-scopePhase)]);
         for(const [name,pts,map] of [['panel-a',a,osc],['panel-b',b,osc],['large-a',a,close],['large-b',b,close]])q(`[data-c-${name}]`).setAttribute('d',qstring(pts,map));
         q('[data-c-power]').textContent=state.power?'关机':'开机';
         q('[data-c-mode]').value=state.mode;
         q('[data-c-position]').value=state.x.toFixed(3);
         q('[data-c-distance]').value=state.x;
         q('[data-c-axis]').textContent=state.mode==='wave'?'时域：2 ns/格，周期 r₀ = 5 格。橙色 CH1，绿色 CH2。':'X–Y：横轴 CH1，纵轴 CH2。同相对应正斜直线。';
-        q('[data-c-read]').textContent=state.power?`x = ${state.x.toFixed(3)} m · ${state.aligned?'回光已对准':'回光较弱，请调镜'} · ${state.ref===null?'待记参考':`r = ${rFromPhase(phase()).toFixed(3)} 格 · Δφ = ${(tau*rFromPhase(phase())/gridPeriod).toFixed(3)} rad`}`:'仪器未通电';
+        q('[data-c-read]').textContent=state.power?`x = ${(reading?.x??state.x).toFixed(3)} m · ${state.aligned?'回光已对准':'回光较弱，请调镜'} · ${state.ref===null?'待记参考':`r = ${(reading?.r??rFromPhase(phase())).toFixed(3)} 格 · Δφ = ${scopePhase.toFixed(4)} rad`}`:'仪器未通电';
       }
       function note(text){q('[data-c-note]').textContent=text;}
       function move(x){state.x=Math.round(1000*Math.max(state.medium==='air'?.1:.45,Math.min(1.8,x)))/1000;draw();}
@@ -2593,25 +2602,34 @@ function mountBench(chapter, bench) {
       function zero(){
         if(!state.power||!state.aligned){note('先开机并对准回光。');return;}
         if(state.medium!=='air'){note('请先用空管建立相位参照，再装液体。');return;}
-        clear();state.ref=state.x;note(`已记空管参考 x₀ = ${state.x.toFixed(3)} m。测空气光速时，接下来逐点移动并记录。`);draw();
+        clear();state.ref=state.x;readingNoise.reset();state.refReading=measuredX();
+        note(`已记空管参考 x₀ = ${state.refReading.toFixed(3)} m。测空气光速时，接下来逐点移动并记录。`);draw();
       }
       function record(){
         if(!state.power||!state.aligned||state.ref===null){note('建立有效读数前，先通电、对准回光并记 x₀。');return;}
         if(state.medium!=='air'){
           if(Math.abs(rFromPhase(phase()))>.003){note('液体已改变相位。把小车移近，直到 X–Y 图恢复同相的正斜线，再记录。');return;}
-          const n=1+2*(state.ref-state.x)/tubeLength;
-          q('[data-c-result]').textContent=`${solutions[state.medium][0]}：恢复同相需把小车移近 ${((state.ref-state.x)*1000).toFixed(1)} mm。n ≈ ${n.toFixed(3)}，液体光速约 ${(C/n/1e8).toFixed(3)} × 10⁸ m/s。`;
+          readingNoise.reset();
+          const reading=observed(), displacement=state.refReading-reading.x;
+          const n=1+2*displacement/tubeLength;
+          draw();
+          q('[data-c-result]').textContent=`${solutions[state.medium][0]}：恢复同相需把小车移近 ${(displacement*1000).toFixed(1)} mm。n ≈ ${n.toFixed(3)}，液体光速约 ${(C/n/1e8).toFixed(3)} × 10⁸ m/s。`;
           return;
         }
-        const optical=2*(state.x-state.ref), r=rFromPhase(phase());
-        if(state.rows.some(row=>row.x===state.x)){note('该刻度位置已记录。请把小车移到另一位置。');return;}
+        if(state.rows.some(row=>row.setting===state.x)){note('该刻度位置已记录。请把小车移到另一位置。');return;}
         if(state.rows.length>=12){note('已记录十二点。请比较拟合残差，或清空开始新一组。');return;}
-        state.rows.push({x:state.x,optical,r,phase:tau*r/gridPeriod});
+        readingNoise.reset();
+        const reading=observed();
+        state.rows.push({...reading,setting:state.x,optical:2*(reading.x-state.refReading)});
+        draw();
         q('[data-c-rows]').innerHTML=state.rows.map(row=>`<tr><td>${row.x.toFixed(3)}</td><td>${row.optical.toFixed(3)}</td><td>${row.r.toFixed(3)}</td><td>${row.phase.toFixed(4)}</td></tr>`).join('');
         if(state.rows.length<3){note('已记一组相移和位置。至少要有三个不同位置，才能比较线性拟合结果。');return;}
         const mean=key=>state.rows.reduce((a,b)=>a+b[key],0)/state.rows.length;
         const mx=mean('optical'),my=mean('phase');
-        const slope=state.rows.reduce((s,p)=>s+(p.optical-mx)*(p.phase-my),0)/state.rows.reduce((s,p)=>s+(p.optical-mx)**2,0);
+        const spread=state.rows.reduce((s,p)=>s+(p.optical-mx)**2,0);
+        if(!spread){q('[data-c-result]').textContent='';note('读数位置在仪器分辨率内重合。请拉开位移再记录。');return;}
+        const slope=state.rows.reduce((s,p)=>s+(p.optical-mx)*(p.phase-my),0)/spread;
+        if(slope<=0){q('[data-c-result]').textContent='';note('当前位移太近，读数波动掩盖了相位变化。请扩大测量范围。');return;}
         const v=tau*F/slope;
         q('[data-c-result]').textContent=`${state.rows.length} 点拟合：相位斜率 ${slope.toFixed(4)} rad/m，空气光速 ${(v/1e8).toFixed(3)} × 10⁸ m/s。`;
         note('表中的位置先减参考点，再把位移乘二换成双程。检查示波器一周期的格数是否保持一致。');
