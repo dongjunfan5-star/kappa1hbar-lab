@@ -198,6 +198,7 @@ body, .stage iframe, .failed { background-color: var(--lab-page); color: var(--l
   <h2>从一段梭形，读出半个波长</h2>
   <p class="source-note">对应教材原理1—3，第109—111页，式(7-1)—(7-11)、图7-1—7-3。</p>
   <p>盯住弦上的一个点：它主要上下运动，波的形状却能沿弦左右传播，所以这是<strong>横波</strong>。左右传播的两个同频波叠加后，有些位置始终不动，叫<strong>波节</strong>；相邻波节之间振幅最大的地方叫<strong>波腹</strong>。梭形是高速振动留下的范围，不是弦在同一时刻同时处在两条曲线上。</p>
+  <script src="../../assets/measurement-noise.js"></script>
   <div class="viz-slot"><iframe id="frame-shape" title="波节与波腹交互" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;style&gt;:root {
   color-scheme: light dark;
   background-color: var(
@@ -3776,6 +3777,10 @@ body, .stage iframe, .failed { background-color: var(--lab-page); color: var(--l
  const root=document.getElementById(&#x27;standing-wave-lab&#x27;);if(!root||root.dataset.ready)return;root.dataset.ready=&#x27;1&#x27;;
  const q=s=&gt;root.querySelector(s),svg=q(&#x27;#swl-drawing&#x27;),input=q(&#x27;#swl-length&#x27;),mass=q(&#x27;#swl-mass&#x27;);
  const f=100,rho=.0005,g=9.8;let state={mass:50,length:45,rows:[]},frame=0,old=null;
+ const noise=parent.PhysLabNoise.createSampler();
+ const measuredLength=()=&gt;+noise.read(&#x27;ruler&#x27;,state.length,.065,{min:20,max:90}).toFixed(2);
+ const measuredMass=()=&gt;+noise.read(&#x27;balance&#x27;,state.mass,.17,{min:0}).toFixed(1);
+ let lastObservation;
  const clamp=(x,a,b)=&gt;Math.max(a,Math.min(b,x));
  function physics(s){const v=Math.sqrt(s.mass/1000*g/rho),L=s.length/100,r=2*L*f/v,n=Math.max(1,Math.round(r));return {v,L,r,n,near:Math.abs(r-n)&lt;.012};}
  function wave(z,K){const b=.06,dr=Math.sin(K)*Math.cosh(b),di=Math.cos(K)*Math.sinh(b),nr=Math.sin(K*(1-z))*Math.cosh(b*(1-z)),ni=Math.cos(K*(1-z))*Math.sinh(b*(1-z)),den=dr*dr+di*di;return Math.hypot((nr*dr+ni*di)/den,(ni*dr-nr*di)/den);}
@@ -3792,32 +3797,32 @@ body, .stage iframe, .failed { background-color: var(--lab-page); color: var(--l
   const upper=[],lower=[];for(let i=0;i&lt;=300;i++){const z=i/300,amp=2.6*wave(z,p.r*Math.PI);upper.push([left+span*z,y-amp]);lower.push([left+span*z,y+amp]);}
   out+=`&lt;path d=&quot;${path(upper)} ${path(lower.reverse()).replace(&#x27;M&#x27;,&#x27;L&#x27;)} Z&quot; class=&quot;envelope&quot;/&gt;`;
   out+=`&lt;path d=&quot;M${left},180 V190 M${left},185 H${right} M${right},180 V190&quot; class=&quot;guide&quot;/&gt;`;
-  out+=txt((left+right)/2,211,`L = ${s.length.toFixed(2)} cm`,&#x27;middle&#x27;);
+  out+=txt((left+right)/2,211,`L = ${(s===state?measuredLength():s.length).toFixed(2)} cm`,&#x27;middle&#x27;);
   if(p.near){for(let i=0;i&lt;p.n;i++)out+=txt(left+span*(i+.5)/p.n,60,String(i+1),&#x27;middle&#x27;);}
   svg.innerHTML=out;old={...s};
  }
  function save(){try{Promise.resolve(window.openai?.setWidgetState?.({modelContent:{kind:&#x27;standing-wave-lab&#x27;,massGrams:state.mass,lengthCm:state.length,records:state.rows},privateContent:{state,expanded:q(&#x27;#swl-data&#x27;).open}})).catch(()=&gt;{});}catch{}}
  function table(){
-  q(&#x27;#swl-rows&#x27;).innerHTML=state.rows.map(r=&gt;`&lt;tr&gt;&lt;td&gt;${r.m.toFixed(0)}&lt;/td&gt;&lt;td&gt;${r.n}&lt;/td&gt;&lt;td&gt;${r.L.toFixed(2)}&lt;/td&gt;&lt;/tr&gt;`).join(&#x27;&#x27;);
-  const distinct=new Set(state.rows.map(r=&gt;r.m)).size;q(&#x27;#swl-count&#x27;).textContent=`已记录 ${distinct} 种张力 / 目标至少 5 种`+(state.rows.length&gt;=24?&#x27; · 已达24条上限，可撤销末条&#x27;:&#x27;&#x27;);q(&#x27;#swl-undo&#x27;).disabled=state.rows.length===0;
+  q(&#x27;#swl-rows&#x27;).innerHTML=state.rows.map(r=&gt;`&lt;tr&gt;&lt;td&gt;${r.m.toFixed(1)}&lt;/td&gt;&lt;td&gt;${r.n}&lt;/td&gt;&lt;td&gt;${r.L.toFixed(2)}&lt;/td&gt;&lt;/tr&gt;`).join(&#x27;&#x27;);
+  const distinct=new Set(state.rows.map(r=&gt;Math.round(r.m/10))).size;q(&#x27;#swl-count&#x27;).textContent=`已记录 ${distinct} 种张力 / 目标至少 5 种`+(state.rows.length&gt;=24?&#x27; · 已达24条上限，可撤销末条&#x27;:&#x27;&#x27;);q(&#x27;#swl-undo&#x27;).disabled=state.rows.length===0;
   if(distinct&lt;5){q(&#x27;#swl-fit&#x27;).textContent=&#x27;等待至少 5 种张力的数据。&#x27;;return;}
   const pts=state.rows.map(r=&gt;[r.m/1000,(r.L/100/r.n)**2]),N=pts.length,mx=pts.reduce((s,p)=&gt;s+p[0],0)/N,my=pts.reduce((s,p)=&gt;s+p[1],0)/N;
   const slope=pts.reduce((s,p)=&gt;s+(p[0]-mx)*(p[1]-my),0)/pts.reduce((s,p)=&gt;s+(p[0]-mx)**2,0);
   const density=g/(4*f*f*slope);
   q(&#x27;#swl-fit&#x27;).textContent=slope&gt;0?`拟合线密度：${(density*1000).toFixed(3)} g/m · 模型值：0.500 g/m`:&#x27;拟合斜率非正，请检查记录。&#x27;;
  }
- function render(animate=false){input.value=state.length;mass.value=state.mass;q(&#x27;#swl-length-value&#x27;).textContent=state.length.toFixed(2)+&#x27; cm&#x27;;q(&#x27;#swl-force&#x27;).textContent=(state.mass/1000*g).toFixed(3)+&#x27; N&#x27;;
+ function render(animate=false){input.value=state.length;mass.value=state.mass;q(&#x27;#swl-length-value&#x27;).textContent=measuredLength().toFixed(2)+&#x27; cm&#x27;;q(&#x27;#swl-force&#x27;).textContent=(measuredMass()/1000*g).toFixed(3)+&#x27; N&#x27;;
   const p=physics(state);q(&#x27;#swl-record&#x27;).disabled=!p.near||state.rows.length&gt;=24;
-  q(&#x27;#swl-status&#x27;).textContent=p.near?`接近共振峰 · ${p.n} 个波腹 · 由此估计波速 ${(2*p.L*f/p.n).toFixed(2)} m/s`:&#x27;尚未到共振峰 · 波腹数暂不记录&#x27;;
+  q(&#x27;#swl-status&#x27;).textContent=p.near?`接近共振峰 · ${p.n} 个波腹 · 由此估计波速 ${(2*(measuredLength()/100)*f/p.n).toFixed(2)} m/s`:&#x27;尚未到共振峰 · 波腹数暂不记录&#x27;;
   cancelAnimationFrame(frame);
   if(!animate||!old||matchMedia(&#x27;(prefers-reduced-motion: reduce)&#x27;).matches){draw(state);return;}
-  const from={...old},to={...state},t0=performance.now();const tick=t=&gt;{const u=Math.min(1,(t-t0)/130);draw({...to,length:from.length+(to.length-from.length)*u,mass:from.mass+(to.mass-from.mass)*u});if(u&lt;1)frame=requestAnimationFrame(tick);};frame=requestAnimationFrame(tick);
+  const from={...old},to={...state},t0=performance.now();const tick=t=&gt;{const u=Math.min(1,(t-t0)/130);draw(u===1?state:{...to,length:from.length+(to.length-from.length)*u,mass:from.mass+(to.mass-from.mass)*u});if(u&lt;1)frame=requestAnimationFrame(tick);};frame=requestAnimationFrame(tick);
  }
- function restore(data){const s=data?.privateContent?.state;if(s){if([20,30,40,50,60,70,80,90,100].includes(s.mass))state.mass=s.mass;if(Number.isFinite(s.length))state.length=clamp(s.length,20,90);if(Array.isArray(s.rows))state.rows=s.rows.filter(r=&gt;Number.isFinite(r.m)&amp;&amp;r.m&gt;=20&amp;&amp;r.m&lt;=100&amp;&amp;Number.isFinite(r.L)&amp;&amp;r.L&gt;=20&amp;&amp;r.L&lt;=90&amp;&amp;Number.isInteger(r.n)&amp;&amp;r.n&gt;0&amp;&amp;r.n&lt;15).slice(0,24);q(&#x27;#swl-data&#x27;).open=data.privateContent.expanded===true;}}
+ function restore(data){const s=data?.privateContent?.state;if(s){if([20,30,40,50,60,70,80,90,100].includes(s.mass))state.mass=s.mass;if(Number.isFinite(s.length))state.length=clamp(s.length,20,90);if(Array.isArray(s.rows))state.rows=s.rows.filter(r=&gt;Number.isFinite(r.m)&amp;&amp;r.m&gt;=19.8&amp;&amp;r.m&lt;=100.2&amp;&amp;Number.isFinite(r.L)&amp;&amp;r.L&gt;=20&amp;&amp;r.L&lt;=90&amp;&amp;Number.isInteger(r.n)&amp;&amp;r.n&gt;0&amp;&amp;r.n&lt;15).slice(0,24);q(&#x27;#swl-data&#x27;).open=data.privateContent.expanded===true;}}
  input.addEventListener(&#x27;input&#x27;,()=&gt;{state.length=+input.value;render(true);});input.addEventListener(&#x27;change&#x27;,save);
  mass.addEventListener(&#x27;change&#x27;,()=&gt;{state.mass=+mass.value;render(true);save();});
  for(const [id,delta] of [[&#x27;#swl-less&#x27;,-.1],[&#x27;#swl-more&#x27;,.1]])q(id).addEventListener(&#x27;click&#x27;,()=&gt;{state.length=Math.round(clamp(state.length+delta,20,90)*100)/100;render(true);save();});
- q(&#x27;#swl-record&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{const p=physics(state);if(!p.near||state.rows.length&gt;=24)return;state.rows.push({m:state.mass,L:state.length,n:p.n});table();render();save();});
+ q(&#x27;#swl-record&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{const p=physics(state);if(!p.near||state.rows.length&gt;=24)return;const observation=state.mass+&#x27;:&#x27;+state.length;if(observation===lastObservation)noise.reset();lastObservation=observation;state.rows.push({m:measuredMass(),L:measuredLength(),n:p.n});table();render();save();});
  q(&#x27;#swl-undo&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{state.rows.pop();table();render();save();});
  restore(window.openai?.widgetState);table();render();new ResizeObserver(()=&gt;draw(state)).observe(root);
  window.addEventListener(&#x27;openai:set_globals&#x27;,e=&gt;{if(e.detail?.globals?.widgetState){restore(e.detail.globals.widgetState);table();render();}});
@@ -5624,11 +5629,13 @@ body, .stage iframe, .failed { background-color: var(--lab-page); color: var(--l
           for (var i=0;i&lt;=120;i++) d += (i?&#x27;L&#x27;:&#x27;M&#x27;)+(x+width*i/120).toFixed(2)+&#x27; &#x27;+(y-amplitude*Math.sin(2*Math.PI*cycles*i/120+(phase || 0))).toFixed(2);
           return path(d,kind);
         }
+        const responseNoise = parent.PhysLabNoise.createSampler();
         function draw() {
           var measured = svg.parentElement.getBoundingClientRect().width;
           var width = measured &gt; 0 ? measured : 736;
           lastWidth = width;
           var m = model();
+          const observedResponse = responseNoise.read(&#x27;electromagnetic-response&#x27;, m.response, .006, {min:0});
           var magnetX = width-66;
           var scopeX = width-122;
           svg.setAttribute(&#x27;viewBox&#x27;,&#x27;0 0 &#x27;+width+&#x27; 448&#x27;);
@@ -5659,7 +5666,7 @@ body, .stage iframe, .failed { background-color: var(--lab-page); color: var(--l
           text(70,201,&#x27;接收器&#x27;);
           node(&#x27;rect&#x27;,{x:scopeX,y:146,width:106,height:48,&#x27;class&#x27;:&#x27;em-face&#x27;});
           node(&#x27;rect&#x27;,{x:scopeX+8,y:154,width:65,height:29,&#x27;class&#x27;:&#x27;em-face&#x27;});
-          wave(scopeX+12,169,57,10*m.response,2,&#x27;em-response&#x27;,-m.lag-Math.PI/2);
+          wave(scopeX+12,169,57,10*observedResponse,2,&#x27;em-response&#x27;,-m.lag-Math.PI/2);
           node(&#x27;circle&#x27;,{cx:scopeX+89,cy:164,r:5,&#x27;class&#x27;:&#x27;em-structure&#x27;});
           node(&#x27;circle&#x27;,{cx:scopeX+89,cy:180,r:3,&#x27;class&#x27;:&#x27;em-structure&#x27;});
           text(scopeX+53,215,&#x27;示波器&#x27;);
@@ -5687,13 +5694,13 @@ body, .stage iframe, .failed { background-color: var(--lab-page); color: var(--l
           for (var i=0;i&lt;=480;i++) {
             var u = 2*i/480;
             var current = Math.sin(2*Math.PI*u);
-            var value = view === &#x27;current&#x27; ? current : isForce ? current*current : -m.response*Math.cos(4*Math.PI*u-m.lag);
+            var value = view === &#x27;current&#x27; ? current : isForce ? current*current : -observedResponse*Math.cos(4*Math.PI*u-m.lag);
             d += (i?&#x27;L&#x27;:&#x27;M&#x27;)+(left+plotWidth*i/480).toFixed(2)+&#x27; &#x27;+mapY(value).toFixed(2);
           }
           path(d,&#x27;em-&#x27;+view);
           frequencyValue.textContent = Number.isInteger(f) ? String(f) : f.toFixed(1);
           driveValue.textContent = &#x27;交流驱动 &#x27;+(2*f)+&#x27; Hz&#x27;;
-          responseValue.textContent = &#x27;相对响应 &#x27;+(100*m.response).toFixed(1)+&#x27;%&#x27;;
+          responseValue.textContent = &#x27;相对响应读数 &#x27;+(100*observedResponse).toFixed(1)+&#x27;%&#x27;;
           targetValue.textContent = &#x27;共振附近输入 &#x27;+(20*n)+&#x27; Hz&#x27;;
           legend.textContent = view === &#x27;current&#x27; ? &#x27;观察窗：2 个电流周期 · 每周期电流正负各一次&#x27; : isForce ? &#x27;观察窗：2 个电流周期 · 虚线：平均吸力 0.5&#x27; : &#x27;观察窗：2 个电流周期 · 相对静平衡的位移，峰值归一化&#x27;;
           status.textContent = &#x27;选定模态响应模型 · &#x27;+(m.near ? &#x27;接近该模态共振&#x27; : &#x27;偏离该模态共振&#x27;);
@@ -7459,6 +7466,7 @@ body, .stage iframe, .failed { background-color: var(--lab-page); color: var(--l
   const root=document.getElementById(&#x27;standing-wave-resonance&#x27;);if(!root||root.dataset.ready)return false;root.dataset.ready=&#x27;1&#x27;;
   const q=s=&gt;root.querySelector(s),svg=q(&#x27;#swr-plot&#x27;);
   let state={mode:&#x27;response&#x27;,zeta:.02,frequency:100,time:80},rendered=null,raf=0;
+  const noise=parent.PhysLabNoise.createSampler();
   const f0=100,omega0=2*Math.PI*f0,clamp=(v,l,h)=&gt;Math.max(l,Math.min(h,v));
   const amplitude=(frequency,zeta)=&gt;{const r=frequency/f0;return 1/Math.sqrt((1-r*r)**2+(2*zeta*r)**2);};
   function physics(z){const peakFrequency=f0*Math.sqrt(1-2*z*z),peak=1/(2*z*Math.sqrt(1-z*z)),split=2*z*Math.sqrt(1-z*z),center=1-2*z*z,low=f0*Math.sqrt(center-split),high=f0*Math.sqrt(center+split);return{peakFrequency,peak,half:peak/Math.sqrt(2),low,high,width:high-low,Q:f0/(high-low),beta:z*omega0,fd:f0*Math.sqrt(1-z*z)};}
@@ -7479,7 +7487,7 @@ body, .stage iframe, .failed { background-color: var(--lab-page); color: var(--l
     out+=line(left,y(p.half),right,y(p.half),&#x27;reference&#x27;);
     out+=line(x(p.low),y(p.half),x(p.low),bottom,&#x27;reference&#x27;)+line(x(p.high),y(p.half),x(p.high),bottom,&#x27;reference&#x27;);
     out+=`&lt;circle cx=&quot;${x(p.low)}&quot; cy=&quot;${y(p.half)}&quot; r=&quot;3.5&quot; class=&quot;mark&quot;/&gt;&lt;circle cx=&quot;${x(p.high)}&quot; cy=&quot;${y(p.half)}&quot; r=&quot;3.5&quot; class=&quot;mark&quot;/&gt;`;
-    const cursorA=amplitude(s.frequency,s.zeta);out+=line(x(s.frequency),top,x(s.frequency),bottom,&#x27;cursor&#x27;);out+=`&lt;circle cx=&quot;${x(s.frequency)}&quot; cy=&quot;${y(cursorA)}&quot; r=&quot;5&quot; class=&quot;mark&quot;/&gt;`;
+    const cursorA=s===state?noise.read(&#x27;response&#x27;,amplitude(s.frequency,s.zeta),.025,{min:0}):amplitude(s.frequency,s.zeta);out+=line(x(s.frequency),top,x(s.frequency),bottom,&#x27;cursor&#x27;);out+=`&lt;circle cx=&quot;${x(s.frequency)}&quot; cy=&quot;${y(cursorA)}&quot; r=&quot;5&quot; class=&quot;mark&quot;/&gt;`;
     out+=text(right,308,&#x27;驱动力频率 / Hz&#x27;,&#x27;end&#x27;);
    }else{
     const x=t=&gt;left+t/.2*pw,mid=(top+bottom)/2,scale=ph/2.1,y=a=&gt;mid-a*scale;
@@ -7488,7 +7496,7 @@ body, .stage iframe, .failed { background-color: var(--lab-page); color: var(--l
     for(const ms of small?[0,100,200]:[0,50,100,150,200]){out+=line(x(ms/1000),top,x(ms/1000),bottom);out+=text(x(ms/1000),bottom+22,String(ms),ms===0?&#x27;start&#x27;:ms===200?&#x27;end&#x27;:&#x27;middle&#x27;);}
     const pts=[],up=[],down=[];for(let i=0;i&lt;=1200;i++){const t=.2*i/1200,e=Math.exp(-p.beta*t);pts.push([x(t),y(e*Math.cos(2*Math.PI*p.fd*t))]);up.push([x(t),y(e)]);down.push([x(t),y(-e)]);}
     out+=`&lt;path d=&quot;${path(pts)}&quot; class=&quot;curve&quot;/&gt;&lt;path d=&quot;${path(up)}&quot; class=&quot;envelope&quot;/&gt;&lt;path d=&quot;${path(down)}&quot; class=&quot;envelope&quot;/&gt;`;
-    const t=s.time/1000,e=Math.exp(-p.beta*t);out+=line(x(t),top,x(t),bottom,&#x27;cursor&#x27;);out+=`&lt;circle cx=&quot;${x(t)}&quot; cy=&quot;${y(e)}&quot; r=&quot;5&quot; class=&quot;mark&quot;/&gt;`;
+    const t=s.time/1000,e=s===state?noise.read(&#x27;envelope&#x27;,Math.exp(-p.beta*t),.008,{min:0}):Math.exp(-p.beta*t);out+=line(x(t),top,x(t),bottom,&#x27;cursor&#x27;);out+=`&lt;circle cx=&quot;${x(t)}&quot; cy=&quot;${y(e)}&quot; r=&quot;5&quot; class=&quot;mark&quot;/&gt;`;
     out+=text(right,308,&#x27;停止驱动后的时间 / ms&#x27;,&#x27;end&#x27;);
    }
    svg.innerHTML=out;rendered={...s};
@@ -7498,11 +7506,11 @@ body, .stage iframe, .failed { background-color: var(--lab-page); color: var(--l
    q(&#x27;#swr-zeta-value&#x27;).textContent=state.zeta.toFixed(3);q(&#x27;#swr-frequency-value&#x27;).textContent=state.frequency.toFixed(1)+&#x27; Hz&#x27;;q(&#x27;#swr-time-value&#x27;).textContent=state.time.toFixed(0)+&#x27; ms&#x27;;
    q(&#x27;#swr-frequency-control&#x27;).hidden=state.mode!==&#x27;response&#x27;;q(&#x27;#swr-time-control&#x27;).hidden=state.mode!==&#x27;decay&#x27;;
    const p=physics(state.zeta);
-   q(&#x27;#swr-results&#x27;).textContent=state.mode===&#x27;response&#x27;?`峰值 ${p.peak.toFixed(3)} · 带宽 ${p.width.toFixed(3)} Hz · Q ≈ ${p.Q.toFixed(2)}`:`包络剩余 ${(100*Math.exp(-p.beta*state.time/1000)).toFixed(1)}% · 阻尼系数 β = ${p.beta.toFixed(2)} s⁻¹`;
+   q(&#x27;#swr-results&#x27;).textContent=state.mode===&#x27;response&#x27;?`当前振幅读数 ${noise.read(&#x27;response&#x27;,amplitude(state.frequency,state.zeta),.025,{min:0}).toFixed(3)} · 模型带宽 ${p.width.toFixed(3)} Hz · Q ≈ ${p.Q.toFixed(2)}`:`包络读数 ${(100*noise.read(&#x27;envelope&#x27;,Math.exp(-p.beta*state.time/1000),.008,{min:0})).toFixed(1)}% · 阻尼系数 β = ${p.beta.toFixed(2)} s⁻¹`;
    q(&#x27;#swr-caption&#x27;).textContent=state.mode===&#x27;response&#x27;?`A² 半峰点：${p.low.toFixed(2)}、${p.high.toFixed(2)} Hz；幅度为峰值的 1/√2。`:&#x27;实线：弦上选定点的位移 · 虚线：指数衰减包络&#x27;;
    cancelAnimationFrame(raf);
    if(!animate||!rendered||rendered.mode!==state.mode||matchMedia(&#x27;(prefers-reduced-motion: reduce)&#x27;).matches){draw(state);return;}
-   const from={...rendered},to={...state},start=performance.now();const tick=t=&gt;{const a=clamp((t-start)/150,0,1),u=1-(1-a)**3,s={...to};for(const k of [&#x27;zeta&#x27;,&#x27;frequency&#x27;,&#x27;time&#x27;])s[k]=from[k]+(to[k]-from[k])*u;draw(s);if(a&lt;1)raf=requestAnimationFrame(tick);};raf=requestAnimationFrame(tick);
+   const from={...rendered},to={...state},start=performance.now();const tick=t=&gt;{const a=clamp((t-start)/150,0,1),u=1-(1-a)**3,s={...to};for(const k of [&#x27;zeta&#x27;,&#x27;frequency&#x27;,&#x27;time&#x27;])s[k]=from[k]+(to[k]-from[k])*u;draw(a===1?state:s);if(a&lt;1)raf=requestAnimationFrame(tick);};raf=requestAnimationFrame(tick);
   }
   function restore(data){const s=data?.privateContent?.resonance;if(!s)return;if(s.mode===&#x27;response&#x27;||s.mode===&#x27;decay&#x27;)state.mode=s.mode;for(const [key,lo,hi] of [[&#x27;zeta&#x27;,.01,.1],[&#x27;frequency&#x27;,80,120],[&#x27;time&#x27;,0,200]])if(Number.isFinite(s[key]))state[key]=clamp(s[key],lo,hi);}
   function save(){try{Promise.resolve(window.openai?.setWidgetState?.({modelContent:{kind:&#x27;standing-wave-resonance&#x27;,...state,...physics(state.zeta)},privateContent:{resonance:state}})).catch(()=&gt;{});}catch{}}

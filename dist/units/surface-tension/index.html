@@ -471,6 +471,7 @@ body { font-family: var(--lab-font); }
 </head>
 <body>
 <main id="course" class="unit-content"><noscript><p>请在浏览器中允许 JavaScript，以操作仿真实验台。</p></noscript></main>
+<script src="../../assets/measurement-noise.js"></script>
 <script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id, lesson);</script>
 <script>const anatomyIso = (() => {
 const AZIMUTH = 45;
@@ -2457,7 +2458,8 @@ function mountBench(chapter, bench) {
   }
   const svgStart = (label) => `<figure style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px;margin:1rem 0"><svg viewBox="40 15 270 250" role="img" aria-label="${label}" style="display:block;flex:0 1 280px;width:280px;max-width:100%;height:auto;color:inherit"><title>${label}</title>`;
   const svgEnd = (caption) => `</svg><figcaption style="flex:1 1 210px;min-width:0;font-size:14px;line-height:1.65">${caption}</figcaption></figure>`;
-  const calibration = [[.5,17.46],[1,19.90],[1.5,22.37],[2,24.80],[2.5,27.28],[3,29.70],[3.5,32.19],[4,34.62],[4.5,37.10],[5,39.51]];
+  const calibration = [[.5,17.46],[1,19.90],[1.5,22.37],[2,24.80],[2.5,27.28],[3,29.70],[3.5,32.19],[4,34.62],[4.5,37.10],[5,39.51]]
+    .map(([mass,ideal])=>[mass,Number(PhysLabNoise.sample(ideal,.028).toFixed(2))]);
   function fitCalibration() {
     const n=calibration.length, mx=calibration.reduce((s,p)=>s+p[1],0)/n, my=calibration.reduce((s,p)=>s+p[0]*9.81,0)/n;
     const k=calibration.reduce((s,p)=>s+(p[1]-mx)*(p[0]*9.81-my),0)/calibration.reduce((s,p)=>s+(p[1]-mx)**2,0);
@@ -2643,7 +2645,7 @@ function mountBench(chapter, bench) {
       }
       ['[data-smode]','[data-sk]','[data-ss]','[data-sdl]','[data-sr]','[data-sh]'].forEach(s=>q(s).addEventListener('input',update));
       q('[data-sfit]').addEventListener('click',()=>{const fit=fitCalibration();q('[data-sk]').value=fit.k.toFixed(5);q('[data-sfitread]').textContent=`模拟点最小二乘拟合：F/mN＝${fit.k.toFixed(5)} × 杆位置/mm ${fit.b<0?'−':'＋'} ${Math.abs(fit.b).toFixed(5)}；因此 k＝${fit.k.toFixed(5)} N/m。截距对应位置基线。`;update();});
-      q('[data-swater]').addEventListener('click',()=>{const r=Number(q('[data-sr]').value)/1000;if(r>0){q('[data-sh]').value=((2*.07275/(998.2*9.81*r)-r/3)*1000).toFixed(4);update();}});
+      q('[data-swater]').addEventListener('click',()=>{const r=Number(q('[data-sr]').value)/1000;if(r>0){q('[data-sh]').value=PhysLabNoise.sample((2*.07275/(998.2*9.81*r)-r/3)*1000,.085,{min:0}).toFixed(4);update();}});
       function lookup(){const raw=String(q('[data-stemp]').value).trim(),t=Number(raw);if(raw===''||!Number.isFinite(t)){q('[data-slookup]').textContent='请输入有效温度。';return;}const v=interp(tension,t);q('[data-slookup]').textContent=v===null?'超出教材0～45°C表区间，不作外推。':`教材纯水参考值（相邻点线性内插）：${v.toFixed(3)} mN/m＝${(v/1000).toFixed(6)} N/m。`;}
       q('[data-stemp]').addEventListener('input',lookup);update();lookup();
     }
@@ -2703,6 +2705,11 @@ function mountBench(chapter, bench) {
     mount(host,{k,svgHit,bindHits,timeline}){
       const q=s=>host.querySelector(s),plan={x:-106,y:-62,w:212,d:124,r:7},G=drawing(k,plan,255),{P,at}=G;
       let dmm=2,L=.2,elapsed=0,run=false,cancel=()=>{},mode='lines',rows=[],recorded=false,phase='ready';
+      const instruments=PhysLabNoise.createSampler();
+      const diameter=()=>Number(instruments.read('diameter',dmm,.016).toFixed(2));
+      const distance=()=>Number(instruments.read('distance',L,.00045).toFixed(4));
+      const temperature=()=>instruments.read('thermometer',20,.16).toFixed(1);
+      let clockOffset=0;
       let model=fallModel(dmm,L);
       let body=G.base();
       // 15 base components; rigid rear structure and thermometer remain behind the glass.
@@ -2733,29 +2740,35 @@ function mountBench(chapter, bench) {
       body+=`<path data-fneedle class="iso-line" data-tone="lit" d="${k.lineOnTop([59,33],[59,18],8.2,P)}"/>`;
       const hit=(id,label,p,r)=>svgHit(id,label,...at(p),r);
       body+=hit('f-release','筒口：释放小球',[-5,0,227],23)+hit('f-balls','球盘：切换球径',[62,-22,6],25)+hit('f-timer','秒表：切换计时起点',[59,33,9],24)+hit('f-zone','下标圈：切换计时区段',[15,2,82],21)+hit('f-temp','温度计：查看液体条件',[-57,-36,150],18);
-      host.innerHTML=`<div class="rig-scene" data-parts="${G.count}">${k.figureSvg({width:620,height:470,label:'落球测黏度实验台，筒口、球盘、秒表、下标圈和温度计均可操作',body:[body]})}</div><p class="rig-readout" data-fread aria-live="off"></p><p data-fstatus role="status">先辨认两条标圈，再点筒口释放。键盘Tab可选中图中部件，Enter或空格操作。</p><div class="rig-tools"><button type="button" data-act="release">释放小球</button><button type="button" data-act="pause">暂停 / 继续</button><button type="button" data-act="step">前进0.20 s</button><button type="button" data-act="record">记录本次</button><button type="button" data-act="reset">复位</button></div><p class="hint">教学模型：20°C蓖麻油，η＝0.950 Pa·s、ρ₀＝960 kg/m³，钢球ρ＝7800 kg/m³；筒内径50 mm、液深40 cm。动画按物理时间4倍播放，球体放大以便辨认；刻线与计时来自同一位置函数。模型含容器修正，按小Re线性阻力计算；本练习的最高Re约0.10。</p><div class="table-wrap"><table><thead><tr><th>d / mm</th><th>L / cm</th><th>t / s</th><th>η₀ / Pa·s</th><th>诊断</th></tr></thead><tbody data-frows></tbody></table></div><p class="hint">依据：教材pp.95–102，尤其落球装置图5-3与p.100操作。图为原创仪器示意；原章节的完整修正与毛细管练习仍可独立使用。</p>`;
+      host.innerHTML=`<div class="rig-scene" data-parts="${G.count}">${k.figureSvg({width:620,height:470,label:'落球测黏度实验台，筒口、球盘、秒表、下标圈和温度计均可操作',body:[body]})}</div><p class="rig-readout" data-fread aria-live="off"></p><p data-fstatus role="status">先辨认两条标圈，再点筒口释放。键盘Tab可选中图中部件，Enter或空格操作。</p><div class="rig-tools"><button type="button" data-act="release">释放小球</button><button type="button" data-act="pause">暂停 / 继续</button><button type="button" data-act="step">前进0.20 s</button><button type="button" data-act="record">记录本次</button><button type="button" data-act="reset">复位</button></div><p class="hint">教学模型：20°C蓖麻油，η＝0.950 Pa·s、ρ₀＝960 kg/m³，钢球ρ＝7800 kg/m³；筒内径50 mm、液深40 cm。动画按物理时间4倍播放，球体放大以便辨认；刻线触发与运动来自同一位置函数，仪表读数含轻微波动。模型含容器修正，按小Re线性阻力计算；本练习的最高Re约0.10。</p><div class="table-wrap"><table><thead><tr><th>d / mm</th><th>L / cm</th><th>t / s</th><th>η₀ / Pa·s</th><th>诊断</th></tr></thead><tbody data-frows></tbody></table></div><p class="hint">依据：教材pp.95–102，尤其落球装置图5-3与p.100操作。图为原创仪器示意；原章节的完整修正与毛细管练习仍可独立使用。</p>`;
       const announce=s=>{q('[data-fstatus]').textContent=s;};
-      function watch(){return mode==='release'?Math.min(elapsed,model.t2):clamp(elapsed-model.t1,0,model.t2-model.t1);}
+      function watch(){
+        const start=mode==='release'?0:model.t1,end=model.t2-start;
+        const current=clamp(elapsed-start,0,end);
+        return current*(1+clockOffset/end);
+      }
       function draw(){
         q('[data-fball]').setAttribute('transform',k.translateAlong(P,[0,0,-500*model.y(elapsed)]));
         const a=watch()/60*Math.PI*2;q('[data-fneedle]').setAttribute('d',k.lineOnTop([59,33],[59+15*Math.sin(a),33-15*Math.cos(a)],8.2,P));
         const shift=500*(.2-L);q('[data-lower]').setAttribute('transform',k.translateAlong(P,[0,0,shift]));q('[data-rig-hit="f-zone"]').setAttribute('transform',k.translateAlong(P,[0,0,shift]));
         const next=elapsed===0?'ready':elapsed<model.t1?'approach':elapsed<model.t2?'timing':'done';
         if(next!==phase){phase=next;announce({ready:'准备释放。',approach:'小球正在接近上标线。',timing:'小球越过上标线：正常计时区开始。',done:'小球已越过下标线：秒表停止，可以记录。'}[phase]);}
-        q('[data-fread]').textContent=`球径 ${dmm.toFixed(1)} mm · 区段 ${(L*100).toFixed(0)} cm · ${mode==='lines'?'上标线起计':'释放即计（错误示例）'} · 秒表 ${watch().toFixed(3)} s · 入液深度 ${(model.y(elapsed)*100).toFixed(1)} cm`;
+        q('[data-fread]').textContent=`球径 ${diameter().toFixed(2)} mm · 区段 ${(distance()*100).toFixed(2)} cm · ${mode==='lines'?'上标线起计':'释放即计（错误示例）'} · 秒表 ${watch().toFixed(3)} s · 入液深度 ${(model.y(elapsed)*100).toFixed(1)} cm`;
       }
       function halt(){cancel();run=false;}
       function play(){if(elapsed>=model.end)return;halt();run=true;const start=elapsed;cancel=timeline((model.end-start)*250,p=>{elapsed=start+(model.end-start)*p;draw();if(p===1)run=false;});}
-      function reset(){halt();elapsed=0;recorded=false;phase='ready';model=fallModel(dmm,L);const b=at([-5,0,207]),r=dmm*1.85*k.cameraOf(P).k;q('[data-fball]').innerHTML=`<circle cx="${b[0]}" cy="${b[1]}" r="${r}" fill="var(--anatomy-paper)" stroke="currentColor" stroke-width="1.1"/><circle cx="${b[0]-r*.25}" cy="${b[1]-r*.28}" r="${r*.42}" fill="currentColor" opacity=".3"/>`;draw();announce('已复位。选球和计时区段后，再释放。');}
+      function reset(){halt();elapsed=0;recorded=false;phase='ready';model=fallModel(dmm,L);instruments.reset();clockOffset=PhysLabNoise.sample(0,.045);const b=at([-5,0,207]),r=dmm*1.85*k.cameraOf(P).k;q('[data-fball]').innerHTML=`<circle cx="${b[0]}" cy="${b[1]}" r="${r}" fill="var(--anatomy-paper)" stroke="currentColor" stroke-width="1.1"/><circle cx="${b[0]-r*.25}" cy="${b[1]-r*.28}" r="${r*.42}" fill="currentColor" opacity=".3"/>`;draw();announce('已复位。选球和计时区段后，再释放。');}
       function release(){if(run)return;reset();play();}
       function record(){if(elapsed<model.t2){announce('尚未越过下标线。先完成这一段下落，再记录完整时间。');return;}if(recorded){announce('本次已经记录；复位或换球后再测一次。');return;}
-        const t=watch(),v=L/t,eta=(model.rho-model.rho0)*9.81*model.d*model.d/(18*v*model.C),ok=mode==='lines';recorded=true;
-        rows.push(`<tr><td>${dmm.toFixed(1)}</td><td>${(L*100).toFixed(0)}</td><td>${t.toFixed(3)}</td><td>${eta.toFixed(4)}</td><td>${ok?'区间匹配':'计时起点错'}</td></tr>`);table(host,'[data-frows]',rows);
+        const d=diameter()/1000,Lmeas=distance(),t=Number(watch().toFixed(3)),v=Lmeas/t;
+        const C=(1+2.4*d/.05)*(1+1.65*d/.4);
+        const eta=(model.rho-model.rho0)*9.81*d*d/(18*v*C),ok=mode==='lines';recorded=true;
+        rows.push(`<tr><td>${(d*1000).toFixed(2)}</td><td>${(Lmeas*100).toFixed(2)}</td><td>${t.toFixed(3)}</td><td>${eta.toFixed(4)}</td><td>${ok?'区间匹配':'计时起点错'}</td></tr>`);table(host,'[data-frows]',rows);
         announce(ok?'本次距离与时间对应同一区段。换一种球径再测：模型给出的黏度应基本一致，观察球径如何改变下落时间。':'你把释放到上标圈的一段时间也计入，却仍用两线距离L，所以速度偏小、黏度偏大。把秒表改成上标圈起计，再测同一颗球。');
       }
       const actions={release,pause:()=>{if(run){halt();announce('暂停。可用“前进0.20 s”观察过线。');}else play();},step:()=>{halt();elapsed=Math.min(model.end,elapsed+.2);draw();},record,reset};
       q('.rig-tools').addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b)actions[b.dataset.act]();});
-      bindHits(host,{'f-release':release,'f-balls':()=>{dmm=[1.5,2,3][([1.5,2,3].indexOf(dmm)+1)%3];reset();announce(`已换成${dmm} mm球；其他液体条件相同。`);},'f-zone':()=>{L=L===.2?.1:.2;reset();announce(`两线距离改为${L*100} cm；上标线仍在液面下5 cm。`);},'f-timer':()=>{mode=mode==='lines'?'release':'lines';reset();announce(mode==='lines'?'从上标圈到下标圈辅助计时。':'错误示例：从释放开始计时，距离却仍采用两标圈之间的L。');},'f-temp':()=>announce('温度计示20°C。液体黏度依赖温度；本次比较固定温度、密度和容器，只改变球径或计时区段。')});
+      bindHits(host,{'f-release':release,'f-balls':()=>{dmm=[1.5,2,3][([1.5,2,3].indexOf(dmm)+1)%3];reset();announce(`已换成${dmm} mm球；其他液体条件相同。`);},'f-zone':()=>{L=L===.2?.1:.2;reset();announce(`两线距离改为${L*100} cm；上标线仍在液面下5 cm。`);},'f-timer':()=>{mode=mode==='lines'?'release':'lines';reset();announce(mode==='lines'?'从上标圈到下标圈辅助计时。':'错误示例：从释放开始计时，距离却仍采用两标圈之间的L。');},'f-temp':()=>announce(`温度计示${temperature()} °C。液体黏度依赖温度；本次比较固定温度、密度和容器，只改变球径或计时区段。`)});
       table(host,'[data-frows]',rows);draw();
       return {dispose:halt};
     }
@@ -2781,6 +2794,9 @@ function mountBench(chapter, bench) {
     mount(host,{k,svgHit,bindHits,timeline}){
       const q=s=>host.querySelector(s),plan={x:-91,y:-65,w:182,d:130,r:7},G=drawing(k,plan,301),{P,at}=G;
       let p=0,a=0,wet=false,zero=false,broken=false,rows=[],cancel=()=>{},weight=0,liquid='water',moving=false;
+      const ruler=PhysLabNoise.createSampler();
+      const readRod=()=>a>0&&!moving?Number(ruler.read('rod',a,.009,{min:0}).toFixed(3)):a;
+      let lastRecord;
       const sigma=()=>liquid==='water'?.07275:.032;
       const model=()=>pullModel(p,a,broken,sigma());
       let body=G.base();
@@ -2823,22 +2839,26 @@ function mountBench(chapter, bench) {
         const zt=92-m.error*4,zb=92-p*4;
         q('[data-pfilm]').setAttribute('d',wet&&!broken?k.pathOf([at([-1,4,zt]),at([31,4,zt]),at([36,4,zb]),at([-6,4,zb])],true):'');
         q('[data-rig-hit="p-upper"]').setAttribute('transform',k.translateAlong(P,[0,0,a*4]));q('[data-rig-hit="p-pan"]').setAttribute('transform',k.translateAlong(P,[0,0,-m.error*4]));q('[data-pad]').value=a.toFixed(2);
-        q('[data-pread]').textContent=`${!zero?'空挂待归零':!wet?'基线已记':broken?'液膜破裂':'液膜连接'} · 平台下降 ${p.toFixed(2)} mm · 上杆增量 ${a.toFixed(2)} mm · 三线偏差 ${Math.abs(m.error).toFixed(2)} mm · 附加拉力 ${(m.extra*1000).toFixed(3)} mN`;
+        q('[data-pread]').textContent=`${!zero?'空挂待归零':!wet?'基线已记':broken?'液膜破裂':'液膜连接'} · 平台下降 ${p.toFixed(2)} mm · 上杆增量 ${readRod().toFixed(3)} mm · 三线偏差 ${Math.abs(m.error).toFixed(2)} mm · 模型液膜拉力 ${(m.extra*1000).toFixed(3)} mN`;
       }
-      function move(np,na){cancel();const p0=p,a0=a;moving=true;cancel=timeline(260,t=>{const u=t*t*(3-2*t);p=p0+(np-p0)*u;a=a0+(na-a0)*u;draw();if(t===1)moving=false;});}
-      function reset(){cancel();moving=false;p=0;a=0;broken=false;wet=zero;draw();say(zero?'重新浸润。请慢慢下降平台，每次都恢复三线对齐。':'先记录空挂基线。');}
+      function move(np,na){cancel();const p0=p,a0=a;moving=true;cancel=timeline(260,t=>{const u=t*t*(3-2*t);p=p0+(np-p0)*u;a=a0+(na-a0)*u;if(t===1){moving=false;ruler.reset();lastRecord=undefined;}draw();});}
+      function reset(){cancel();moving=false;p=0;a=0;broken=false;wet=zero;ruler.reset();lastRecord=undefined;draw();say(zero?'重新浸润。请慢慢下降平台，每次都恢复三线对齐。':'先记录空挂基线。');}
       function prepare(){if(!zero){zero=true;draw();say('空挂基线l₀已记录，金属丝自重由后续读数差扣除。再点挂盘浸润。');}else {wet=true;reset();}}
       function down(){if(!wet){say('尚未浸润：先空挂归零，再点挂盘。');return;}if(moving)return;if(broken){say('液膜已经破裂；重新浸润后再测。');return;}move(Math.min(10,p+.5),a);}
       function up(){if(!wet){say('先完成空挂基线与浸润。');return;}if(moving)return;move(p,Math.min(5,a+.25));}
       function align(){if(!wet||broken){say('先浸润完整液膜，再调三线。破裂后没有附加表面拉力可读。');return;}if(moving)return;const target=2*sigma()*.05*clamp(p/6,0,1)/2*1000;move(p,target);say('辅助调整上杆，令下端回到固定基准。观察三条线汇合后，再继续下降平台。');}
       function record(){if(!wet){say('尚未形成液膜，不能记录拉脱读数。');return;}const m=model();if(broken){say('这次读数取晚了：液膜已破裂，表面附加力消失。重新浸润，尝试在破裂前读数。');return;}if(moving||Math.abs(m.error)>.08){say('三线尚未对齐。若下端位置变化，杆位移就不再等于弹簧伸长变化；先上调杆位恢复基准。');return;}
-        const estimate=2*a/1000/(2*.05)*1000,near=m.extra>=.995*m.peak;
-        rows.push(`<tr><td>${liquid==='water'?'纯水':'肥皂水（假设）'}</td><td>${a.toFixed(3)}</td><td>${(2*a).toFixed(3)}</td><td>${estimate.toFixed(2)}</td><td>${near?'临界且对齐':'尚未达极值'}</td></tr>`);table(host,'[data-prows]',rows);
+        if(lastRecord===readRod())ruler.reset();
+        const rod=readRod();lastRecord=rod;
+        const estimate=2*rod/1000/(2*.05)*1000,near=m.extra>=.995*m.peak;
+        rows.push(`<tr><td>${liquid==='water'?'纯水':'肥皂水（假设）'}</td><td>${rod.toFixed(3)}</td><td>${(2*rod).toFixed(3)}</td><td>${estimate.toFixed(2)}</td><td>${near?'临界且对齐':'尚未达极值'}</td></tr>`);table(host,'[data-prows]',rows);draw();
         say(near?'已在近临界且三线对齐时记录。再下降一小步观察破裂后的变化，然后重新浸润重复测量。':'三线对齐了，但液膜还没有接近最大拉力，因此σ偏小。再小步下降平台并重新对齐，比较下一次记录。');
       }
       const actions={prepare,down,up,align,record,reset};q('.rig-tools').addEventListener('click',e=>{const b=e.target.closest('[data-pact]');if(b)actions[b.dataset.pact]();});
       q('[data-pad]').addEventListener('input',e=>{if(!wet){e.target.value=a;say('先空挂归零并浸润，再调杆位。');return;}move(p,Number(e.target.value));});
-      bindHits(host,{'p-platform':down,'p-upper':up,'p-mirror':()=>{const m=model();say(Math.abs(m.error)<.08?'三线已对齐：弹簧下端回到同一基准。':'三线未重合：调上杆位置，使镜中横线、基准线与反射像重合。');},'p-pan':prepare,'p-cup':()=>{liquid=liquid==='water'?'soap':'water';reset();say(liquid==='water'?'换为20°C纯水，重新测量。':'换为假设肥皂水样品，重新测量，比较临界伸长是否变小。');},'p-weights':()=>{weight=weight>=5?.5:weight+.5;q('[data-pcal]').textContent=`标定模拟：m＝${weight.toFixed(1)} g，F＝${(weight*9.81).toFixed(3)} mN，伸长＝${(weight*9.81/2).toFixed(3)} mm；F/Δl＝2.00 N/m。砝码标定应在测液体之前完成。`;}});
+      bindHits(host,{'p-platform':down,'p-upper':up,'p-mirror':()=>{const m=model();say(Math.abs(m.error)<.08?'三线已对齐：弹簧下端回到同一基准。':'三线未重合：调上杆位置，使镜中横线、基准线与反射像重合。');},'p-pan':prepare,'p-cup':()=>{liquid=liquid==='water'?'soap':'water';reset();say(liquid==='water'?'换为20°C纯水，重新测量。':'换为假设肥皂水样品，重新测量，比较临界伸长是否变小。');},'p-weights':()=>{weight=weight>=5?.5:weight+.5;const force=weight*9.81;
+        const extension=Number(PhysLabNoise.sample(force/2,.025).toFixed(3));
+        q('[data-pcal]').textContent=`标定模拟：m＝${weight.toFixed(1)} g，F＝${force.toFixed(3)} mN，伸长＝${extension.toFixed(3)} mm；F/Δl＝${(force/extension).toFixed(3)} N/m。砝码标定应在测液体之前完成。`;}});
       // Arrow keys on the physical handwheels offer finer control without leaving the figure.
       host.addEventListener('keydown',e=>{const el=e.target.closest('[data-rig-hit]');if(!el||!['ArrowUp','ArrowDown'].includes(e.key))return;const id=el.dataset.rigHit;if(id==='p-upper'&&wet){e.preventDefault();move(p,clamp(a+(e.key==='ArrowUp'?.05:-.05),0,5));}if(id==='p-platform'&&wet&&!broken){e.preventDefault();move(clamp(p+(e.key==='ArrowDown'?.1:-.1),0,10),a);}});
       table(host,'[data-prows]',rows);draw();return {dispose:()=>cancel()};

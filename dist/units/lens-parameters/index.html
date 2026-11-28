@@ -472,6 +472,7 @@ body { font-family: var(--lab-font); }
 </head>
 <body>
 <main id="course" class="unit-content"><noscript><p>请允许 JavaScript 以操作仿真实验台。</p></noscript></main>
+<script src="../../assets/measurement-noise.js"></script>
 <script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id,lesson);</script>
 <script>const anatomyIso = (() => {
 const AZIMUTH = 45;
@@ -2546,6 +2547,8 @@ function mountBench(chapter, bench) {
       const beamPath=(pts,back)=>`<path d="${k.pathOf(pts.map(([x,h])=>at(X(x),0,axisZ+h)))}" stroke="${back?'#e9b777':'#9ce5c3'}" stroke-opacity="${back?'.66':'.74'}" stroke-width="1.25" fill="none" vector-effect="non-scaling-stroke"/>`;
       const tag=(id,mm,y,z,label,r=23)=>svgHit(id,label,...at(X(mm),y,z),r);
       const status=(n,d=1)=>Number(n).toFixed(d);
+      const rulerReading=PhysLabNoise.createSampler();
+      const measuredPosition=(part,position)=>Number(status(rulerReading.read(part,position,.19)));
       function traces(){
         const h0=mode==='parallel'?0:mode==='mirror'?4:15;
         const u=lens-objectX;
@@ -2627,7 +2630,7 @@ function mountBench(chapter, bench) {
         q('[data-lens-negative]').textContent=negative?'移除凹透镜':'插入凹透镜';
         q('[data-lens-mirror]').hidden=mode!=='mirror';
         const opticalStatus=observed.sharp?(mode==='parallel'?'光斑最小，可记录':'图样清晰，可记录'):(observed.spread<2?'接近清晰，微调试试':'还未合焦');
-        q('[data-lens-readout]').textContent=`${labels[mode]} · 凸透镜 ${status(lens)} mm · ${mode==='mirror'?`平面镜 ${status(mirror)} mm`:`白屏 ${status(screen)} mm`} · ${opticalStatus}`;
+        q('[data-lens-readout]').textContent=`${labels[mode]} · 凸透镜 ${status(measuredPosition('lens',lens))} mm · ${mode==='mirror'?`平面镜 ${status(measuredPosition('mirror',mirror))} mm`:`白屏 ${status(measuredPosition('screen',screen))} mm`} · ${opticalStatus}`;
         q('[data-lens-hint]').textContent=tip;
         q('[data-lens-result]').textContent=recordedResult;
         q('[data-lens-rows]').innerHTML=sequence.length?sequence.map(([name,x,note])=>`<tr><td>${name}</td><td>${status(x)} mm</td><td>${note}</td></tr>`).join(''):'<tr><td colspan="3">找到清晰像后记录位置。</td></tr>';
@@ -2646,7 +2649,7 @@ function mountBench(chapter, bench) {
       }
       function resetRecords(){sequence=[];reference=null;recordedResult='';}
       function load(key){
-        mode=key;({lens,screen}=initial[key]);negative=false;mirror=300;resetRecords();
+        mode=key;({lens,screen}=initial[key]);negative=false;mirror=300;resetRecords();rulerReading.reset();
         if(key==='bessel'){screen=objectX+Number(q('[data-lens-length]').value);tip='保持物、屏固定，从靠物一侧找大像，再从靠屏一侧找小像。';}
         else if(key==='mirror')tip='靠近或远离字物移动凸透镜，在物屏上观察返回的倒像。';
         else if(key==='parallel')tip='模拟平行光入射。移动白屏，使光斑尺寸最小。';
@@ -2663,25 +2666,31 @@ function mountBench(chapter, bench) {
           const imageName=lens-objectX<screen-lens?'清晰大像':'清晰小像';
           if(sequence.some(row=>row[0]===imageName) && sequence.length<2){tip='这一类像已记过。继续沿导轨寻找另一个大小不同的清晰位置。';draw();return;}
           if(sequence.length===2)resetRecords();
-          sequence.push([imageName,lens,`L = ${status(L)} mm`]);
+          rulerReading.reset('lens');
+          const measuredLens=measuredPosition('lens',lens), measuredL=measuredPosition('screen',screen)-objectX;
+          sequence.push([imageName,measuredLens,`L = ${status(measuredL)} mm`]);
           if(sequence.length===2){
             const difference=Math.abs(sequence[1][1]-sequence[0][1]);
-            recordedResult=`f = ${status((L*L-difference*difference)/(4*L))} mm · L = ${status(L)} mm，ℓ = ${status(difference)} mm`;
+            recordedResult=`f = ${status((measuredL*measuredL-difference*difference)/(4*measuredL))} mm · L = ${status(measuredL)} mm，ℓ = ${status(difference)} mm`;
             tip='两个位置已记录。读数允许少许偏差，可清空后试另一个物屏距。';
           }else tip='已记录一个像。沿导轨继续找另一个大小不同的清晰像。';
         }else if(mode==='concave'){
-          if(!negative){reference=screen;sequence=[['原像 A′',screen,'尚未插凹透镜']];recordedResult='';tip='原像已记录，插入凹透镜并找新像。';}
+          rulerReading.reset('screen');
+          const measuredScreen=measuredPosition('screen',screen);
+          if(!negative){reference=measuredScreen;sequence=[['原像 A′',measuredScreen,'尚未插凹透镜']];recordedResult='';tip='原像已记录，插入凹透镜并找新像。';}
           else if(reference===null){tip='还没有原像。取下凹透镜并先记录原像位置。';}
           else {
-            const p=reference-negativeX,v=screen-negativeX;
-            sequence=[sequence[0],['新像 A″',screen,`p = ${status(p)} mm，p′ = ${status(v)} mm`]];
+            const p=reference-negativeX,v=measuredScreen-negativeX;
+            sequence=[sequence[0],['新像 A″',measuredScreen,`p = ${status(p)} mm，p′ = ${status(v)} mm`]];
             recordedResult=`f = ${status(1/(1/v-1/p))} mm · 凹透镜虚物与实像均在右侧`;
             tip='虚物 p 为正。用带符号的公式算出的焦距为负。';
           }
         }else{
-          const u=lens-objectX,v=screen-lens;
+          rulerReading.reset(activePart());
+          const measuredLens=measuredPosition('lens',lens), measuredScreen=measuredPosition('screen',screen);
+          const u=measuredLens-objectX,v=measuredScreen-measuredLens;
           const f=mode==='mirror'?u:mode==='parallel'?v:u*v/(u+v);
-          sequence=[...sequence.slice(-5),[labels[mode],activePart()==='lens'?lens:screen,mode==='mirror'?`物到透镜 ${status(u)} mm`:mode==='parallel'?`透镜到焦点 ${status(v)} mm`:`u = ${status(u)} mm，v = ${status(v)} mm`]];
+          sequence=[...sequence.slice(-5),[labels[mode],activePart()==='lens'?measuredLens:measuredScreen,mode==='mirror'?`物到透镜 ${status(u)} mm`:mode==='parallel'?`透镜到焦点 ${status(v)} mm`:`u = ${status(u)} mm，v = ${status(v)} mm`]];
           recordedResult=`f = ${status(f)} mm`;
           tip='这个清晰位置已记录。';
         }

@@ -471,6 +471,7 @@ body { font-family: var(--lab-font); }
 </head>
 <body>
 <main id="course" class="unit-content"><noscript><p>请在浏览器中允许 JavaScript，以操作仿真实验台。</p></noscript></main>
+<script src="../../assets/measurement-noise.js"></script>
 <script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id, lesson);</script>
 <script>const anatomyIso = (() => {
 const AZIMUTH = 45;
@@ -2534,16 +2535,18 @@ function mountBench(chapter, bench) {
     ],
     mount(chapter){
       const q=s=>chapter.querySelector(s),svg=q('[data-role="mass-svg"]');
+      const balance=PhysLabNoise.createSampler();
       function draw(){
-        const m=+q('[data-role="ma"]').value,r=+q('[data-role="rho"]').value,bv=+q('[data-role="bubble"]').value,rw=+q('[data-role="temp"]').value,V=m/r,B=rw*(V+bv),app=m-B,calc=m/B*rw;
+        const m=+q('[data-role="ma"]').value,r=+q('[data-role="rho"]').value,bv=+q('[data-role="bubble"]').value,rw=+q('[data-role="temp"]').value,V=m/r;
+        const air=balance.read('air',m,.003),app=balance.read('immersed',m-rw*(V+bv),.003),B=air-app,calc=air/B*rw;
         q('[data-role="mao"]').textContent=m.toFixed(0);q('[data-role="rhoo"]').textContent=r.toFixed(1);q('[data-role="bo"]').textContent=bv.toFixed(1);
-        q('[data-role="mass-reading"]').textContent=`空气中 ${m.toFixed(3)} g；浸液表观 ${app.toFixed(3)} g；差值 b=${B.toFixed(3)} g。按无气泡公式求得 ρ=${calc.toFixed(4)} g/cm³，相对真实值偏差 ${((calc/r-1)*100).toFixed(2)}%。`;
+        q('[data-role="mass-reading"]').textContent=`空气中 ${air.toFixed(3)} g；浸液表观 ${app.toFixed(3)} g；差值 b=${B.toFixed(3)} g。按无气泡公式求得 ρ=${calc.toFixed(4)} g/cm³，相对真实值偏差 ${((calc/r-1)*100).toFixed(2)}%。`;
         const w=Math.max(280,svg.clientWidth),cx=w/2,max=270,x=v=>38+(w-58)*v/max;
         svg.setAttribute('viewBox',`0 0 ${w} 245`);
-        svg.innerHTML=`<title>称量示值：空气中${m.toFixed(1)}克，浸液${app.toFixed(2)}克</title><text x="12" y="24" fill="currentColor">质量示值 / g</text><text x="12" y="56" fill="currentColor">空气中</text><line x1="38" y1="78" x2="${x(m)}" y2="78" stroke="#2878a5" stroke-width="15"/><text x="12" y="114" fill="currentColor">完全浸液</text><line x1="38" y1="136" x2="${x(app)}" y2="136" stroke="#c47b25" stroke-width="15"/><line x1="38" y1="178" x2="${w-20}" y2="178" stroke="currentColor" opacity=".5"/>${[0,100,200].map(v=>`<text x="${x(v)}" y="201" text-anchor="middle" fill="currentColor">${v}</text>`).join('')}<text x="${cx}" y="232" text-anchor="middle" fill="currentColor">示值差对应浮力，非质量消失</text>`;
+        svg.innerHTML=`<title>称量示值：空气中${air.toFixed(3)}克，浸液${app.toFixed(3)}克</title><text x="12" y="24" fill="currentColor">质量示值 / g</text><text x="12" y="56" fill="currentColor">空气中</text><line x1="38" y1="78" x2="${x(air)}" y2="78" stroke="#2878a5" stroke-width="15"/><text x="12" y="114" fill="currentColor">完全浸液</text><line x1="38" y1="136" x2="${x(app)}" y2="136" stroke="#c47b25" stroke-width="15"/><line x1="38" y1="178" x2="${w-20}" y2="178" stroke="currentColor" opacity=".5"/>${[0,100,200].map(v=>`<text x="${x(v)}" y="201" text-anchor="middle" fill="currentColor">${v}</text>`).join('')}<text x="${cx}" y="232" text-anchor="middle" fill="currentColor">示值差对应浮力，非质量消失</text>`;
       }
       ['ma','rho','bubble','temp'].forEach(k=>q(`[data-role="${k}"]`).addEventListener('input',draw));
-      q('[data-role="clean"]').addEventListener('click',()=>{q('[data-role="bubble"]').value=0;draw();});
+      q('[data-role="clean"]').addEventListener('click',()=>{q('[data-role="bubble"]').value=0;balance.reset();draw();});
       const pr=()=>{const t=Number(q('[data-role="period"]').value);q('[data-role="period-reading"]').textContent=t>0&&Number.isFinite(t)?`系统总质量 = 200.0×(${t.toFixed(3)}/1.000)² = ${(200*t*t).toFixed(2)} g。若只要附加物质量，还要扣除载体。`:'请输入正的周期。';};
       q('[data-role="period"]').addEventListener('input',pr);pr();draw();new ResizeObserver(draw).observe(svg);
     }
@@ -2580,7 +2583,7 @@ function mountBench(chapter, bench) {
         <p>理想教学模型取g=9.8 m/s²、L=1.000 m，由静止释放，计时间隔的空间中心距释放点为s。选择距离、记录时间，再拟合v²对2s；可改Δs观察有限挡光间隔的影响。</p>
         <div class="sim"><div class="sim-controls"><label>s / cm <select data-role="distance"><option>20</option><option>30</option><option>40</option><option>50</option><option>60</option></select></label><label>垫高h / mm <input data-role="height" type="range" min="10" max="50" value="20" step="1"><output data-role="ho"></output></label><label>挡光间隔Δs / mm <input data-role="width" type="range" min="5" max="30" value="10" step="1"><output data-role="wo"></output></label></div>
         <p data-role="gate-reading" class="reading" aria-live="polite"></p><div class="sim-controls"><button type="button" data-role="record">记录本次</button><button type="button" data-role="fill">填入五组教学数据</button><button type="button" data-role="clear">清空记录</button></div>
-        <div class="table-wrap"><table><thead><tr><th>s / cm</th><th>Δt / ms</th><th>v / (m/s)</th></tr></thead><tbody data-role="gate-table"></tbody></table></div><svg data-role="gate-svg" style="width:100%;height:245px" role="img" aria-label="以2s为横轴、v平方为纵轴的拟合图"></svg><p data-role="fit-reading" class="reading" aria-live="polite"></p><p class="hint">改变h或Δs会清空本轮模拟记录，以免把不同条件混在一次拟合中。模型含有限间隔平均速度的影响，不含随机计时噪声。</p></div>
+        <div class="table-wrap"><table><thead><tr><th>s / cm</th><th>Δt / ms</th><th>v / (m/s)</th></tr></thead><tbody data-role="gate-table"></tbody></table></div><svg data-role="gate-svg" style="width:100%;height:245px" role="img" aria-label="以2s为横轴、v平方为纵轴的拟合图"></svg><p data-role="fit-reading" class="reading" aria-live="polite"></p><p class="hint">改变h或Δs会清空本轮模拟记录，以免把不同条件混在一次拟合中。模拟光电计时含小幅随机波动，有限遮光间隔也会影响平均速度。</p></div>
         <h3>动作二：预测碰后速度，再看动量和动能</h3>
         <div class="sim"><div class="sim-controls"><label>m₁ / g <input data-role="m1" type="range" min="100" max="500" value="300" step="10"><output data-role="m1o"></output></label><label>m₂ / g <input data-role="m2" type="range" min="100" max="500" value="200" step="10"><output data-role="m2o"></output></label><label>u₁ / (m/s) <input data-role="u1" type="range" min="0.1" max="1.2" value="0.6" step="0.05"><output data-role="u1o"></output></label><label>u₂ / (m/s) <input data-role="u2" type="range" min="-0.8" max="0" value="0" step="0.05"><output data-role="u2o"></output></label><label>碰撞类型 <select data-role="etype"><option value="1">钢圈：理想弹性 e=1</option><option value="0.4">金属：示例 e=0.4</option><option value="0">粘合：完全非弹性 e=0</option></select></label></div>
         <svg data-role="collision-svg" style="width:100%;height:250px" role="img" aria-label="碰撞前后两滑块的速度方向及大小"></svg><p data-role="collision-reading" class="reading" aria-live="polite"></p><p class="hint">图显示碰前/碰后速度示意，不是连续位置动画。e=0.4是教学设定，并非教材金属的标定值；理想模型无外力，所以动量差总为零，真实实验必须由测量检验。</p></div>`},
@@ -2621,7 +2624,14 @@ function mountBench(chapter, bench) {
     mount(chapter){
       const q=s=>chapter.querySelector(s),gs=q('[data-role="gate-svg"]'),cs=q('[data-role="collision-svg"]');let rows=[];
       const val=k=>Number(q(`[data-role="${k}"]`).value);
-      const gate=s=>{const a=9.8*val('height')/1000,w=val('width')/1000,dt=Math.sqrt(2*(s+w/2)/a)-Math.sqrt(2*(s-w/2)/a);return {s,dt,v:w/dt};};
+      const gauge=PhysLabNoise.createSampler();
+      let lastGate;
+      const gate=nominal=>{
+        const a=9.8*val('height')/1000,w=val('width')/1000;
+        const ideal=Math.sqrt(2*(nominal+w/2)/a)-Math.sqrt(2*(nominal-w/2)/a);
+        const dt=gauge.read('timer',ideal,.00010,{min:.000001}),s=gauge.read('ruler',nominal,.00018);
+        return {nominal,s,dt,v:w/dt};
+      };
       function showGate(){
         const r=gate(val('distance')/100);q('[data-role="ho"]').textContent=val('height');q('[data-role="wo"]').textContent=val('width');
         q('[data-role="gate-reading"]').textContent=`s=${(r.s*100).toFixed(2)} cm：Δt=${(r.dt*1000).toFixed(3)} ms，v̄=${r.v.toFixed(5)} m/s。`;
@@ -2630,12 +2640,12 @@ function mountBench(chapter, bench) {
         gs.setAttribute('viewBox',`0 0 ${w} 245`);let h=`<title>v平方对2s的拟合，记录${rows.length}组</title><text x="8" y="20" fill="currentColor">v² / (m²/s²)</text><line x1="${left}" y1="${top}" x2="${left}" y2="${bottom}" stroke="currentColor"/><line x1="${left}" y1="${bottom}" x2="${right}" y2="${bottom}" stroke="currentColor"/><text x="${right}" y="237" text-anchor="end" fill="currentColor">2s / m</text>`;
         for(const t of [0,.4,.8,1.2])h+=`<text x="${x(t/2)}" y="215" text-anchor="middle" fill="currentColor">${t.toFixed(1)}</text>`;
         for(const t of [0,.2,.4,.6])h+=`<text x="${left-6}" y="${y(t)+4}" text-anchor="end" fill="currentColor">${t.toFixed(1)}</text>`;
-        if(new Set(rows.map(r=>r.s)).size>=2){const n=rows.length,mx=rows.reduce((s,r)=>s+2*r.s,0)/n,my=rows.reduce((s,r)=>s+r.v*r.v,0)/n,a=rows.reduce((s,r)=>s+(2*r.s-mx)*(r.v*r.v-my),0)/rows.reduce((s,r)=>s+(2*r.s-mx)**2,0),b=my-a*mx,g=a/(val('height')/1000);q('[data-role="fit-reading"]').textContent=`拟合a=${a.toFixed(5)} m/s²，截距=${b.toExponential(2)} m²/s²，g=${g.toFixed(4)} m/s²（模型9.8）。已记录${new Set(rows.map(r=>r.s)).size}/5种释放距离。`;h+=`<line x1="${x(.17)}" y1="${y(a*.34+b)}" x2="${x(.62)}" y2="${y(a*1.24+b)}" stroke="#2878a5" stroke-width="2"/>`;}else q('[data-role="fit-reading"]').textContent='至少记录两种距离可拟合；按教材完成五种距离，并在真实实验中每处重复测量。';
+        if(new Set(rows.map(r=>r.nominal)).size>=2){const n=rows.length,mx=rows.reduce((s,r)=>s+2*r.s,0)/n,my=rows.reduce((s,r)=>s+r.v*r.v,0)/n,a=rows.reduce((s,r)=>s+(2*r.s-mx)*(r.v*r.v-my),0)/rows.reduce((s,r)=>s+(2*r.s-mx)**2,0),b=my-a*mx,g=a/(val('height')/1000);q('[data-role="fit-reading"]').textContent=`拟合a=${a.toFixed(5)} m/s²，截距=${b.toExponential(2)} m²/s²，g=${g.toFixed(4)} m/s²（模型9.8）。已记录${new Set(rows.map(r=>r.nominal)).size}/5种释放距离。`;h+=`<line x1="${x(.17)}" y1="${y(a*.34+b)}" x2="${x(.62)}" y2="${y(a*1.24+b)}" stroke="#2878a5" stroke-width="2"/>`;}else q('[data-role="fit-reading"]').textContent='至少记录两种距离可拟合；按教材完成五种距离，并在真实实验中每处重复测量。';
         rows.forEach(r=>h+=`<circle cx="${x(r.s)}" cy="${y(r.v*r.v)}" r="5" fill="#c47b25"/>`);gs.innerHTML=h;
       }
       q('[data-role="distance"]').addEventListener('input',showGate);['height','width'].forEach(k=>q(`[data-role="${k}"]`).addEventListener('input',()=>{rows=[];showGate();}));
-      q('[data-role="record"]').addEventListener('click',()=>{if(rows.length<30)rows.push(gate(val('distance')/100));showGate();if(rows.length===30)q('[data-role="fit-reading"]').textContent+=' 达到30条上限，可清空后重新练习。';});
-      q('[data-role="fill"]').addEventListener('click',()=>{rows=[.2,.3,.4,.5,.6].map(gate);showGate();});q('[data-role="clear"]').addEventListener('click',()=>{rows=[];showGate();});
+      q('[data-role="record"]').addEventListener('click',()=>{if(rows.length<30){const nominal=val('distance')/100;if(lastGate===nominal)gauge.reset();rows.push(gate(nominal));lastGate=nominal;}showGate();if(rows.length===30)q('[data-role="fit-reading"]').textContent+=' 达到30条上限，可清空后重新练习。';});
+      q('[data-role="fill"]').addEventListener('click',()=>{rows=[.2,.3,.4,.5,.6].map(nominal=>{gauge.reset();return gate(nominal);});lastGate=undefined;showGate();});q('[data-role="clear"]').addEventListener('click',()=>{rows=[];showGate();});
       function showCollision(){const m1=val('m1')/1000,m2=val('m2')/1000,u1=val('u1'),u2=val('u2'),e=val('etype'),p0=m1*u1+m2*u2,v1=(p0-m2*e*(u1-u2))/(m1+m2),v2=(p0+m1*e*(u1-u2))/(m1+m2),E0=(m1*u1*u1+m2*u2*u2)/2,E1=(m1*v1*v1+m2*v2*v2)/2;
         ['m1','m2','u1','u2'].forEach(k=>q(`[data-role="${k}o"]`).textContent=val(k).toFixed(k[0]==='u'?2:0));
         const near=Math.abs(p0)<1e-9;q('[data-role="collision-reading"]').textContent=`碰后v₁=${v1.toFixed(3)}、v₂=${v2.toFixed(3)} m/s；总动量前后均${p0.toFixed(4)} kg·m/s。动能${E0.toFixed(5)} → ${E1.toFixed(5)} J，损失${((E0-E1)/E0*100).toFixed(2)}%。${near?'总动量接近零，用绝对动量差，不计算相对百分比。':''}`;
@@ -2696,13 +2706,16 @@ function mountBench(chapter, bench) {
       const s={mode:'mass',onPan:false,level:-2,lower:0,bubble:false,tare:0,tareGood:false,mass:null,buoy:null,moving:false,rows:[],note:'先点前面的调平脚，直到气泡居中；再点右侧托盘上的样品。'};
       const M=120,RHO=7.8,RW=.998229,V=M/RHO,CUP=86.420;
       let stop=()=>{};
-      host.innerHTML=`<div class="rig-tools"><label>接法 <select data-mode><option value="mass">基础称量：样品放在秤盘上</option><option value="hydro">静力称衡：烧杯在秤盘上</option></select></label></div><div class="rig-scene"></div><p class="rig-readout" aria-live="polite"></p><p class="hint" data-guidance></p><div class="rig-tools"><button type="button" data-level>调平脚 +1 格</button><button type="button" data-sample>放置／取下样品</button><button type="button" data-tare>去皮</button><button type="button" data-lower>降低／升起悬样</button><button type="button" data-bubble>附着／去除气泡</button></div>${toolsButtons}${table(['接法','读数 / g','解释'])}<p class="hint" data-result></p><p class="hint">教学模型：样品质量 120 g、密度 7.8 g/cm³；水温 20 ℃，ρ水 = 0.998229 g/cm³（教材附录）。天平分度示例 0.001 g；本图无随机噪声，实测应等待稳定。独立支架不放在天平上；杯壁用教学剖视显示，样品始终不接触杯底或杯壁。</p>`;
+      host.innerHTML=`<div class="rig-tools"><label>接法 <select data-mode><option value="mass">基础称量：样品放在秤盘上</option><option value="hydro">静力称衡：烧杯在秤盘上</option></select></label></div><div class="rig-scene"></div><p class="rig-readout" aria-live="polite"></p><p class="hint" data-guidance></p><div class="rig-tools"><button type="button" data-level>调平脚 +1 格</button><button type="button" data-sample>放置／取下样品</button><button type="button" data-tare>去皮</button><button type="button" data-lower>降低／升起悬样</button><button type="button" data-bubble>附着／去除气泡</button></div>${toolsButtons}${table(['接法','读数 / g','解释'])}<p class="hint" data-result></p><p class="hint">教学模型：样品质量 120 g、密度 7.8 g/cm³；水温 20 ℃，ρ水 = 0.998229 g/cm³（教材附录）。天平分度示例 0.001 g；稳定后读数仍有轻微随机波动。独立支架不放在天平上；杯壁用教学剖视显示，样品始终不接触杯底或杯壁。</p>`;
       const scene=host.querySelector('.rig-scene'),read=host.querySelector('.rig-readout'),note=host.querySelector('[data-guidance]'),result=host.querySelector('[data-result]');
       function riseFull(){return Math.PI*12*12*22/(56*46)*(1+(s.bubble?.45:0)/V);}
       function immersion(){return clamp((88-(110-50*s.lower))/(22-riseFull()),0,1);}
       function raw(){return s.mode==='mass'?(s.onPan?M:0):CUP+RW*(V+(s.bubble?.45:0))*immersion();}
       function stable(){return s.level===0&&!s.moving;}
-      function value(){return raw()-s.tare;}
+      const balance=PhysLabNoise.createSampler();
+      let lastRecorded;
+      function value(){const ideal=raw()-s.tare;return stable()&&ideal!==0?balance.read('load',ideal,.003):ideal;}
+      function reweigh(){balance.reset();lastRecorded=undefined;}
       function instrument(){
         let a=`<path class="iso-halo" d="${k.haloOf({x:-140,y:-65,w:170,d:150,r:12},-14,8,P)}"/>`;
         for(const [x,y] of [[-120,-44],[10,-44],[-120,63],[10,63]]) a+=round(x,y,7,-14,3,'lo')+round(x,y,5,-11,11,'mid');
@@ -2765,24 +2778,27 @@ function mountBench(chapter, bench) {
         result.textContent=s.mass!==null&&s.buoy!==null?`已记录 m = ${fixed(s.mass)} g，b = ${fixed(s.buoy)} g。ρ = mρ水/b = ${fixed(s.mass*RW/s.buoy,4)} g/cm³。${s.bubble?'气泡使排水体积变大，结果偏小。':''}`:'记录空气中质量 m 和完全浸没后的增加量 b，再计算 ρ = mρ水/b。';
       }
       function level(){if(s.moving)return;s.level=s.level>=2?-2:s.level+1;s.note=s.level===0?'气泡已居中。现在可以称量；去皮应在你要扣除的容器单独放上天平时进行。':'气泡偏离中央圆圈；继续逐格调平。';rememberFocus(host,drawStatic);}
-      function tare(){if(!stable()){s.note='先调平并等待稳定，随后去皮。';drawLive();return;}s.tare=raw();s.tareGood=s.mode==='hydro'&&immersion()===0;s.note=s.tareGood?'烧杯及水已经去皮。现在点支架旋钮，将样品完全浸没。':s.mode==='mass'?(s.onPan?'你把样品也去皮了；取下样品再去皮，之后重新称量。':'空秤盘已归零。'): '浸水时去皮会把浮力增加量也扣掉。先升起样品，重新去皮。';drawLive();}
-      function sample(){if(s.mode!=='mass'){s.note='静力称衡时样品由独立支架悬挂，请操作支架旋钮。';drawLive();return;}s.onPan=!s.onPan;s.note=s.onPan?'样品已放上秤盘。稳定后记录空气中的质量 m。':'样品已取下；空秤盘可以去皮归零。';rememberFocus(host,drawStatic);}
-      function lower(){if(s.mode!=='hydro'){s.note='先把接法切换到静力称衡。';drawLive();return;}if(s.moving)return;const start=s.lower,target=start<.5?1:0;s.moving=true;s.note=target?'样品下降。读数增加来自样品对水的向下反作用力。':'样品上升。完全离水后才给烧杯重新去皮。';stop=timeline(1050,p=>{const e=p*p*(3-2*p);s.lower=start+(target-start)*e;if(p===1){s.moving=false;s.note=target?'样品完全浸没，且不接触杯底或杯壁；可以记录 b。':'样品已完全离水；此时可以给烧杯及水去皮。';}drawLive();});}
-      function bubble(){if(s.mode!=='hydro')return;if(s.moving)return;s.bubble=!s.bubble;s.note=s.bubble?'附着气泡几乎不增加样品质量，却增加排水体积；再次记录，比较计算密度。':'已去除气泡；真实实验还要检查挂线、浸没程度和接触。';drawLive();}
+      function tare(){if(!stable()){s.note='先调平并等待稳定，随后去皮。';drawLive();return;}s.tare=raw();reweigh();s.tareGood=s.mode==='hydro'&&immersion()===0;s.note=s.tareGood?'烧杯及水已经去皮。现在点支架旋钮，将样品完全浸没。':s.mode==='mass'?(s.onPan?'你把样品也去皮了；取下样品再去皮，之后重新称量。':'空秤盘已归零。'): '浸水时去皮会把浮力增加量也扣掉。先升起样品，重新去皮。';drawLive();}
+      function sample(){if(s.mode!=='mass'){s.note='静力称衡时样品由独立支架悬挂，请操作支架旋钮。';drawLive();return;}s.onPan=!s.onPan;reweigh();s.note=s.onPan?'样品已放上秤盘。稳定后记录空气中的质量 m。':'样品已取下；空秤盘可以去皮归零。';rememberFocus(host,drawStatic);}
+      function lower(){if(s.mode!=='hydro'){s.note='先把接法切换到静力称衡。';drawLive();return;}if(s.moving)return;const start=s.lower,target=start<.5?1:0;s.moving=true;s.note=target?'样品下降。读数增加来自样品对水的向下反作用力。':'样品上升。完全离水后才给烧杯重新去皮。';stop=timeline(1050,p=>{const e=p*p*(3-2*p);s.lower=start+(target-start)*e;if(p===1){s.moving=false;reweigh();s.note=target?'样品完全浸没，且不接触杯底或杯壁；可以记录 b。':'样品已完全离水；此时可以给烧杯及水去皮。';}drawLive();});}
+      function bubble(){if(s.mode!=='hydro')return;if(s.moving)return;s.bubble=!s.bubble;reweigh();s.note=s.bubble?'附着气泡几乎不增加样品质量，却增加排水体积；再次记录，比较计算密度。':'已去除气泡；真实实验还要检查挂线、浸没程度和接触。';drawLive();}
       const actions={level,tare,sample,lower,bubble};bindHits(host,actions);
       for(const id of Object.keys(actions))host.querySelector(`[data-${id}]`).addEventListener('click',actions[id]);
-      host.querySelector('[data-mode]').addEventListener('change',e=>{stop();s.mode=e.target.value;s.lower=0;s.moving=false;s.tare=0;s.tareGood=false;s.onPan=false;s.note=s.mode==='hydro'?'烧杯及水已经放上天平；先去皮，再浸没样品。':'点样品，把它放在秤盘上。';drawStatic();});
+      host.querySelector('[data-mode]').addEventListener('change',e=>{stop();reweigh();s.mode=e.target.value;s.lower=0;s.moving=false;s.tare=0;s.tareGood=false;s.onPan=false;s.note=s.mode==='hydro'?'烧杯及水已经放上天平；先去皮，再浸没样品。':'点样品，把它放在秤盘上。';drawStatic();});
       host.querySelector('[data-record]').addEventListener('click',()=>{
         if(!stable()){s.note='读数未稳定或天平未调平，先完成相应操作。';drawLive();return;}
         let what;
         if(s.mode==='mass'){
           if(!s.onPan||s.tare!==0){s.note='先在空秤盘上归零，再把样品放上；当前不能把净读数当样品质量。';drawLive();return;}
-          s.mass=Number(fixed(value()));what='空气中样品质量 m';
+          what='空气中样品质量 m';
         }else{
           if(!s.tareGood||immersion()<1){s.note='先在样品离水时给烧杯去皮，再将样品完全浸没。';drawLive();return;}
-          s.buoy=Number(fixed(value()));what=s.bubble?'增加量 b（附着气泡）':'增加量 b（无气泡）';
+          what=s.bubble?'增加量 b（附着气泡）':'增加量 b（无气泡）';
         }
-        s.rows.push(`<tr><td>${s.mode==='mass'?'基础称量':'静力称衡'}</td><td>${fixed(value())}</td><td>${what}</td></tr>`);host.querySelector('[data-records]').innerHTML=s.rows.join('');s.note='本次读数已记录。';drawLive();
+        if(lastRecorded===value())reweigh();
+        lastRecorded=value();
+        if(s.mode==='mass')s.mass=Number(fixed(lastRecorded));else s.buoy=Number(fixed(lastRecorded));
+        s.rows.push(`<tr><td>${s.mode==='mass'?'基础称量':'静力称衡'}</td><td>${fixed(lastRecorded)}</td><td>${what}</td></tr>`);host.querySelector('[data-records]').innerHTML=s.rows.join('');s.note='本次读数已记录。';drawLive();
       });
       host.querySelector('[data-clear]').addEventListener('click',()=>{s.rows=[];s.mass=s.buoy=null;host.querySelector('[data-records]').innerHTML='';drawLive();});
       drawStatic();
@@ -2805,7 +2821,7 @@ function mountBench(chapter, bench) {
       const SCALE=600,L=1,G=9.8,DS=.01,ARM=.002,m1=.2,m2=.4,U=.6;
       const couplings=[{e:1,name:'弹性钢片环'},{e:.5,name:'部分非弹性示例'},{e:0,name:'粘合碰撞'}];
       let stop=()=>{},events=[],runDuration=0,markerStart=.15;
-      host.innerHTML=`<div class="rig-tools"><label>实验模式 <select data-mode><option value="accel">倾斜导轨：匀加速运动</option><option value="collision">水平导轨：三类碰撞</option></select></label><label data-height-wrap>垫高 h / mm <input data-height type="range" min="10" max="30" step="5" value="20"></label><label data-start-wrap>释放位置 x / m <input data-start type="range" min="0.10" max="0.50" step=".05" value=".15"></label><button type="button" data-run>释放滑块</button><button type="button" data-reset>复位</button></div><div class="rig-scene"></div><p class="rig-readout" aria-live="polite"></p><p class="hint" data-guidance></p><div class="rig-tools"><button type="button" data-air>开／关气源</button><button type="button" data-raise>垫高 +5 mm</button><button type="button" data-gate>光电门移动 +5 cm</button><button type="button" data-coupling>切换碰撞头</button></div>${toolsButtons}${table(['模式','几何／装置','光电计时 / ms','速度 / m·s⁻¹','处理结果'])}<p class="hint" data-result></p><p class="hint">教学参数：支脚间距 L = 1.000 m，遮光框两前沿间距 Δs = 10.00 mm，每臂宽 2.00 mm；无摩擦、无计时噪声。碰撞示例 m₁ = 200 g、m₂ = 400 g，u₁ = +0.600 m/s、u₂ = 0；部分非弹性碰撞的 e = 0.5 是示例，须由真实数据求实物的 e。碰撞前先放平导轨；图中升降量按几何比例绘制。</p>`;
+      host.innerHTML=`<div class="rig-tools"><label>实验模式 <select data-mode><option value="accel">倾斜导轨：匀加速运动</option><option value="collision">水平导轨：三类碰撞</option></select></label><label data-height-wrap>垫高 h / mm <input data-height type="range" min="10" max="30" step="5" value="20"></label><label data-start-wrap>释放位置 x / m <input data-start type="range" min="0.10" max="0.50" step=".05" value=".15"></label><button type="button" data-run>释放滑块</button><button type="button" data-reset>复位</button></div><div class="rig-scene"></div><p class="rig-readout" aria-live="polite"></p><p class="hint" data-guidance></p><div class="rig-tools"><button type="button" data-air>开／关气源</button><button type="button" data-raise>垫高 +5 mm</button><button type="button" data-gate>光电门移动 +5 cm</button><button type="button" data-coupling>切换碰撞头</button></div>${toolsButtons}${table(['模式','几何／装置','光电计时 / ms','速度 / m·s⁻¹','处理结果'])}<p class="hint" data-result></p><p class="hint">教学参数：支脚间距 L = 1.000 m，遮光框两前沿间距 Δs = 10.00 mm，每臂宽 2.00 mm；运动按无摩擦模型，光电计时含小幅随机波动。碰撞示例 m₁ = 200 g、m₂ = 400 g，u₁ = +0.600 m/s、u₂ = 0；部分非弹性碰撞的 e = 0.5 是示例，须由真实数据求实物的 e。碰撞前先放平导轨；图中升降量按几何比例绘制。</p>`;
       const scene=host.querySelector('.rig-scene'),read=host.querySelector('.rig-readout'),note=host.querySelector('[data-guidance]'),result=host.querySelector('[data-result]');
       const trackZ=x=>40+(s.mode==='accel'?s.height*SCALE*(1-x/SCALE):0);
       function tiltSlab(x,y,w,d,z,h,tone='mid'){
@@ -2884,6 +2900,7 @@ function mountBench(chapter, bench) {
       }
       function velocities(){const e=couplings[s.coupling].e;return {v1:(m1-e*m2)/(m1+m2)*U,v2:(1+e)*m1/(m1+m2)*U};}
       function acceleration(){return G*s.height/L;}
+      function readInterval(dt){return Number(fixed(PhysLabNoise.sample(dt,.00010,{min:.000001})*1000,3))/1000;}
       function live(){
         const c1=scene.querySelector('[data-cart1]'),c2=scene.querySelector('[data-cart2]');
         // Rebuild only the moving assemblies; the stationary 50+ parts stay untouched.
@@ -2893,10 +2910,10 @@ function mountBench(chapter, bench) {
         scene.querySelector('[data-rig-hit="coupling"]')?.setAttribute('transform',movement);
         const gates=s.mode==='accel'?[s.gate]:[.28,.70];
         gates.forEach((g,i)=>{const blocked=[s.x1,...(s.mode==='collision'?[s.x2]:[])].some(x=>[-DS/2,DS/2].some(a=>Math.abs(g-(x+a))<ARM/2));const el=scene.querySelector(`[data-beam="${i}"]`);if(el)el.innerHTML=line([[g*SCALE,-17,trackZ(g*SCALE)+36],[g*SCALE,17,trackZ(g*SCALE)+36]],blocked?'hi':'faint');});
-        const ds=s.gateTimes.map(v=>v===null?'—':fixed(v*1000,2));
+        const ds=s.gateTimes.map(v=>v===null?'—':fixed(v*1000,3));
         scene.querySelector('[data-timer]').innerHTML=label([430,118,19],`P1 ${ds[0]} ms`,9)+label([430,130,19],`P2 ${ds[1]} ms`,9);
         read.setAttribute('aria-live',s.running?'off':'polite');
-        read.textContent=s.mode==='accel'?`气源${s.air?'已开':'关闭'} · h = ${fixed(s.height*1000,0)} mm · x = ${fixed(s.x1)} m · t = ${fixed(s.t)} s · P1 = ${ds[0]} ms`:`${couplings[s.coupling].name} · t = ${fixed(s.t)} s · x₁ = ${fixed(s.x1)} m，x₂ = ${fixed(s.x2)} m · P1/P2 = ${ds.join(' / ')} ms`;
+        read.textContent=s.mode==='accel'?`气源${s.air?'已开':'关闭'} · h = ${fixed(s.height*1000,0)} mm · x = ${fixed(s.x1)} m · t = ${fixed(s.t)} s · P1 = ${ds[0]} ms${s.running||!s.last?'':` · s = ${fixed(s.last.d)} m`}`:`${couplings[s.coupling].name} · t = ${fixed(s.t)} s · x₁ = ${fixed(s.x1)} m，x₂ = ${fixed(s.x2)} m · P1/P2 = ${ds.join(' / ')} ms`;
         note.textContent=s.note;
       }
       function reset(){stop();s.running=false;s.t=0;s.last=null;s.gateTimes=[null,null];s.x1=s.mode==='accel'?s.start:.12;s.x2=.55;s.note='已复位。确认气源、导轨状态与读数方法，再释放滑块。';rememberFocus(host,art);}
@@ -2911,17 +2928,24 @@ function mountBench(chapter, bench) {
         if(s.mode==='accel'){
           const a=acceleration(),x0=s.start,g=s.gate;
           const xa=g-DS/2-ARM/2,xb=g+DS/2-ARM/2;
-          const ta=Math.sqrt(2*(xa-x0)/a),tb=Math.sqrt(2*(xb-x0)/a),dt=tb-ta;
+          const ta=Math.sqrt(2*(xa-x0)/a),tb=Math.sqrt(2*(xb-x0)/a),dt=readInterval(tb-ta);
           events=[{at:tb,gate:0,dt}];runDuration=Math.sqrt(2*(.94-x0)/a);
-          s.last={mode:'accel',h:s.height,d:(xa+xb)/2-x0,dt,v:DS/dt,a};
+          const nominalDistance=(xa+xb)/2-x0;
+          const d=Number(fixed(PhysLabNoise.sample(nominalDistance,.0015)));
+          s.last={mode:'accel',h:s.height,d,nominalDistance,dt,v:DS/dt,a};
           stop=timeline(runDuration*1200,p=>{s.t=p*runDuration;s.x1=x0+.5*a*s.t*s.t;events.filter(e=>s.t>=e.at).forEach(e=>s.gateTimes[e.gate]=e.dt);if(p===1){s.running=false;s.note='本次释放结束。s 取两次触发位置的中点到释放点的距离；v = Δs/Δt 是短程平均速度。';}live();});
         }else{
           const {v1,v2}=velocities(),x10=.12,x20=.55,contactX=x20-(s.coupling===0?62:52)/SCALE,contact=(contactX-x10)/U;
           const segments=[{cart:1,x:x10,v:U,t0:0,t1:contact},{cart:1,x:contactX,v:v1,t0:contact,t1:8},{cart:2,x:x20,v:v2,t0:contact,t1:8}];
-          for(const seg of segments){if(Math.abs(seg.v)<1e-9)continue;for(const [gi,g]of [[0,.28],[1,.70]]){const sign=Math.sign(seg.v);const xa=g-sign*(DS/2+ARM/2),xb=g+sign*(DS/2-ARM/2);const ta=seg.t0+(xa-seg.x)/seg.v,tb=seg.t0+(xb-seg.x)/seg.v;if(ta>=seg.t0-1e-9&&tb<=seg.t1&&tb>ta)events.push({at:tb,gate:gi,dt:tb-ta,cart:seg.cart,after:seg.t0>0});}}
+          for(const seg of segments){if(Math.abs(seg.v)<1e-9)continue;for(const [gi,g]of [[0,.28],[1,.70]]){const sign=Math.sign(seg.v);const xa=g-sign*(DS/2+ARM/2),xb=g+sign*(DS/2-ARM/2);const ta=seg.t0+(xa-seg.x)/seg.v,tb=seg.t0+(xb-seg.x)/seg.v;if(ta>=seg.t0-1e-9&&tb<=seg.t1&&tb>ta)events.push({at:tb,gate:gi,dt:readInterval(tb-ta),cart:seg.cart,after:seg.t0>0});}}
           const end1=Math.abs(v1)<1e-9?Infinity:contact+((v1>0?.91:.08)-contactX)/v1,end2=contact+(.91-x20)/v2;runDuration=Math.min(end1,end2);
           events=events.filter(e=>e.at<=runDuration).sort((a,b)=>a.at-b.at);
-          s.last={mode:'collision',name:couplings[s.coupling].name,e:couplings[s.coupling].e,v1,v2,u:U,p0:m1*U,p1:m1*v1+m2*v2,e0:.5*m1*U*U,e1:.5*m1*v1*v1+.5*m2*v2*v2,events};
+          const measured=(cart,after,velocity)=>{
+            const pulse=events.find(event=>event.cart===cart&&event.after===after);
+            return pulse?Math.sign(velocity)*DS/pulse.dt:0;
+          };
+          const u=measured(1,false,U),after1=measured(1,true,v1),after2=measured(2,true,v2);
+          s.last={mode:'collision',name:couplings[s.coupling].name,e:couplings[s.coupling].e,v1:after1,v2:after2,u,p0:m1*u,p1:m1*after1+m2*after2,e0:.5*m1*u*u,e1:.5*m1*after1*after1+.5*m2*after2*after2,events};
           stop=timeline(runDuration*1400,p=>{s.t=p*runDuration;if(s.t<=contact){s.x1=x10+U*s.t;s.x2=x20;}else{s.x1=contactX+v1*(s.t-contact);s.x2=x20+v2*(s.t-contact);}events.filter(e=>s.t>=e.at).forEach(e=>s.gateTimes[e.gate]=e.dt);if(p===1){s.running=false;s.note=Math.abs(v1)<1e-9?'碰后滑块 1 停止；通过持续位置不变判断 v₁ = 0，不能把“没有光电脉冲”自动当成零速度。':'本次碰撞结束；速度向右为正，向左为负。计时器显示最后一次经过，各次脉冲见记录。';}live();});
         }
       }
@@ -2936,14 +2960,14 @@ function mountBench(chapter, bench) {
         if(r.mode==='accel'){
           cells=['匀加速',`h=${fixed(r.h*1000,0)} mm；s=${fixed(r.d,3)} m`,fixed(r.dt*1000,3),fixed(r.v,5),`2s=${fixed(2*r.d,3)} m；v²=${fixed(r.v*r.v,6)} m²/s²`];
         }else{
-          const pulse=r.events.map(e=>`P${e.gate+1}：${e.after?'碰后':'碰前'}块${e.cart} ${fixed(e.dt*1000,2)}`).join('；');
-          cells=['碰撞',r.name,pulse,`u₁=+${fixed(U)}；v₁=${fixed(r.v1)}；v₂=+${fixed(r.v2)}`,`p：${fixed(r.p0,4)} → ${fixed(r.p1,4)} kg·m/s；E：${fixed(r.e0,4)} → ${fixed(r.e1,4)} J`];
+          const pulse=r.events.map(e=>`P${e.gate+1}：${e.after?'碰后':'碰前'}块${e.cart} ${fixed(e.dt*1000,3)}`).join('；');
+          cells=['碰撞',r.name,pulse,`u₁=+${fixed(r.u)}；v₁=${fixed(r.v1)}；v₂=+${fixed(r.v2)}`,`p：${fixed(r.p0,4)} → ${fixed(r.p1,4)} kg·m/s；E：${fixed(r.e0,4)} → ${fixed(r.e1,4)} J`];
         }
         s.rows.push(r);host.querySelector('[data-records]').insertAdjacentHTML('beforeend',`<tr>${cells.map(c=>`<td>${c}</td>`).join('')}</tr>`);
         if(r.mode==='accel'){
           const rows=s.rows.filter(a=>a.mode==='accel'&&Math.abs(a.h-r.h)<1e-8),n=rows.length,x=rows.map(a=>2*a.d),y=rows.map(a=>a.v*a.v),sx=x.reduce((a,b)=>a+b,0),sy=y.reduce((a,b)=>a+b,0),sxx=x.reduce((a,b)=>a+b*b,0),sxy=x.reduce((a,b,i)=>a+b*y[i],0),den=n*sxx-sx*sx;
-          result.textContent=n>=2&&Math.abs(den)>1e-12?`同一 h 的 ${n} 组数据拟合 v² = a·(2s)+b：a=${fixed((n*sxy-sx*sy)/den,6)} m/s²；g=aL/h=${fixed((n*sxy-sx*sy)/den*L/r.h,4)} m/s²。有限遮光长度会使短程平均速度与中点瞬时速度有小偏差。`:'再保持 h 不变，改变释放点，至少记录两种 s；建议按教材做多组，再用 v² 对 2s 的斜率求 a。';
-        }else result.textContent=`总动量相对差 ${fixed((r.p1-r.p0)/r.p0*100,3)}%；动能减少 ${fixed((r.e0-r.e1)/r.e0*100,2)}%。模型中 e=${r.e}；实际实验应由带方向的碰前后速度计算。${r.e===0?'两个遮光框先后经过 P2，得到相同共同速度。':''}`;
+          result.textContent=new Set(rows.map(row=>row.nominalDistance)).size>=2&&Math.abs(den)>1e-12?`同一 h 的 ${n} 组数据拟合 v² = a·(2s)+b：a=${fixed((n*sxy-sx*sy)/den,6)} m/s²；g=aL/h=${fixed((n*sxy-sx*sy)/den*L/r.h,4)} m/s²。有限遮光长度会使短程平均速度与中点瞬时速度有小偏差。`:'再保持 h 不变，改变释放点，至少记录两种 s；建议按教材做多组，再用 v² 对 2s 的斜率求 a。';
+        }else result.textContent=`总动量相对差 ${fixed((r.p1-r.p0)/r.p0*100,3)}%；动能减少 ${fixed((r.e0-r.e1)/r.e0*100,2)}%。模型中 e=${r.e}；实际实验应由带方向的碰前后速度计算。${r.e===0?'两个遮光框先后经过 P2，读数应在计时误差范围内接近。':''}`;
         s.note='本次数据已加入记录表。';live();
       });
       host.querySelector('[data-clear]').addEventListener('click',()=>{s.rows=[];host.querySelector('[data-records]').innerHTML='';result.textContent='';});

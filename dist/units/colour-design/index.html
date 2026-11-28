@@ -472,6 +472,7 @@ body { font-family: var(--lab-font); }
 </head>
 <body>
 <main id="course" class="unit-content"><noscript><p>请允许 JavaScript 以操作仿真实验台。</p></noscript></main>
+<script src="../../assets/measurement-noise.js"></script>
 <script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id,lesson);</script>
 <script>const anatomyIso = (() => {
 const AZIMUTH = 45;
@@ -2799,10 +2800,10 @@ function mountBench(chapter, bench) {
     return (1240/nominalWavelength[channel])*(1-Math.exp(-milliamps/2.5))+.0028*milliamps;
   }
   function ledIntercept(samples) {
-    const atCurrent=new Map(samples.filter(r=>r.amps[r.channel]>=25).map(r=>[r.amps[r.channel],r.v]));
-    if(atCurrent.size<3) return null;
-    const points=[...atCurrent];
-    if(Math.max(...atCurrent.keys())-Math.min(...atCurrent.keys())<30) return null;
+    const active=samples.filter(r=>r.amps[r.channel]>=25);
+    const settings=new Set(active.map(r=>r.amps[r.channel]));
+    if(settings.size<3 || Math.max(...settings)-Math.min(...settings)<30) return null;
+    const points=active.map(r=>[r.current[r.channel],r.v]);
     const n=points.length;
     const meanI=points.reduce((sum,p)=>sum+p[0],0)/n, meanU=points.reduce((sum,p)=>sum+p[1],0)/n;
     const dx2=points.reduce((sum,p)=>sum+(p[0]-meanI)**2,0);
@@ -2865,7 +2866,7 @@ function mountBench(chapter, bench) {
       ]});
       const intensityOptions=options(['iv','intensity','distance'],'iv',v=>({'iv':'单灯 U → I','intensity':'单灯 I → 相对光强','distance':'距离 → 相对光强'}[v]));
       host.innerHTML=`<div class="rig-scene">${art}</div>
-        <p class="rig-readout">白屏：<strong data-cc-colour>红色</strong>　<span data-cc-channel-label>红</span>灯端电压 <b data-cc-voltage>—</b> V　中心相对光强 <b data-cc-level>—</b> <span>a.u.</span></p>
+        <p class="rig-readout">白屏：<strong data-cc-colour>红色</strong>　<span data-cc-channel-label>红</span>灯端电压 <b data-cc-voltage>—</b> V　中心相对光强 <b data-cc-level>—</b> <span>a.u.</span>　实测屏距 <b data-cc-measured-dist>—</b> cm　实测 R/G/B 电流 <b data-cc-measured-current>—</b> mA</p>
         <div class="rig-tools">
           <label>实验接法 <select data-cc-mode><option value="mix">三路配色</option><option value="single">单灯伏安与光强</option></select></label>
           <label>测量通道 <select data-cc-channel>${options([0,1,2],channel,n=>names[n]+' LED')}</select></label>
@@ -2879,6 +2880,13 @@ function mountBench(chapter, bench) {
         <p class="hint">色光按线性强度相加，再经屏幕 RGB 编码显示。滤片是通带的理想近似。照度读数为教学相对量，模型包含有限发散束的距离变化。可用下方记录拟合 LED 的阈值电压。</p>`;
       const q=query=>host.querySelector(query);
       const controls=channels.map(name=>q(`[data-cc-${name.toLowerCase()}]`));
+      const meter=PhysLabNoise.createSampler();
+      const measured = model => ({
+        voltage: meter.read('voltage', model.v, .004, {min:0}),
+        intensity: meter.read('intensity', model.centre, .08, {min:0}),
+        current: model.input.map((value, index) => meter.read('current'+index, value, .17, {min:0})),
+        distance: meter.read('distance', dist, .13),
+      });
       const shift=()=>1.6*(dist-40);
       const factor=()=>1.25/(1+(dist/80)**2);
       function pointOut(i) {
@@ -2905,7 +2913,9 @@ function mountBench(chapter, bench) {
         return {input,incident,transmitted,measuredAtCenter,centre,colour,v:ledVoltage(channel,input[channel])};
       }
       function render() {
-        const {input,incident,transmitted,centre,colour,v}=model();
+        const ideal=model();
+        const {input,incident,transmitted,colour}=ideal;
+        const reading=measured(ideal);
         const move=k.translateAlong(g.p,[shift(),0,0]);
         const rays=input.map((a,i)=>{
           if(!a) return '';
@@ -2940,12 +2950,14 @@ function mountBench(chapter, bench) {
         q('[data-cc-align]').setAttribute('aria-pressed',String(aligned));
         q('[data-cc-colour]').textContent=colour;
         q('[data-cc-channel-label]').textContent=names[channel];
-        q('[data-cc-voltage]').textContent=v.toFixed(3);
-        q('[data-cc-level]').textContent=centre.toFixed(2);
+        q('[data-cc-voltage]').textContent=reading.voltage.toFixed(3);
+        q('[data-cc-level]').textContent=reading.intensity.toFixed(2);
+        q('[data-cc-measured-dist]').textContent=reading.distance.toFixed(2);
+        q('[data-cc-measured-current]').textContent=reading.current.map(value=>value.toFixed(2)).join('/');
         const single=records.filter(r=>r.mode==='single'&&r.channel===channel);
         const interval=ledIntercept(single);
         const p=single.filter(r=>plot==='iv'||(r.aligned===aligned&&r.filter===filter&&(plot==='intensity'?r.dist===dist:r.amps[channel]===input[channel])));
-        const mapPoint=r=>plot==='iv'?[r.v,r.amps[channel]]:plot==='intensity'?[r.amps[channel],r.relative]:[r.dist,r.relative];
+        const mapPoint=r=>plot==='iv'?[r.v,r.current[channel]]:plot==='intensity'?[r.current[channel],r.relative]:[r.distance,r.relative];
         const axes=plot==='iv'?['端电压 U / V','正向电流 I / mA']:plot==='intensity'?['正向电流 I / mA','相对光强 / a.u.']:['屏距 / cm','相对光强 / a.u.'];
         q('[data-cc-plot]').innerHTML=graph(p.map(mapPoint),...axes);
         q('[data-cc-result]').textContent=interval>0
@@ -2974,16 +2986,15 @@ function mountBench(chapter, bench) {
       q('[data-cc-white]').addEventListener('click',()=>setPreset(60));
       function showRows() {
         q('[data-cc-count]').textContent=records.length;
-        q('[data-cc-rows]').innerHTML=records.map(r=>`<tr><td>${r.mode==='mix'?'配色':'单灯'}</td><td>${names[r.channel]}</td><td>${r.dist}</td><td>${filterNames[r.filter]}</td><td>${r.amps.join('/')}</td><td>${r.v.toFixed(3)}</td><td>${r.relative.toFixed(2)}</td><td>${r.colour}</td></tr>`).join('');
+        q('[data-cc-rows]').innerHTML=records.map(r=>`<tr><td>${r.mode==='mix'?'配色':'单灯'}</td><td>${names[r.channel]}</td><td>${r.distance.toFixed(2)}</td><td>${filterNames[r.filter]}</td><td>${r.current.map(value=>value.toFixed(2)).join('/')}</td><td>${r.v.toFixed(3)}</td><td>${r.relative.toFixed(2)}</td><td>${r.colour}</td></tr>`).join('');
         render();
       }
       q('[data-cc-record]').addEventListener('click',()=>{
         const m=model();
-        const record={mode, channel, dist, filter, aligned, amps:m.input, v:m.v, relative:m.centre, colour:m.colour};
-        if (records.some(r=>JSON.stringify(r)===JSON.stringify(record))) {
-          q('[data-cc-result]').textContent='这组条件已经记录。改变电流、屏距或滤片，再记录下一组。';
-          return;
-        }
+        meter.reset();
+        const reading=measured(m);
+        const record={mode, channel, dist, filter, aligned, amps:m.input,
+          v:reading.voltage, relative:reading.intensity, current:reading.current, distance:reading.distance, colour:m.colour};
         records.push(record);showRows();
       });
       q('[data-cc-clear]').addEventListener('click',()=>{records.length=0;showRows();});

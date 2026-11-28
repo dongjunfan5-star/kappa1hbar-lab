@@ -2441,6 +2441,7 @@ function mountBench(chapter, bench) {
   }
 }
 </script>
+<script src="../../assets/measurement-noise.js"></script>
 <script>(() => {
   const radius = .1000;
   const turns = 1000;
@@ -2633,16 +2634,19 @@ function mountBench(chapter, bench) {
       const held = {earth:[],field:[],inertia:[],coupled:[],angle:[]};
       const settings={aligned:false, weight:false, phase:'earth', angle:5, x:0, distance:12, couple:'single', damping:0, sign:-1, current:1};
       const storedCurrents={earth:1,field:100};
+      const meters=PhysLabNoise.createSampler();
       let cancel=()=>{}, active=null, measuring=false;
-      let frameAngles=[0,0], elapsed=0;
+      let frameAngles=[0,0],frameReadings=[0,0],elapsed=0;
       const note=text=>{get('note').textContent=text;};
       const kAligned = () => settings.aligned ? 1 : Math.cos(25*rad);
       const signedCurrent = () => settings.sign*settings.current;
+      const currentReading = () => meters.read('current',signedCurrent(),settings.phase==='field'?.12:.014);
       const axialNet = () => earth*kAligned()+coilField(signedCurrent());
       const strength = () => Math.abs(axialNet());
       const equilibrium = () => settings.phase==='earth'&&axialNet()<0 ? 180 : 0;
-      const fieldRaw = () => Math.round((earth*kAligned()+coilField(signedCurrent(),settings.x))/10)*.01;
-      const fieldOffset = () => Math.round(earth*kAligned()/10)*.01;
+      const fieldReading=(key,microtesla)=>Math.round(meters.read(key,microtesla/1000,.0065)*100)/100;
+      const fieldRaw = () => fieldReading('field',earth*kAligned()+coilField(signedCurrent(),settings.x));
+      const fieldOffset = () => fieldReading('offset',earth*kAligned());
       const calibratedSlope=()=>leastSquares(held.field.filter(row=>row.position===0).map(row=>({x:row.x,y:row.net*1000})))?.slope;
       const coupling=()=>{
         const C = mu*dipole**2/(4*Math.PI*(settings.distance/100)**3);
@@ -2679,7 +2683,8 @@ function mountBench(chapter, bench) {
         get('field-arrow').innerHTML=probe||Math.abs(axialNet())<2?'':`<path fill="none" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="4 4" opacity=".55" d="${path([[-tip,0,49],[tip,0,49]])}"/>`+
           face([[tip,0,49],[bar,-2,49],[bar,2,49]],'var(--accent)');
         get('screen-field').textContent=`${fixed(fieldRaw())} mT`;
-        get('screen-current').textContent=settings.phase==='earth'||probe?`${signedCurrent()<0?'−':'+'}${fixed(settings.current)} mA`:'+0.00 mA';
+        const current=settings.phase==='earth'&&active ? active.x : currentReading();
+        get('screen-current').textContent=settings.phase==='earth'||probe?`${current<0?'−':'+'}${fixed(Math.abs(current))} mA`:'+0.00 mA';
       }
 
       const tables={earth:['符号电流 / mA','5 周期用时 / s','T / s','1/T² / s⁻²'],field:['符号电流 / mA','探头 x / cm','读数 / mT','扣底后 / mT'],inertia:['配重','5 周期用时 / s','T / s'],coupled:['针距 / cm','初态','ω同 / rad/s','ω反 / rad/s','拍频 / Hz'],angle:['初始角','阻尼比','无阻尼同角周期 / s','摆动特征']};
@@ -2726,7 +2731,7 @@ function mountBench(chapter, bench) {
         return fitted?`线圈斜率 β = ${fixed(fitted.slope*1000,2)} μT/mA，理论值 ${fixed(fieldPerMilliamp,2)} μT/mA。`:'把探头放在 x = 0 cm，记录至少三个不同电流，拟合中心附加场。';
       }
       function vibrationChart() {
-        const wave=active?.wave??[], second=active?.second??[];
+        const wave=active?.angleReadings??[], second=active?.secondReadings??[];
         const seconds=active?.seconds??8;
         const top=1.15*Math.max(5,settings.phase==='angle'?settings.angle:0);
         const points=samples=>samples.filter((_,i)=>i%2===0).map((y,i)=>({x:i*2*seconds/Math.max(1,samples.length-1),y}));
@@ -2793,16 +2798,17 @@ function mountBench(chapter, bench) {
           rowsAndResult();
         }
         const live=field ? `探头 x = ${settings.x} cm · 特斯拉计 <strong>${fixed(fieldRaw())} mT</strong> · 断电底值 ${fixed(fieldOffset())} mT` :
-          coupled ? `针间距 ${settings.distance} cm · 针一 ${fixed(frameAngles[0],1)}° · 针二 ${fixed(frameAngles[1],1)}°` :
-          earthMode ? `带符号电流 ${fixed(signedCurrent())} mA · 当前偏角 ${fixed(frameAngles[0],1)}°` :
-          angle ? `释放角 ${settings.angle}° · 阻尼比 ${fixed(settings.damping)} · 当前偏角 ${fixed(frameAngles[0],1)}°` :
-          `配重 ${settings.weight?'2 × 0.150 g，r = 2.00 cm':'未安装'} · 当前偏角 ${fixed(frameAngles[0],1)}°`;
+          coupled ? `针间距 ${settings.distance} cm · 针一 ${fixed(frameReadings[0],1)}° · 针二 ${fixed(frameReadings[1],1)}°` :
+          earthMode ? `带符号电流 ${fixed(active?.x??currentReading())} mA · 当前偏角 ${fixed(frameReadings[0],1)}°` :
+          angle ? `释放角 ${settings.angle}° · 阻尼比 ${fixed(settings.damping)} · 当前偏角 ${fixed(frameReadings[0],1)}°` :
+          `配重 ${settings.weight?'2 × 0.150 g，r = 2.00 cm':'未安装'} · 当前偏角 ${fixed(frameReadings[0],1)}°`;
         get('live').innerHTML=`${live}${field?'':` · 仿真计时 <strong>${fixed(elapsed)} s</strong>`}`;
         redrawBodies();
       }
 
       function invalidate(message) {
-        cancel();active=null;measuring=false;elapsed=0;frameAngles=[0,0];
+        cancel();active=null;measuring=false;elapsed=0;frameAngles=[0,0];frameReadings=[0,0];
+        meters.reset();
         note(message);paint(true);
       }
       function align() {
@@ -2829,6 +2835,7 @@ function mountBench(chapter, bench) {
         if(measuring||settings.phase==='field')return;
         if(!settings.aligned){note('先用断电时的针向对齐线圈轴，再开始计时。');return;}
         if(settings.phase==='earth'&&strength()<2){note('合场太弱，细线扭转和杂散场会主导读数。把电流调离抵消点。');return;}
+        if(active) meters.reset();
         measuring=true;
         const phase=settings.phase;
         if(phase==='earth'||phase==='inertia') {
@@ -2836,9 +2843,9 @@ function mountBench(chapter, bench) {
           const J=phase==='inertia'&&settings.weight?inertia+addedInertia:inertia;
           const T=period(B,J,4);
           const duration=5*T;
-          const timed=Math.round(duration*100)/100;
+          const timed=Math.round(PhysLabNoise.sample(duration,.025,{min:.01})*100)/100;
           const wave=Array.from({length:321},(_,i)=>4*Math.cos(i/320*5*tau));
-          active={x:signedCurrent(),period:timed/5,seconds:timed,wave,valid:axialNet()>2,weight:settings.weight};
+          active={x:currentReading(),setting:signedCurrent(),period:timed/5,seconds:timed,wave,valid:axialNet()>2,weight:settings.weight};
         } else if(phase==='coupled') {
           const [same,opposite]=coupling();
           const beat=Math.abs(same-opposite)/tau;
@@ -2850,19 +2857,26 @@ function mountBench(chapter, bench) {
             if(settings.couple==='opposite')return [b,-b];
             return [(a+b)/2,(a-b)/2];
           });
-          active={seconds,wave:both.map(p=>p[0]),second:both.map(p=>p[1]),distance:settings.distance,couple:settings.couple,same,opposite,beat};
+          const frequencyError=Math.min(.0025,Math.abs(same-opposite)*.07);
+          const sameReading=PhysLabNoise.sample(same,frequencyError),oppositeReading=PhysLabNoise.sample(opposite,frequencyError);
+          active={seconds:PhysLabNoise.sample(seconds,.022,{min:.01}),wave:both.map(p=>p[0]),second:both.map(p=>p[1]),
+            distance:settings.distance,couple:settings.couple,same:sameReading,opposite:oppositeReading,beat:Math.abs(sameReading-oppositeReading)/tau};
         } else {
           const T=period(earth,inertia,settings.angle);
           const seconds=4*T;
           const feature=settings.damping===0?'近似周期运动':settings.damping<1?'振幅逐渐衰减':settings.damping===1?'小角度临界阻尼':'过阻尼回零';
-          active={seconds,wave:swingSamples(settings.angle,settings.damping,seconds),angle:settings.angle,damping:settings.damping,period:T,feature};
+          const measuredPeriod=PhysLabNoise.sample(T,.005,{min:.001});
+          active={seconds:4*measuredPeriod,wave:swingSamples(settings.angle,settings.damping,seconds),angle:settings.angle,damping:settings.damping,period:measuredPeriod,feature};
         }
+        active.angleReadings=active.wave.map(value=>PhysLabNoise.sample(value,.12));
+        if(active.second)active.secondReadings=active.second.map(value=>PhysLabNoise.sample(value,.12));
         note(phase==='earth'||phase==='inertia'?'已放开磁针。计满 5 个完整周期。':'观察偏角曲线和磁针的运动。');
         paint(true);
         cancel=timeline(phase==='earth'||phase==='inertia'?3250:4300,progress=>{
           const index=Math.round(progress*(active.wave.length-1));
           elapsed=progress*active.seconds;
           frameAngles=[active.wave[index],active.second?.[index]??0];
+          frameReadings=[active.angleReadings[index],active.secondReadings?.[index]??0];
           if(progress===1){
             measuring=false;
             note(phase==='earth'&&!active.valid?'磁针已换了平衡方向。这组可以记录，但不进入原分支拟合。':'计时完成。记录本次读数，再改变条件。');
@@ -2874,20 +2888,21 @@ function mountBench(chapter, bench) {
         const phase=settings.phase, rows=held[phase];
         if(phase==='field') {
           const raw=fieldRaw();
-          const row={x:signedCurrent(),position:settings.x,raw,net:raw-fieldOffset()};
-          const existing=rows.findIndex(point=>point.x===row.x&&point.position===row.position);
+          const row={x:currentReading(),setting:signedCurrent(),position:settings.x,raw,net:raw-fieldOffset()};
+          const existing=rows.findIndex(point=>point.setting===row.setting&&point.position===row.position);
           if(existing>=0)rows[existing]=row;
           else rows.push(row);
           note('已记录。中心磁场曲线使用 x = 0 cm 的读数。');
         } else {
           if(!active||measuring){note('完成这次释放与计时以后再记录。');return;}
-          const sameSetting=row=>phase==='earth'?row.x===active.x:phase==='inertia'?row.weight===active.weight:phase==='coupled'?row.distance===active.distance&&row.couple===active.couple:row.angle===active.angle&&row.damping===active.damping;
+          const sameSetting=row=>phase==='earth'?row.setting===active.setting:phase==='inertia'?row.weight===active.weight:phase==='coupled'?row.distance===active.distance&&row.couple===active.couple:row.angle===active.angle&&row.damping===active.damping;
           const index=rows.findIndex(sameSetting);
           if(index>=0) rows[index]=active;
           else rows.push(active);
           note(phase==='earth'&&!active.valid?'已记录反转点，拟合时已排除。':'已写入本组记录。条件相同的再次测量会更新该行。');
         }
         paint(true);
+        if(phase==='field')meters.reset();
       }
       function reverse() {
         if(settings.phase!=='field'&&settings.phase!=='earth'){note('当前操作使用断电时的地磁场。');return;}

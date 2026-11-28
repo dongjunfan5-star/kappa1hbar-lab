@@ -2441,6 +2441,7 @@ function mountBench(chapter, bench) {
   }
 }
 </script>
+<script src="../../assets/measurement-noise.js"></script>
 <script>(() => {
   const light = [
     {nm:365.0, nu:8.214, name:'近紫外', color:'#bba9fc'},
@@ -2643,7 +2644,8 @@ function mountBench(chapter, bench) {
       const state = {on:false, warm:0, covered:true, band:0, voltage:0, aperture:5, distance:35};
       const recorded = light.map(()=>({}));
       const saturation = {iris:[],distance:[]};
-      let scan, dark, baseline, comparisonBands, cancelWarm = () => {};
+      const meters = PhysLabNoise.createSampler();
+      let scan, dark, baseline, comparisonBands, lastSaturationCapture, cancelWarm = () => {};
       const q = name => host.querySelector(`[data-ph-${name}]`);
       const mode = () => q('series').value;
       const band = () => light[state.band];
@@ -2661,6 +2663,8 @@ function mountBench(chapter, bench) {
         const reverse = -.43*strength()*clamp(-voltage/.145,0,1);
         return forward + reverse + darkSignal(voltage);
       }
+      const voltageReading=()=>rounded(meters.read('voltage',state.voltage,.0013),3);
+      const currentReading=(covered=state.covered)=>meters.read(covered?'dark-current':'light-current',signal(state.voltage,covered),.014);
 
       function render() {
         const lit = beamOn();
@@ -2686,11 +2690,11 @@ function mountBench(chapter, bench) {
         q('power').setAttribute('aria-pressed',String(state.on));
         q('cover').textContent = state.covered?'打开遮光盖':'合上遮光盖';
         q('cover').setAttribute('aria-pressed',String(state.covered));
-        q('device-u').textContent = state.on?`${fixed(state.voltage)} V`:'— V';
-        q('device-i').textContent = ready()?`${fixed(signal(state.voltage),2)} pA`:'— pA';
+        q('device-u').textContent = state.on?`${fixed(voltageReading())} V`:'— V';
+        q('device-i').textContent = ready()?`${fixed(currentReading(),2)} pA`:'— pA';
         q('distance-value').textContent = `${state.distance} cm`;
         q('live').innerHTML = ready()
-          ? `<strong>U = ${fixed(state.voltage)} V · I = ${fixed(signal(state.voltage),2)} pA</strong><br>${band().nm.toFixed(1)} nm · Φ ${state.aperture} mm · d ${state.distance} cm · ${lit?'光照 K':'遮光，仅暗电流'}`
+          ? `<strong>U = ${fixed(voltageReading())} V · I = ${fixed(currentReading(),2)} pA</strong><br>${band().nm.toFixed(1)} nm · Φ ${state.aperture} mm · d ${state.distance} cm · ${lit?'光照 K':'遮光，仅暗电流'}`
           : (state.on?'汞灯预热中，等电流读数稳定。':'仪器已关机。');
         showCurve();
       }
@@ -2716,10 +2720,13 @@ function mountBench(chapter, bench) {
       function sweep() {
         if (!beamOn()) return note('等汞灯预热完成并打开遮光盖，再扫光照曲线。');
         const range = Array.from({length:641},(_,i)=>+(-2.4+i*.01).toFixed(2));
-        scan={signature:signature(),data:range.map(u=>[u,+signal(u,false).toFixed(3)])};
+        scan={signature:signature(),data:range.map(u=>[
+          rounded(PhysLabNoise.sample(u,.0013),4),rounded(PhysLabNoise.sample(signal(u,false),.011),3)
+        ])};
+        meters.reset();
         wavelengthCurves.set(signature(),scan.data);
         note('扫线完成。可以切到「遏止区细看」比较横轴交点与曲线抬头处。');
-        showCurve();
+        render();
       }
 
       function findCrossing(points,target) {
@@ -2745,7 +2752,7 @@ function mountBench(chapter, bench) {
       function showCurve() {
         const selected = scan?.signature===signature() ? scan.data : [];
         const close = selected.length && q('zoom').value==='close';
-        const middle = close ? findCrossing(selected,0) : 0;
+        const middle = close ? (findCrossing(selected,0)??0) : 0;
         const xmin = close?middle-.23:-2.4, xmax = close?middle+.22:4;
         const previous = [...wavelengthCurves.entries()].filter(([key])=>{
           const [,aperture,distance] = key.split(':').map(Number);
@@ -2754,7 +2761,7 @@ function mountBench(chapter, bench) {
         const thin = (rows,stride=5)=>rows.filter((_,i)=>i%stride===0);
         const series = (close?[]:previous.map(([,data])=>({data:thin(data),color:'var(--anatomy-lo)',dashed:true}))).concat(
           selected.length?[{data:close?selected.filter(([u])=>u>=xmin&&u<=xmax):thin(selected),color:'var(--accent)'}]:[]);
-        const reading = ready() && state.voltage>=xmin && state.voltage<=xmax ? [state.voltage,signal(state.voltage)] : null;
+        const reading = ready() && voltageReading()>=xmin && voltageReading()<=xmax ? [voltageReading(),currentReading()] : null;
         const values = series.flatMap(trace=>trace.data.map(([,i])=>i));
         if (reading) values.push(reading[1]);
         const ymin=Math.min(-1,...values)*1.07, ymax=Math.max(close?3:38,...values)*1.08;
@@ -2772,8 +2779,9 @@ function mountBench(chapter, bench) {
         if (!Number.isFinite(value)) return note('当前曲线无法判读，先检查光路并重新扫描。');
         baseline ??= {aperture:state.aperture,distance:state.distance};
         voltage(value);
-        recorded[state.band][method]=state.voltage;
-        note(`${methods.find(([key])=>key===method)[1]}已记录 ${band().nm.toFixed(1)} nm 的 Uₐ = ${fixed(state.voltage)} V。${method==='zero'?'保持这次电压以记录暗电流。':method==='comp'?`以遮光值 ${fixed(dark.current,2)} pA 为判据。`:'比较负压底部的近直线与抬头段。'}`);
+        const measured=voltageReading();
+        recorded[state.band][method]=measured;
+        note(`${methods.find(([key])=>key===method)[1]}已记录 ${band().nm.toFixed(1)} nm 的 Uₐ = ${fixed(measured)} V。${method==='zero'?'保持这次电压以记录暗电流。':method==='comp'?`以遮光值 ${fixed(dark.current,2)} pA 为判据。`:'比较负压底部的近直线与抬头段。'}`);
         showResults();
       }
 
@@ -2782,7 +2790,7 @@ function mountBench(chapter, bench) {
         if (!ready() || zero===undefined || scan?.signature!==signature() || Math.abs(state.voltage-zero)>.002)
           return note('先点「记录 I = 0 的电压」，把旋钮留在这个读数，再遮光测 I₁。');
         state.covered=true;
-        dark={signature:signature(),current:rounded(signal(state.voltage),2)};
+        dark={signature:signature(),current:rounded(currentReading(true),2)};
         render();
         note(`同一反向电压下遮光得到 I₁ = ${fixed(dark.current,2)} pA。打开遮光盖，再用 I = I₁ 找对应电压。`);
       }
@@ -2812,13 +2820,20 @@ function mountBench(chapter, bench) {
         const variable=kind==='iris'?'aperture':'distance';
         if (first && (first.band!==state.band || first[control]!==state[control] || Math.abs(first.voltage-state.voltage)>.0005))
           return note('这一组应保持原有滤光片、两极电压和控制量，只改变光阑或距离中的一项。');
-        const current = rounded(signal(state.voltage)-darkSignal(state.voltage),2);
+        const capture=`${signature()}:${state.voltage}`;
+        if(capture===lastSaturationCapture){
+          meters.reset('light-current');
+          meters.reset('dark-current');
+        }
+        lastSaturationCapture=capture;
+        const current = rounded(currentReading(false)-currentReading(true),2);
         const value = {voltage:state.voltage,band:state.band,aperture:state.aperture,distance:state.distance,current};
         const index=rows.findIndex(row=>row[variable]===value[variable]);
         if (index>=0) rows[index]=value;
         else rows.push(value);
         note('已记录饱和光电流。表中已扣除这个正电压下的暗电流。');
         showSaturation();
+        render();
       }
 
       function showSaturation() {
@@ -2837,6 +2852,7 @@ function mountBench(chapter, bench) {
 
       function power() {
         state.on=!state.on;
+        meters.reset();
         cancelWarm();
         state.warm=0;
         if (state.on) {

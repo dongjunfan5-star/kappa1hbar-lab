@@ -2441,6 +2441,7 @@ function mountBench(chapter, bench) {
   }
 }
 </script>
+<script src="../../assets/measurement-noise.js"></script>
 <script>(() => {
   const mercury = [
     {id:'hg405', label:'汞紫线', wave:404.68, color:'#a693ff'},
@@ -2657,14 +2658,13 @@ function mountBench(chapter, bench) {
       let angle=0,incidence=44,slit=4,selected='hg546',direct=false,note='先开汞灯，再调焦、共轴。';
       let zeroDirect=null,zeroReflection=null,pending=null;
       const records=[];
+      const verniers=PhysLabNoise.createSampler();
       const context=()=>mode==='prism'?'prism':mode+'-'+density;
       const availableLines=()=>lamps[lamp].lines;
       const chosen=()=>availableLines().find(l=>l.id===selected);
       const reference=()=>mode==='reflect'?zeroReflection:zeroDirect;
       const measureType=()=>mode==='prism'?'偏向角':'衍射角';
-      const drift=[.008,-.009,.005,-.004,.002];
       const repeatCount=(line,k)=>records.filter(row=>row.context===context()&&row.line.id===line.id&&row.order===k).length;
-      const readingDrift=(line,k)=>drift[repeatCount(line,k)%drift.length];
       const lineAngle=(line,k)=> {
         if(k===0)return 0;
         if(mode==='prism')return direct?null:prismAngles(line.wave,incidence).deviation;
@@ -2674,7 +2674,8 @@ function mountBench(chapter, bench) {
       const worldAngle=(increment=angle)=>mode==='reflect'?180-increment:increment;
       const getReadings=value=>{
         const turn=worldAngle(value);
-        return [roundAngle(358.5833333333+turn-.004),roundAngle(178.6000000000+turn+.003)];
+        return [roundAngle(verniers.read('first',358.5833333333+turn-.004,1.35/60)),
+          roundAngle(verniers.read('second',178.6000000000+turn+.003,1.35/60))];
       };
       const readingText=reading=>reading.map(vernier).join(' ／ ');
       const figure=k.figureSvg({width,height,label:'旋转式分光计。灯管、平行光管、色散元件和转动望远镜可操作。',body:[
@@ -2740,7 +2741,7 @@ function mountBench(chapter, bench) {
         if(direct)return [center];
         return [center,...lines.flatMap(l=>[-2,-1,1,2].flatMap(k=>{
           const phi=lineAngle(l,k);
-          return phi===null?[]:[{l,k,phi:phi+readingDrift(l,Math.abs(k))}];
+          return phi===null?[]:[{l,k,phi}];
         }))];
       }
       const visibleLines=lines=>lines.filter(({phi})=>Math.abs(phi-angle)<2.05);
@@ -2748,7 +2749,7 @@ function mountBench(chapter, bench) {
         const l=chosen(), k=mode==='prism'?1:side*order;
         const phi=lineAngle(l,k);
         if(phi===null||!Number.isFinite(phi)||Math.abs(phi)>87)return null;
-        return phi+(mode==='prism'?0:readingDrift(l,Math.abs(k)));
+        return phi;
       }
       function rayPath(angle,length,color,opacity,start=[0,0,axis+.8]) {
         const offset=polar(angle,length,0);
@@ -2939,6 +2940,7 @@ function mountBench(chapter, bench) {
         else zeroDirect=getReadings(angle);
         tell('已记下参考方向。透射光栅接着找左右一级；棱镜接着找谱线折返点。');
         refresh();
+        verniers.reset();
       }
       function record() {
         if(!on||!aligned){tell('开启光源并完成调焦与共轴后才能记录。');return;}
@@ -2975,6 +2977,8 @@ function mountBench(chapter, bench) {
           pending.pairs[side]=pair;
           if(!pending.pairs[-side]){
             tell(`已暂存${side<0?'左':'右'}侧读数。保持谱线和级次，换到另一侧再记录。`);
+            refresh();
+            verniers.reset();
             return;
           }
           const left=pending.pairs[-1],right=pending.pairs[1];
@@ -2985,6 +2989,7 @@ function mountBench(chapter, bench) {
           tell(`第 ${trial} 组${l.label}已记录。重新对准做下一组，或切换要测的谱线。`);
         }
         refresh({recordsChanged:true});
+        verniers.reset();
       }
         const listen=(selector,event,handler)=>q(selector).addEventListener(event,handler);
         const button=(name,handler)=>listen(`[data-hs-${name}]`,'click',handler);

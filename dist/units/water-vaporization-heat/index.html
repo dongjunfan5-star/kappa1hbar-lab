@@ -472,6 +472,7 @@ body { font-family: var(--lab-font); }
 </head>
 <body>
 <main id="course" class="unit-content"><noscript><p>请允许 JavaScript 以操作仿真实验台。</p></noscript></main>
+<script src="../../assets/measurement-noise.js"></script>
 <script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id,lesson);</script>
 <script>const anatomyIso = (() => {
 const AZIMUTH = 45;
@@ -2610,18 +2611,21 @@ function mountBench(chapter, bench) {
       const data = {runs:[], calibration:[]};
       const fresh = () => ({step:0, temperature:room, flask:room, hot:false, busy:false, open:false, cooled:false,
         grams:0, doses:0, theta1:null, theta2:null, theta3:null, condensed:false, stopped:false, weighed:null,
-        exported:false, environment:0, balance:null, gasket:'air'});
+        exported:false, environment:0, balance:null, weighing:[], gasket:'air'});
       let s = fresh(), cancelHeat = () => {}, cancelFlow = () => {};
       const mass = x => `${x.toFixed(2)} g`;
       const temp = x => `${x.toFixed(2)} ℃`;
+      const sensors=PhysLabNoise.createSampler();
+      const observedMass = value => Number(PhysLabNoise.sample(value,.018).toFixed(2));
+      const observedTemp = (channel,value) => Number(sensors.read(channel,value,.035).toFixed(2));
       const voltage = theta => 272.86 + 1.006 * theta;
       const netMass = () => cup.mass + stirrer.mass + waterMass;
       const withSensor = () => baseCapacity + sensorCapacity + waterCapacity * s.grams;
       const K = () => gasket[s.gasket][1];
       const target = () => 2 * room - (s.theta1 ?? room);
       const currentRows = () => [
-        ['空内筒 m₁',s.step>=1?mass(cup.mass):'—'], ['搅拌器 m₂',s.step>=2?mass(stirrer.mass):'—'],
-        ['通汽前总质量 m₀',s.step>=3?mass(netMass()):'—'], ['通汽后总质量 m总',s.weighed===null?'—':mass(s.weighed)],
+        ['空内筒 m₁',s.step>=1?mass(s.weighing[0]):'—'], ['搅拌器 m₂',s.step>=2?mass(s.weighing[1]):'—'],
+        ['通汽前总质量 m₀',s.step>=3?mass(s.weighing[2]):'—'], ['通汽后总质量 m总',s.weighed===null?'—':mass(s.weighed)],
         ['冷水初温 θ₁',s.theta1===null?'—':temp(s.theta1)], ['平衡终温 θ₂',s.theta2===null?'—':temp(s.theta2)],
         ['蒸汽温度 θ₃',s.theta3===null?'—':temp(s.theta3)]
       ];
@@ -2630,37 +2634,41 @@ function mountBench(chapter, bench) {
         q('runs').innerHTML = data.runs.map(r=>`<tr><td>${r.insulation}</td><td>${r.low.toFixed(2)}</td><td>${r.high.toFixed(2)}</td><td>${r.delta.toFixed(2)}</td><td>${r.latent.toFixed(3)}</td></tr>`).join('');
       };
       function draw() {
-        const display = s.theta2 ?? (s.stopped ? s.temperature : s.temperature + (s.open ? .26 : 0));
+        const modelDisplay = s.stopped ? s.temperature : s.temperature + (s.open ? .26 : 0);
+        const display = s.theta2 ?? observedTemp('calorimeter',modelDisplay);
+        const flaskReading = observedTemp('flask',s.flask);
         q('element').setAttribute('opacity',s.hot ? '.74' : '0');
         q('heater-led').setAttribute('opacity',s.hot ? '1' : '.25');
         q('flask-bubbles').setAttribute('opacity',s.hot && s.flask>=99.95?'.8':'0');
         q('vapor').setAttribute('opacity',s.hot && s.flask>=83 && !s.open ? '.64':'0');
         q('hose').setAttribute('opacity',s.open ? '1' : '.42');
         q('stopper').style.display = s.open ? '' : 'none';
-        q('cup-surface').setAttribute('fill', display >= room ? '#679397' : '#376f7a');
+        q('cup-surface').setAttribute('fill', modelDisplay >= room ? '#679397' : '#376f7a');
         q('scale-cup').setAttribute('opacity',s.step===3&&!s.cooled||s.weighed!==null?'1':'0');
-        q('meter-svg').textContent = `${voltage(s.hot && !s.open ? s.flask : display).toFixed(1)}`;
+        q('meter-svg').textContent = `${voltage(s.hot && !s.open ? flaskReading : display).toFixed(1)}`;
         q('scale-svg').textContent = s.balance===null?'—':s.balance.toFixed(2)+' g';
         q('weigh').textContent = ['称空内筒','称搅拌器','称加水总质量','称停汽后的总质量'][s.step];
         for (const selector of ['heat','read-steam','inlet']) q(selector).disabled = s.busy;
         for (const selector of ['gasket','target']) q(selector).disabled = s.cooled || s.doses>0;
-        q('reading').innerHTML = `烧瓶 <strong>${temp(s.flask)}</strong> · 量热器 <strong>${temp(display)}</strong> · 天平 <strong>${s.balance===null?'未称量':mass(s.balance)}</strong>${s.theta1===null?'':` · 补偿目标约 ${target().toFixed(1)} ℃`}`;
+        q('reading').innerHTML = `烧瓶 <strong>${temp(flaskReading)}</strong> · 量热器 <strong>${temp(display)}</strong> · 天平 <strong>${s.balance===null?'未称量':mass(s.balance)}</strong>${s.theta1===null?'':` · 补偿目标约 ${target().toFixed(1)} ℃`}`;
         results();
       }
       function weigh() {
-        if (s.step===0) { s.step++; s.balance=cup.mass; note('已称空内筒。下一次称搅拌器。'); }
-        else if (s.step===1) { s.step++; s.balance=stirrer.mass; note('已称搅拌器。向内筒加水，再称合在一起的总质量。'); }
-        else if (s.step===2) { s.step++; s.balance=netMass(); note('已记 m₀。冷却水和内筒，再开始制备蒸汽。'); }
+        if (s.step===0) { s.step++; s.balance=observedMass(cup.mass); s.weighing.push(s.balance); note('已称空内筒。下一次称搅拌器。'); }
+        else if (s.step===1) { s.step++; s.balance=observedMass(stirrer.mass); s.weighing.push(s.balance); note('已称搅拌器。向内筒加水，再称合在一起的总质量。'); }
+        else if (s.step===2) { s.step++; s.balance=observedMass(netMass()); s.weighing.push(s.balance); note('已记 m₀。冷却水和内筒，再开始制备蒸汽。'); }
         else {
           if (s.exported) return note('本组数据已经记录。选“开始下一组”重复或更换隔热层。');
           if (s.theta2===null) return note('停汽后先搅拌均匀并读 θ₂，再称最终质量。');
-          s.weighed = Math.round(100*(netMass() + s.grams + (s.condensed?.12:0)))/100;
+          s.weighed = observedMass(netMass() + s.grams + (s.condensed?.12:0));
           s.balance = s.weighed;
-          const delta = s.weighed - netMass();
+          const [cupReading,stirrerReading,initialMass]=s.weighing;
+          const delta = s.weighed - initialMass;
+          const measuredCapacity = (initialMass-cupReading-stirrerReading)*waterCapacity+cupReading*cup.capacity+stirrerReading*stirrer.capacity;
           const rise = s.theta2 - s.theta1;
           const coolHeat = waterCapacity*(s.theta3-s.theta2);
           if (delta<=0 || rise<=0) return note('本组增重或升温不足，请重新测量。');
-          const result = (baseCapacity*rise/delta-coolHeat)/1000;
+          const result = (measuredCapacity*rise/delta-coolHeat)/1000;
           const corrected = result + sensorCapacity*rise/delta/1000;
           q('result').textContent = `L ≈ ${result.toFixed(3)} MJ/kg · 探头热容修正后 ${corrected.toFixed(3)} MJ/kg`;
           data.runs.push({insulation:gasket[s.gasket][0],low:s.theta1,high:s.theta2,delta,latent:result});
@@ -2675,7 +2683,7 @@ function mountBench(chapter, bench) {
         if (s.cooled) return note('内筒已冷却。改变初温时请开始下一组。');
         s.cooled=true;
         s.temperature=Number(q('target').value);
-        s.theta1=s.temperature;
+        s.theta1=observedTemp('calorimeter',s.temperature);
         s.condensed=s.temperature<dew;
         note(s.condensed?'初温低于露点，筒外会凝露。可以完成并比较这组有系统误差的数据。':s.temperature===room?'初温等于室温，通汽后更易出现净散热。可以与预冷组对比。':'已记录初温 θ₁。内筒外表保持干燥。');
         draw();
@@ -2696,8 +2704,9 @@ function mountBench(chapter, bench) {
       function readSteam() {
         if (!s.hot || s.busy || s.flask<boiling) return note('先稳定沸腾，再读蒸汽温度。');
         if (s.doses>0) return note('本组的 θ₃ 已在送汽前记录。');
-        s.theta3=s.flask;
-        note('已记录 θ₃ = 100.00 ℃。导管出口约浸入 1 cm，离开筒底。');
+        if(s.theta3!==null)sensors.reset('flask');
+        s.theta3=observedTemp('flask',s.flask);
+        note(`已记录 θ₃ = ${temp(s.theta3)}。导管出口约浸入 1 cm，离开筒底。`);
         draw();
       }
       function inlet() {
@@ -2713,7 +2722,7 @@ function mountBench(chapter, bench) {
         if (s.doses>=8) return note('水温已过高，请停汽，再比较本组误差。');
         const adding=.87;
         const afterCapacity = withSensor()+adding*waterCapacity;
-        const noLeak = (withSensor()*s.temperature+adding*(latent+waterCapacity*s.theta3))/afterCapacity;
+        const noLeak = (withSensor()*s.temperature+adding*(latent+waterCapacity*s.flask))/afterCapacity;
         const exchange = K()*(room-(noLeak+s.temperature)/2)*11;
         s.temperature = noLeak + exchange/afterCapacity;
         s.grams = Math.round((s.grams + adding)*100)/100;
@@ -2739,7 +2748,8 @@ function mountBench(chapter, bench) {
       function stir() {
         if (!s.stopped) return note('通汽时边送汽边搅动。记录终温前，要先停止通汽。');
         if (s.exported) return note('本组已经称量完毕。');
-        s.theta2=Math.round(s.temperature*100)/100;
+        if(s.theta2!==null)sensors.reset('calorimeter');
+        s.theta2=observedTemp('calorimeter',s.temperature);
         note('水温已均匀。最后称“停汽后的总质量”，用增重求冷凝水质量。');
         draw();
       }
@@ -2748,7 +2758,7 @@ function mountBench(chapter, bench) {
         const after = room+(s.temperature-room)*Math.exp(-K()*60/withSensor());
         if (s.doses>0) s.environment += (after-s.temperature)*withSensor();
         s.temperature=after;
-        if (s.doses===0) s.theta1=Math.round(after*100)/100;
+        if (s.doses===0) s.theta1=observedTemp('calorimeter',after);
         if (s.stopped) s.theta2=null;
         note('与外界换热 1 min。请重新观察温度，停汽后需再次搅匀并读 θ₂。');
         draw();
@@ -2756,7 +2766,7 @@ function mountBench(chapter, bench) {
       function reset() {
         cancelHeat();cancelFlow();
         const insulation = q('gasket').value;
-        s=fresh();s.gasket=insulation;
+        s=fresh();sensors.reset();s.gasket=insulation;
         q('flow').setAttribute('opacity','0');q('result').textContent='';
         note('本组状态已归零，旧数据保留。可更换夹层或冷却目标后重测。');draw();
       }
@@ -2765,11 +2775,12 @@ function mountBench(chapter, bench) {
       for (const [name,callback] of Object.entries(actions)) q(name).addEventListener('click',callback);
       bindHits(host,{'vh-heat':heat,'vh-steam':readSteam,'vh-inlet':inlet,'vh-dose':dose,'vh-stir':stir,'vh-weigh':weigh});
 
-      const offset = theta => ({0:.014,20:-.019,40:.026,60:-.01,80:-.029,100:.017})[theta];
+      const calibrationMeter=PhysLabNoise.createSampler();
+      const readCalibration=theta=>Number(calibrationMeter.read('voltage',voltage(theta),.042).toFixed(3));
       function calibration() {
         const rows = data.calibration;
         const selected = Number(q('std').value);
-        q('cal-output').textContent = `数字表 ${(voltage(selected)+offset(selected)).toFixed(3)} mV`;
+        q('cal-output').textContent = `数字表 ${readCalibration(selected).toFixed(3)} mV`;
         let fit = null;
         if (rows.length>=2) {
           const center = axis => rows.reduce((sum,row)=>sum+row[axis],0)/rows.length;
@@ -2785,10 +2796,10 @@ function mountBench(chapter, bench) {
       q('std').addEventListener('change',calibration);
       q('record-cal').addEventListener('click',()=>{
         const t=Number(q('std').value);
-        if (!data.calibration.some(([x])=>x===t)) data.calibration.push([t,voltage(t)+offset(t)]);
+        if (!data.calibration.some(([x])=>x===t)) data.calibration.push([t,readCalibration(t)]);
         data.calibration.sort((a,b)=>a[0]-b[0]);calibration();
       });
-      q('clear-cal').addEventListener('click',()=>{data.calibration=[];calibration();});
+      q('clear-cal').addEventListener('click',()=>{data.calibration=[];calibrationMeter.reset();calibration();});
       draw();calibration();
     }
   });

@@ -472,6 +472,7 @@ body { font-family: var(--lab-font); }
 </head>
 <body>
 <main id="course" class="unit-content"><noscript><p>请允许 JavaScript 以操作仿真实验台。</p></noscript></main>
+<script src="../../assets/measurement-noise.js"></script>
 <script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id,lesson);</script>
 <script>const anatomyIso = (() => {
 const AZIMUTH = 45;
@@ -2597,7 +2598,9 @@ function mountBench(chapter, bench) {
       const easing=z=>(1-Math.exp(-4*z))/(1-Math.exp(-4));
       const start=()=>({phase:'ambient',equilibrium:ambient,p:ambient,t:roomK,pumps:0,p0:null,p1:null,closure:null});
       let state=start();
-      let trace=[{p:ambient,t:roomK}];
+      const sensors=PhysLabNoise.createSampler();
+      const observe=()=>({p:rounded(sensors.read('pressure',state.p,.012)),t:sensors.read('temperature',state.t,.16)});
+      let trace=[observe()];
       const runs=[];
       let animationCancel=()=>{};
       let bulbCancel=()=>{};
@@ -2608,7 +2611,8 @@ function mountBench(chapter, bench) {
       const names={ambient:'接通大气',ready:'双阀关闭',charging:'进气阀开启',sealed:'已加压，待散热',cooling:'等候状态 I',stable:'室温已稳定',I:'已记录状态 I',venting:'快速放气',vented:'等候关闭放气阀',II:'已关闭放气阀',warming:'等候状态 III',III:'回到室温',done:'本组已完成'};
 
       function draw(phase) {
-        const c=state.t-273.15;
+        const current=observe();
+        const c=current.t-273.15;
         const intake=inletOpen();
         const vent=outletOpen();
         const display=(select,yes)=>{get(select).style.display=yes?'':'none';};
@@ -2619,22 +2623,22 @@ function mountBench(chapter, bench) {
         by('flow').setAttribute('opacity',state.phase==='venting'?String(Math.max(.15,1-(phase||0)*.7)):'0');
         by('gas').style.setProperty('--g-gas-tint',c>=roomC?'#e4a376':'#76bfdf');
         by('gas').setAttribute('opacity',String(Math.min(.34,Math.abs(c-roomC)*.064)));
-        by('panel-p').textContent=`p = ${f3(state.p)} kPa`;
+        by('panel-p').textContent=`p = ${f3(current.p)} kPa`;
         by('panel-t').textContent=`T = ${c.toFixed(1)} °C`;
-        by('read').textContent=`${names[state.phase]} · 绝对压强 ${f3(state.p)} kPa · 温度 ${c.toFixed(1)} °C`;
+        by('read').textContent=`${names[state.phase]} · 绝对压强 ${f3(current.p)} kPa · 温度 ${c.toFixed(1)} °C`;
         by('intake').textContent=intake?'关闭 C₁':'打开 C₁';
         by('vent').textContent=vent?'关闭 C₂':'打开 C₂';
         by('intake').setAttribute('aria-pressed',String(intake));
         by('vent').setAttribute('aria-pressed',String(vent));
         by('timing').disabled=['venting','vented','II','warming','III','done'].includes(state.phase);
         by('record').textContent=({ambient:'记录 p₀',stable:'记录 p₁',III:'记录 p₂'})[state.phase]||'记录当前读数';
-        const pts=trace.concat([{p:state.p,t:state.t}]);
+        const pts=trace.concat([current]);
         const step=300/Math.max(16,pts.length-1);
         by('plot-p').setAttribute('d',k.pathOf(pts.map(({p},i)=>[88+i*step,49-(p-ambient)*2.65])));
         by('plot-t').setAttribute('d',k.pathOf(pts.map(({t},i)=>[88+i*step,94-(t-roomK)*3.25])));
       }
 
-      function sample(){trace.push({p:state.p,t:state.t});}
+      function sample(){trace.push(observe());}
 
       function animate(length,between,finish){
         animationCancel=timeline(length,z=>{
@@ -2685,7 +2689,7 @@ function mountBench(chapter, bench) {
         }
         if(state.phase==='I'){
           const when=by('timing').value;
-          const before=state.p1;
+          const before=state.p;
           const endPressure=when==='early'?ambient+.25*(before-ambient):ambient;
           const adiabatic=pressure=>roomK*(pressure/before)**((gammaRef-1)/gammaRef);
           state.phase='venting';
@@ -2702,7 +2706,7 @@ function mountBench(chapter, bench) {
           });
         }
         if(state.phase==='vented'){
-          state.closure={...state.closure,p:state.p,t:state.t};
+          state.closure={...state.closure,p:state.p,t:state.t,observed:observe()};
           state.phase='II';
           note('C₂ 已关闭。瓶内仍比室温冷，保持两阀关闭并等待。');
           return draw();
@@ -2729,16 +2733,18 @@ function mountBench(chapter, bench) {
 
       function record(){
         if(state.phase==='ambient'){
-          state.p0=rounded(state.p);
-          note(`已记录 p₀ = ${f3(state.p0)} kPa，θ₀ = ${roomC.toFixed(1)} °C。关闭 C₂ 准备进气。`);
+          if(state.p0!==null)sensors.reset();
+          const reading=observe();
+          state.p0=reading.p;
+          note(`已记录 p₀ = ${f3(state.p0)} kPa，θ₀ = ${(reading.t-273.15).toFixed(1)} °C。关闭 C₂ 准备进气。`);
         }else if(state.phase==='stable'){
-          state.p1=rounded(state.p);
+          state.p1=observe().p;
           state.phase='I';
           note(`已记录 p₁ = ${f3(state.p1)} kPa。现在打开 C₂ 放气。`);
         }else if(state.phase==='III'){
-          const p2=rounded(state.p);
+          const p2=observe().p;
           const gamma=Math.log(state.p1/state.p0)/Math.log(state.p1/p2);
-          const {when,p,t}=state.closure;
+          const {when,observed:{p,t}}=state.closure;
           runs.push({gamma,when,p0:state.p0,p1:state.p1,p2,pClose:p,cClose:t-273.15});
           state.phase='done';
           by('rows').insertAdjacentHTML('beforeend',`<tr><td>${runs.length}</td><td>${readings[when]}</td><td>${f3(state.p0)}</td><td>${f3(state.p1)}</td><td>${f3(p)}</td><td>${(t-273.15).toFixed(1)}</td><td>${f3(p2)}</td><td>${f3(gamma)}</td></tr>`);
@@ -2763,7 +2769,7 @@ function mountBench(chapter, bench) {
         animationCancel();
         bulbCancel();
         by('bulb').removeAttribute('transform');
-        state=start();trace=[{p:ambient,t:roomK}];
+        state=start();sensors.reset();trace=[observe()];
         note('新一组，C₂ 已打开。记录环境参考 p₀，已完成的数据保留。');
         draw();
       });

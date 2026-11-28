@@ -472,6 +472,7 @@ body { font-family: var(--lab-font); }
 </head>
 <body>
 <main id="course" class="unit-content"><noscript><p>请允许 JavaScript 以操作仿真实验台。</p></noscript></main>
+<script src="../../assets/measurement-noise.js"></script>
 <script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id,lesson);</script>
 <script>const anatomyIso = (() => {
 const AZIMUTH = 45;
@@ -2625,7 +2626,8 @@ function mountBench(chapter, bench) {
         wedge:()=>[wedgeStart(),wedgeStart()+20*wedgeSpacing],
         diffract:()=>[-darkSpot(),darkSpot()],
       };
-      const coord = ()=> fixed((isDiff() ? 0 : 12) + state.position);
+      const scaleReading=PhysLabNoise.createSampler();
+      const coord = ()=> fixed(scaleReading.read('position',(isDiff() ? 0 : 12) + state.position,isDiff() ? .024 : .006));
       const specimen = ()=>levels[state.specimen];
       function captureArt() {
         const heading = isDiff()?'CMOS 图样 · 暗纹':'目镜视野 · 反射条纹';
@@ -2803,7 +2805,7 @@ function mountBench(chapter, bench) {
       }
 
       function switchMode(mode){
-        state.mode=mode;state.position=0;state.order=isDiff()?1:5;
+        state.mode=mode;state.position=0;state.order=isDiff()?1:5;scaleReading.reset();
         state.pressed=false;state.powered=false;state.focussed=false;state.mirror=40;
         captureArt();controls();render();output();report('');
       }
@@ -2828,6 +2830,7 @@ function mountBench(chapter, bench) {
         const dl=Math.abs(state.position-left),dr=Math.abs(state.position-right);
         const tolerance=state.mode==='wedge'?.025:.045;
         if(Math.min(dl,dr)>tolerance){report('十字丝还没对准所选暗纹；继续微调或使用上方导引。');return;}
+        scaleReading.reset('position');
         const side=dl<=dr?'left':'right', pos=Number(coord());
         if(state.mode==='newton'){
           const key=`${state.azimuth}/${state.order}`;
@@ -2837,7 +2840,7 @@ function mountBench(chapter, bench) {
         }else{
           const entry=state.diffraction.get(order())||{};entry[side]=pos;state.diffraction.set(order(),entry);
         }
-        report(`已记录${side==='left'?'左侧／起点':'右侧／终点'}坐标 ${fixed(pos)} mm。`);output();
+        report(`已记录${side==='left'?'左侧／起点':'右侧／终点'}坐标 ${fixed(pos)} mm。`);render();output();
       }
       function rotate(){
         if(isSurface()){state.pressed=!state.pressed;output();}

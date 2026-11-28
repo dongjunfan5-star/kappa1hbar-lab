@@ -2441,6 +2441,7 @@ function mountBench(chapter, bench) {
   }
 }
 </script>
+<script src="../../assets/measurement-noise.js"></script>
 <script>(() => {
   const plateGap = 0.00500;
   const reticleGap = 0.000500;
@@ -2672,6 +2673,8 @@ function mountBench(chapter, bench) {
       const state = { level: false, wire: false, focus: 0, sprayed: false, mode: 'static', medium: 'oil', index: 0,
         drops: [], field: false, voltage: 110, position: upper, balancing: null, runVoltage: null,
         fall: null, rise: null, timer: null, busy: false, saved: [], current: '', trial: 0, readingSaved: false };
+      const voltmeter = PhysLabNoise.createSampler();
+      const voltageReading = () => state.field ? Number(voltmeter.read('plate-voltage', state.voltage, .85).toFixed(1)) : 0;
       let cancel = () => {};
       const note = (message) => { element('note').textContent = message; };
       const dropName = () => state.index < 9 ? `${state.index + 1} 号` : state.index === 9 ? '偏暗小滴' : '偏亮大滴';
@@ -2699,7 +2702,7 @@ function mountBench(chapter, bench) {
       function view() {
         const glow = ['#e9f6ce', '#d8f1bf', '#e6f0c6'];
         const open = state.wire && state.focus === 2;
-        const field = state.field ? state.voltage : 0;
+        const field = voltageReading();
         element('reticle').style.filter = state.focus ? '' : 'blur(1.6px)';
         element('particles').innerHTML = state.wire ? `<path d="M143 28v97l-2 15v28" stroke="#e0ddb0" stroke-width="2.1" fill="none" opacity=".8" ${open ? '' : 'style="filter:blur(2.8px)"'}/>` : state.sprayed ?
           repeat(state.field ? 4 : 13, i => makeCircle(71 + (i * 29 + 25) % 132, 44 + (i * 31 + 24) % 142, .45 + i % 4 * .27, glow[i % 3], .15 + i % 3 * .13)) +
@@ -2800,6 +2803,7 @@ function mountBench(chapter, bench) {
         if (!available()) return;
         if (state.wire) return note('定位丝仍在油滴室内。请先取出，再加电场。');
         state.field = !state.field;
+        voltmeter.reset();
         note(state.field ? '旋转电源旋钮微调上板电压，也可用方向键逐伏调整下方输入框。' : '两板已短路。现在撤去电场，可用两条横丝之间的时间计算下落速度。');
         observe();
       }
@@ -2827,9 +2831,10 @@ function mountBench(chapter, bench) {
         if (apparent() !== '近似静止') return note(`油滴还在${apparent()}。改变电压幅值或极性，直到近似静止。`);
         cancel();
         clearRun();
-        state.balancing = state.voltage;
+        state.balancing = voltageReading();
         note(`已记下 ${signed(state.balancing)} V。短路并计时下落，从上横丝到下横丝。`);
         view();
+        voltmeter.reset();
       }
       function lift() {
         if (!available() || !ready()) return;
@@ -2856,12 +2861,13 @@ function mountBench(chapter, bench) {
         state.timer = null;
         const speed = rising ? motion.fallSpeed * (riseRatio - 1) : motion.fallSpeed;
         const travelTime = reticleGap / speed;
-        const fluctuation = [0, .02, -.02, .01, -.01, .03, -.03, .01][state.trial++ % 8];
-        const measurement = Number((travelTime + fluctuation + (state.index === 9 ? fluctuation * 6 : 0)).toFixed(2));
+        state.trial++;
+        const timingError = Math.min(.09, .025 + .003 * travelTime) * (state.index === 9 ? 4 : 1);
+        const measurement = Number(PhysLabNoise.sample(travelTime, timingError, {min:.01}).toFixed(2));
         const begin = () => {
           state.field = rising;
           state.timer = 0;
-          if (rising) state.runVoltage = state.voltage;
+          if (rising) state.runVoltage = voltageReading();
           animatePosition(rising ? upper : lower, Math.min(2450, 650 + travelTime * 145), rising ? '上升计时' : '下落计时', () => {
             if (rising) state.rise = measurement;
             else state.fall = measurement;
@@ -2919,6 +2925,7 @@ function mountBench(chapter, bench) {
         state.saved.push({ key, trial: state.trial, label: `${dropName()} ${state.medium === 'oil' ? '油' : '水'}`, mode: state.mode, voltage: state.mode === 'static' ? state.balancing : state.runVoltage, fall: state.fall, rise: state.mode === 'static' ? null : state.rise, charge });
         state.readingSaved = true;
         redrawData();
+        voltmeter.reset();
         note(`${dropName()}状态已保存 ${count} 笔原始读数。可继续往返，或换一颗后重新寻找平衡。`);
       }
 

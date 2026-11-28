@@ -471,6 +471,7 @@ body { font-family: var(--lab-font); }
 </head>
 <body>
 <main id="course" class="unit-content"><noscript><p>请在浏览器中允许 JavaScript，以操作仿真实验台。</p></noscript></main>
+<script src="../../assets/measurement-noise.js"></script>
 <script>const lessons = new Map(); const addLesson = lesson => lessons.set(lesson.id, lesson);</script>
 <script>const anatomyIso = (() => {
 const AZIMUTH = 45;
@@ -2537,7 +2538,10 @@ function mountBench(chapter, bench) {
       const root=chapter.querySelector('[data-young-lab]'); if(!root || root.dataset.ready)return;root.dataset.ready='1';
       const g=9.81,L=1,D=1.5,l=0.05,d=0.0005,E=2e11,S=Math.PI*d*d/4;
       let level=0,branch='up',records=Array.from({length:7},()=>({up:null,down:null}));
-      const reading=(i,dir)=>20+1000*(2*D*L/(S*l*E))*(0.5*i*g)+(dir==='up'?1:-1)*0.045*i/6+0.012*Math.sin(i*1.7);
+      const scale=PhysLabNoise.createSampler();
+      const modelReading=(i,dir)=>20+1000*(2*D*L/(S*l*E))*(0.5*i*g)+(dir==='up'?1:-1)*.045*i/6;
+      const reading=(i,dir)=>Number(scale.read('ruler',modelReading(i,dir),.045).toFixed(3));
+      const sampleReading=(i,dir)=>Number(PhysLabNoise.sample(modelReading(i,dir),.045).toFixed(3));
       const svg=root.querySelector('[data-y-plot]');
       function render() {
         const F=level*0.5*g, extension=F*L/(S*E), r=reading(level,branch);
@@ -2565,8 +2569,8 @@ function mountBench(chapter, bench) {
       root.querySelector('[data-y-add]').addEventListener('click',()=>{if(level<6){level++;branch='up';render();}});
       root.querySelector('[data-y-remove]').addEventListener('click',()=>{if(level>0){level--;branch='down';render();}});
       root.querySelector('[data-y-return]').addEventListener('click',()=>{branch='down';render();});
-      root.querySelector('[data-y-record]').addEventListener('click',()=>{records[level][branch]=reading(level,branch);render();});
-      root.querySelector('[data-y-example]').addEventListener('click',()=>{records=records.map((_,i)=>({up:reading(i,'up'),down:reading(i,'down')}));level=0;branch='down';render();});
+      root.querySelector('[data-y-record]').addEventListener('click',()=>{if(records[level][branch]!==null)scale.reset();records[level][branch]=reading(level,branch);render();});
+      root.querySelector('[data-y-example]').addEventListener('click',()=>{records=records.map((_,i)=>({up:sampleReading(i,'up'),down:sampleReading(i,'down')}));level=0;branch='down';render();});
       root.querySelector('[data-y-clear]').addEventListener('click',()=>{records=Array.from({length:7},()=>({up:null,down:null}));level=0;branch='up';render();});
       if(typeof ResizeObserver==='function')new ResizeObserver(render).observe(svg.parentElement);
       render();
@@ -2649,8 +2653,8 @@ function mountBench(chapter, bench) {
         root.querySelector('[data-t-error]').textContent=error;
       }
       count.addEventListener('input',()=>{time0.value='';time1.value='';render();});
-      root.querySelector('[data-t-bare]').addEventListener('click',()=>{const N=validN();if(N!==null)time0.value=(N*T0+.12).toFixed(3);render();});
-      root.querySelector('[data-t-ring]').addEventListener('click',()=>{const N=validN();if(N!==null)time1.value=(N*T1-.08).toFixed(3);render();});
+      root.querySelector('[data-t-bare]').addEventListener('click',()=>{const N=validN();if(N!==null)time0.value=PhysLabNoise.sample(N*T0,.22).toFixed(3);render();});
+      root.querySelector('[data-t-ring]').addEventListener('click',()=>{const N=validN();if(N!==null)time1.value=PhysLabNoise.sample(N*T1,.22).toFixed(3);render();});
       time0.addEventListener('input',render);time1.addEventListener('input',render);
       if(typeof ResizeObserver==='function')new ResizeObserver(render).observe(svg.parentElement);
       render();
@@ -2755,6 +2759,10 @@ function mountBench(chapter, bench) {
       const area=Math.PI*m.d*m.d/4, gain=2*m.D/m.l;
       const physics=mass=>{const force=mass*m.g,extension=force*m.L/(area*m.E);return {force,extension,reading:m.r0+1000*gain*extension,theta:extension/m.l};};
       const st={level:false,mirror:false,focus:false,baseline:false,massIndex:0,mass:0,busy:false,direction:'加荷',records:[],view:false};
+      const scale=PhysLabNoise.createSampler();
+      let acquisition=0;
+      const observe=ideal=>st.busy?ideal:Number(scale.read('ruler',ideal,.025).toFixed(2));
+      const initial=()=>st.records.find(row=>row.direction==='初始')?.reading;
       let cancel=()=>{};
       const base={x:-132,y:-45,w:112,d:106,r:8};
       const scopeBase={x:48,y:-38,w:110,d:94,r:7};
@@ -2827,15 +2835,15 @@ function mountBench(chapter, bench) {
       const load=host.querySelector('[data-b-load]'),wireEl=host.querySelector('[data-b-wire]'),lever=host.querySelector('[data-b-lever]');
       const readout=host.querySelector('[data-b-readout]');
       const updateScope=()=>{
-        const p=physics(st.mass),scale=host.querySelector('[data-b-scale]');
+        const position=observe(physics(st.mass).reading),scale=host.querySelector('[data-b-scale]');
         let content='';
-        for(let value=Math.floor(p.reading)-11;value<=Math.ceil(p.reading)+11;value++) {
-          const y=105+(value-p.reading)*9;
+        for(let value=Math.floor(position)-11;value<=Math.ceil(position)+11;value++) {
+          const y=105+(value-position)*9;
           content+=`<path d="M168 ${y}h${value%5===0?28:15}" fill="none" stroke="currentColor" stroke-width="1"/>`;
           if(value%5===0)content+=`<text x="210" y="${y+5}">${value}</text>`;
         }
         scale.innerHTML=content;scale.classList.toggle('b-lens-blur',!st.focus);
-        host.querySelector('[data-b-scope-value]').textContent=st.focus?`十字丝对应 ${p.reading.toFixed(2)} mm；这是绝对读数。初读数为 ${m.r0.toFixed(2)} mm。`:'标尺像模糊：先调焦，再读数。';
+        host.querySelector('[data-b-scope-value]').textContent=st.focus?`十字丝对应 ${position.toFixed(2)} mm；这是绝对读数。${initial()===undefined?'尚未记录初读数。':`初读数为 ${initial().toFixed(2)} mm。`}`:'标尺像模糊：先调焦，再读数。';
       };
       function draw() {
         const p=physics(st.mass),z=-p.extension*4300;
@@ -2843,7 +2851,7 @@ function mountBench(chapter, bench) {
         wireEl.setAttribute('d',k.rise([-50,10],92+z,207,P));
         // Only the tilted lever changes shape; all static solids were built once.
         lever.innerHTML=leverShape(Math.atan2(-z,19));
-        readout.textContent=`净加质量 ${st.mass.toFixed(2)} kg · 拉力 ${p.force.toFixed(2)} N · ${st.busy?'等待稳定':`标尺变化 ${(p.reading-m.r0).toFixed(2)} mm`}`;
+        readout.textContent=`净加质量 ${st.mass.toFixed(2)} kg · 拉力 ${p.force.toFixed(2)} N · ${st.busy?'等待稳定':`标尺变化 ${(observe(p.reading)-(initial()??m.r0)).toFixed(2)} mm`}`;
         for(let i=0;i<6;i++) {
           host.querySelector(`[data-b-weight="${i}"]`).style.display=i<st.massIndex?'':'none';
           host.querySelector(`[data-b-stock="${i}"]`).style.display=i>=st.massIndex?'':'none';
@@ -2871,14 +2879,17 @@ function mountBench(chapter, bench) {
         st.direction=sign>0?'加荷':'减荷';st.massIndex=next;st.busy=true;
         const from=st.mass,to=next*.5;cancel();
         announce(host,'轻放砝码，等待管制器和镜面稳定。');
-        cancel=timeline(650,p=>{st.mass=from+(to-from)*ease(p);if(p===1)st.busy=false;draw();if(p===1)announce(host,`${st.direction}后已稳定。点目镜观察并记录 ${to.toFixed(2)} kg 下的标尺读数。`);});
+        cancel=timeline(650,p=>{st.mass=from+(to-from)*ease(p);if(p===1){st.busy=false;acquisition++;scale.reset();}draw();if(p===1)announce(host,`${st.direction}后已稳定。点目镜观察并记录 ${to.toFixed(2)} kg 下的标尺读数。`);});
       }
       const actions={
         level(){if(st.busy)return;st.level=true;const bubble=host.querySelector('[data-b-bubble]');timeline(400,p=>{bubble.setAttribute('cx',bubbleStart[0]+(bubbleEnd[0]-bubbleStart[0])*ease(p));bubble.setAttribute('cy',bubbleStart[1]+(bubbleEnd[1]-bubbleStart[1])*ease(p));});host.querySelector('[data-b-level]').dataset.ready='true';announce(host,'平台已调平。底脚改变平台姿态，不改变材料的杨氏模量。下一步点三足镜架。');},
         mirror(){if(!st.level)return announce(host,'先调平平台，再安放光杠杆，避免支脚接触不稳。');st.mirror=true;host.querySelector('[data-b-mirror]').dataset.ready='true';announce(host,'两刀口作为转轴，后支脚接触管制器。管制器下降时，镜面会微转。下一步点望远镜调焦轮。');},
         focus(){if(!prepare())return;st.focus=true;host.querySelector('[data-b-focus]').dataset.ready='true';updateScope();announce(host,'模拟已完成十字丝与标尺像的调焦。真实操作还需移动眼睛检查视差；现在点目镜记录初读数。');},
         add(){change(1);},remove(){change(-1);},
-        read(){st.view=true;host.querySelector('[data-b-view]').hidden=false;updateScope();if(!prepare())return;if(!st.focus)return announce(host,'标尺像仍模糊。先点调焦轮，不把模糊位置当有效读数。');if(st.busy)return announce(host,'读数仍在变化。等稳定后再次点目镜。');const p=physics(st.mass);if(!st.baseline){st.baseline=true;st.direction='初始';}const existing=st.records.find(r=>r.mass===st.mass&&r.direction===st.direction);if(!existing)st.records.push({mass:st.mass,reading:p.reading,direction:st.direction});records();announce(host,`${existing?'该状态已记录':'已记录'}：${st.mass.toFixed(2)} kg，${p.reading.toFixed(2)} mm。${st.massIndex===0?'点击备用砝码，加 0.50 kg。':'标尺读数变化来自镜面转动；实际伸长仅 '+(p.extension*1000).toFixed(3)+' mm。'}`);}
+        read(){st.view=true;host.querySelector('[data-b-view]').hidden=false;updateScope();if(!prepare())return;if(!st.focus)return announce(host,'标尺像仍模糊。先点调焦轮，不把模糊位置当有效读数。');if(st.busy)return announce(host,'读数仍在变化。等稳定后再次点目镜。');const p=physics(st.mass);if(!st.baseline){st.baseline=true;st.direction='初始';}const existing=st.records.find(r=>r.acquisition===acquisition);
+          const observed=existing?.reading??observe(p.reading);
+          if(!existing)st.records.push({mass:st.mass,reading:observed,direction:st.direction,acquisition});
+          draw();records();announce(host,`${existing?'该状态已记录':'已记录'}：${st.mass.toFixed(2)} kg，${observed.toFixed(2)} mm。${st.massIndex===0?'点击备用砝码，加 0.50 kg。':'标尺读数变化来自镜面转动；实际伸长仅 '+(p.extension*1000).toFixed(3)+' mm。'}`);}
       };
       host.dataset.figureParts=String(art.count()-6); // Six weights each have a stored and a loaded SVG pose.
       bindHits(host,{'b3-level':actions.level,'b3-mirror':actions.mirror,'b3-focus':actions.focus,'b3-add':actions.add,'b3-remove':actions.remove,'b3-read':actions.read});bindButtons(host,actions);draw();
@@ -2956,7 +2967,7 @@ function mountBench(chapter, bench) {
         <p class="rig-readout b-readings" data-b4-readout></p><p class="b-note" data-b-note aria-live="polite">先点底脚调平，确保钢丝竖直、圆盘不发生侧向摆动。</p>
         <div class="rig-tools"><button type="button" data-b-action="level">底脚调平</button><button type="button" data-b-action="ring">装 / 卸质量环</button><button type="button" data-b-action="disk">扭转 / 释放圆盘</button><button type="button" data-b-action="timer">预备计时 20 周期</button><button type="button" data-b-action="stop">等摆动停止</button></div>
         <div class="table-wrap"><table><thead><tr><th>装配</th><th>完整周期数</th><th>总时长 / s</th><th>周期 / s</th></tr></thead><tbody data-b4-records><tr><td>裸盘</td><td>20</td><td>待测</td><td>待测</td></tr><tr><td>加环</td><td>20</td><td>待测</td><td>待测</td></tr></tbody></table></div><p class="b-current" data-b4-result>测完两种装配，再用周期平方差求切变模量。</p>
-        <details><summary>模型与来源</summary><p class="b-model">装置依据：教材第 93 页图 4-3；尺寸、材料及计时是教学预设。L = 0.700 m、d = 0.500 mm、G = 80.0 GPa；裸盘 I₀ = 2.00 × 10⁻⁴ kg·m²。质量环 m = 0.150 kg，内、外半径 30.0、50.0 mm。小振幅无阻尼模型 T = 2π√(I/D)，D = πGd⁴/(32L)。动画约 12 秒演示 20 周期，计时器显示模型中的真实时长；自动同向过零计时仅代替课堂手工秒表，不模拟人的反应误差。按“等摆动停止”演示轻扶后静止，这段不用于测量。</p></details>`;
+        <details><summary>模型与来源</summary><p class="b-model">装置依据：教材第 93 页图 4-3；尺寸、材料及计时是教学预设。L = 0.700 m、d = 0.500 mm、G = 80.0 GPa；裸盘 I₀ = 2.00 × 10⁻⁴ kg·m²。质量环 m = 0.150 kg，内、外半径 30.0、50.0 mm。小振幅无阻尼模型 T = 2π√(I/D)，D = πGd⁴/(32L)。动画约 12 秒演示 20 周期，计时器模拟同向过零测得的时长，读数有小幅波动。按“等摆动停止”演示轻扶后静止，这段不用于测量。</p></details>`;
       const needle=host.querySelector('[data-b4-index]'),clock=host.querySelector('[data-b4-clock]');
       const readout=host.querySelector('[data-b4-readout]');
       function draw() {
@@ -2971,7 +2982,7 @@ function mountBench(chapter, bench) {
         readout.textContent=`${st.ring?'加环':'裸盘'} · 角位移 ${(st.angle*180/Math.PI).toFixed(1)}° · 完整周期 ${st.count} / ${m.N} · 计时 ${st.time.toFixed(3)} s`;
       }
       function record() {
-        st.readings[st.ring?'ring':'bare']=m.N*period(st.ring);
+        st.readings[st.ring?'ring':'bare']=st.time;
         host.querySelector('[data-b4-records]').innerHTML=[['bare','裸盘'],['ring','加环']].map(([key,label])=>{const t=st.readings[key];return `<tr><td>${label}</td><td>${m.N}</td><td>${t?t.toFixed(3):'待测'}</td><td>${t?(t/m.N).toFixed(4):'待测'}</td></tr>`;}).join('');
         if(st.readings.bare && st.readings.ring) {
           const T0=st.readings.bare/m.N,T1=st.readings.ring/m.N,Dcalc=4*Math.PI*Math.PI*Iring/(T1*T1-T0*T0),Gcalc=32*Dcalc*m.L/(Math.PI*m.d**4);
@@ -2982,15 +2993,16 @@ function mountBench(chapter, bench) {
       function release() {
         st.running=true;st.twisted=false;st.time=0;st.count=0;
         const T=period(st.ring),armed=st.armed,total=(m.N+.25)*T;
+        const duration=m.N*T,observed=armed?PhysLabNoise.sample(duration,.055):duration;
         announce(host,armed?'已释放：等第一次指定方向过零再开始，20 次完整往返后自动停止计时。动画加速。':'已释放，观察圆盘往返扭转。未预备秒表，本次不记录周期；请等它停止后再测。');
         cancel();
         cancel=timeline(12000,p=>{
           const t=p*total;
           st.angle=m.phi*Math.cos(2*Math.PI*t/T);
-          if(armed){st.time=Math.min(m.N*T,Math.max(0,t-.25*T));st.count=Math.min(m.N,Math.floor(st.time/T+1e-8));}
-          if(p===1){st.running=false;st.angle=0;if(armed){st.count=m.N;st.time=m.N*T;record();}st.armed=false;}
+          if(armed){const elapsed=Math.min(duration,Math.max(0,t-.25*T));st.time=elapsed/duration*observed;st.count=Math.min(m.N,Math.floor(elapsed/T+1e-8));}
+          if(p===1){st.running=false;st.angle=0;if(armed){st.count=m.N;st.time=observed;record();}st.armed=false;}
           draw();
-          if(p===1)announce(host,armed?`已计满 ${m.N} 个完整周期，平均周期 ${T.toFixed(4)} s。计时结束并轻扶停盘；现在可${st.ring?'卸环复测':'同轴装环，再测一次'}。`:'本次观察结束并轻扶停盘。下一次先扭转，点秒表预备，再释放。');
+          if(p===1)announce(host,armed?`已计满 ${m.N} 个完整周期，平均周期 ${(st.time/m.N).toFixed(4)} s。计时结束并轻扶停盘；现在可${st.ring?'卸环复测':'同轴装环，再测一次'}。`:'本次观察结束并轻扶停盘。下一次先扭转，点秒表预备，再释放。');
         });
       }
       const actions={

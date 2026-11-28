@@ -2441,6 +2441,7 @@ function mountBench(chapter, bench) {
   }
 }
 </script>
+<script src="../../assets/measurement-noise.js"></script>
 <script>(() => {
   const kelvin = t => t + 273.15;
   const ntc = t => 1000 * Math.exp(3600 * (1 / kelvin(t) - 1 / kelvin(25)));
@@ -2538,29 +2539,40 @@ function mountBench(chapter, bench) {
 
       const q=name=>host.querySelector(`[data-t13-${name}]`);
       const measurement={set:25, actual:25, reference:940, current:.2, testing:false, meter:'ptc', notes:[], sides:{}, moving:false};
+      const meters=PhysLabNoise.createSampler();
       let stop=()=>{};
       const points = measurement.notes;
       const high = ()=>measurement.current>.2;
       const effective = ()=>ntc(measurement.actual+(high()?4.2:.04));
+      const resistanceReading=(key,ideal)=>meters.read(key,ideal,Math.max(1.4,ideal*.002),{min:1});
+      const ntcReading=()=>resistanceReading('bridge-arm',effective());
+      const ptcReading=()=>resistanceReading('bath-ptc',ptc(measurement.actual));
+      const bathReading=()=>meters.read('bath-temperature',measurement.actual,.16);
       const cleanRoom = ()=> !measurement.moving && Math.abs(measurement.set-measurement.actual)<.05;
-      const signal = ()=> 60*(measurement.reference-effective())/(measurement.reference+effective());
+      const signal = ()=> {
+        const measured=ntcReading();
+        return 60*(measurement.reference-measured)/(measurement.reference+measured);
+      };
       const suffix = value=>value >= 10000 ? `${(value/1000).toFixed(1)} kΩ` : `${Math.round(value)} Ω`;
       const message = content=>{q('note').textContent=content;};
       const sample = (type,t)=>type==='ntc'?ntc(t):type==='ptc'?ptc(t):1800;
 
       function bridge() {
+        const temperature=bathReading(), deflect=signal(), measuredPtc=ptcReading();
+        const ohm=measurement.meter==='ptc'&&!measurement.testing?measuredPtc:
+          resistanceReading('ohmmeter',sample(measurement.meter,measurement.testing?72:measurement.actual));
         q('target').textContent=`${measurement.set} ℃`;
         q('device-r').textContent=suffix(measurement.reference);
-        q('device-temp').textContent=`${measurement.actual.toFixed(1)} °C`;
-        q('device-ptc').textContent=suffix(sample(measurement.meter,measurement.testing?72:measurement.actual));
-        q('smoke').textContent=`欧姆挡：${suffix(sample(measurement.meter,measurement.testing?72:measurement.actual))}。${measurement.testing?'热源附近示范温度 72 ℃。':'对照恒温水浴当前温度。'}`;
-        const deflection=Math.max(-5,Math.min(5,signal()));
+        q('device-temp').textContent=`${temperature.toFixed(1)} °C`;
+        q('device-ptc').textContent=suffix(ohm);
+        q('smoke').textContent=`欧姆挡：${suffix(ohm)}。${measurement.testing?'热源附近示范温度 72 ℃。':'对照恒温水浴当前温度。'}`;
+        const deflection=Math.max(-5,Math.min(5,deflect));
         q('needle').setAttribute('d',path([[-103,17.8,18],[-103+deflection*6.25,17.8,25+7*Math.cos(deflection*Math.PI/10)]]));
-        q('live').innerHTML=`<strong>水浴 ${measurement.actual.toFixed(1)} ℃ · 检流计 ${signal() >= 0 ? '+' : ''}${signal().toFixed(2)} 格</strong><br>标准电阻 R₀ = ${suffix(measurement.reference)}，PTC = ${suffix(ptc(measurement.actual))}${high()?' · 较大电流产生明显自热':''}`;
+        q('live').innerHTML=`<strong>水浴 ${temperature.toFixed(1)} ℃ · 检流计 ${deflect >= 0 ? '+' : ''}${deflect.toFixed(2)} 格</strong><br>标准电阻 R₀ = ${suffix(measurement.reference)}，PTC = ${suffix(measuredPtc)}${high()?' · 较大电流产生明显自热':''}`;
       }
 
       function logarithmicFit(rows) {
-        if(rows.length<3) return;
+        if(new Set(rows.map(row=>row.set)).size<3) return;
         const xs=rows.map(row=>1/kelvin(row.t)), ys=rows.map(row=>Math.log(row.ntc));
         const mean=values=>values.reduce((sum,value)=>sum+value,0)/values.length;
         const X=mean(xs),Y=mean(ys);
@@ -2585,23 +2597,25 @@ function mountBench(chapter, bench) {
         const yTitle=log?'ln(R / Ω)':'R / Ω';
         const f=(v,decimals)=>v.toFixed(decimals);
         q('plot').innerHTML=`<path class="axis" d="M57 25V165H380"/><text x="56" y="21">${negative?'NTC':'PTC'} · ${yTitle}</text><text x="380" y="196" text-anchor="end">${xTitle}</text><text x="57" y="182" text-anchor="start">${f(xmin,negative&&log?2:0)}</text><text x="380" y="182" text-anchor="end">${f(xmax,negative&&log?2:0)}</text><text x="50" y="165" text-anchor="end">${f(ymin,0)}</text><text x="50" y="42" text-anchor="end">${f(ymax,0)}</text><path class="model" d="${graphPath(chartRows)}"/><path class="curve" d="${graphPath(observations)}"/>${observations.map(([X,Y])=>`<circle class="points" cx="${px(X)}" cy="${py(Y)}" r="3.6"/>`).join('')}<text x="380" y="20" text-anchor="end">虚线：模型参照</text>`;
-        q('rows').innerHTML=rows.map(row=>`<tr><td>${row.t.toFixed(0)}</td><td>${row.ntc}</td><td>${row.ptc}</td></tr>`).join('');
+        q('rows').innerHTML=rows.map(row=>`<tr><td>${row.t.toFixed(1)}</td><td>${row.ntc}</td><td>${row.ptc}</td></tr>`).join('');
         const fit=logarithmicFit(rows);
         if(!fit) { q('result').textContent='记录至少三个不同温度的点，可用拟合求 B。'; return; }
-        const minimum=rows.reduce((best,row)=>row.ptc<best.ptc?row:best,rows[0]);
-        const minimumIndex=rows.indexOf(minimum);
-        const nearMinimum=minimum.t-(rows[minimumIndex-1]?.t ?? -Infinity)<=4 && (rows[minimumIndex+1]?.t ?? Infinity)-minimum.t<=4;
+        const temperatures=[...new Map(rows.map(row=>[row.set,row])).values()];
+        const minimum=temperatures.reduce((best,row)=>row.ptc<best.ptc?row:best,temperatures[0]);
+        const minimumIndex=temperatures.indexOf(minimum);
+        const nearMinimum=minimum.set-(temperatures[minimumIndex-1]?.set ?? -Infinity)<=4 && (temperatures[minimumIndex+1]?.set ?? Infinity)-minimum.set<=4;
         const target=2*minimum.ptc;
-        const above=rows.findIndex(row=>row.t>minimum.t&&row.ptc>=target);
-        const lower=rows[above-1], upper=rows[above];
-        const canFindCurie=nearMinimum&&lower&&upper&&upper.t-lower.t<=4;
+        const above=temperatures.findIndex(row=>row.set>minimum.set&&row.ptc>=target);
+        const lower=temperatures[above-1], upper=temperatures[above];
+        const canFindCurie=nearMinimum&&lower&&upper&&upper.set-lower.set<=4;
         const curieText=canFindCurie ? ` · PTC 居里点 ≈ ${(lower.t+(upper.t-lower.t)*Math.log(target/lower.ptc)/Math.log(upper.ptc/lower.ptc)).toFixed(1)} ℃` : ' · PTC 最低区和跃升区需补点才可求居里点';
-        const lo=rows.find(row=>row.t===75), hi=rows.find(row=>row.t===85);
-        const alphaPtc=lo&&hi?` · PTC α₇₅–₈₅ = ${((Math.log(hi.ptc)-Math.log(lo.ptc))/10).toFixed(4)} K⁻¹`:'';
-        const ptcLeft=rows.find(row=>row.t===79), ptcCenter=rows.find(row=>row.t===80), ptcRight=rows.find(row=>row.t===81);
-        const tangentPtc=ptcLeft&&ptcCenter&&ptcRight ? ` · PTC α₈₀ 差分 ${((ptcRight.ptc-ptcLeft.ptc)/(2*ptcCenter.ptc)).toFixed(4)} K⁻¹` : '';
-        const left=rows.find(row=>row.t===49), center=rows.find(row=>row.t===50), right=rows.find(row=>row.t===51);
-        const tangent=left&&center&&right?` · NTC α₅₀ 差分 ${((right.ntc-left.ntc)/(2*center.ntc)).toFixed(4)} K⁻¹`:'';
+        const at=t=>temperatures.find(row=>row.set===t);
+        const lo=at(75), hi=at(85);
+        const alphaPtc=lo&&hi?` · PTC α₇₅–₈₅ = ${((Math.log(hi.ptc)-Math.log(lo.ptc))/(hi.t-lo.t)).toFixed(4)} K⁻¹`:'';
+        const ptcLeft=at(79), ptcCenter=at(80), ptcRight=at(81);
+        const tangentPtc=ptcLeft&&ptcCenter&&ptcRight ? ` · PTC α₈₀ 差分 ${((ptcRight.ptc-ptcLeft.ptc)/((ptcRight.t-ptcLeft.t)*ptcCenter.ptc)).toFixed(4)} K⁻¹` : '';
+        const left=at(49), center=at(50), right=at(51);
+        const tangent=left&&center&&right?` · NTC α₅₀ 差分 ${((right.ntc-left.ntc)/((right.t-left.t)*center.ntc)).toFixed(4)} K⁻¹`:'';
         q('result').textContent=`拟合 B = ${Math.round(fit.slope)} K · R∞ = ${Math.exp(fit.intercept).toExponential(2)} Ω · NTC α₅₀ = ${(-fit.slope/kelvin(50)**2).toFixed(4)} K⁻¹${tangent}${curieText}${alphaPtc}${tangentPtc}`;
       }
 
@@ -2613,6 +2627,7 @@ function mountBench(chapter, bench) {
       }
       function stabilize() {
         stop();
+        meters.reset();
         const initial=measurement.actual;
         measurement.testing=false;
         measurement.moving=true;
@@ -2630,22 +2645,23 @@ function mountBench(chapter, bench) {
       }
       function balance() {
         if(!cleanRoom()) return message('先点水浴，等两只探头达到设定温度。');
-        standard(effective());
+        standard(ntcReading());
         message(high()?'已平衡。较大电流会产生自热，可以与小电流再测一次作比较。':'指针回到零附近。标准电阻对应此时的 NTC 阻值。');
       }
       function record() {
         if(!cleanRoom()) return message('此时探头未到设定温度。请先等水浴稳定。');
         if(Math.abs(signal())>.18) return message('指针还偏离零位。请调标准电阻或点「微调至零」。');
         if(high()) return message('这次阻值含自热偏差。比较完示值后换小电流，再重新调零保存。');
-        const row={t:measurement.set,ntc:measurement.reference,ptc:Math.round(ptc(measurement.actual))};
-        const existing=points.findIndex(item=>item.t===row.t);
-        if(existing<0) points.push(row); else points[existing]=row;
+        const row={set:measurement.set,t:Number(bathReading().toFixed(1)),ntc:measurement.reference,ptc:Math.round(ptcReading())};
+        points.push(row);
+        bridge();
+        meters.reset();
         updatePlot();
-        message(`已记录 ${row.t} ℃ 的两个阻值。再选择一个水温，等待后重新调零。`);
+        message(`已记录 ${row.t.toFixed(1)} ℃ 的两个阻值。可重复测量或选择另一水温。`);
       }
       function sensitivity(sign) {
         if(!cleanRoom()) return message('等水浴稳定，再检查检流计灵敏度。');
-        const nominal=effective(), side=sign>0?'plus':'minus';
+        const nominal=ntcReading(), side=sign>0?'plus':'minus';
         const offset=nominal*(60+sign)/(60-sign);
         standard(offset);
         measurement.sides[side]=1/Math.max(1,Math.abs(measurement.reference-Math.round(nominal)));
